@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/src/main/main.iml" filepath="$PROJECT_DIR$/src/main/main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/project-pather.iml" filepath="$PROJECT_DIR$/.idea/modules/project-pather.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/project-pather_main.iml" filepath="$PROJECT_DIR$/.idea/modules/project-pather_main.iml" group="project-pather" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/project-pather_test.iml" filepath="$PROJECT_DIR$/.idea/modules/project-pather_test.iml" group="project-pather" />
+      <module fileurl="file://$PROJECT_DIR$/src/test/test.iml" filepath="$PROJECT_DIR$/src/test/test.iml" />
+    </modules>
+  </component>
+</project>
