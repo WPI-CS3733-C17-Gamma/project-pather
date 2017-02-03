@@ -4,34 +4,27 @@ buildscript {
 
     }
     repositories {
-        mavenLocal()
-            mavenCentral()
-
-
+        jcenter()
     }
 
 }
 apply plugin: 'java'
+apply plugin: 'javafx-gradle-plugin'
+
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.+'
+
     // https://mvnrepository.com/artifact/org.apache.derby/derby
     compile group: 'org.apache.derby', name: 'derby', version: '10.13.1.1'
 }
 
 repositories {
-    mavenLocal()
-        mavenCentral()
-
+    jcenter()
 }
 
-apply plugin: 'javafx-gradle-plugin'
-
-
 jfx {
-    // minimal requirement for jfxJar-task
     mainClass = 'Main';
-    // minimal requirement for jfxNative-task
-    vendor = 'TeamGamma'; 
+    vendor = 'TeamGamma';
 }
 sourceSets {
     main {
