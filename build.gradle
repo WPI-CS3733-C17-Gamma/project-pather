@@ -26,15 +26,6 @@ jfx {
     mainClass = 'Main';
     vendor = 'TeamGamma';
 }
-sourceSets {
-    main {
-        resources {
-            srcDirs = ["src/main/java"]
-                includes = ["**/*.fxml"]
 
-        }
-
-    }
-
-}
+sourceSets.main.resources.srcDirs = ["src/main/resources"]
 
