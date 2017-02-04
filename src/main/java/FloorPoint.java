@@ -1,4 +1,4 @@
-public class FloorPoint {
+public class FloorPoint implements Comparable{
 
     public final int x;
     public final int y;
@@ -14,6 +14,10 @@ public class FloorPoint {
         return 0;
     }
 
+    @Override
+    public int compareTo(Object o) {
+        return 0;
+    }
 
     public String toString(){
         return "x: " + x + " y: " + y + " floor: " + floor;

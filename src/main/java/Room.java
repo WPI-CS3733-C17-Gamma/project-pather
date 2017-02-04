@@ -1,4 +1,4 @@
-public class Room {
+public class Room implements Comparable {
 
     GraphNode location;
     String name;
@@ -9,7 +9,8 @@ public class Room {
     public void setLocation(GraphNode loc){
     }
 
-    public int compareTo(Room other){
+    @Override
+    public int compareTo(Object o) {
         return 0;
     }
 }

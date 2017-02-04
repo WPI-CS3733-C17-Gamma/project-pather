@@ -1,6 +1,6 @@
 import java.util.List;
 
-public class GraphNode {
+public class GraphNode implements Comparable {
 
     List<GraphNode> adjacent;
     FloorPoint location;
@@ -29,4 +29,8 @@ public class GraphNode {
         return location;
     }
 
+    @Override
+    public int compareTo(Object o) {
+        return 0;
+    }
 }
