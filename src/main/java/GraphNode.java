@@ -1,6 +1,6 @@
 import java.util.List;
 
-public class GraphNode implements Comparable {
+public class GraphNode extends Ided implements Comparable {
 
     List<GraphNode> adjacent;
     FloorPoint location;

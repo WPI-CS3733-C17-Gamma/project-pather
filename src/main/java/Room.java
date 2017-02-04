@@ -1,4 +1,4 @@
-public class Room implements Comparable {
+public class Room extends Ided implements Comparable {
 
     GraphNode location;
     String name;

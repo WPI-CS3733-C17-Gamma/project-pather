@@ -1,8 +1,7 @@
 import java.util.List;
 import java.util.Objects;
 
-public class DirectoryEntry {
-
+public class DirectoryEntry extends Ided {
     /**
      * the name of the entry (e.g. Dr. John or Restroom)
      */
