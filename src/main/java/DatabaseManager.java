@@ -10,7 +10,9 @@ public class DatabaseManager {
         "create table Edges (ID1 integer, ID2 integer," +
             "constraint pk_e Primary key (ID1, ID2)," +
             "constraint id1_fk foreign key (ID1) references GraphNodes(ID)," +
-            "constraint id2_fk foreign key (ID2) references GraphNodes(ID))"};
+            "constraint id2_fk foreign key (ID2) references GraphNodes(ID))",
+        "create table Rooms (rID Integer Primary key, Name varchar(30), nID Integer," +
+            "constraint fk_gn foreign key (nID) references GraphNodes(ID))"};
 
     public DatabaseManager(String dbName) {
 		// define the Derby connection URL to use
@@ -29,7 +31,10 @@ public class DatabaseManager {
      * @returns the loaded map
      */
     public Map load(){
+        // Map IDs for Rooms and Nodes to Rooms and Nodes, respectively
         HashMap<Integer, GraphNode> nodes = new HashMap<Integer, GraphNode>();
+        HashMap<Integer, Room> rooms = new HashMap<Integer, Room>();
+
         try {
             // Get all GraphNodes
             Statement s = connection.createStatement();
@@ -54,11 +59,21 @@ public class DatabaseManager {
                 nodes.get(result.getInt(2))
                     .addAdjacent(nodes.get(result.getInt(1)));
             }
+
+            // Get all rooms
+            result = s.executeQuery("select * from Rooms");
+            while(result.next()) {
+                rooms.put(result.getInt(1),
+                          new Room(nodes.get(result.getInt(3)),
+                                   result.getString(2)));
+            }
         }
         catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        Directory directory = null;
+        Directory directory = new Directory(
+            new HashMap<DirectoryEntry, Room>(),
+            new LinkedList<Room>(rooms.values()));
         GraphNetwork graph = new GraphNetwork(
             new LinkedList<GraphNode>(nodes.values()));
         return new Map(directory, graph, null);

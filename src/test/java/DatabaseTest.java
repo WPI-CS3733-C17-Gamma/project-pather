@@ -70,5 +70,24 @@ public class DatabaseTest extends TestCase{
 
         assertEquals(graph, actual.graph);
     }
+
+    @Test
+    public void testRoomLoad() {
+        String[] statements =
+            {"insert into GraphNodes (ID, X, Y, Floor) values (1, 4, 2, 'bob1')",
+             "insert into Rooms (rID, name, nID) values (1, 'derFs Office', 1)"};
+        Connection conn = initDB("test3", statements);
+
+        GraphNode nodeA = new GraphNode(new FloorPoint(4, 2, "bob1"));
+        Room roomA = new Room(nodeA, "derFs Office");
+        Directory directory = new Directory(
+            new HashMap<DirectoryEntry, Room>(),
+            new LinkedList<Room>(Arrays.asList(roomA)));
+
+        DatabaseManager db = new DatabaseManager("memory:test3;");
+
+        Map actual = db.load();
+
+        assertEquals(directory, actual.directory);
     }
 }
