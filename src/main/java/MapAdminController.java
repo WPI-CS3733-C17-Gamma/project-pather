@@ -46,7 +46,13 @@ public class MapAdminController extends DisplayController {
         }
     }
 
+    /**
+     * Delete a node from graph and delete the node from the adjacent nodes
+     * @param node
+     */
     public void deleteNode(GraphNode node){
+
+        map.deleteNode(node);
     }
 
     /**

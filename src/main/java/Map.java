@@ -101,11 +101,13 @@ public class Map {
     }
 
     /**
-     *
+     *Delete node from graph and delete the node from adjacent nodes
      * @param node
      * @return
      */
     public boolean deleteNode(GraphNode node){
+
+        graph.deleteNode(node);
         return true;
     }
 
