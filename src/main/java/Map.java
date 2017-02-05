@@ -7,6 +7,14 @@ public class Map {
     GraphNetwork graph;
     HashMap<String, Image> mapImages;
 
+    public Map(Directory directory,
+               GraphNetwork graph,
+               HashMap<String, Image> mapImages) {
+        this.directory = directory;
+        this.graph = graph;
+        this.mapImages = mapImages;
+    }
+
     /**
      *
      * @param term
@@ -52,9 +60,15 @@ public class Map {
     /**
      *
      * @param room
+     * @return true if the room is added, false if it is a duplicate
      */
-    public void addRoom(Room room){
-        directory.addRoom(room);
+    public boolean addRoom(Room room){
+        return directory.addRoom(room);
+    }
+
+    public boolean deleteRoom(GraphNode node) {
+        Room roomAtNode = directory.getRoom(node);
+        return directory.deleteRoom(roomAtNode);
     }
 
     /**
@@ -85,13 +99,12 @@ public class Map {
     }
 
     /**
-     *
-     * @param node
+     * Add node to graph
+     * @param node node to add
      * @return
      */
     public boolean addNode(GraphNode node){
-        graph.addNode(node);
-        return true;
+        return graph.addNode(node);
     }
 
     /**
@@ -105,7 +118,8 @@ public class Map {
     }
 
     /**
-     *
+     * return the graph node closest to the location given
+     * ignores points on different floors
      * @param point
      * @return
      */
@@ -127,8 +141,10 @@ public class Map {
      *
      * @param nodeA
      * @param nodeB
+     * @return true if the point is  added to both nodes
      */
-    public void addConnection(GraphNode nodeA, GraphNode nodeB){
+    public boolean addConnection(GraphNode nodeA, GraphNode nodeB){
+        return nodeA.addAdjacent(nodeB) && nodeB.addAdjacent(nodeA);
     }
 
     /**
