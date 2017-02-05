@@ -1,7 +1,4 @@
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
-
+import java.util.*;
 public class Directory {
     HashMap<String, DirectoryEntry> entries;
     HashMap<String, Room> rooms;

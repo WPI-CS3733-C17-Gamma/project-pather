@@ -3,10 +3,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -22,7 +19,7 @@ public class DirectoryTest{
 
     @Before
     public void setUp(){
-        d = new Directory();
+        d = new Directory(new HashMap<>(), new HashMap<>());
 
         List<Room> list1 = new ArrayList<>();
         List<Room> list2 = new ArrayList<>();
@@ -50,7 +47,7 @@ public class DirectoryTest{
         List<String> temp = new ArrayList<>();
         temp.add("3A");
         List result = d.searchRooms("3A");
-        System.err.println(result.toString()+"***********************************************");
+        // System.err.println(result.toString()+"***********************************************");
         assertNotNull(result);
         assertListEquals(result, temp);
     }
@@ -85,7 +82,7 @@ public class DirectoryTest{
         List<String> temp = new ArrayList();
         temp.add("Albert");
         List result = d.searchEntries("Albert");
-        System.err.println(result.toString()+"***********************************************");
+        // System.err.println(result.toString()+"***********************************************");
         assertListEquals(result, temp);
         assertListEquals(d.searchEntries("Alb"), temp);
     }
