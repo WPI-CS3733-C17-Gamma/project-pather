@@ -4,6 +4,8 @@ public class Room extends Ided implements Comparable {
     String name;
 
     public Room(GraphNode location, String name){
+        this.location = location;
+        this.name = name;
     }
 
     public void setLocation(GraphNode loc){

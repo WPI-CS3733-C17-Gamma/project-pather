@@ -5,6 +5,10 @@ import java.util.stream.Collectors;
 public class GraphNetwork {
     LinkedList<GraphNode> graphNodes = new LinkedList();
 
+    public GraphNetwork(LinkedList<GraphNode> graphNodes) {
+        this.graphNodes = graphNodes;
+    }
+
     public LinkedList getPath(GraphNode start, GraphNode end) {
         return null;
     }
