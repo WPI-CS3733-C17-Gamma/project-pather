@@ -1,5 +1,6 @@
 import junit.framework.TestCase;
 import org.junit.Test;
+import java.util.LinkedList;
 
 /**
  * Class to test searching for points from a given location
@@ -23,7 +24,7 @@ public class PointSearchTest extends TestCase {
     @Test
     // test if minimum distance will be picked from multiple nodes
     public void testGraph(){
-        GraphNetwork network = new GraphNetwork();
+        GraphNetwork network = new GraphNetwork(new LinkedList<GraphNode>());
         network.addNode(new GraphNode(one));
         network.addNode(new GraphNode(two));
         network.addNode(new GraphNode(three));
@@ -37,7 +38,7 @@ public class PointSearchTest extends TestCase {
     // ensure that different floors will be ignored
     public void testDifferentFloor() {
         GraphNode floorTwo = new GraphNode(new FloorPoint(0,0,"two"));
-        GraphNetwork network = new GraphNetwork();
+        GraphNetwork network = new GraphNetwork(new LinkedList<GraphNode>());
         network.addNode(new GraphNode(two));
         network.addNode(floorTwo);
         // get closest
