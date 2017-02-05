@@ -3,10 +3,10 @@ import java.util.List;
 
 public class Directory {
     HashMap<DirectoryEntry, Room> entries;
-    HashMap<Room, GraphNode> rooms;
+    HashMap<String, Room> rooms;
 
     public Directory(HashMap<DirectoryEntry, Room> entries,
-                     HashMap<Room, GraphNode> rooms) {
+                     HashMap<String, Room> rooms) {
             this.entries = entries;
             this.rooms = rooms;
     }
@@ -62,15 +62,23 @@ public class Directory {
      * @return
      */
     public boolean addRoom(Room room){
-        return true;
+        if(!rooms.containsKey(room.name)){
+            rooms.put(room.name, room);
+            return true;
+        }
+        // return false if the room already exists
+        return false;
     }
 
     /**
-     *
      * @param roomName
      * @return
      */
     public Room getRoom(String roomName){
+        if(rooms.containsKey(roomName)){
+            return rooms.get(roomName);
+        }
+
         return null;
     }
 

@@ -60,8 +60,10 @@ public class Map {
     /**
      *
      * @param room
+     * @return true if the room is added, false if it is a duplicate
      */
-    public void addRoom(Room room){
+    public boolean addRoom(Room room){
+        return directory.addRoom(room);
     }
 
     /**
