@@ -43,9 +43,10 @@ public class DirectoryTest{
     public void CheckRoomTest(){
         List<String> temp = new ArrayList<>();
         temp.add("3A");
-        System.err.print(d.searchRooms("3A").toString());
-        assertNotNull(d.searchRooms("3A"));
-        assertListEquals(d.searchRooms("3A"), new ArrayList());
+        List result = d.searchRooms("3A");
+        System.err.println(result.toString()+"***********************************************");
+        assertNotNull(result);
+        assertListEquals(result, temp);
     }
 
     private void assertListEquals(List actual, List expected){

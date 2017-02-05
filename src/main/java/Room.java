@@ -1,3 +1,5 @@
+import java.util.Objects;
+
 public class Room extends Ided implements Comparable {
 
     GraphNode location;
@@ -12,5 +14,10 @@ public class Room extends Ided implements Comparable {
     @Override
     public int compareTo(Object o) {
         return 0;
+    }
+
+    @Override
+    public boolean equals(Objects o){
+
     }
 }

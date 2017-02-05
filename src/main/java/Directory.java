@@ -15,11 +15,12 @@ public class Directory {
      * @return
      */
     public List<String> searchRooms(String key){
+        System.err.println(rooms.keySet().toArray().toString());
         List<String> temp = new ArrayList();
-        if (rooms.keySet().contains(key)) {
+//        if (rooms.get(key) != null) {
             temp.add(key);
-        }
-        return new ArrayList();
+//        }
+        return temp;
     }
 
     /**
