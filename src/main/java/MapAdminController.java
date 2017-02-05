@@ -72,4 +72,8 @@ public class MapAdminController extends DisplayController {
         boolean successfulAdd = map.addRoom(new Room(node, roomName));
     }
 
+    public void deleteRoomFromNode(GraphNode node) {
+        boolean successfulDelete = map.deleteRoom(node);
+    }
+
 }

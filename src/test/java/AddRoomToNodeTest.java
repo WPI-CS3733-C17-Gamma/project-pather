@@ -12,7 +12,7 @@ public class AddRoomToNodeTest extends TestCase {
    Directory directory;
    protected void setUp(){
       dummyNode = new GraphNode(new FloorPoint(1,1,""));
-       directory = new Directory (new HashMap<DirectoryEntry, Room> (),
+       directory = new Directory (new HashMap<String, DirectoryEntry> (),
            new HashMap<String, Room>() );
    }
 

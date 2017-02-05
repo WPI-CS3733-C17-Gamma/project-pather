@@ -1,3 +1,4 @@
+import com.sun.corba.se.impl.orbutil.graph.Graph;
 import javafx.scene.image.Image;
 import java.util.HashMap;
 import java.util.List;
@@ -64,6 +65,11 @@ public class Map {
      */
     public boolean addRoom(Room room){
         return directory.addRoom(room);
+    }
+
+    public boolean deleteRoom(GraphNode node) {
+        Room roomAtNode = directory.getRoom(node);
+        return directory.deleteRoom(roomAtNode);
     }
 
     /**

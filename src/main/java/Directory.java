@@ -1,11 +1,12 @@
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 public class Directory {
-    HashMap<DirectoryEntry, Room> entries;
+    HashMap<String, DirectoryEntry> entries;
     HashMap<String, Room> rooms;
 
-    public Directory(HashMap<DirectoryEntry, Room> entries,
+    public Directory(HashMap<String, DirectoryEntry> entries,
                      HashMap<String, Room> rooms) {
             this.entries = entries;
             this.rooms = rooms;
@@ -88,6 +89,37 @@ public class Directory {
      * @return
      */
     public Room getRoom(GraphNode node){
-        return null;
+        Optional<Room> roomAtNode = rooms.values().stream()
+            .filter(room -> room.location.equals(node))
+            .findFirst();
+
+        if (roomAtNode.isPresent()) {
+           return roomAtNode.get();
+        }
+        else {
+            return null;
+        }
+    }
+
+
+    /**
+     * remove room from rooms
+     * remove all entries that have this room as a location
+     * @param room
+     * @return
+     */
+    public boolean deleteRoom(Room room) {
+        if(rooms.containsKey(room.name)){
+            rooms.remove(room);
+        }
+        else {
+            return false;
+        }
+
+        for(DirectoryEntry entry : entries.values()) {
+           entry.deleteLocatoin(room);
+        }
+
+        return true;
     }
 }
