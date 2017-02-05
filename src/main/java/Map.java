@@ -84,12 +84,12 @@ public class Map {
     }
 
     /**
-     *
-     * @param node
+     * Add node to graph
+     * @param node node to add
      * @return
      */
     public boolean addNode(GraphNode node){
-        return true;
+        return graph.addNode(node);
     }
 
     /**

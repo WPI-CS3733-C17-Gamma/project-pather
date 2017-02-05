@@ -20,7 +20,12 @@ public class MapAdminController extends DisplayController {
     public void login(String credentials){
     }
 
+    /**
+     * Create node from given location. Make new GraphNode
+     * @param location location to create a point at
+     */
     public void addNode(FloorPoint location){
+        map.addNode(new GraphNode(location));
     }
 
     /**

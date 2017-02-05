@@ -49,10 +49,12 @@ public class GraphNetwork {
      * Add node to graph if it is not already there
      * @param node
      */
-    public void addNode(GraphNode node){
+    public boolean addNode(GraphNode node){
         if(!graphNodes.contains(node)){
             graphNodes.add(node);
+            return true;
         }
+        return false;
     }
 
     public void deleteNode(GraphNode node){
