@@ -17,7 +17,11 @@ public class Room extends Ided implements Comparable {
     }
 
     @Override
-    public boolean equals(Objects o){
-
+    public boolean equals(Object room) {
+        if (room instanceof Room) {
+            Room p = (Room) room;
+            return (p.location.equals(this.location) && p.name.equals(this.name));
+        }
+        return false;
     }
 }

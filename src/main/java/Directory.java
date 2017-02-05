@@ -17,9 +17,9 @@ public class Directory {
     public List<String> searchRooms(String key){
         System.err.println(rooms.keySet().toArray().toString());
         List<String> temp = new ArrayList();
-//        if (rooms.get(key) != null) {
+        if (rooms.get(key) != null) {
             temp.add(key);
-//        }
+        }
         return temp;
     }
 

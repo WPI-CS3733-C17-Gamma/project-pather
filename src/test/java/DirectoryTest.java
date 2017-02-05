@@ -39,7 +39,8 @@ public class DirectoryTest{
         assertEquals(1, 1);
     }
 
-    @Test
+    @Test //**************CHANGE THIS LATER***************
+    //This checks to see if the search result returns the right rooms
     public void CheckRoomTest(){
         List<String> temp = new ArrayList<>();
         temp.add("3A");
@@ -48,6 +49,7 @@ public class DirectoryTest{
         assertNotNull(result);
         assertListEquals(result, temp);
     }
+
 
     private void assertListEquals(List actual, List expected){
         assertEquals(actual.size(), expected.size());
