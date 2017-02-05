@@ -17,11 +17,7 @@ public class GraphNetwork {
      * @return
      */
     public GraphNode getGraphNode(FloorPoint loc){
-        // filter the nodes for all the ones on the same floor
-        List<GraphNode> sameFloor = graphNodes.stream()
-                .filter(node -> node.location.floor.equals(loc.floor))
-                .collect(Collectors.toList());
-
+        List<GraphNode> sameFloor = getGraphNodesOnFloor(loc.floor);
         // get the closest point to the node
         double minDistance = Double.MAX_VALUE;
         GraphNode closestNode = null;
@@ -37,6 +33,22 @@ public class GraphNetwork {
         return closestNode;
     }
 
+    /**
+     * Get a list of all nodes on a specified floor
+     * @param floor string floor name
+     * @return
+     */
+    public List<GraphNode> getGraphNodesOnFloor(String floor) {
+       List<GraphNode> sameFloor = graphNodes.stream()
+               .filter(node -> node.location.floor.equals(floor))
+               .collect(Collectors.toList());
+       return sameFloor;
+    }
+
+    /**
+     * Add node to graph if it is not already there
+     * @param node
+     */
     public void addNode(GraphNode node){
         if(!graphNodes.contains(node)){
             graphNodes.add(node);

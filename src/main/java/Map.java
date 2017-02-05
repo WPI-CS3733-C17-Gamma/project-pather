@@ -102,7 +102,8 @@ public class Map {
     }
 
     /**
-     *
+     * return the graph node closest to the location given
+     * ignores points on different floors
      * @param point
      * @return
      */
