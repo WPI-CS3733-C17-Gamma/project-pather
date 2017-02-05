@@ -145,4 +145,20 @@ public class Map {
     public HashMap<String, Image> getImages(){
         return this.mapImages;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Map)) {
+            return false;
+        }
+        if (obj == this) {
+            return true;
+        }
+
+        Map rhs = (Map) obj;
+        return this.directory.equals(rhs.directory) &&
+            this.graph.equals(rhs.graph) &&
+            this.mapImages.equals(rhs.mapImages);
+    }
+
 }

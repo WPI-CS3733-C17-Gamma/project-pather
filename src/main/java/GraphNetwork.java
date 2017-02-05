@@ -70,4 +70,17 @@ public class GraphNetwork {
     LinkedList AStar(GraphNode start, GraphNode end){
         return null;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof GraphNetwork)) {
+            return false;
+        }
+        if (obj == this) {
+            return true;
+        }
+
+        GraphNetwork rhs = (GraphNetwork) obj;
+        return this.graphNodes.equals(rhs.graphNodes);
+    }
 }
