@@ -35,14 +35,21 @@ public class MapAdminController extends DisplayController {
      */
     public GraphNode selectNode(FloorPoint loc){
         GraphNode selected = map.getGraphNode(loc);
-        // if the
-        return  null;
+        return  selected;
     }
 
     public void deleteNode(GraphNode node){
     }
 
+    /**
+     * Add connection from nodeA to nodeB and
+     * from nodeB to nodeA
+     * Does not add a connection if it already exists
+     * @param nodeA
+     * @param nodeB
+     */
     public void addConnection(GraphNode nodeA, GraphNode nodeB){
+        boolean addedSuccesfully = map.addConnection(nodeA, nodeB);
     }
 
     public void deleteConnection(GraphNode nodeA, GraphNode nodeB){
