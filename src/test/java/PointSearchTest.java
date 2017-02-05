@@ -2,7 +2,7 @@ import junit.framework.TestCase;
 import org.junit.Test;
 
 /**
- * Created by Saahil on 2/4/2017.
+ * Class to test searching for points from a given location
  */
 public class PointSearchTest extends TestCase {
     FloorPoint one , two, three, four;
