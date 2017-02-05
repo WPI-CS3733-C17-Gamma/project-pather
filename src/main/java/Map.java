@@ -1,4 +1,3 @@
-
 import javafx.scene.image.Image;
 import java.util.HashMap;
 import java.util.List;
@@ -14,7 +13,7 @@ public class Map {
      * @return
      */
     public List<String> searchRoom(String term){
-        return null;
+        return directory.searchRooms(term);
     }
 
     /**
@@ -23,7 +22,7 @@ public class Map {
      * @return
      */
     public List<String> searchEntry(String term){
-        return null;
+        return directory.searchEntries(term);
     }
 
     /**
@@ -32,7 +31,7 @@ public class Map {
      * @return
      */
     public Room getRoomFromName(String roomName){
-        return null;
+        return directory.getRoom(roomName);
     }
 
     /**
@@ -41,7 +40,7 @@ public class Map {
      * @return
      */
     public Room getRoomFromNode(GraphNode node){
-        return null;
+        return directory.getRoom(node);
     }
 
     /**
@@ -55,6 +54,7 @@ public class Map {
      * @param room
      */
     public void addRoom(Room room){
+        directory.addRoom(room);
     }
 
     /**
@@ -63,7 +63,7 @@ public class Map {
      * @return
      */
     public boolean addEntry(DirectoryEntry entry){
-        return true;
+        return directory.addEntry(entry);
     }
 
     /**
@@ -72,7 +72,7 @@ public class Map {
      * @return
      */
     public boolean deleteEntry(String key){
-        return false;
+        return directory.deleteEntry(key);
     }
 
     /**
@@ -81,7 +81,7 @@ public class Map {
      * @return
      */
     public DirectoryEntry getEntry(String name){
-        return null;
+        return directory.getEntry(name);
     }
 
     /**
@@ -90,6 +90,7 @@ public class Map {
      * @return
      */
     public boolean addNode(GraphNode node){
+        graph.addNode(node);
         return true;
     }
 
@@ -99,6 +100,7 @@ public class Map {
      * @return
      */
     public boolean deleteNode(GraphNode node){
+        graph.deleteNode(node);
         return true;
     }
 
@@ -108,7 +110,7 @@ public class Map {
      * @return
      */
     public GraphNode getGraphNode(FloorPoint point){
-        return null;
+        return graph.getGraphNode(point);
     }
 
     /**

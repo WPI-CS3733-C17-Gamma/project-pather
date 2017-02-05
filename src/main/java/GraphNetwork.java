@@ -7,7 +7,7 @@ public class GraphNetwork {
         return null;
     }
 
-    public LinkedList getGraphNode(FloorPoint loc){
+    public GraphNode getGraphNode(FloorPoint loc){
         return null;
     }
 

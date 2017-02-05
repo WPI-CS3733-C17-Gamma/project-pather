@@ -1,12 +1,12 @@
-import junit.framework.*; 
-import org.junit.Test; 
-import org.junit.Ignore; 
-import static org.junit.Assert.assertEquals; 
+import junit.framework.*;
+import org.junit.Test;
+import org.junit.Ignore;
+import static org.junit.Assert.assertEquals;
 
 
 public class MainTest extends TestCase {
 
-    // run every test 
+    // run every test
     protected void setUp() {
 	System.out.println("Set up test");
     }
@@ -14,8 +14,8 @@ public class MainTest extends TestCase {
     @Test
     public void testFirst() {
 	int x = 1;
-	x = 2; 
-	assertEquals(x , 2); 
+	x = 2;
+	assertEquals(x , 2);
     }
 
 }

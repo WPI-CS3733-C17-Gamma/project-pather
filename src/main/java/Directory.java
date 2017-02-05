@@ -1,17 +1,25 @@
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class Directory {
-    HashMap entries;
-    HashMap rooms;
+    HashMap<String, DirectoryEntry> entries;
+    HashMap<String, Room> rooms;
+
+    public Directory(){
+        entries = new HashMap<>();
+        rooms = new HashMap<>();
+    }
 
     /**
      *
      * @param key
      * @return
      */
-    public List searchRooms(String key){
-        return null;
+    public List<String> searchRooms(String key){
+        List<String> temp = new ArrayList();
+        if (rooms.keySet().contains(key)) {
+            temp.add(key);
+        }
+        return new ArrayList();
     }
 
     /**
@@ -20,7 +28,17 @@ public class Directory {
      * @return
      */
     public List<String> searchEntries(String key){
-        return null;
+        List<String> list = new ArrayList();
+        Set<String> keySets = rooms.keySet();
+        Iterator<String> i = keySets.iterator();
+        String temp;
+        while(i.hasNext()){
+            temp = i.next();
+            if (temp.contains(key)) {
+                list.add(temp);
+            }
+        }
+        return list;
     }
 
     /**
@@ -29,6 +47,7 @@ public class Directory {
      * @return
      */
     public boolean addEntry(DirectoryEntry entry){
+        entries.put(entry.getName(), entry);
         return true;
     }
 
@@ -56,6 +75,7 @@ public class Directory {
      * @return
      */
     public boolean addRoom(Room room){
+        rooms.put(room.name, room);
         return true;
     }
 

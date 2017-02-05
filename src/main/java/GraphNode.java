@@ -6,7 +6,7 @@ public class GraphNode extends Ided implements Comparable {
     FloorPoint location;
 
     public GraphNode(FloorPoint p){
-
+        location = p;
     }
 
     public List<GraphNode> getAdjacent(){
@@ -14,10 +14,12 @@ public class GraphNode extends Ided implements Comparable {
     }
 
     public boolean addAdjacent(GraphNode node){
+        adjacent.add(node);
         return true;
     }
 
     public boolean removeAdjacent(GraphNode node){
+        adjacent.remove(node);
         return true;
     }
 
