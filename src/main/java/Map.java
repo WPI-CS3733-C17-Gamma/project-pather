@@ -1,4 +1,3 @@
-
 import javafx.scene.image.Image;
 import java.util.HashMap;
 import java.util.List;
@@ -108,7 +107,7 @@ public class Map {
      * @return
      */
     public GraphNode getGraphNode(FloorPoint point){
-        return null;
+        return graph.getGraphNode(point);
     }
 
     /**

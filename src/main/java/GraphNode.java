@@ -6,7 +6,7 @@ public class GraphNode extends Ided implements Comparable {
     FloorPoint location;
 
     public GraphNode(FloorPoint p){
-
+        this.location = p;
     }
 
     public List<GraphNode> getAdjacent(){
@@ -27,6 +27,15 @@ public class GraphNode extends Ided implements Comparable {
 
     public FloorPoint getLocation() {
         return location;
+    }
+
+    /**
+     * return cartisian distance to another graph node
+     * @param graphNode
+     * @return
+     */
+    public double distance (GraphNode graphNode){
+        return this.location.distance(graphNode.location);
     }
 
     @Override
