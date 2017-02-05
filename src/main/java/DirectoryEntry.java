@@ -71,4 +71,19 @@ public class DirectoryEntry extends Ided {
     public void setTitle(String title) {
         this.title = title;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof DirectoryEntry)) {
+            return false;
+        }
+        if (obj == this) {
+            return true;
+        }
+
+        DirectoryEntry rhs = (DirectoryEntry) obj;
+        return this.name.equals(rhs.name) &&
+            this.title.equals(rhs.title) &&
+            this.location.equals(rhs.location);
+    }
 }

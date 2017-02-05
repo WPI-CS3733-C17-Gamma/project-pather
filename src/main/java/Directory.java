@@ -1,12 +1,13 @@
 import java.util.HashMap;
 import java.util.List;
+import java.util.Collection;
 
 public class Directory {
     HashMap<DirectoryEntry, Room> entries;
-    HashMap<Room, GraphNode> rooms;
+    Collection<Room> rooms;
 
     public Directory(HashMap<DirectoryEntry, Room> entries,
-                     HashMap<Room, GraphNode> rooms) {
+                     Collection<Room> rooms) {
             this.entries = entries;
             this.rooms = rooms;
     }
@@ -82,4 +83,19 @@ public class Directory {
     public Room getRoom(GraphNode node){
         return null;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Directory)) {
+            return false;
+        }
+        if (obj == this) {
+            return true;
+        }
+
+        Directory rhs = (Directory) obj;
+        return this.entries.equals(rhs.entries) &&
+            this.rooms.equals(rhs.rooms);
+    }
+
 }
