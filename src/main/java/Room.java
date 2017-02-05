@@ -6,16 +6,36 @@ public class Room extends Ided implements Comparable {
     String name;
 
     public Room(GraphNode location, String name){
+        this.location = location;
+        this.name = name;
     }
 
     public void setLocation(GraphNode loc){
     }
 
+    /**
+     *
+     * @param room
+     * @return negative if this is smaller than room, otherwise positive
+     */
     @Override
-    public int compareTo(Object o) {
-        return 0;
+    public int compareTo(Object room){
+        try {
+            Room p = (Room) room;
+            System.out.println(p.name + "\t" + this.name);
+            return(this.name.compareTo(p.name));
+        }
+        catch(ClassCastException e) {
+            throw e;
+        }
+
     }
 
+    /**
+     *
+     * @param room
+     * @return true if rooms are the same
+     */
     @Override
     public boolean equals(Object room) {
         if (room instanceof Room) {
@@ -24,4 +44,6 @@ public class Room extends Ided implements Comparable {
         }
         return false;
     }
+
+
 }

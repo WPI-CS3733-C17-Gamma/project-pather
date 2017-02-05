@@ -13,14 +13,17 @@ import static org.junit.Assert.*;
 public class DirectoryTest{
     Directory d;
 
+    Room albert = new Room(null, "3A");
+    Room bernie = new Room(null, "4B");
+    Room charles = new Room(null, "5C");
+    Room albert2 = new Room(null, "3A");
+
     static Scanner input = new Scanner(System.in);
 
     @Before
     public void setUp(){
         d = new Directory();
-        Room albert = new Room(null, "3A");
-        Room bernie = new Room(null, "4B");
-        Room charles = new Room(null, "5C");
+
         List<Room> list1 = new ArrayList<>();
         List<Room> list2 = new ArrayList<>();
         List<Room> list3 = new ArrayList<>();
@@ -40,7 +43,9 @@ public class DirectoryTest{
     }
 
     @Test //**************CHANGE THIS LATER***************
-    //This checks to see if the search result returns the right rooms
+    /**
+     * This checks to see if the search result returns the right rooms
+     */
     public void CheckRoomTest(){
         List<String> temp = new ArrayList<>();
         temp.add("3A");
@@ -48,6 +53,17 @@ public class DirectoryTest{
         System.err.println(result.toString()+"***********************************************");
         assertNotNull(result);
         assertListEquals(result, temp);
+    }
+
+    /**
+     *
+     * This test tests the room compare method
+     */
+    @Test
+    public void compareToTest() {
+        assertEquals(albert.compareTo(albert2), 0);
+        assertTrue(albert.compareTo(charles) < 0);
+        assertTrue(charles.compareTo(albert) > 0);
     }
 
 
@@ -58,5 +74,19 @@ public class DirectoryTest{
         while(ie.hasNext() &&  ia.hasNext()){
             assertEquals(ia.next(), (ie.next()));
         }
+    }
+
+    /**
+     * This test tests if the serach result for entry is returning the correct list of
+     * entry names
+     */
+    @Test
+    public void searchEntryTest() {
+        List<String> temp = new ArrayList();
+        temp.add("Albert");
+        List result = d.searchEntries("Albert");
+        System.err.println(result.toString()+"***********************************************");
+        assertListEquals(result, temp);
+        assertListEquals(d.searchEntries("Alb"), temp);
     }
 }

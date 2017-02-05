@@ -17,12 +17,11 @@ public class PatientController extends DisplayController{
     }
 
     public void search(String room) {
-        String room2 = room.toLowerCase();
-
-        if (((int)room2.charAt(0)) < 58 && ((int)room2.charAt(0)) > 47){
-            map.searchRoom(room2);
+        if (((int)room.charAt(0)) < 58 && ((int)room.charAt(0)) > 47){
+            map.searchRoom(room);
         }
         else{
+            String room2 = room.toLowerCase();
             map.searchEntry(room2);
         }
     }
