@@ -21,9 +21,9 @@ public class PointSearchTest extends TestCase {
     }
 
     @Test
-    public void testGraph (){
+    // test if minimum distance will be picked from multiple nodes
+    public void testGraph(){
         GraphNetwork network = new GraphNetwork();
-
         network.addNode(new GraphNode(one));
         network.addNode(new GraphNode(two));
         network.addNode(new GraphNode(three));
@@ -32,6 +32,18 @@ public class PointSearchTest extends TestCase {
         GraphNode closestToOne = network.getGraphNode(one);
 
         assertEquals(closestToOne.getLocation(), one);
+    }
+    @Test
+    // ensure that different floors will be ignored
+    public void testDifferentFloor() {
+        GraphNode floorTwo = new GraphNode(new FloorPoint(0,0,"two"));
+        GraphNetwork network = new GraphNetwork();
+        network.addNode(new GraphNode(two));
+        network.addNode(floorTwo);
+        // get closest
+        GraphNode closestToOne = network.getGraphNode(one);
+        // assert it is expected
+        assertEquals(closestToOne.location, two);
 
     }
 }
