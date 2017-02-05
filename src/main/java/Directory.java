@@ -2,8 +2,14 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Directory {
-    HashMap entries;
-    HashMap rooms;
+    HashMap<DirectoryEntry, Room> entries;
+    HashMap<Room, GraphNode> rooms;
+
+    public Directory(HashMap<DirectoryEntry, Room> entries,
+                     HashMap<Room, GraphNode> rooms) {
+            this.entries = entries;
+            this.rooms = rooms;
+    }
 
     /**
      *

@@ -7,6 +7,14 @@ public class Map {
     GraphNetwork graph;
     HashMap<String, Image> mapImages;
 
+    public Map(Directory directory,
+               GraphNetwork graph,
+               HashMap<String, Image> mapImages) {
+        this.directory = directory;
+        this.graph = graph;
+        this.mapImages = mapImages;
+    }
+
     /**
      *
      * @param term
