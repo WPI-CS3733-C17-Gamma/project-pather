@@ -1,4 +1,3 @@
-
 import javafx.scene.image.Image;
 import java.util.HashMap;
 import java.util.List;
@@ -7,6 +6,14 @@ public class Map {
     Directory directory;
     GraphNetwork graph;
     HashMap<String, Image> mapImages;
+
+    public Map(Directory directory,
+               GraphNetwork graph,
+               HashMap<String, Image> mapImages) {
+        this.directory = directory;
+        this.graph = graph;
+        this.mapImages = mapImages;
+    }
 
     /**
      *
@@ -85,30 +92,33 @@ public class Map {
     }
 
     /**
-     *
-     * @param node
+     * Add node to graph
+     * @param node node to add
      * @return
      */
     public boolean addNode(GraphNode node){
-        return true;
+        return graph.addNode(node);
     }
 
     /**
-     *
+     *Delete node from graph and delete the node from adjacent nodes
      * @param node
      * @return
      */
     public boolean deleteNode(GraphNode node){
+
+        graph.deleteNode(node);
         return true;
     }
 
     /**
-     *
+     * return the graph node closest to the location given
+     * ignores points on different floors
      * @param point
      * @return
      */
     public GraphNode getGraphNode(FloorPoint point){
-        return null;
+        return graph.getGraphNode(point);
     }
 
     /**
@@ -125,8 +135,10 @@ public class Map {
      *
      * @param nodeA
      * @param nodeB
+     * @return true if the point is  added to both nodes
      */
-    public void addConnection(GraphNode nodeA, GraphNode nodeB){
+    public boolean addConnection(GraphNode nodeA, GraphNode nodeB){
+        return nodeA.addAdjacent(nodeB) && nodeB.addAdjacent(nodeA);
     }
 
     /**
