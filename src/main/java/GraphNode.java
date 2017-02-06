@@ -12,6 +12,7 @@ public class GraphNode extends Ided implements Comparable {
      * @param p
      */
     public GraphNode(FloorPoint p){
+        location = p;
         this.location = p;
         adjacent = new LinkedList<GraphNode>();
     }
@@ -38,6 +39,7 @@ public class GraphNode extends Ided implements Comparable {
     }
 
     public boolean removeAdjacent(GraphNode node){
+        adjacent.remove(node);
         return true;
     }
 

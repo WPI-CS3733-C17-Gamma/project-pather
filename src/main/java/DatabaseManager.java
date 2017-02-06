@@ -39,9 +39,13 @@ public class DatabaseManager {
         // Map IDs for Rooms, Entries and Nodes to Rooms, Entries, and
         // Nodes, respectively
         HashMap<Integer, GraphNode> nodes = new HashMap<Integer, GraphNode>();
-        HashMap<Integer, Room> rooms = new HashMap<Integer, Room>();
-        HashMap<Integer, DirectoryEntry> entries =
+        HashMap<Integer, Room> roomsID = new HashMap<Integer, Room>();
+        HashMap<Integer, DirectoryEntry> entriesID =
             new HashMap<Integer, DirectoryEntry>();
+
+        HashMap<String, Room> rooms = new HashMap<String, Room>();
+        HashMap<String, DirectoryEntry> entries =
+            new HashMap<String, DirectoryEntry>();
 
         try {
             // Prepared Statement for room association query, gets room
@@ -78,9 +82,10 @@ public class DatabaseManager {
             // Get all rooms
             result = s.executeQuery("select * from Rooms");
             while(result.next()) {
-                rooms.put(result.getInt(1),
-                          new Room(nodes.get(result.getInt(3)),
-                                   result.getString(2)));
+                Room room = new Room(nodes.get(result.getInt(3)),
+                                     result.getString(2));
+                roomsID.put(result.getInt(1), room);
+                rooms.put(room.name, room);
             }
 
             // Get all Entries
@@ -93,21 +98,21 @@ public class DatabaseManager {
                 ResultSet roomAssoc = queryRoomAssoc.executeQuery();
                 // construct a list of associated rooms
                 while(roomAssoc.next()) {
-                    locations.add(rooms.get(roomAssoc.getInt(1)));
+                    locations.add(roomsID.get(roomAssoc.getInt(1)));
                 }
 
-                entries.put(result.getInt(1),
-                            new DirectoryEntry(result.getString(3),
-                                               result.getString(2),
-                                               locations));
+                DirectoryEntry entry = new DirectoryEntry(result.getString(3),
+                                                          result.getString(2),
+                                                          locations);
+                entriesID.put(result.getInt(1), entry);
+                entries.put(result.getString(3), entry);
             }
         }
         catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        Directory directory = new Directory(
-            new LinkedList<DirectoryEntry>(entries.values()),
-            new LinkedList<Room>(rooms.values()));
+
+        Directory directory = new Directory(entries, rooms);
         GraphNetwork graph = new GraphNetwork(
             new LinkedList<GraphNode>(nodes.values()));
         return new Map(directory, graph, null);

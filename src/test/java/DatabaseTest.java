@@ -89,15 +89,15 @@ public class DatabaseTest extends TestCase{
 
         GraphNode nodeA = new GraphNode(new FloorPoint(4, 2, "bob1"));
         Room roomA = new Room(nodeA, "derFs Office");
-        Directory directory = new Directory(
-            new LinkedList<DirectoryEntry>(),
-            new LinkedList<Room>(Arrays.asList(roomA)));
+
+        HashMap<String, Room> rooms = new HashMap<String, Room>();
+        rooms.put(roomA.name, roomA);
 
         DatabaseManager db = new DatabaseManager("memory:test3;");
 
         Map actual = db.load();
 
-        assertEquals(directory, actual.directory);
+        assertEquals(rooms, actual.directory.rooms);
         closeDB("test3");
     }
 
@@ -114,15 +114,18 @@ public class DatabaseTest extends TestCase{
         Room roomA = new Room(nodeA, "derFs Office");
         DirectoryEntry entryA = new DirectoryEntry(
             "the land of derF", "office", Arrays.asList(roomA));
-        Directory directory = new Directory(
-            new LinkedList<DirectoryEntry>(Arrays.asList(entryA)),
-            new LinkedList<Room>(Arrays.asList(roomA)));
+
+        HashMap<String, DirectoryEntry> entries =
+            new HashMap<String, DirectoryEntry>();
+        entries.put(entryA.name, entryA);
+        HashMap<String, Room> rooms = new HashMap<String, Room>();
+        rooms.put(roomA.name, roomA);
 
         DatabaseManager db = new DatabaseManager("memory:test4;");
 
         Map actual = db.load();
 
-        assertEquals(directory.entries, actual.directory.entries);
+        assertEquals(entries, actual.directory.entries);
         closeDB("test4");
     }
 }
