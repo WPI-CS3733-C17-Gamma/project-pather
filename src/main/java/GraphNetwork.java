@@ -35,7 +35,7 @@ public class GraphNetwork {
             openSet.sort(new Comparator<AStarNode>(){
                 @Override
                 public int compare(AStarNode a, AStarNode b) {
-                    return ((int)a.fScore- (int)b.fScore);
+                    return ((int)b.fScore- (int)a.fScore);
                 }
             });
 
