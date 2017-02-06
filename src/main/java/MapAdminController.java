@@ -110,6 +110,18 @@ public class MapAdminController extends DisplayController {
         //idk what to do about deleting this
     }
 
+    /**
+     * add a room to the selected node given a node and a name
+     * @param node
+     * @param roomName
+     */
+    public void addRoomToNode(GraphNode node, String roomName) {
+        boolean successfulAdd = map.addRoom(new Room(node, roomName));
+    }
+
+    public void deleteRoomFromNode(GraphNode node) {
+        boolean successfulDelete = map.deleteRoom(node);
+    }
     private void setMap(String loc, String mapName){
         File file = new File(loc);
         Image map = new Image(file.toURI().toString());

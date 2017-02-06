@@ -12,8 +12,9 @@ public class GraphNode extends Ided implements Comparable {
      * @param p
      */
     public GraphNode(FloorPoint p){
+        location = p;
         this.location = p;
-        adjacent = new LinkedList<>();
+        adjacent = new LinkedList<GraphNode>();
     }
 
     public List<GraphNode> getAdjacent(){
@@ -38,6 +39,7 @@ public class GraphNode extends Ided implements Comparable {
     }
 
     public boolean removeAdjacent(GraphNode node){
+        adjacent.remove(node);
         return true;
     }
 
@@ -61,5 +63,49 @@ public class GraphNode extends Ided implements Comparable {
     @Override
     public int compareTo(Object o) {
         return 0;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof GraphNode)) {
+            return false;
+        }
+        if (obj == this) {
+            return true;
+        }
+
+        GraphNode rhs = (GraphNode) obj;
+
+        // Check all adjacent points locations are equal
+        boolean allFpEqual = false;
+        // if both are null, they are equal
+        if (this.adjacent == null && rhs.adjacent == null) {
+            allFpEqual = true;
+        }
+        // If both are not null, and the same length, check if their
+        // contents match
+        else if (this.adjacent != null && rhs.adjacent != null &&
+                 this.adjacent.size() == rhs.adjacent.size()) {
+            allFpEqual = true;
+            // For each adjacent here...
+            for (GraphNode graphNode : this.adjacent) {
+                boolean fpEqual = false;
+                // check for an adjacent there
+                for (GraphNode rhsGraphNode : rhs.adjacent) {
+                    // We have found a corresponding point
+                    if (graphNode.location.equals(rhsGraphNode.location)) {
+                        fpEqual = true;
+                        break;
+                    }
+                }
+                // becomes false if any are false
+                allFpEqual = allFpEqual && fpEqual;
+            }
+        }
+        return this.location.equals(rhs.location) && allFpEqual;
+    }
+
+    public String toString(){
+        return "<Node at " + location.toString();
     }
 }

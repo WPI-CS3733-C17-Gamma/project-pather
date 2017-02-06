@@ -21,7 +21,7 @@ public class Map {
      * @return
      */
     public List<String> searchRoom(String term){
-        return null;
+        return directory.searchRooms(term);
     }
 
     /**
@@ -30,7 +30,7 @@ public class Map {
      * @return
      */
     public List<String> searchEntry(String term){
-        return null;
+        return directory.searchEntries(term);
     }
 
     /**
@@ -39,7 +39,7 @@ public class Map {
      * @return
      */
     public Room getRoomFromName(String roomName){
-        return null;
+        return directory.getRoom(roomName);
     }
 
     /**
@@ -48,7 +48,7 @@ public class Map {
      * @return
      */
     public Room getRoomFromNode(GraphNode node){
-        return null;
+        return directory.getRoom(node);
     }
 
     /**
@@ -60,8 +60,15 @@ public class Map {
     /**
      *
      * @param room
+     * @return true if the room is added, false if it is a duplicate
      */
-    public void addRoom(Room room){
+    public boolean addRoom(Room room){
+        return directory.addRoom(room);
+    }
+
+    public boolean deleteRoom(GraphNode node) {
+        Room roomAtNode = directory.getRoom(node);
+        return directory.deleteRoom(roomAtNode);
     }
 
     /**
@@ -70,7 +77,7 @@ public class Map {
      * @return
      */
     public boolean addEntry(DirectoryEntry entry){
-        return true;
+        return directory.addEntry(entry);
     }
 
     /**
@@ -79,7 +86,7 @@ public class Map {
      * @return
      */
     public boolean deleteEntry(String key){
-        return false;
+        return directory.deleteEntry(key);
     }
 
     /**
@@ -88,7 +95,7 @@ public class Map {
      * @return
      */
     public DirectoryEntry getEntry(String name){
-        return null;
+        return directory.getEntry(name);
     }
 
     /**
@@ -106,7 +113,6 @@ public class Map {
      * @return
      */
     public boolean deleteNode(GraphNode node){
-
         graph.deleteNode(node);
         return true;
     }
@@ -147,4 +153,20 @@ public class Map {
     public HashMap<String, Image> getImages(){
         return this.mapImages;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Map)) {
+            return false;
+        }
+        if (obj == this) {
+            return true;
+        }
+
+        Map rhs = (Map) obj;
+        return this.directory.equals(rhs.directory) &&
+            this.graph.equals(rhs.graph) &&
+            this.mapImages.equals(rhs.mapImages);
+    }
+
 }
