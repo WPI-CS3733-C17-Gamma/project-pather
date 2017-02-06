@@ -1,8 +1,29 @@
-public class MapAdminController extends DisplayController {
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
+import java.awt.*;
+import java.io.File;
+
+public class MapAdminController extends DisplayController {
 //    MapAdminDisplay display;
     GraphNode selectedNode;
     GraphNode secondaryNode;
+
+    @FXML
+    private Button buttonSave;
+    @FXML
+    private Button buttonCancel;
+    @FXML
+    private ToggleButton togglebuttonAddNode;
+    @FXML
+    private ToggleButton togglebuttonAddConnections;
+    @FXML
+    private ImageView imageviewMap;
+
+    String mapName;
 
     /**
      *  Construct map admin controller
@@ -25,7 +46,11 @@ public class MapAdminController extends DisplayController {
      * @param location location to create a point at
      */
     public void addNode(FloorPoint location){
-        map.addNode(new GraphNode(location));
+        //need to add database save code
+    }
+
+    public void addNodeGraphically(){
+        addNode(getMouseLocation());
     }
 
     /**
@@ -46,7 +71,13 @@ public class MapAdminController extends DisplayController {
         }
     }
 
+    /**
+     * Delete a node from graph and delete the node from the adjacent nodes
+     * @param node
+     */
     public void deleteNode(GraphNode node){
+
+        map.deleteNode(node);
     }
 
     /**
@@ -74,6 +105,27 @@ public class MapAdminController extends DisplayController {
 
     public void deleteRoomFromNode(GraphNode node) {
         boolean successfulDelete = map.deleteRoom(node);
+    }
+    private void setMap(String loc, String mapName){
+        File file = new File(loc);
+        Image map = new Image(file.toURI().toString());
+        imageviewMap.setImage(map);
+        this.mapName = mapName;
+    }
+
+    private void isClicked(){
+        if (togglebuttonAddNode.isSelected()){
+            addNodeGraphically();
+        } else if (togglebuttonAddConnections.isSelected()){
+            //add in AddConnections stuff
+        }
+    }
+
+    private FloorPoint getMouseLocation(){
+        PointerInfo a = MouseInfo.getPointerInfo();
+        Point b = a.getLocation();
+
+        return new FloorPoint(((int) b.getX()),(int) b.getY(),mapName);
     }
 
 }

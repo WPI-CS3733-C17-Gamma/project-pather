@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+   <center>
+      <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <ListView fx:id="options" layoutX="200.0" layoutY="92.0" prefHeight="200.0" prefWidth="200.0" />
+            <TextField fx:id="searchBar" layoutX="200.0" layoutY="36.0" onKeyReleased="#search" prefHeight="25.0" prefWidth="198.0" promptText="Search...." />
+         </children>
+      </AnchorPane>
+   </center>
+</BorderPane>
