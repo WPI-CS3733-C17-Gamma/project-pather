@@ -11,9 +11,12 @@ public class Directory {
     }
 
     /**
-     *
-     * @param key
-     * @return
+     * Search through a list of room to see if there is a name of the room matches the input;
+     * Since searching based on the name of the room (which only consists of two characters, a number that
+     * indicates which floor the room is on, and one capital letter) is very specific and hard to mess up, the list
+     * should contain only one result
+     * @param key the given input string that needs to be searched on
+     * @return an empty list if the given name of the room is not found, or a list containing the given name of the room
      */
     public List<String> searchRooms(String key){
         List<String> temp = new ArrayList();
@@ -24,9 +27,9 @@ public class Directory {
     }
 
     /**
-     *
-     * @param key
-     * @return
+     * Search through names of all possible entries and return a list of all possible entry names containing that substring
+     * @param key the given substring that needs to be searched for
+     * @return a list of all possible entry names containing that substring
      */
     public List<String> searchEntries(String key){
         key = key.toLowerCase();
