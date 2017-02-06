@@ -8,6 +8,12 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Arc;
+import javafx.scene.shape.ArcType;
 import javafx.stage.Stage;
 
 import java.net.URL;
@@ -30,6 +36,24 @@ public class PatientController extends DisplayController implements Initializabl
     @FXML
     private void initialize() {
     }
+    @FXML
+    private ImageView imageView;
+
+    @FXML
+    private AnchorPane anchorPane;
+    @FXML
+    private void draw() {
+        Arc a1 = new Arc(200, 300, 100, 100, 90, 90);
+        a1.setType(ArcType.OPEN);
+        a1.setStroke(Color.BLACK);
+        a1.setFill(null);
+        a1.setStrokeWidth(3);
+        anchorPane.getChildren().addAll(a1);
+
+        Image floor3 = new Image("Maps/floor3.png");
+        imageView.setImage(floor3);
+
+    }
 
     public PatientController(Map map,
                              /*Kiosk kiosk, */
@@ -40,24 +64,34 @@ public class PatientController extends DisplayController implements Initializabl
 
     public void search () {
         String search = searchBar.getText();
+        if (search.length() > 0) {
+            options.setVisible(true);
+        }
+        else {
+            options.setVisible(false);
+            return;
+        }
         System.out.println("search : " + search);
-
-        ObservableList<String> filter = FXCollections.observableArrayList(map.searchEntry(search));
+        ObservableList<String> filter = FXCollections.observableArrayList(search(search));
         options.setItems(filter);
     }
 
 
 
-    public void search(String room) {
+    public List<String> search(String room) {
         if (((int)room.charAt(0)) < 58 && ((int)room.charAt(0)) > 47){
-            map.searchRoom(room);
+            return map.searchRoom(room);
         }
         else{
             String room2 = room.toLowerCase();
-            map.searchEntry(room2);
+            return map.searchEntry(room2);
         }
     }
 
+    public void switchToMapAdmin() {
+        System.out.println("switch");
+        applicationController.createMapAdminDisplay();
+    }
     public GraphNode select(String option) {
         return null;
     }
@@ -72,18 +106,6 @@ public class PatientController extends DisplayController implements Initializabl
     }
 
 
-    public static void main(String[] args) {
-        Application app = new Application() {
-            @Override
-            public void start(Stage primaryStage) throws Exception {
-                Parent root = FXMLLoader.load(getClass().getResource("PatientDisplay.fxml"));
-                //  get input text
-                primaryStage.setTitle("PatientDisplay");
-                primaryStage.setScene(new Scene(root, 500, 300));
-                primaryStage.show();
-            }
-        };
-    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {

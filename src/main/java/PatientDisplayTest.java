@@ -32,6 +32,7 @@ public class PatientDisplayTest extends Application {
 
         primaryStage.setTitle("PatientDisplay");
         primaryStage.setScene(new Scene(root, 800, 500));
+
         primaryStage.show();
     }
 
