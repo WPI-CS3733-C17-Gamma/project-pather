@@ -1,6 +1,7 @@
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -10,6 +11,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Arc;
@@ -41,25 +43,17 @@ public class PatientController extends DisplayController implements Initializabl
 
     @FXML
     private AnchorPane anchorPane;
-    @FXML
-    private void draw() {
-        Arc a1 = new Arc(200, 300, 100, 100, 90, 90);
-        a1.setType(ArcType.OPEN);
-        a1.setStroke(Color.BLACK);
-        a1.setFill(null);
-        a1.setStrokeWidth(3);
-        anchorPane.getChildren().addAll(a1);
-
-        Image floor3 = new Image("Maps/floor3.png");
-        imageView.setImage(floor3);
-
-    }
 
     public PatientController(Map map,
                              /*Kiosk kiosk, */
                              ApplicationController applicationController,
                              String currentMap){
         super(map,applicationController, currentMap);
+    }
+
+    public void displayImage() {
+        Image floor3 = new Image("Maps/floor3.png");
+        imageView.setImage(floor3);
     }
 
     public void search () {
@@ -72,12 +66,31 @@ public class PatientController extends DisplayController implements Initializabl
             return;
         }
         System.out.println("search : " + search);
-        ObservableList<String> filter = FXCollections.observableArrayList(search(search));
-        options.setItems(filter);
+        List<String> results = search(search);
+        for (String s: results){
+            System.out.println(s);
+        }
+        if(!results.isEmpty()) {
+            ObservableList<String> filter = FXCollections.observableArrayList(results);
+            options.setItems(filter);
+            options.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    System.out.println("clicked on " + options.getSelectionModel().getSelectedItem());
+                }
+            });
+        }
+        else {
+            options.setVisible(false);
+        }
     }
 
 
-
+    /**
+     * get rooms / entries related to entry
+     * @param room
+     * @return
+     */
     public List<String> search(String room) {
         if (((int)room.charAt(0)) < 58 && ((int)room.charAt(0)) > 47){
             return map.searchRoom(room);
@@ -89,9 +102,11 @@ public class PatientController extends DisplayController implements Initializabl
     }
 
     public void switchToMapAdmin() {
-        System.out.println("switch");
         applicationController.createMapAdminDisplay();
-        draw();
+    }
+    @FXML
+    public void selectOption() {
+        System.out.println("SELECT");
     }
     public GraphNode select(String option) {
         return null;
@@ -110,6 +125,9 @@ public class PatientController extends DisplayController implements Initializabl
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        System.out.println("INIT");
+        displayImage();
+
 
     }
 }
