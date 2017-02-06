@@ -43,7 +43,6 @@ public class MapAdminController extends DisplayController implements Initializab
      */
     public MapAdminController(Map map, ApplicationController applicationController, String currentMap) {
         super(map, applicationController, currentMap);
-        initialize();
     }
 
 
@@ -62,7 +61,7 @@ public class MapAdminController extends DisplayController implements Initializab
      */
     public void addNode(FloorPoint location){
         map.addNode(new GraphNode(location));
-        Circle c = new Circle((double)location.getX(), (double)location.getY(), 4, Color.BLUE);
+        Circle c = new Circle((double)location.getX(), (double)location.getY(), 4, Color.BLUE); //Circle not in the right place
         anchorpaneMap.getChildren().addAll(c);
 
         //Everything needs to be adjusted in database
@@ -138,8 +137,9 @@ public class MapAdminController extends DisplayController implements Initializab
     }
 
     private void setMap(String loc){
-        Image map = new Image(loc);
-        imageviewMap.setImage(map);
+        System.out.println(loc);
+        Image floor3 = new Image("Maps/floor3.png");
+        imageviewMap.setImage(floor3);
         this.mapName = loc;
     }
 
@@ -165,7 +165,7 @@ public class MapAdminController extends DisplayController implements Initializab
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
+        setMap(location.toString());
     }
 
 }
