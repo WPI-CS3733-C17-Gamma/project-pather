@@ -35,7 +35,7 @@ public class GraphNetwork {
             openSet.sort(new Comparator<AStarNode>(){
                 @Override
                 public int compare(AStarNode a, AStarNode b) {
-                    return ((int)b.fScore- (int)a.fScore);
+                    return ((int)b.fScore - (int)a.fScore);
                 }
             });
 
@@ -45,6 +45,12 @@ public class GraphNetwork {
 
             openSet.remove(current);
             closedSet.add(current);
+            current.node.adjacent.sort(new Comparator<GraphNode>(){
+                @Override
+                public int compare(GraphNode a, GraphNode b) {
+                    return ((int)b.distance(goalNode) - (int)a.distance(goalNode));
+                }
+            });
             for (GraphNode gNeighbour: current.node.adjacent) {
                 AStarNode neighbour = new AStarNode(gNeighbour);
                 if (closedSet.contains(neighbour))
