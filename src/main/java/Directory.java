@@ -1,4 +1,5 @@
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Directory {
     HashMap<String, DirectoryEntry> entries;
@@ -11,16 +12,16 @@ public class Directory {
     }
 
     /**
-     *
+     * search for rooms
      * @param key
      * @return
      */
     public List<String> searchRooms(String key){
-        List<String> temp = new ArrayList();
-        if (rooms.get(key) != null) {
-            temp.add(key);
-        }
-        return temp;
+        return rooms.values()
+            .stream()
+            .filter(room -> room.name.toLowerCase().contains(key.toLowerCase()))
+            .map(room -> room.name)
+            .collect(Collectors.toList());
     }
 
     /**
@@ -68,7 +69,12 @@ public class Directory {
      * @return
      */
     public DirectoryEntry getEntry(String key){
-        return null;
+        if (this.entries.containsKey(key)) {
+            return entries.get(key);
+        }
+        else {
+            return null;
+        }
     }
 
     /**
