@@ -91,6 +91,7 @@ public class PatientController extends DisplayController implements Initializabl
     public void switchToMapAdmin() {
         System.out.println("switch");
         applicationController.createMapAdminDisplay();
+        draw();
     }
     public GraphNode select(String option) {
         return null;
