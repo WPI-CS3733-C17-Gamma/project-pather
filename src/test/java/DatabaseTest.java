@@ -1,3 +1,4 @@
+import javafx.scene.image.Image;
 import java.util.HashMap;
 import java.util.List;
 import java.util.LinkedList;
@@ -127,5 +128,24 @@ public class DatabaseTest extends TestCase{
 
         assertEquals(entries, actual.directory.entries);
         closeDB("test4");
+    }
+
+    @Test
+    public void testEmptyLoad() {
+        initDB("test5", new String[0]);
+        GraphNetwork graph = new GraphNetwork(
+            new LinkedList<GraphNode>());
+        Directory directory = new Directory(
+            new HashMap<String, DirectoryEntry>(),
+            new HashMap<String, Room>());
+        HashMap<String, Image> mapImages = new HashMap<String, Image>();
+        Map expected = new Map(directory, graph, mapImages);
+
+        DatabaseManager db = new DatabaseManager("memory:test5;");
+
+        Map actual = db.load();
+
+        assertEquals(expected, actual);
+        closeDB("test5");
     }
 }

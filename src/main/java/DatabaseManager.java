@@ -1,6 +1,7 @@
 import java.sql.*;
 import java.util.HashMap;
 import java.util.LinkedList;
+import javafx.scene.image.Image;
 
 public class DatabaseManager {
     String connectionURL;
@@ -115,7 +116,9 @@ public class DatabaseManager {
         Directory directory = new Directory(entries, rooms);
         GraphNetwork graph = new GraphNetwork(
             new LinkedList<GraphNode>(nodes.values()));
-        return new Map(directory, graph, null);
+        HashMap<String, Image> mapImages = new HashMap<String, Image>();
+
+        return new Map(directory, graph, mapImages);
     }
 
     public boolean write(Map data){
