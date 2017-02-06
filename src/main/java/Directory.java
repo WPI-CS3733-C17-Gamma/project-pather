@@ -1,4 +1,5 @@
 import java.util.*;
+
 public class Directory {
     HashMap<String, DirectoryEntry> entries;
     HashMap<String, Room> rooms;
@@ -135,4 +136,19 @@ public class Directory {
 
         return true;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Directory)) {
+            return false;
+        }
+        if (obj == this) {
+            return true;
+        }
+
+        Directory rhs = (Directory) obj;
+        return this.entries.equals(rhs.entries) &&
+            this.rooms.equals(rhs.rooms);
+    }
+
 }

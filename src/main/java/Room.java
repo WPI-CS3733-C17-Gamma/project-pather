@@ -31,19 +31,17 @@ public class Room extends Ided implements Comparable {
 
     }
 
-    /**
-     *
-     * @param room
-     * @return true if rooms are the same
-     */
     @Override
-    public boolean equals(Object room) {
-        if (room instanceof Room) {
-            Room p = (Room) room;
-            return (p.location.equals(this.location) && p.name.equals(this.name));
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Room)) {
+            return false;
         }
-        return false;
+        if (obj == this) {
+            return true;
+        }
+
+        Room rhs = (Room) obj;
+        return this.location.equals(rhs.location) &&
+            this.name.equals(rhs.name);
     }
-
-
 }
