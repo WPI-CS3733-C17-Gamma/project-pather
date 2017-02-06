@@ -81,7 +81,7 @@ public class DatabaseTest extends TestCase{
         GraphNode nodeA = new GraphNode(new FloorPoint(4, 2, "bob1"));
         Room roomA = new Room(nodeA, "derFs Office");
         Directory directory = new Directory(
-            new HashMap<DirectoryEntry, Room>(),
+            new LinkedList<DirectoryEntry>(),
             new LinkedList<Room>(Arrays.asList(roomA)));
 
         DatabaseManager db = new DatabaseManager("memory:test3;");
@@ -89,5 +89,29 @@ public class DatabaseTest extends TestCase{
         Map actual = db.load();
 
         assertEquals(directory, actual.directory);
+    }
+
+    @Test
+    public void testEntriesLoad() {
+        String[] statements =
+            {"insert into GraphNodes (ID, X, Y, Floor) values (1, 4, 2, 'bob1')",
+             "insert into Rooms (rID, name, nID) values (1, 'derFs Office', 1)",
+             "insert into Entries (eID, name, title) values (1, 'the land of derF', 'office')",
+             "insert into RoomEntryAssoc (eID, rID) values (1, 1)"};
+        initDB("test4", statements);
+
+        GraphNode nodeA = new GraphNode(new FloorPoint(4, 2, "bob1"));
+        Room roomA = new Room(nodeA, "derFs Office");
+        DirectoryEntry entryA = new DirectoryEntry(
+            "the land of derF", "office", Arrays.asList(roomA));
+        Directory directory = new Directory(
+            new LinkedList<DirectoryEntry>(Arrays.asList(entryA)),
+            new LinkedList<Room>(Arrays.asList(roomA)));
+
+        DatabaseManager db = new DatabaseManager("memory:test4;");
+
+        Map actual = db.load();
+
+        assertEquals(directory.entries, actual.directory.entries);
     }
 }

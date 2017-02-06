@@ -1,12 +1,11 @@
-import java.util.HashMap;
 import java.util.List;
 import java.util.Collection;
 
 public class Directory {
-    HashMap<DirectoryEntry, Room> entries;
+    Collection<DirectoryEntry> entries;
     Collection<Room> rooms;
 
-    public Directory(HashMap<DirectoryEntry, Room> entries,
+    public Directory(Collection<DirectoryEntry> entries,
                      Collection<Room> rooms) {
             this.entries = entries;
             this.rooms = rooms;
