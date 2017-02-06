@@ -108,7 +108,7 @@ public class Map {
     }
 
     /**
-     *
+     *Delete node from graph and delete the node from adjacent nodes
      * @param node
      * @return
      */

@@ -1,8 +1,39 @@
-public class MapAdminController extends DisplayController {
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.*;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
 
+import java.awt.*;
+import java.io.File;
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class MapAdminController extends DisplayController implements Initializable {
 //    MapAdminDisplay display;
     GraphNode selectedNode;
     GraphNode secondaryNode;
+
+    @FXML
+    private Button buttonSave;
+    @FXML
+    private Button buttonCancel;
+    @FXML
+    private ToggleButton togglebuttonAddNode;
+    @FXML
+    private ToggleButton togglebuttonAddConnections;
+    @FXML
+    private ImageView imageviewMap;
+    @FXML
+    private AnchorPane anchorpaneMap;
+
+    String mapName;
 
     /**
      *  Construct map admin controller
@@ -14,10 +45,14 @@ public class MapAdminController extends DisplayController {
         super(map, applicationController, currentMap);
     }
 
+
     void update(){
+        //needs to update the database with any changes
+
     }
 
     public void login(String credentials){
+        //no need to worry about this for this iteration
     }
 
     /**
@@ -26,6 +61,14 @@ public class MapAdminController extends DisplayController {
      */
     public void addNode(FloorPoint location){
         map.addNode(new GraphNode(location));
+        Circle c = new Circle((double)location.getX(), (double)location.getY(), 4, Color.BLUE); //Circle not in the right place
+        anchorpaneMap.getChildren().addAll(c);
+
+        //Everything needs to be adjusted in database
+    }
+
+    public void addNodeGraphically(){
+        addNode(getMouseLocation());
     }
 
     /**
@@ -46,7 +89,13 @@ public class MapAdminController extends DisplayController {
         }
     }
 
+    /**
+     * Delete a node from graph and delete the node from the adjacent nodes
+     * @param node
+     */
     public void deleteNode(GraphNode node){
+
+        map.deleteNode(node);
     }
 
     /**
@@ -57,10 +106,21 @@ public class MapAdminController extends DisplayController {
      * @param nodeB
      */
     public void addConnection(GraphNode nodeA, GraphNode nodeB){
-        boolean addedSuccesfully = map.addConnection(nodeA, nodeB);
+        map.addConnection(nodeA, nodeB);
+        Line l = new Line(nodeA.location.getX(),nodeA.location.getY(), nodeB.location.getX(), nodeB.location.getY());
+        l.setFill(Color.RED);
+
     }
 
+    public void addConnectionGraphically(){
+
+
+
+    }
+
+
     public void deleteConnection(GraphNode nodeA, GraphNode nodeB){
+        //idk what to do about deleting this
     }
 
     /**
@@ -74,6 +134,38 @@ public class MapAdminController extends DisplayController {
 
     public void deleteRoomFromNode(GraphNode node) {
         boolean successfulDelete = map.deleteRoom(node);
+    }
+
+    private void setMap(String loc){
+        System.out.println(loc);
+        Image floor3 = new Image("Maps/floor3.png");
+        imageviewMap.setImage(floor3);
+        this.mapName = loc;
+    }
+
+    public void isClicked(){
+        if (togglebuttonAddNode.isSelected()) {
+            addNodeGraphically();
+        }
+    }
+
+    private void isDragged(){
+        if (togglebuttonAddConnections.isSelected()){
+
+        }
+    }
+
+    private FloorPoint getMouseLocation(){
+        PointerInfo a = MouseInfo.getPointerInfo();
+        Point b = a.getLocation();
+
+        return new FloorPoint(((int) b.getX()),(int) b.getY(),mapName); //don't need to adjust for resolution because resolution is 1150x625
+    }
+
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        setMap(location.toString());
     }
 
 }

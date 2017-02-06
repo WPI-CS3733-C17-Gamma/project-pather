@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1150.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ToggleButton fx:id="togglebuttonAddNode" layoutX="126.0" layoutY="79.0" mnemonicParsing="false" text="Add Node" />
+      <ToggleButton fx:id="togglebuttonAddConnections" layoutX="222.0" layoutY="79.0" mnemonicParsing="false" text="Add Connections" />
+      <AnchorPane fx:id="anchorpaneMap" layoutY="146.0" prefHeight="625.0" prefWidth="1150.0">
+         <children>
+            <ImageView fx:id="imageviewMap" fitHeight="625.0" fitWidth="1150.0" onMouseClicked="#isClicked" pickOnBounds="true" preserveRatio="true" />
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>
