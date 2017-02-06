@@ -27,6 +27,8 @@ public class ApplicationController extends Application {
         map.addEntry(new DirectoryEntry("A","doctor", new LinkedList<Room>()));
         map.addEntry(new DirectoryEntry("anotherB","doctor", new LinkedList<Room>()));
         map.addEntry(new DirectoryEntry("Cee","doctor", new LinkedList<Room>()));
+        Room tempRoom = new Room(new GraphNode(new FloorPoint(1,1,"1")), "402");
+        map.addRoom(tempRoom);
         ////
         createPatientDisplay();
         primaryStage.show();

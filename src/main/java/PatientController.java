@@ -56,6 +56,9 @@ public class PatientController extends DisplayController implements Initializabl
         imageView.setImage(floor3);
     }
 
+    /**
+     * perform search
+     */
     public void search () {
         String search = searchBar.getText();
         if (search.length() > 0) {
@@ -76,7 +79,9 @@ public class PatientController extends DisplayController implements Initializabl
             options.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
-                    System.out.println("clicked on " + options.getSelectionModel().getSelectedItem());
+                    String selectedString = options.getSelectionModel().getSelectedItem();
+                    System.out.println("clicked on " + selectedString);
+                    select(selectedString);
                 }
             });
         }
@@ -104,11 +109,21 @@ public class PatientController extends DisplayController implements Initializabl
     public void switchToMapAdmin() {
         applicationController.createMapAdminDisplay();
     }
-    @FXML
-    public void selectOption() {
-        System.out.println("SELECT");
-    }
     public GraphNode select(String option) {
+        System.out.println("select");
+        DirectoryEntry entry = map.getEntry(option);
+        if (entry != null) {
+            System.out.println("Found Entry!");
+        }
+        else {
+            Room room =  map.getRoomFromName(option);
+            if (room != null) {
+                System.out.println("FOUND ROOM! : " + room);
+            }
+            else {
+                System.out.println("no entry :( ");
+            }
+        }
         return null;
     }
 
