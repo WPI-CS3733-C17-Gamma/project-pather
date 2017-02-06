@@ -3,6 +3,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.*;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
 
 import java.awt.*;
 import java.io.File;
@@ -35,10 +39,14 @@ public class MapAdminController extends DisplayController {
         super(map, applicationController, currentMap);
     }
 
+
     void update(){
+        //needs to update the database with any changes
+
     }
 
     public void login(String credentials){
+        //no need to worry about this for this iteration
     }
 
     /**
@@ -46,7 +54,8 @@ public class MapAdminController extends DisplayController {
      * @param location location to create a point at
      */
     public void addNode(FloorPoint location){
-        //need to add database save code
+        map.addNode(new GraphNode(location));
+        Circle c = new Circle((double)location.getX(), (double)location.getY(), 4, Color.BLUE);
     }
 
     public void addNodeGraphically(){
@@ -88,10 +97,17 @@ public class MapAdminController extends DisplayController {
      * @param nodeB
      */
     public void addConnection(GraphNode nodeA, GraphNode nodeB){
-        boolean addedSuccesfully = map.addConnection(nodeA, nodeB);
+        Line l = new Line(nodeA.location.getX(),nodeA.location.getY(), nodeB.location.getX(), nodeB.location.getY());
+        l.setFill(Color.RED);
     }
 
+    public void addConnectionGraphically(){
+
+    }
+
+
     public void deleteConnection(GraphNode nodeA, GraphNode nodeB){
+        //idk what to do about deleting this
     }
 
     private void setMap(String loc, String mapName){
@@ -102,10 +118,14 @@ public class MapAdminController extends DisplayController {
     }
 
     private void isClicked(){
-        if (togglebuttonAddNode.isSelected()){
+        if (togglebuttonAddNode.isSelected()) {
             addNodeGraphically();
-        } else if (togglebuttonAddConnections.isSelected()){
-            //add in AddConnections stuff
+        }
+    }
+
+    private void isDragged(){
+        if (togglebuttonAddConnections.isSelected()){
+
         }
     }
 
@@ -113,7 +133,7 @@ public class MapAdminController extends DisplayController {
         PointerInfo a = MouseInfo.getPointerInfo();
         Point b = a.getLocation();
 
-        return new FloorPoint(((int) b.getX()),(int) b.getY(),mapName);
+        return new FloorPoint(((int) b.getX()),(int) b.getY(),mapName); //don't need to adjust for resolution because resolution is 1150x625
     }
 
 }
