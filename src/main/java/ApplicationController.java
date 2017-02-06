@@ -28,7 +28,8 @@ public class ApplicationController extends Application {
         map.addEntry(new DirectoryEntry("anotherB","doctor", new LinkedList<Room>()));
         map.addEntry(new DirectoryEntry("Cee","doctor", new LinkedList<Room>()));
         ////
-        createPatientDisplay();
+        //createPatientDisplay();
+        createMapAdminDisplay();
         primaryStage.show();
     }
 
@@ -59,7 +60,7 @@ public class ApplicationController extends Application {
     public void createMapAdminDisplay(){
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("AdminDisplay.fxml"));
-            PatientController controller = new PatientController(map,this, "Maps/floor3.png");
+            MapAdminController controller = new MapAdminController(map,this, "Maps/floor3.png");
             loader.setController(controller);
             Parent root = loader.load();
             pStage.setTitle("MapAdmin");
@@ -77,7 +78,7 @@ public class ApplicationController extends Application {
     public void createDirectoryAdminDisplay(){
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("AdminDisplay.fxml"));
-            PatientController controller = new PatientController(map,this, "Maps/floor3.png");
+            MapAdminController controller = new MapAdminController(map,this, "Maps/floor3.png");
             loader.setController(controller);
             Parent root = loader.load();
             pStage.setTitle("DirectoryAdmin");
