@@ -10,28 +10,45 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class DatabaseTest extends TestCase{
-    private Connection initDB(String name, String[] statements) {
+    // Using databases in memory to not clutter up the file system
+    private final String DBName = "memory:testDB";
+    private Connection conn;
+
+    @Override
+    protected void setUp() {
         try {
-            Connection conn = DriverManager.getConnection("jdbc:derby:memory:" + name + ";create=true");
-            Statement statement = conn.createStatement();
-            for (String s : DatabaseManager.initStatements) {
-                statement.executeUpdate(s);
-            }
-            for (String s : statements) {
-                statement.executeUpdate(s);
-            }
-            statement.close();
-            return conn;
+            conn = DriverManager.getConnection(
+                "jdbc:derby:" + DBName + ";create=true");
+            // Execute all init statements
+            execStatements(DatabaseManager.initStatements);
+        }
+        catch (SQLException e) {
+            // Sometimes these are fatal, sometimes not. Don't think
+            // it's worth the effort to figure out which is which
+            System.err.println(e.getMessage());
+        }
+    }
+
+    @Override
+    protected void tearDown() {
+        try {
+            // drop DB from last test
+            DriverManager.getConnection("jdbc:derby:" + DBName + ";drop=true");
         }
         catch (SQLException e) {
             System.err.println(e.getMessage());
         }
-        return null;
     }
 
-    private void closeDB(String name) {
+    private void execStatements(String[] statements) {
         try {
-            DriverManager.getConnection("jdbc:derby:memory:" + name + ";drop=true");
+            Statement statement = conn.createStatement();
+
+            // Execute all given setup statements
+            for (String s : statements) {
+                statement.executeUpdate(s);
+            }
+            statement.close();
         }
         catch (SQLException e) {
             System.err.println(e.getMessage());
@@ -43,19 +60,15 @@ public class DatabaseTest extends TestCase{
         String[] statements =
             {"insert into GraphNodes (ID, X, Y, Floor) values (1, 4, 2, 'bob1')",
              "insert into GraphNodes (ID, X, Y, Floor) values (2, 4, 3, 'bob1')"};
-        initDB("test1", statements);
+        execStatements(statements);
 
         GraphNode nodeA = new GraphNode(new FloorPoint(4, 2, "bob1"));
         GraphNode nodeB = new GraphNode(new FloorPoint(4, 3, "bob1"));
         GraphNetwork graph = new GraphNetwork(
             new LinkedList<GraphNode>(Arrays.asList(nodeA, nodeB)));
 
-        DatabaseManager db = new DatabaseManager("memory:test1;");
-
-        Map actual = db.load();
-
+        Map actual = new DatabaseManager(DBName).load();
         assertEquals(graph, actual.graph);
-        closeDB("test1");
     }
 
     @Test
@@ -64,7 +77,7 @@ public class DatabaseTest extends TestCase{
             {"insert into GraphNodes (ID, X, Y, Floor) values (1, 4, 2, 'bob1')",
              "insert into GraphNodes (ID, X, Y, Floor) values (2, 4, 3, 'bob1')",
              "insert into Edges (ID1, ID2) values (1, 2)"};
-        initDB("test2", statements);
+        execStatements(statements);
 
         GraphNode nodeA = new GraphNode(new FloorPoint(4, 2, "bob1"));
         GraphNode nodeB = new GraphNode(new FloorPoint(4, 3, "bob1"));
@@ -73,12 +86,8 @@ public class DatabaseTest extends TestCase{
         GraphNetwork graph = new GraphNetwork(
             new LinkedList<GraphNode>(Arrays.asList(nodeA, nodeB)));
 
-        DatabaseManager db = new DatabaseManager("memory:test2;");
-
-        Map actual = db.load();
-
+        Map actual = new DatabaseManager(DBName).load();
         assertEquals(graph, actual.graph);
-        closeDB("test2");
     }
 
     @Test
@@ -86,7 +95,7 @@ public class DatabaseTest extends TestCase{
         String[] statements =
             {"insert into GraphNodes (ID, X, Y, Floor) values (1, 4, 2, 'bob1')",
              "insert into Rooms (rID, name, nID) values (1, 'derFs Office', 1)"};
-        initDB("test3", statements);
+        execStatements(statements);
 
         GraphNode nodeA = new GraphNode(new FloorPoint(4, 2, "bob1"));
         Room roomA = new Room(nodeA, "derFs Office");
@@ -94,12 +103,8 @@ public class DatabaseTest extends TestCase{
         HashMap<String, Room> rooms = new HashMap<String, Room>();
         rooms.put(roomA.name, roomA);
 
-        DatabaseManager db = new DatabaseManager("memory:test3;");
-
-        Map actual = db.load();
-
+        Map actual = new DatabaseManager(DBName).load();
         assertEquals(rooms, actual.directory.rooms);
-        closeDB("test3");
     }
 
     @Test
@@ -109,7 +114,7 @@ public class DatabaseTest extends TestCase{
              "insert into Rooms (rID, name, nID) values (1, 'derFs Office', 1)",
              "insert into Entries (eID, name, title) values (1, 'the land of derF', 'office')",
              "insert into RoomEntryAssoc (eID, rID) values (1, 1)"};
-        initDB("test4", statements);
+        execStatements(statements);
 
         GraphNode nodeA = new GraphNode(new FloorPoint(4, 2, "bob1"));
         Room roomA = new Room(nodeA, "derFs Office");
@@ -119,20 +124,13 @@ public class DatabaseTest extends TestCase{
         HashMap<String, DirectoryEntry> entries =
             new HashMap<String, DirectoryEntry>();
         entries.put(entryA.name, entryA);
-        HashMap<String, Room> rooms = new HashMap<String, Room>();
-        rooms.put(roomA.name, roomA);
 
-        DatabaseManager db = new DatabaseManager("memory:test4;");
-
-        Map actual = db.load();
-
+        Map actual = new DatabaseManager(DBName).load();
         assertEquals(entries, actual.directory.entries);
-        closeDB("test4");
     }
 
     @Test
     public void testEmptyLoad() {
-        initDB("test5", new String[0]);
         GraphNetwork graph = new GraphNetwork(
             new LinkedList<GraphNode>());
         Directory directory = new Directory(
@@ -141,11 +139,7 @@ public class DatabaseTest extends TestCase{
         HashMap<String, Image> mapImages = new HashMap<String, Image>();
         Map expected = new Map(directory, graph, mapImages);
 
-        DatabaseManager db = new DatabaseManager("memory:test5;");
-
-        Map actual = db.load();
-
+        Map actual = new DatabaseManager(DBName).load();
         assertEquals(expected, actual);
-        closeDB("test5");
     }
 }
