@@ -28,14 +28,22 @@ public class DatabaseTest extends TestCase{
         return null;
     }
 
+    private void closeDB(String name) {
+        try {
+            DriverManager.getConnection("jdbc:derby:memory:" + name + ";drop=true");
+        }
+        catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+
     @Test
     public void testGraphNodesLoad() {
         String[] statements =
             {"insert into GraphNodes (ID, X, Y, Floor) values (1, 4, 2, 'bob1')",
              "insert into GraphNodes (ID, X, Y, Floor) values (2, 4, 3, 'bob1')"};
-        Connection conn = initDB("test1", statements);
+        initDB("test1", statements);
 
-        Directory directory = null;
         GraphNode nodeA = new GraphNode(new FloorPoint(4, 2, "bob1"));
         GraphNode nodeB = new GraphNode(new FloorPoint(4, 3, "bob1"));
         GraphNetwork graph = new GraphNetwork(
@@ -46,6 +54,7 @@ public class DatabaseTest extends TestCase{
         Map actual = db.load();
 
         assertEquals(graph, actual.graph);
+        closeDB("test1");
     }
 
     @Test
@@ -54,9 +63,8 @@ public class DatabaseTest extends TestCase{
             {"insert into GraphNodes (ID, X, Y, Floor) values (1, 4, 2, 'bob1')",
              "insert into GraphNodes (ID, X, Y, Floor) values (2, 4, 3, 'bob1')",
              "insert into Edges (ID1, ID2) values (1, 2)"};
-        Connection conn = initDB("test2", statements);
+        initDB("test2", statements);
 
-        Directory directory = null;
         GraphNode nodeA = new GraphNode(new FloorPoint(4, 2, "bob1"));
         GraphNode nodeB = new GraphNode(new FloorPoint(4, 3, "bob1"));
         nodeA.addAdjacent(nodeB);
@@ -69,6 +77,7 @@ public class DatabaseTest extends TestCase{
         Map actual = db.load();
 
         assertEquals(graph, actual.graph);
+        closeDB("test2");
     }
 
     @Test
@@ -76,7 +85,7 @@ public class DatabaseTest extends TestCase{
         String[] statements =
             {"insert into GraphNodes (ID, X, Y, Floor) values (1, 4, 2, 'bob1')",
              "insert into Rooms (rID, name, nID) values (1, 'derFs Office', 1)"};
-        Connection conn = initDB("test3", statements);
+        initDB("test3", statements);
 
         GraphNode nodeA = new GraphNode(new FloorPoint(4, 2, "bob1"));
         Room roomA = new Room(nodeA, "derFs Office");
@@ -89,6 +98,7 @@ public class DatabaseTest extends TestCase{
         Map actual = db.load();
 
         assertEquals(directory, actual.directory);
+        closeDB("test3");
     }
 
     @Test
@@ -113,5 +123,6 @@ public class DatabaseTest extends TestCase{
         Map actual = db.load();
 
         assertEquals(directory.entries, actual.directory.entries);
+        closeDB("test4");
     }
 }
