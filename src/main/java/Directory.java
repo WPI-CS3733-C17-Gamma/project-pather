@@ -62,8 +62,8 @@ public class Directory {
      * @param key
      * @return
      */
-    public boolean deleteEntry(String key){
-        return entries.remove(key, entries.get(key));
+    public boolean deleteEntry(DirectoryEntry key){
+        return entries.remove(key.getName(), key);
     }
 
     /**
@@ -75,6 +75,14 @@ public class Directory {
         DirectoryEntry entry;
         entry = entries.get(key);
         return entry;
+    }
+
+    /**
+     *
+     * @return the map of all directory entries
+     */
+    public HashMap<String, DirectoryEntry> getEntries(){
+        return this.entries;
     }
 
     /**

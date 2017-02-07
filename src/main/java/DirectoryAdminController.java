@@ -26,19 +26,36 @@ public class DirectoryAdminController extends DisplayController implements Initi
               currentMap);
     }
 
+    /**
+     * search entry by keyword
+     * @param search
+     * @return
+     */
     public List<String> searchEntry(String search) {
-        return null;
+        return map.searchEntry(search);
     }
 
     public DirectoryEntry selectEntry(String entryName) {
         return null;
     }
 
+    /**
+     * remove the given directory entry in Directory
+     * @param entry
+     * @return
+     */
     public boolean deleteEntry(DirectoryEntry entry) {
-        return false;
+        return map.deleteEntry(entry);
     }
 
+    /**
+     * Create a new directory entry in the Directory object in the Map
+     * @param name
+     * @param title
+     * @param room
+     */
     public void createEntry(String name, String title, List<Room> room) {
+        map.addEntry(new DirectoryEntry(name, title, room));
     }
 
 
@@ -98,7 +115,7 @@ public class DirectoryAdminController extends DisplayController implements Initi
         }
 
         System.out.print(activeDirectoryEntry.getName());
-        map.deleteEntry(activeDirectoryEntry.getName());
+        map.deleteEntry(activeDirectoryEntry);
         map.addEntry(newEntry);
         return;
 

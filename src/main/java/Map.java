@@ -85,7 +85,7 @@ public class Map {
      * @param key
      * @return
      */
-    public boolean deleteEntry(String key){
+    public boolean deleteEntry(DirectoryEntry key){
         return directory.deleteEntry(key);
     }
 
