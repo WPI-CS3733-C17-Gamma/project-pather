@@ -51,7 +51,7 @@ public class ApplicationController extends Application {
     }
 
 
-    private void createPatientDisplay(){
+    public void createPatientDisplay(){
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("PatientDisplay.fxml"));
             PatientController controller = new PatientController(map,this, "Maps/floor3.png");
@@ -76,7 +76,7 @@ public class ApplicationController extends Application {
             loader.setController(controller);
             Parent root = loader.load();
             pStage.setTitle("MapAdmin");
-            pStage.setScene(new Scene(root, 800, 500));
+            pStage.setScene(new Scene(root, 1200, 1000));
         }
         catch (Exception e){
             e.printStackTrace();
@@ -89,12 +89,12 @@ public class ApplicationController extends Application {
      */
     public void createDirectoryAdminDisplay(){
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("AdminDisplay.fxml"));
-            PatientController controller = new PatientController(map,this, "Maps/floor3.png");
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("DirectoryAdminDisplay.fxml"));
+            DirectoryAdminController controller = new DirectoryAdminController(map,this, "Maps/floor3.png");
             loader.setController(controller);
             Parent root = loader.load();
             pStage.setTitle("DirectoryAdmin");
-            pStage.setScene(new Scene(root, 800, 500));
+            pStage.setScene(new Scene(root, 1200, 1000));
         }
         catch (Exception e){
             e.printStackTrace();
