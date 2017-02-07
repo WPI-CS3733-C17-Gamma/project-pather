@@ -45,13 +45,13 @@ public class GraphNetwork {
 
             openSet.remove(current);
             closedSet.add(current);
-            current.node.adjacent.sort(new Comparator<GraphNode>(){
+            current.node.getAdjacent().sort(new Comparator<GraphNode>(){
                 @Override
                 public int compare(GraphNode a, GraphNode b) {
                     return ((int)b.distance(goalNode) - (int)a.distance(goalNode));
                 }
             });
-            for (GraphNode gNeighbour: current.node.adjacent) {
+            for (GraphNode gNeighbour: current.node.getAdjacent()) {
                 AStarNode neighbour = new AStarNode(gNeighbour);
                 if (closedSet.contains(neighbour))
                     continue;
