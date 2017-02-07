@@ -137,7 +137,7 @@ public class Directory {
         }
 
         for(DirectoryEntry entry : entries.values()) {
-           entry.deleteLocatoin(room);
+           entry.deleteLocation(room);
         }
 
         return true;

@@ -28,7 +28,18 @@ public class ApplicationController extends Application {
         map.addEntry(new DirectoryEntry("anotherB","doctor", new LinkedList<Room>()));
         map.addEntry(new DirectoryEntry("Cee","doctor", new LinkedList<Room>()));
         Room tempRoom = new Room(new GraphNode(new FloorPoint(1,1,"1")), "402");
+        Room tempRoom2 = new Room(new GraphNode(new FloorPoint(2,1,"1")), "401");
+        Room tempRoom3 = new Room(new GraphNode(new FloorPoint(3,1,"1")), "432");
+        Room tempRoom4 = new Room(new GraphNode(new FloorPoint(4,1,"1")), "502");
+        map.getEntry("Cee").addLocation(tempRoom);
+        map.getEntry("Cee").addLocation(tempRoom2);
+        map.getEntry("Cee").addLocation(tempRoom3);
+        map.getEntry("Cee").addLocation(tempRoom4);
+        map.getEntry("A").addLocation(tempRoom);
         map.addRoom(tempRoom);
+        map.addRoom(tempRoom2);
+        map.addRoom(tempRoom3);
+        map.addRoom(tempRoom4);
         ////
         createPatientDisplay();
         primaryStage.show();
@@ -61,7 +72,7 @@ public class ApplicationController extends Application {
     public void createMapAdminDisplay(){
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("AdminDisplay.fxml"));
-            PatientController controller = new PatientController(map,this, "Maps/floor3.png");
+            MapAdminController controller = new MapAdminController(map,this, "Maps/floor3.png");
             loader.setController(controller);
             Parent root = loader.load();
             pStage.setTitle("MapAdmin");

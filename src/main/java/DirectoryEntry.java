@@ -54,14 +54,14 @@ public class DirectoryEntry extends Ided {
     /**
      * @param location the new location that this entry is associated with
      */
-    public void addLocatoin(Room location){
+    public void addLocation(Room location){
         this.location.add(location);
     }
 
     /**
      * @param loc the location that this entry is no longer associated with
      */
-    public void deleteLocatoin(Room loc){
+    public void deleteLocation(Room loc){
         this.location.remove(loc);
     }
 
