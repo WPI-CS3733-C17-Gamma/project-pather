@@ -3,7 +3,7 @@ import java.util.List;
 
 public class GraphNode extends Ided implements Comparable {
 
-    private List<GraphNode> adjacent;
+    List<GraphNode> adjacent;
     FloorPoint location;
 
     /**
