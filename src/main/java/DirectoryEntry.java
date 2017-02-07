@@ -1,5 +1,4 @@
 import java.util.List;
-import java.util.Objects;
 
 public class DirectoryEntry extends Ided {
     /**
@@ -55,14 +54,14 @@ public class DirectoryEntry extends Ided {
     /**
      * @param location the new location that this entry is associated with
      */
-    public void addLocatoin(Room location){
+    public void addLocation(Room location){
         this.location.add(location);
     }
 
     /**
      * @param loc the location that this entry is no longer associated with
      */
-    public void deleteLocatoin(Room loc){
+    public void deleteLocation(Room loc){
         this.location.remove(loc);
     }
 
@@ -71,5 +70,20 @@ public class DirectoryEntry extends Ided {
      */
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof DirectoryEntry)) {
+            return false;
+        }
+        if (obj == this) {
+            return true;
+        }
+
+        DirectoryEntry rhs = (DirectoryEntry) obj;
+        return this.name.equals(rhs.name) &&
+            this.title.equals(rhs.title) &&
+            this.location.equals(rhs.location);
     }
 }

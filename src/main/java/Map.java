@@ -1,4 +1,3 @@
-
 import javafx.scene.image.Image;
 import java.util.HashMap;
 import java.util.List;
@@ -8,13 +7,21 @@ public class Map {
     GraphNetwork graph;
     HashMap<String, Image> mapImages;
 
+    public Map(Directory directory,
+               GraphNetwork graph,
+               HashMap<String, Image> mapImages) {
+        this.directory = directory;
+        this.graph = graph;
+        this.mapImages = mapImages;
+    }
+
     /**
      *
      * @param term
      * @return
      */
     public List<String> searchRoom(String term){
-        return null;
+        return directory.searchRooms(term);
     }
 
     /**
@@ -23,7 +30,7 @@ public class Map {
      * @return
      */
     public List<String> searchEntry(String term){
-        return null;
+        return directory.searchEntries(term);
     }
 
     /**
@@ -32,7 +39,7 @@ public class Map {
      * @return
      */
     public Room getRoomFromName(String roomName){
-        return null;
+        return directory.getRoom(roomName);
     }
 
     /**
@@ -41,7 +48,7 @@ public class Map {
      * @return
      */
     public Room getRoomFromNode(GraphNode node){
-        return null;
+        return directory.getRoom(node);
     }
 
     /**
@@ -53,8 +60,15 @@ public class Map {
     /**
      *
      * @param room
+     * @return true if the room is added, false if it is a duplicate
      */
-    public void addRoom(Room room){
+    public boolean addRoom(Room room){
+        return directory.addRoom(room);
+    }
+
+    public boolean deleteRoom(GraphNode node) {
+        Room roomAtNode = directory.getRoom(node);
+        return directory.deleteRoom(roomAtNode);
     }
 
     /**
@@ -63,7 +77,7 @@ public class Map {
      * @return
      */
     public boolean addEntry(DirectoryEntry entry){
-        return true;
+        return directory.addEntry(entry);
     }
 
     /**
@@ -72,7 +86,7 @@ public class Map {
      * @return
      */
     public boolean deleteEntry(String key){
-        return false;
+        return directory.deleteEntry(key);
     }
 
     /**
@@ -81,34 +95,36 @@ public class Map {
      * @return
      */
     public DirectoryEntry getEntry(String name){
-        return null;
+        return directory.getEntry(name);
     }
 
     /**
-     *
-     * @param node
+     * Add node to graph
+     * @param node node to add
      * @return
      */
     public boolean addNode(GraphNode node){
-        return true;
+        return graph.addNode(node);
     }
 
     /**
-     *
+     *Delete node from graph and delete the node from adjacent nodes
      * @param node
      * @return
      */
     public boolean deleteNode(GraphNode node){
+        graph.deleteNode(node);
         return true;
     }
 
     /**
-     *
+     * return the graph node closest to the location given
+     * ignores points on different floors
      * @param point
      * @return
      */
     public GraphNode getGraphNode(FloorPoint point){
-        return null;
+        return graph.getGraphNode(point);
     }
 
     /**
@@ -122,11 +138,23 @@ public class Map {
     }
 
     /**
-     *
+     * adds a connection between two nodes
      * @param nodeA
      * @param nodeB
+     * @return true if the point is  added to both nodes
      */
-    public void addConnection(GraphNode nodeA, GraphNode nodeB){
+    public boolean addConnection(GraphNode nodeA, GraphNode nodeB){
+        return graph.addConnection(nodeA, nodeB);
+    }
+
+    /**
+     * Deletes the connection between two nodes
+     * @param nodeA
+     * @param nodeB
+     * @return true if successful
+     */
+    public boolean deleteConnection(GraphNode nodeA, GraphNode nodeB) {
+        return this.graph.deleteConnection(nodeA, nodeB);
     }
 
     /**
@@ -135,4 +163,20 @@ public class Map {
     public HashMap<String, Image> getImages(){
         return this.mapImages;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Map)) {
+            return false;
+        }
+        if (obj == this) {
+            return true;
+        }
+
+        Map rhs = (Map) obj;
+        return this.directory.equals(rhs.directory) &&
+            this.graph.equals(rhs.graph) &&
+            this.mapImages.equals(rhs.mapImages);
+    }
+
 }

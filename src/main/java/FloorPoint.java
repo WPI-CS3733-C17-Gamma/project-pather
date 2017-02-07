@@ -19,6 +19,30 @@ public class FloorPoint implements Comparable{
         return 0;
     }
 
+    /**
+     * return the cartisian distance between another point
+     * @param point
+     * @return
+     */
+    public double distance (FloorPoint point) {
+        return Math.sqrt(point.x * point.x + point.y * point.y);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof FloorPoint)) {
+            return false;
+        }
+        if (obj == this) {
+            return true;
+        }
+
+        FloorPoint rhs = (FloorPoint) obj;
+        return this.x == rhs.x &&
+               this.y == rhs.y &&
+            this.floor.equals(rhs.floor);
+    }
+
     public String toString(){
         return "x: " + x + " y: " + y + " floor: " + floor;
     }
