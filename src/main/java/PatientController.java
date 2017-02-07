@@ -1,4 +1,3 @@
-import com.sun.corba.se.impl.orbutil.graph.Graph;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -16,7 +15,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Shape;
-import sun.security.provider.SHA;
 
 import java.net.URL;
 import java.util.ArrayList;
