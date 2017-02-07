@@ -58,7 +58,7 @@ public class ApplicationController extends Application {
             loader.setController(controller);
             Parent root = loader.load();
             pStage.setTitle("PatientDisplay");
-            pStage.setScene(new Scene(root, 800, 500));
+            pStage.setScene(new Scene(root, 1200, 1000));
         }
         catch (Exception e){
             e.printStackTrace();

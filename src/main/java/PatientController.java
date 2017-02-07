@@ -4,7 +4,9 @@ import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -14,6 +16,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Shape;
+import sun.security.provider.SHA;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -24,11 +27,12 @@ import java.util.stream.Collectors;
 
 
 public class PatientController extends DisplayController implements Initializable {
-    //PatientDisplay display;
-    GraphNode destination;
+    // kiosk location
     GraphNode startNode;
+    // main application controller
     ApplicationController appController;
-
+    // list of shapes that have been drawn on the screen
+    List<Shape> drawnObjects;
     // FXML Things
     @FXML
     private TextField searchBar;
@@ -43,6 +47,9 @@ public class PatientController extends DisplayController implements Initializabl
 
     @FXML
     private AnchorPane anchorPane;
+
+    @FXML
+    private Label helpLabel;
 
     public PatientController(Map map,
                              /*Kiosk kiosk, */
@@ -60,6 +67,7 @@ public class PatientController extends DisplayController implements Initializabl
      * perform search
      */
     public void search () {
+        clearDisplay();
         String search = searchBar.getText();
         if (search.length() > 0) {
             options.setVisible(true);
@@ -111,8 +119,20 @@ public class PatientController extends DisplayController implements Initializabl
         }
     }
 
+    /**
+     * swtich to map admin
+     */
     public void switchToMapAdmin() {
         applicationController.createMapAdminDisplay();
+    }
+
+
+    /**
+     * swtich to directory admin
+     */
+    public void switchToDirectoryAdmin () {
+        System.out.println("SWITCHING TO DIR ADMIN");
+        applicationController.createDirectoryAdminDisplay();
     }
 
     /**
@@ -167,6 +187,18 @@ public class PatientController extends DisplayController implements Initializabl
     }
 
     /**
+     * Remove all the points that have been drawn on the map
+     */
+    public void clearDisplay () {
+        if(drawnObjects == null) {
+            return;
+        }
+        for (Shape shape : drawnObjects) {
+            anchorPane.getChildren().remove(shape);
+        }
+    }
+
+    /**
      * convert local coordinates of map to 1000 / 1000
      * @param node
      * @return
@@ -176,9 +208,8 @@ public class PatientController extends DisplayController implements Initializabl
         double imageHeight = imageView.getFitHeight();
 
         int newX = (int)(node.location.x / 1000. * imageWidth + imageView.getLayoutX());
-        int newY = (int)(node.location.y / 1000. * imageHeight + imageView.getLayoutX());
-        System.out.println("New X" + newX);
-        System.out.println("New Y" + newY);
+        int newY = (int)(node.location.y / 1000. * imageHeight + imageView.getLayoutY());
+        System.out.printf("image width : %f \nimage Height : %f\n", imageWidth, imageHeight);
 
         return new FloorPoint(newX, newY, node.location.floor);
 
@@ -203,7 +234,10 @@ public class PatientController extends DisplayController implements Initializabl
             samplePath.add(new GraphNode(new FloorPoint (100,400,"")));
             samplePath.add(new GraphNode(new FloorPoint (500,400,"")));
             samplePath.add(new GraphNode(new FloorPoint (500,100,"")));
-            samplePath.add(new GraphNode(new FloorPoint (600,100,"")));
+            samplePath.add(new GraphNode(new FloorPoint (1000,1000,"")));
+            samplePath.add(new GraphNode(new FloorPoint (0,1000,"")));
+            samplePath.add(new GraphNode(new FloorPoint (0,0,"")));
+            samplePath.add(new GraphNode(new FloorPoint (1000,0,"")));
 
             displayPath(samplePath);
 
@@ -226,8 +260,8 @@ public class PatientController extends DisplayController implements Initializabl
                 listToDraw.add(drawConnection(prev, node));
             }
             prev = node;
-
         }
+        drawnObjects = listToDraw;
     }
 
     /**
@@ -241,6 +275,12 @@ public class PatientController extends DisplayController implements Initializabl
         return c;
     }
 
+    /**
+     * draw the line between two nodes
+     * @param nodeA
+     * @param nodeB
+     * @return
+     */
     public Shape drawConnection (GraphNode nodeA, GraphNode nodeB) {
         FloorPoint pointA = toLocal(nodeA);
         FloorPoint pointB = toLocal(nodeB);
@@ -257,7 +297,15 @@ public class PatientController extends DisplayController implements Initializabl
     public void loginDirectoryAdmin(String login) {
     }
 
-    void update() {
+    public void help () {
+        System.out.println("Here is how to use this...");
+        if (helpLabel.isVisible()) {
+            helpLabel.setVisible(false);
+        }
+        else {
+           helpLabel.setVisible(true);
+        }
+
     }
 
 
@@ -271,8 +319,11 @@ public class PatientController extends DisplayController implements Initializabl
 //        start = map.getRoomFromName("Kiosk");
 
         imageView.toBack();
-        imageView.setFitHeight(500);
-        imageView.setFitWidth(500);
+        imageView.setPreserveRatio(false);
+        imageView.setFitHeight(800);
+        imageView.setFitWidth(1000);
+        helpLabel.setText("Hello! Thanks for using project-pather.\n\nTo get started, start typing into the search bar. " +
+            "\n Then, select the option you would like to get a path to.\n\nTo close this menu, click on it");
 
     }
 }
