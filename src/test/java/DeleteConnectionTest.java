@@ -6,7 +6,7 @@ import java.util.*;
 /**
  * Created by jonandrews on 2/6/17.
  */
-public class DelectConnectionTest extends TestCase {
+public class DeleteConnectionTest extends TestCase {
     FloorPoint point11 = new FloorPoint(10, 10, "");
     FloorPoint point14 = new FloorPoint(10, 40, "");
     FloorPoint point15 = new FloorPoint(10, 50, "");
@@ -131,6 +131,7 @@ public class DelectConnectionTest extends TestCase {
         assertTrue(node23.adjacent.contains(node22));
         betterGraph.deleteConnection(node23, node22);
         assertFalse(node23.adjacent.contains(node22));
+        assertFalse(node22.adjacent.contains(node23));
 
     }
 
@@ -138,11 +139,13 @@ public class DelectConnectionTest extends TestCase {
         assertTrue(node23.adjacent.contains(node22));
         testMap.deleteConnection(node23, node22);
         assertFalse(node23.adjacent.contains(node22));
+        assertFalse(node22.adjacent.contains(node23));
     }
 
     public void testConnectionMapAdminController() {
         assertTrue(node23.adjacent.contains(node22));
         testMap.deleteConnection(node23, node22);
         assertFalse(node23.adjacent.contains(node22));
+        assertFalse(node22.adjacent.contains(node23));
     }
 }
