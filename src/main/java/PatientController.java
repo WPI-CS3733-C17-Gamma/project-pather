@@ -117,6 +117,7 @@ public class PatientController extends DisplayController implements Initializabl
             String room2 = room.toLowerCase();
             return map.searchEntry(room2);
         }
+        //(update) the display the list of room
     }
 
     /**

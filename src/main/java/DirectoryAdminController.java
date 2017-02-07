@@ -76,7 +76,32 @@ public class DirectoryAdminController extends DisplayController implements Initi
         return null;
     }
 
-    public void saveEntry(String name, String title, List<Room> room) {
+    /**
+     * activeDirectoryEntry must have the entry that is being edited
+     * Throws error IllegalStateException if entry is not selected
+     * and throws IllegalArgumentException if entry already exits
+     * @param name name of the new entry
+     * @param title title of the new entry
+     * @param room list of room associated with the new entry
+     */
+    public void saveEntry(String name, String title, List<Room> room) throws IllegalStateException, IllegalArgumentException{
+        if( activeDirectoryEntry == null ) {
+            throw new IllegalStateException("Tried to save entry when none was selected\n"
+                + "Please make sure 'activeDirectoryEntry in DirectoryAdminController is not null");
+        }
+
+        DirectoryEntry newEntry = new DirectoryEntry(name, title, room);
+
+        if( map.getEntry(name) != null && map.getEntry(name).equals(newEntry) ) {
+            throw new IllegalArgumentException("Tried to save entry that would be a duplicate of one"
+            + " already in the directory");
+        }
+
+        System.out.print(activeDirectoryEntry.getName());
+        map.deleteEntry(activeDirectoryEntry.getName());
+        map.addEntry(newEntry);
+        return;
+
     }
 
     /**

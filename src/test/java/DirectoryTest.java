@@ -39,7 +39,7 @@ public class DirectoryTest{
         assertEquals(1, 1);
     }
 
-    @Test //**************CHANGE THIS LATER***************
+    @Test
     /**
      * This checks to see if the search result returns the right rooms
      */
@@ -50,11 +50,11 @@ public class DirectoryTest{
         // System.err.println(result.toString()+"***********************************************");
         assertNotNull(result);
         assertListEquals(result, temp);
+        assertListEquals(d.searchRooms("3B"), new ArrayList());
     }
 
     /**
-     *
-     * This test tests the room compare method
+     * This test tests the CompareTo method for Room objects
      */
     @Test
     public void compareToTest() {
@@ -63,7 +63,11 @@ public class DirectoryTest{
         assertTrue(charles.compareTo(albert) > 0);
     }
 
-
+    /**
+     * check if two lists contain the same elements and in the exact same order
+     * @param actual
+     * @param expected
+     */
     private void assertListEquals(List actual, List expected){
         assertEquals(actual.size(), expected.size());
         Iterator ia = actual.iterator();
@@ -74,7 +78,7 @@ public class DirectoryTest{
     }
 
     /**
-     * This test tests if the serach result for entry is returning the correct list of
+     * This test tests if the search result for entry is returning the correct list of
      * entry names
      */
     @Test
@@ -85,5 +89,7 @@ public class DirectoryTest{
         // System.err.println(result.toString()+"***********************************************");
         assertListEquals(result, temp);
         assertListEquals(d.searchEntries("Alb"), temp);
+        temp.add("Bernie");
+        assertListEquals(d.searchEntries("er"), temp);//return more than one results
     }
 }
