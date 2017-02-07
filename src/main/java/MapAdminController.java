@@ -4,13 +4,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 
-import java.awt.*;
 import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -32,6 +32,8 @@ public class MapAdminController extends DisplayController implements Initializab
     private ImageView imageviewMap;
     @FXML
     private AnchorPane anchorpaneMap;
+    @FXML
+    private AnchorPane anchorpaneWindow;
 
     String mapName;
 
@@ -61,14 +63,17 @@ public class MapAdminController extends DisplayController implements Initializab
      */
     public void addNode(FloorPoint location){
         map.addNode(new GraphNode(location));
-        Circle c = new Circle((double)location.getX(), (double)location.getY(), 4, Color.BLUE); //Circle not in the right place
-        anchorpaneMap.getChildren().addAll(c);
+        System.out.println(location.getX() + " " + location.getY());
+        Circle c = new Circle((double)location.getX(), (double)location.getY() + 150, 3, Color.BLUE); //Circle not in the right place bc cursor is entire frame while circle is within image frame.
+        System.out.println(c.getCenterX() + " " + c.getCenterY());
+        System.out.println();
+        anchorpaneWindow.getChildren().addAll(c);
 
         //Everything needs to be adjusted in database
     }
 
-    public void addNodeGraphically(){
-        addNode(getMouseLocation());
+    public void addNodeGraphically(MouseEvent e){
+    addNode(getMouseLocation(e));
     }
 
     /**
@@ -143,9 +148,9 @@ public class MapAdminController extends DisplayController implements Initializab
         this.mapName = loc;
     }
 
-    public void isClicked(){
+    public void isClicked(MouseEvent m){
         if (togglebuttonAddNode.isSelected()) {
-            addNodeGraphically();
+            addNodeGraphically(m);
         }
     }
 
@@ -155,11 +160,9 @@ public class MapAdminController extends DisplayController implements Initializab
         }
     }
 
-    private FloorPoint getMouseLocation(){
-        PointerInfo a = MouseInfo.getPointerInfo();
-        Point b = a.getLocation();
+    private FloorPoint getMouseLocation(MouseEvent mouseEvent){
 
-        return new FloorPoint(((int) b.getX()),(int) b.getY(),mapName); //don't need to adjust for resolution because resolution is 1150x625
+        return new FloorPoint((int)mouseEvent.getX(),(int)mouseEvent.getY(),mapName); //don't need to adjust for resolution because resolution is 1150x625
     }
 
 
