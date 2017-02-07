@@ -62,16 +62,18 @@ public class Directory {
      * @return
      */
     public boolean deleteEntry(String key){
-        return false;
+        return entries.remove(key, entries.get(key));
     }
 
     /**
      *
-     * @param key
-     * @return
+     * @param key the key of the entry to get
+     * @return the entry or null if it could not be found
      */
     public DirectoryEntry getEntry(String key){
-        return null;
+        DirectoryEntry entry;
+        entry = entries.get(key);
+        return entry;
     }
 
     /**
