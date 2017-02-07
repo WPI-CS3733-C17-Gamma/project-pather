@@ -148,6 +148,16 @@ public class Map {
     }
 
     /**
+     * Deletes the connection between two nodes
+     * @param nodeA
+     * @param nodeB
+     * @return true if successful
+     */
+    public boolean deleteConnection(GraphNode nodeA, GraphNode nodeB) {
+        return this.graph.deleteConnection(nodeA, nodeB);
+    }
+
+    /**
      * @return the images stored in the Map object
      */
     public HashMap<String, Image> getImages(){
