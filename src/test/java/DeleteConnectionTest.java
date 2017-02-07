@@ -140,7 +140,7 @@ public class DelectConnectionTest extends TestCase {
         assertFalse(node23.adjacent.contains(node22));
     }
 
-    public void testConnectionAdminController() {
+    public void testConnectionMapAdminController() {
         assertTrue(node23.adjacent.contains(node22));
         testMap.deleteConnection(node23, node22);
         assertFalse(node23.adjacent.contains(node22));
