@@ -35,6 +35,9 @@ public class MapAdminController extends DisplayController implements Initializab
     @FXML
     private AnchorPane anchorpaneWindow;
 
+    private double tempX;
+    private double tempY;
+
     String mapName;
 
     /**
@@ -63,10 +66,10 @@ public class MapAdminController extends DisplayController implements Initializab
      */
     public void addNode(FloorPoint location){
         map.addNode(new GraphNode(location));
-        System.out.println(location.getX() + " " + location.getY());
+        //System.out.println(location.getX() + " " + location.getY());
         Circle c = new Circle((double)location.getX(), (double)location.getY() + 150, 3, Color.BLUE); //Circle not in the right place bc cursor is entire frame while circle is within image frame.
-        System.out.println(c.getCenterX() + " " + c.getCenterY());
-        System.out.println();
+        //System.out.println(c.getCenterX() + " " + c.getCenterY());
+        //System.out.println();
         anchorpaneWindow.getChildren().addAll(c);
 
         //Everything needs to be adjusted in database
@@ -111,21 +114,32 @@ public class MapAdminController extends DisplayController implements Initializab
      * @param nodeB
      */
     public void addConnection(GraphNode nodeA, GraphNode nodeB){
+        //System.out.println("started");
         map.addConnection(nodeA, nodeB);
-        Line l = new Line(nodeA.location.getX(),nodeA.location.getY(), nodeB.location.getX(), nodeB.location.getY());
+        Line l = new Line(nodeA.location.getX(),nodeA.location.getY()+150, nodeB.location.getX(), nodeB.location.getY()+150);
         l.setFill(Color.RED);
-
+        anchorpaneWindow.getChildren().add(l);
+        //System.out.println("finished");
     }
 
-    public void addConnectionGraphically(){
+    public void addConnectionPressed(MouseEvent m){
+        tempX = m.getX();
+        tempY = m.getY();
+    }
 
+    public void addConnectionReleased(MouseEvent m){
+        double finalX = m.getX();
+        double finalY = m.getY();
 
+        addConnection(new GraphNode(new FloorPoint((int)tempX, (int)tempY, mapName)), new GraphNode(new FloorPoint((int)finalX, (int)finalY, mapName)));
 
     }
 
 
     public void deleteConnection(GraphNode nodeA, GraphNode nodeB){
-        //idk what to do about deleting this
+
+
+
     }
 
     /**
@@ -154,9 +168,15 @@ public class MapAdminController extends DisplayController implements Initializab
         }
     }
 
-    private void isDragged(){
+    public void isPressed(MouseEvent m){
         if (togglebuttonAddConnections.isSelected()){
+             addConnectionPressed(m);
+        }
+    }
 
+    public void isReleased(MouseEvent m){
+        if (togglebuttonAddConnections.isSelected()){
+            addConnectionReleased(m);
         }
     }
 
