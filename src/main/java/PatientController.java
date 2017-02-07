@@ -121,6 +121,7 @@ public class PatientController extends DisplayController implements Initializabl
      * @return
      */
     public GraphNode select(String option) {
+        searchBar.setText(option);
         System.out.println("select");
         DirectoryEntry entry = map.getEntry(option);
         // if the selected entry is an entry not a room
