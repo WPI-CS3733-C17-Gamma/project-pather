@@ -129,7 +129,18 @@ public class GraphNetwork {
         return false;
     }
 
+    /**
+     * Delete a node from graph and delete the node from the adjacent nodes
+     * @param node
+     */
+
     public void deleteNode(GraphNode node){
+        // 1. remove node from list
+        graphNodes.remove(node);
+        // 2. remove node from all adjacent nodes
+       for(GraphNode s: node.adjacent){
+           s.adjacent.remove(node);
+       }
     }
 
     /**

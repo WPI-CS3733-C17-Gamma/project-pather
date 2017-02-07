@@ -1,4 +1,5 @@
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Directory {
     HashMap<String, DirectoryEntry> entries;
@@ -136,7 +137,7 @@ public class Directory {
         }
 
         for(DirectoryEntry entry : entries.values()) {
-           entry.deleteLocatoin(room);
+           entry.deleteLocation(room);
         }
 
         return true;
