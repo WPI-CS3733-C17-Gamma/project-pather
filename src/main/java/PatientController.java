@@ -26,6 +26,9 @@ import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 
+/**
+ * controls all interaction with the patient display
+ */
 public class PatientController extends DisplayController implements Initializable {
     // kiosk location
     GraphNode startNode;
@@ -40,9 +43,6 @@ public class PatientController extends DisplayController implements Initializabl
     @FXML
     private ListView<String> options;
     @FXML
-    private void initialize() {
-    }
-    @FXML
     private ImageView imageView;
 
     @FXML
@@ -51,6 +51,12 @@ public class PatientController extends DisplayController implements Initializabl
     @FXML
     private Label helpLabel;
 
+    /**
+     *
+     * @param map
+     * @param applicationController
+     * @param currentMap
+     */
     public PatientController(Map map,
                              /*Kiosk kiosk, */
                              ApplicationController applicationController,
@@ -58,6 +64,9 @@ public class PatientController extends DisplayController implements Initializabl
         super(map,applicationController, currentMap);
     }
 
+    /**
+     * draw an image (the map)
+     */
     public void displayImage() {
         Image floor3 = new Image("Maps/floor3.png");
         imageView.setImage(floor3);
@@ -229,19 +238,7 @@ public class PatientController extends DisplayController implements Initializabl
         }
         // should throw error
         else {
-            System.out.println("drawing temp path");
-
-            LinkedList<GraphNode> samplePath = new LinkedList<>();
-            samplePath.add(new GraphNode(new FloorPoint (100,400,"")));
-            samplePath.add(new GraphNode(new FloorPoint (500,400,"")));
-            samplePath.add(new GraphNode(new FloorPoint (500,100,"")));
-            samplePath.add(new GraphNode(new FloorPoint (1000,1000,"")));
-            samplePath.add(new GraphNode(new FloorPoint (0,1000,"")));
-            samplePath.add(new GraphNode(new FloorPoint (0,0,"")));
-            samplePath.add(new GraphNode(new FloorPoint (1000,0,"")));
-
-            displayPath(samplePath);
-
+            System.out.println("No path can be drawn");
         }
     }
 
@@ -295,6 +292,10 @@ public class PatientController extends DisplayController implements Initializabl
         return line;
     }
 
+    /**
+     * Will be implemented later
+     * @param login
+     */
     public void loginDirectoryAdmin(String login) {
     }
 
@@ -310,12 +311,17 @@ public class PatientController extends DisplayController implements Initializabl
     }
 
 
-
+    /**
+     * initialize the fxml components etc
+     * @param location
+     * @param resources
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         System.out.println("INIT");
         displayImage();
 
+        // TODO will need to be changed to kiosk
         this.startNode = new GraphNode(new FloorPoint(100,100,""));
 //        start = map.getRoomFromName("Kiosk");
 

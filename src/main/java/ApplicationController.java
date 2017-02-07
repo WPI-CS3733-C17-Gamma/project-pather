@@ -17,30 +17,11 @@ public class ApplicationController extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        initialize();
+
         this.pStage = primaryStage;
         // load database
-        //TODO remove!!
-        map = new Map(
-            new Directory(new HashMap<>(), new HashMap<>()),
-            new GraphNetwork(new LinkedList<>()),
-            new HashMap<>());
-        map.addEntry(new DirectoryEntry("A","doctor", new LinkedList<Room>()));
-        map.addEntry(new DirectoryEntry("anotherB","doctor", new LinkedList<Room>()));
-        map.addEntry(new DirectoryEntry("Cee","doctor", new LinkedList<Room>()));
-        Room tempRoom = new Room(new GraphNode(new FloorPoint(1,1,"1")), "402");
-        Room tempRoom2 = new Room(new GraphNode(new FloorPoint(2,1,"1")), "401");
-        Room tempRoom3 = new Room(new GraphNode(new FloorPoint(3,1,"1")), "432");
-        Room tempRoom4 = new Room(new GraphNode(new FloorPoint(4,1,"1")), "502");
-        map.getEntry("Cee").addLocation(tempRoom);
-        map.getEntry("Cee").addLocation(tempRoom2);
-        map.getEntry("Cee").addLocation(tempRoom3);
-        map.getEntry("Cee").addLocation(tempRoom4);
-        map.getEntry("A").addLocation(tempRoom);
-        map.addRoom(tempRoom);
-        map.addRoom(tempRoom2);
-        map.addRoom(tempRoom3);
-        map.addRoom(tempRoom4);
-        ////
+        map = databaseManager.load();
         createPatientDisplay();
         primaryStage.show();
     }
@@ -51,6 +32,9 @@ public class ApplicationController extends Application {
     }
 
 
+    /**
+     * load the patient display into the frame
+     */
     public void createPatientDisplay(){
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("PatientDisplay.fxml"));
@@ -121,6 +105,21 @@ public class ApplicationController extends Application {
      */
     public void logout(){
         createPatientDisplay();
+    }
+
+    /**
+     * write current state to database
+     */
+    public void save () {
+        databaseManager.write(map);
+    }
+    /**
+     * stop and write to database
+     */
+    @Override
+    public void stop () {
+        databaseManager.write(map);
+        System.out.println("Application Closed");
     }
 
     public static void main (String[] args) {
