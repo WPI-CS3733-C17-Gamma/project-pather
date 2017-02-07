@@ -1,16 +1,84 @@
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class GraphNetwork {
-    LinkedList<GraphNode> graphNodes = new LinkedList();
+    LinkedList<GraphNode> graphNodes = new LinkedList<>();
+
+    public GraphNetwork(){}
 
     public GraphNetwork(LinkedList<GraphNode> graphNodes) {
         this.graphNodes = graphNodes;
     }
 
-    public LinkedList getPath(GraphNode start, GraphNode end) {
+    public static LinkedList<GraphNode> getPath(GraphNode startNode, GraphNode goalNode){
+        AStarNode start = new AStarNode(startNode);
+        AStarNode goal = new AStarNode(goalNode);
+        LinkedList<AStarNode> openSet = new LinkedList<>();
+        LinkedList<AStarNode> closedSet = new LinkedList<>();
+
+        AStarNode current;
+
+        openSet.add(start);
+
+        start.gScore = 0;
+
+        start.fScore = start.getDistance(goal);
+
+        while(openSet.size() > 0){
+            //Sort List of nodes
+            openSet.sort(new Comparator<AStarNode>(){
+                @Override
+                public int compare(AStarNode a, AStarNode b) {
+                    return ((int)b.fScore - (int)a.fScore);
+                }
+            });
+
+            current = openSet.getFirst();
+            if(current.equals(goal))
+                return reconstruct_path(current);
+
+            openSet.remove(current);
+            closedSet.add(current);
+            current.node.getAdjacent().sort(new Comparator<GraphNode>(){
+                @Override
+                public int compare(GraphNode a, GraphNode b) {
+                    return ((int)b.distance(goalNode) - (int)a.distance(goalNode));
+                }
+            });
+            for (GraphNode gNeighbour: current.node.getAdjacent()) {
+                AStarNode neighbour = new AStarNode(gNeighbour);
+                if (closedSet.contains(neighbour))
+                    continue;
+                double tentative_gscore = current.gScore + neighbour.getDistance(current);
+                if(!openSet.contains(neighbour))
+                    openSet.add(neighbour);
+
+                else if (tentative_gscore >= neighbour.gScore)
+                    continue;
+                neighbour.cameFrom = current;
+                neighbour.gScore = tentative_gscore;
+                neighbour.fScore = tentative_gscore + neighbour.getDistance(goal);
+            }
+        }
         return null;
+    }
+
+    /***
+     *
+     * @param current
+     * @return final Node in A* and reconstructs path
+     */
+    private static LinkedList<GraphNode> reconstruct_path(AStarNode current){
+        LinkedList<GraphNode> total_path = new LinkedList<>();
+        total_path.add(current.node);
+
+        while(current.cameFrom != null){
+            current = current.cameFrom;
+            total_path.add(current.node);
+        }
+        return total_path;
     }
 
     /**
@@ -64,7 +132,35 @@ public class GraphNetwork {
     public void deleteNode(GraphNode node){
     }
 
-    public void addConnection(GraphNode nodeA, GraphNode nodeB){
+    /**
+     * Adds a connection between two nodes
+     * @param nodeA
+     * @param nodeB
+     * @return true if connection was successful
+     */
+    public boolean addConnection(GraphNode nodeA, GraphNode nodeB){
+        nodeA.addAdjacent(nodeB);
+        nodeB.addAdjacent(nodeA);
+        if(nodeA.getAdjacent().contains(nodeB) && nodeB.getAdjacent().contains(nodeA))
+            return true;
+        else
+            return false;
+    }
+
+    /**
+     * Deletes the connection between two nodes
+     * @param nodeA
+     * @param nodeB
+     * @return true if successful
+     */
+    public boolean deleteConnection(GraphNode nodeA, GraphNode nodeB) {
+        if (nodeB.adjacent.contains(nodeA)) {
+            //do the thing
+            nodeA.removeAdjacent(nodeB);
+            nodeB.removeAdjacent(nodeA);
+            return true;
+        }
+        return false;
     }
 
     LinkedList AStar(GraphNode start, GraphNode end){

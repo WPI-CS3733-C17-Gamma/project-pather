@@ -2,6 +2,7 @@ import java.sql.*;
 import java.util.HashMap;
 import java.util.LinkedList;
 import javafx.scene.image.Image;
+import org.apache.derby.shared.common.error.DerbySQLIntegrityConstraintViolationException;
 
 public class DatabaseManager {
     String connectionURL;
@@ -20,10 +21,18 @@ public class DatabaseManager {
             "constraint eID_fk foreign key (eID) references Entries(eID),"+
             "constraint rID_fk foreign key (rID) references Rooms(rID))"};
 
+    public static final String[] dropStatements = {
+        "drop table RoomEntryAssoc",
+        "drop table Rooms",
+        "drop table Entries",
+        "drop table Edges",
+        "drop table GraphNodes"};
+
+
     public DatabaseManager(String dbName) {
-		// define the Derby connection URL to use
-		this.connectionURL = "jdbc:derby:" + dbName + ";create=true";
-		try {
+        // define the Derby connection URL to use
+        this.connectionURL = "jdbc:derby:" + dbName + ";create=true";
+        try {
             this.connection = DriverManager.getConnection(connectionURL);
             System.out.println("Connected to database " + dbName);
         }
@@ -34,7 +43,7 @@ public class DatabaseManager {
     }
 
     /** Loads a Map from the database
-     * @returns the loaded map
+     * @return the loaded map
      */
     public Map load(){
         // Map IDs for Rooms, Entries and Nodes to Rooms, Entries, and
@@ -121,8 +130,95 @@ public class DatabaseManager {
         return new Map(directory, graph, mapImages);
     }
 
-    public boolean write(Map data){
-        return true;
+    /** Write a map to the database
+     * @param data A Map to save
+     */
+    public void write(Map data) {
+        try {
+            PreparedStatement insertGraphNode = connection.prepareStatement(
+                "insert into GraphNodes (ID, X, Y, Floor) values (?, ?, ?, ?)");
+            PreparedStatement insertEdge = connection.prepareStatement(
+                "insert into Edges (ID1, ID2) values (?, ?)");
+            PreparedStatement insertRoom = connection.prepareStatement(
+                "insert into Rooms (rID, name, nID) values (?, ?, ?)");
+            PreparedStatement insertEntry = connection.prepareStatement(
+                "insert into Entries (eID, name, title) values (?, ?, ?)");
+            PreparedStatement insertRoomEntryAssoc = connection.prepareStatement(
+                "insert into RoomEntryAssoc (eID, rID) values (?, ?)");
+
+            // Clear/reinit DB
+            // TODO: probably a better way to do this
+            execStatements(dropStatements);
+            execStatements(initStatements);
+
+            // Insert each node
+            for (GraphNode node : data.graph.graphNodes) {
+                insertGraphNode.setLong(1, node.id);
+                insertGraphNode.setInt(2, node.location.x);
+                insertGraphNode.setInt(3, node.location.y);
+                insertGraphNode.setString(4, node.location.floor);
+                insertGraphNode.executeUpdate();
+
+                // Insert an edge for each adjacent node
+                for (GraphNode adjacentNode : node.getAdjacent()) {
+                    insertEdge.setLong(1, node.id);
+                    insertEdge.setLong(2, adjacentNode.id);
+                    try {
+                        insertEdge.executeUpdate();
+                    }
+                    // handle constraint violations (duplicate adds)
+                    catch (DerbySQLIntegrityConstraintViolationException e) {
+                        System.out.println(e.getMessage());
+                    }
+                }
+            }
+
+            // Insert each room
+            for (Room room : data.directory.rooms.values()) {
+                insertRoom.setLong(1, room.id);
+                insertRoom.setString(2, room.name);
+                insertRoom.setLong(3, room.location.id);
+                insertRoom.executeUpdate();
+            }
+
+            // Insert each entry
+            for (DirectoryEntry entry : data.directory.entries.values()) {
+                insertEntry.setLong(1, entry.id);
+                insertEntry.setString(2, entry.name);
+                insertEntry.setString(3, entry.title);
+                insertEntry.executeUpdate();
+
+                // Insert each room association
+                for (Room room : entry.location) {
+                    insertRoomEntryAssoc.setLong(1, entry.id);
+                    insertRoomEntryAssoc.setLong(2, room.id);
+                    try {
+                        insertRoomEntryAssoc.executeUpdate();
+                    }
+                    // handle constraint violations (duplicate adds)
+                    catch (DerbySQLIntegrityConstraintViolationException e) {
+                        System.out.println(e.getMessage());
+                    }
+                }
+            }
+        }
+        catch (SQLException e) {
+            System.out.println(e.toString() + e.getMessage());
+        }
     }
 
+    private void execStatements(String[] statements) {
+        try {
+            Statement statement = connection.createStatement();
+
+            // Execute all given setup statements
+            for (String s : statements) {
+                statement.executeUpdate(s);
+            }
+            statement.close();
+        }
+        catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+    }
 }

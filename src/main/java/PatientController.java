@@ -1,3 +1,5 @@
+import java.util.List;
+
 public class PatientController extends DisplayController{
     //PatientDisplay display;
     GraphNode destination;
@@ -16,14 +18,20 @@ public class PatientController extends DisplayController{
         super(map,applicationController, currentMap);
     }
 
+    /**
+     * Search for a list of possible results given a string of input from the list of directory entries and list rooms
+     * @param room the input string for searching for a room
+     */
     public void search(String room) {
-        if (((int)room.charAt(0)) < 58 && ((int)room.charAt(0)) > 47){
-            map.searchRoom(room);
+        List<String> result;
+        if (((int)room.charAt(0)) < 58 && ((int)room.charAt(0)) > 47 && room.length() > 1){
+            result = map.searchRoom(room);
         }
         else{
             String room2 = room.toLowerCase();
-            map.searchEntry(room2);
+            result = map.searchEntry(room2);
         }
+        //(update) the display the list of room
     }
 
     public GraphNode select(String option) {
