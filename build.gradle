@@ -23,7 +23,7 @@ repositories {
 }
 
 jfx {
-    mainClass = 'Main';
+    mainClass = 'ApplicationController';
     vendor = 'TeamGamma';
 }
 
