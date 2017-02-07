@@ -14,9 +14,9 @@ public class Room extends Ided implements Comparable {
     }
 
     /**
-     *
-     * @param room
-     * @return negative if this is smaller than room, otherwise positive
+     * Compare the name of the room lexicographically so that the Collection.sort method can sort rooms alphabetically
+     * @param room the given room that needs to be compared to the current instance of the object
+     * @return negative if this is smaller than the given room, otherwise positive
      */
     @Override
     public int compareTo(Object room){
@@ -31,6 +31,11 @@ public class Room extends Ided implements Comparable {
 
     }
 
+    /**
+     * Determine if the two room objects are equal by their attributes
+     * @param room the room that needs to be checked against this current instance of the object
+     * @return true if rooms share the same attributes
+     */
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof Room)) {
