@@ -41,13 +41,13 @@ public class GraphNetwork {
 
             openSet.remove(current);
             closedSet.add(current);
-            current.node.adjacent.sort(new Comparator<GraphNode>(){
+            current.node.getAdjacent().sort(new Comparator<GraphNode>(){
                 @Override
                 public int compare(GraphNode a, GraphNode b) {
                     return ((int)b.distance(goalNode) - (int)a.distance(goalNode));
                 }
             });
-            for (GraphNode gNeighbour: current.node.adjacent) {
+            for (GraphNode gNeighbour: current.node.getAdjacent()) {
                 AStarNode neighbour = new AStarNode(gNeighbour);
                 if (closedSet.contains(neighbour))
                     continue;
@@ -132,7 +132,19 @@ public class GraphNetwork {
     public void deleteNode(GraphNode node){
     }
 
-    public void addConnection(GraphNode nodeA, GraphNode nodeB){
+    /**
+     * Adds a connection between two nodes
+     * @param nodeA
+     * @param nodeB
+     * @return true if connection was successful
+     */
+    public boolean addConnection(GraphNode nodeA, GraphNode nodeB){
+        nodeA.addAdjacent(nodeB);
+        nodeB.addAdjacent(nodeA);
+        if(nodeA.getAdjacent().contains(nodeB) && nodeB.getAdjacent().contains(nodeA))
+            return true;
+        else
+            return false;
     }
 
     /**

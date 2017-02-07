@@ -138,13 +138,13 @@ public class Map {
     }
 
     /**
-     *
+     * adds a connection between two nodes
      * @param nodeA
      * @param nodeB
      * @return true if the point is  added to both nodes
      */
     public boolean addConnection(GraphNode nodeA, GraphNode nodeB){
-        return nodeA.addAdjacent(nodeB) && nodeB.addAdjacent(nodeA);
+        return graph.addConnection(nodeA, nodeB);
     }
 
     /**
