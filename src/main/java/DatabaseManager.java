@@ -21,9 +21,9 @@ public class DatabaseManager {
             "constraint rID_fk foreign key (rID) references Rooms(rID))"};
 
     public DatabaseManager(String dbName) {
-		// define the Derby connection URL to use
-		this.connectionURL = "jdbc:derby:" + dbName + ";create=true";
-		try {
+        // define the Derby connection URL to use
+        this.connectionURL = "jdbc:derby:" + dbName + ";create=true";
+        try {
             this.connection = DriverManager.getConnection(connectionURL);
             System.out.println("Connected to database " + dbName);
         }
@@ -34,7 +34,7 @@ public class DatabaseManager {
     }
 
     /** Loads a Map from the database
-     * @returns the loaded map
+     * @return the loaded map
      */
     public Map load(){
         // Map IDs for Rooms, Entries and Nodes to Rooms, Entries, and
