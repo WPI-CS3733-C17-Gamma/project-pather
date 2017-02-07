@@ -135,6 +135,22 @@ public class GraphNetwork {
     public void addConnection(GraphNode nodeA, GraphNode nodeB){
     }
 
+    /**
+     * Deletes the connection between two nodes
+     * @param nodeA
+     * @param nodeB
+     * @return true if successful
+     */
+    public boolean deleteConnection(GraphNode nodeA, GraphNode nodeB) {
+        if (nodeB.adjacent.contains(nodeA)) {
+            //do the thing
+            nodeA.removeAdjacent(nodeB);
+            nodeB.removeAdjacent(nodeA);
+            return true;
+        }
+        return false;
+    }
+
     LinkedList AStar(GraphNode start, GraphNode end){
         return null;
     }
