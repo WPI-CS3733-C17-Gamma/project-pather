@@ -130,6 +130,45 @@ public class DatabaseTest extends TestCase{
     }
 
     @Test
+    public void testLoad() {
+        String[] statements =
+            {"insert into GraphNodes (ID, X, Y, Floor) values (1, 4, 2, 'bob1')",
+             "insert into GraphNodes (ID, X, Y, Floor) values (1, 4, 3, 'bob1')",
+             "insert into Rooms (rID, name, nID) values (1, 'derFs Office', 1)",
+             "insert into Entries (eID, name, title) values (1, 'the land of derF', 'office')",
+             "insert into RoomEntryAssoc (eID, rID) values (1, 1)"};
+        execStatements(statements);
+
+        GraphNode nodeA = new GraphNode(new FloorPoint(4, 2, "bob1"));
+        GraphNode nodeB = new GraphNode(new FloorPoint(4, 3, "bob1"));
+        nodeA.addAdjacent(nodeB);
+        nodeB.addAdjacent(nodeA);
+
+        Room roomA = new Room(nodeA, "derFs Office");
+        DirectoryEntry entryA = new DirectoryEntry(
+            "the land of derF", "office", Arrays.asList(roomA));
+
+        HashMap<String, Room> rooms = new HashMap<String, Room>();
+        rooms.put(roomA.name, roomA);
+
+        HashMap<String, DirectoryEntry> entries =
+            new HashMap<String, DirectoryEntry>();
+        entries.put(entryA.name, entryA);
+
+        GraphNetwork graph = new GraphNetwork(
+            new LinkedList<GraphNode>(Arrays.asList(nodeA, nodeB)));
+        Directory directory = new Directory(entries, rooms);
+        HashMap<String, Image> mapImages = new HashMap<String, Image>();
+        Map expected = new Map(directory, graph, mapImages);
+
+        DatabaseManager db = new DatabaseManager(DBName);
+        db.write(expected);
+        Map actual = db.load();
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
     public void testEmptyLoad() {
         GraphNetwork graph = new GraphNetwork(
             new LinkedList<GraphNode>());
@@ -140,6 +179,78 @@ public class DatabaseTest extends TestCase{
         Map expected = new Map(directory, graph, mapImages);
 
         Map actual = new DatabaseManager(DBName).load();
+        assertEquals(expected, actual);
+    }
+
+
+
+    @Test
+    public void testGraphNodeWrite() {
+        GraphNode nodeA = new GraphNode(new FloorPoint(4, 2, "bob1"));
+        GraphNode nodeB = new GraphNode(new FloorPoint(4, 3, "bob1"));
+        nodeA.addAdjacent(nodeB);
+        nodeB.addAdjacent(nodeA);
+
+        GraphNetwork graph = new GraphNetwork(
+            new LinkedList<GraphNode>(Arrays.asList(nodeA, nodeB)));
+        Directory directory = new Directory(
+            new HashMap<String, DirectoryEntry>(),
+            new HashMap<String, Room>());
+        HashMap<String, Image> mapImages = new HashMap<String, Image>();
+        Map expected = new Map(directory, graph, mapImages);
+
+        DatabaseManager db = new DatabaseManager(DBName);
+        db.write(expected);
+        Map actual = db.load();
+
+        assertEquals(expected.graph.graphNodes, actual.graph.graphNodes);
+    }
+
+    @Test
+    public void testWrite() {
+        GraphNode nodeA = new GraphNode(new FloorPoint(4, 2, "bob1"));
+        GraphNode nodeB = new GraphNode(new FloorPoint(4, 3, "bob1"));
+        nodeA.addAdjacent(nodeB);
+        nodeB.addAdjacent(nodeA);
+
+        Room roomA = new Room(nodeA, "derFs Office");
+        DirectoryEntry entryA = new DirectoryEntry(
+            "the land of derF", "office", Arrays.asList(roomA));
+
+        HashMap<String, Room> rooms = new HashMap<String, Room>();
+        rooms.put(roomA.name, roomA);
+
+        HashMap<String, DirectoryEntry> entries =
+            new HashMap<String, DirectoryEntry>();
+        entries.put(entryA.name, entryA);
+
+        GraphNetwork graph = new GraphNetwork(
+            new LinkedList<GraphNode>(Arrays.asList(nodeA, nodeB)));
+        Directory directory = new Directory(entries, rooms);
+        HashMap<String, Image> mapImages = new HashMap<String, Image>();
+        Map expected = new Map(directory, graph, mapImages);
+
+        DatabaseManager db = new DatabaseManager(DBName);
+        db.write(expected);
+        Map actual = db.load();
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testEmptyWrite() {
+        GraphNetwork graph = new GraphNetwork(
+            new LinkedList<GraphNode>());
+        Directory directory = new Directory(
+            new HashMap<String, DirectoryEntry>(),
+            new HashMap<String, Room>());
+        HashMap<String, Image> mapImages = new HashMap<String, Image>();
+        Map expected = new Map(directory, graph, mapImages);
+
+        DatabaseManager db = new DatabaseManager(DBName);
+        db.write(expected);
+        Map actual = db.load();
+
         assertEquals(expected, actual);
     }
 }
