@@ -160,7 +160,7 @@ public class DatabaseManager {
                 insertGraphNode.executeUpdate();
 
                 // Insert an edge for each adjacent node
-                for (GraphNode adjacentNode : node.adjacent) {
+                for (GraphNode adjacentNode : node.getAdjacent()) {
                     insertEdge.setLong(1, node.id);
                     insertEdge.setLong(2, adjacentNode.id);
                     try {

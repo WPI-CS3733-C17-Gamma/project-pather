@@ -20,11 +20,11 @@ public class Directory {
      * @return an empty list if the given name of the room is not found, or a list containing the given name of the room
      */
     public List<String> searchRooms(String key){
-        return rooms.values()
-            .stream()
-            .filter(room -> room.name.toLowerCase().contains(key.toLowerCase()))
-            .map(room -> room.name)
-            .collect(Collectors.toList());
+        List<String> temp = new ArrayList<String>();
+        if (rooms.get(key) != null) {
+            temp.add(key);
+        }
+        return temp;
     }
 
     /**
@@ -34,7 +34,7 @@ public class Directory {
      */
     public List<String> searchEntries(String key){
         key = key.toLowerCase();
-        List<String> list = new ArrayList();
+        List<String> list = new ArrayList<String>();
         Set<String> keySets = entries.keySet();
         Iterator<String> i = keySets.iterator();
         String temp;

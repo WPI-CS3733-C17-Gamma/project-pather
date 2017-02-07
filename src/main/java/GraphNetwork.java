@@ -1,11 +1,7 @@
-import com.sun.corba.se.impl.orbutil.graph.Graph;
-
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
-
-
 
 public class GraphNetwork {
     LinkedList<GraphNode> graphNodes = new LinkedList<>();
@@ -45,13 +41,13 @@ public class GraphNetwork {
 
             openSet.remove(current);
             closedSet.add(current);
-            current.node.adjacent.sort(new Comparator<GraphNode>(){
+            current.node.getAdjacent().sort(new Comparator<GraphNode>(){
                 @Override
                 public int compare(GraphNode a, GraphNode b) {
                     return ((int)b.distance(goalNode) - (int)a.distance(goalNode));
                 }
             });
-            for (GraphNode gNeighbour: current.node.adjacent) {
+            for (GraphNode gNeighbour: current.node.getAdjacent()) {
                 AStarNode neighbour = new AStarNode(gNeighbour);
                 if (closedSet.contains(neighbour))
                     continue;
@@ -147,7 +143,35 @@ public class GraphNetwork {
        }
     }
 
-    public void addConnection(GraphNode nodeA, GraphNode nodeB){
+    /**
+     * Adds a connection between two nodes
+     * @param nodeA
+     * @param nodeB
+     * @return true if connection was successful
+     */
+    public boolean addConnection(GraphNode nodeA, GraphNode nodeB){
+        nodeA.addAdjacent(nodeB);
+        nodeB.addAdjacent(nodeA);
+        if(nodeA.getAdjacent().contains(nodeB) && nodeB.getAdjacent().contains(nodeA))
+            return true;
+        else
+            return false;
+    }
+
+    /**
+     * Deletes the connection between two nodes
+     * @param nodeA
+     * @param nodeB
+     * @return true if successful
+     */
+    public boolean deleteConnection(GraphNode nodeA, GraphNode nodeB) {
+        if (nodeB.adjacent.contains(nodeA)) {
+            //do the thing
+            nodeA.removeAdjacent(nodeB);
+            nodeB.removeAdjacent(nodeA);
+            return true;
+        }
+        return false;
     }
 
     LinkedList AStar(GraphNode start, GraphNode end){
