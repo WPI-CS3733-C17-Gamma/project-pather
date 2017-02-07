@@ -1,13 +1,21 @@
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.*;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
 
-import java.awt.*;
 import java.io.File;
+import java.net.URL;
+import java.util.ResourceBundle;
 
-public class MapAdminController extends DisplayController {
+public class MapAdminController extends DisplayController implements Initializable {
 //    MapAdminDisplay display;
     GraphNode selectedNode;
     GraphNode secondaryNode;
@@ -22,6 +30,13 @@ public class MapAdminController extends DisplayController {
     private ToggleButton togglebuttonAddConnections;
     @FXML
     private ImageView imageviewMap;
+    @FXML
+    private AnchorPane anchorpaneMap;
+    @FXML
+    private AnchorPane anchorpaneWindow;
+
+    private double tempX;
+    private double tempY;
 
     String mapName;
 
@@ -35,10 +50,14 @@ public class MapAdminController extends DisplayController {
         super(map, applicationController, currentMap);
     }
 
+
     void update(){
+        //needs to update the database with any changes
+
     }
 
     public void login(String credentials){
+        //no need to worry about this for this iteration
     }
 
     /**
@@ -46,11 +65,18 @@ public class MapAdminController extends DisplayController {
      * @param location location to create a point at
      */
     public void addNode(FloorPoint location){
-        //need to add database save code
+        map.addNode(new GraphNode(location));
+        //System.out.println(location.getX() + " " + location.getY());
+        Circle c = new Circle((double)location.getX(), (double)location.getY() + 150, 3, Color.BLUE); //Circle not in the right place bc cursor is entire frame while circle is within image frame.
+        //System.out.println(c.getCenterX() + " " + c.getCenterY());
+        //System.out.println();
+        anchorpaneWindow.getChildren().addAll(c);
+
+        //Everything needs to be adjusted in database
     }
 
-    public void addNodeGraphically(){
-        addNode(getMouseLocation());
+    public void addNodeGraphically(MouseEvent e){
+    addNode(getMouseLocation(e));
     }
 
     /**
@@ -88,10 +114,32 @@ public class MapAdminController extends DisplayController {
      * @param nodeB
      */
     public void addConnection(GraphNode nodeA, GraphNode nodeB){
-        boolean addedSuccesfully = map.addConnection(nodeA, nodeB);
+        //System.out.println("started");
+        map.addConnection(nodeA, nodeB);
+        Line l = new Line(nodeA.location.getX(),nodeA.location.getY()+150, nodeB.location.getX(), nodeB.location.getY()+150);
+        l.setFill(Color.RED);
+        anchorpaneWindow.getChildren().add(l);
+        //System.out.println("finished");
     }
 
+    public void addConnectionPressed(MouseEvent m){
+        tempX = m.getX();
+        tempY = m.getY();
+    }
+
+    public void addConnectionReleased(MouseEvent m){
+        double finalX = m.getX();
+        double finalY = m.getY();
+
+        addConnection(new GraphNode(new FloorPoint((int)tempX, (int)tempY, mapName)), new GraphNode(new FloorPoint((int)finalX, (int)finalY, mapName)));
+
+    }
+
+
     public void deleteConnection(GraphNode nodeA, GraphNode nodeB){
+
+
+
     }
 
     /**
@@ -106,26 +154,41 @@ public class MapAdminController extends DisplayController {
     public void deleteRoomFromNode(GraphNode node) {
         boolean successfulDelete = map.deleteRoom(node);
     }
-    private void setMap(String loc, String mapName){
-        File file = new File(loc);
-        Image map = new Image(file.toURI().toString());
-        imageviewMap.setImage(map);
-        this.mapName = mapName;
+
+    private void setMap(String loc){
+        System.out.println(loc);
+        Image floor3 = new Image("Maps/floor3.png");
+        imageviewMap.setImage(floor3);
+        this.mapName = loc;
     }
 
-    private void isClicked(){
-        if (togglebuttonAddNode.isSelected()){
-            addNodeGraphically();
-        } else if (togglebuttonAddConnections.isSelected()){
-            //add in AddConnections stuff
+    public void isClicked(MouseEvent m){
+        if (togglebuttonAddNode.isSelected()) {
+            addNodeGraphically(m);
         }
     }
 
-    private FloorPoint getMouseLocation(){
-        PointerInfo a = MouseInfo.getPointerInfo();
-        Point b = a.getLocation();
+    public void isPressed(MouseEvent m){
+        if (togglebuttonAddConnections.isSelected()){
+             addConnectionPressed(m);
+        }
+    }
 
-        return new FloorPoint(((int) b.getX()),(int) b.getY(),mapName);
+    public void isReleased(MouseEvent m){
+        if (togglebuttonAddConnections.isSelected()){
+            addConnectionReleased(m);
+        }
+    }
+
+    private FloorPoint getMouseLocation(MouseEvent mouseEvent){
+
+        return new FloorPoint((int)mouseEvent.getX(),(int)mouseEvent.getY(),mapName); //don't need to adjust for resolution because resolution is 1150x625
+    }
+
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        setMap(location.toString());
     }
 
 }

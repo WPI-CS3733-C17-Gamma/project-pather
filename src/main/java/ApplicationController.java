@@ -21,8 +21,23 @@ public class ApplicationController extends Application {
 
         this.pStage = primaryStage;
         // load database
+
         map = databaseManager.load();
         createPatientDisplay();
+/*
+        map = new Map(
+            new Directory(new HashMap<>(), new HashMap<>()),
+            new GraphNetwork(new LinkedList<>()),
+            new HashMap<>());
+        map.addEntry(new DirectoryEntry("A","doctor", new LinkedList<Room>()));
+        map.addEntry(new DirectoryEntry("anotherB","doctor", new LinkedList<Room>()));
+        map.addEntry(new DirectoryEntry("Cee","doctor", new LinkedList<Room>()));
+        Room tempRoom = new Room(new GraphNode(new FloorPoint(1,1,"1")), "402");
+        map.addRoom(tempRoom);
+        ////
+        //createPatientDisplay();
+        createMapAdminDisplay();
+        */
         primaryStage.show();
     }
 
@@ -75,6 +90,7 @@ public class ApplicationController extends Application {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("DirectoryAdminDisplay.fxml"));
             DirectoryAdminController controller = new DirectoryAdminController(map,this, "Maps/floor3.png");
+
             loader.setController(controller);
             Parent root = loader.load();
             pStage.setTitle("DirectoryAdmin");
