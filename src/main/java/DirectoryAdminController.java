@@ -102,7 +102,7 @@ public class DirectoryAdminController extends DisplayController implements Initi
     }
 
     public boolean deleteEntry(DirectoryEntry entry) {
-        return false;
+        return map.deleteEntry(activeDirectoryEntry.getName()); 
     }
 
     /**
@@ -113,12 +113,19 @@ public class DirectoryAdminController extends DisplayController implements Initi
         displayEntry(activeDirectoryEntry);
     }
 
-
-    public void addLocationToEntry(String room) {
+    public void entryDeleteSelectedEntry () {
+        if (activeDirectoryEntry != null) {
+            deleteEntry(activeDirectoryEntry); 
+            activeDirectoryEntry = null ;
+            entryEditor.setVisible(false); 
+            serviceSearch.setText("");
+            filterAllEntries();
+        }
+        else {
+            System.out.println("No entry selected"); 
+        }
     }
 
-    public void deleteLocation(String room) {
-    }
 
     public void changeTitle(String title) {
     }
@@ -235,10 +242,19 @@ public class DirectoryAdminController extends DisplayController implements Initi
         else {
             System.out.println("search text" + searchText);
             List<String> results = map.subStringSearchRoom(searchText);
+            List<String> currentLocs= entryCurrentLocations.getItems().stream()
+                .map(String::toString)
+                .collect(Collectors.toList());
+            
+            results = results.stream()
+                .filter(res -> !currentLocs.contains(res))
+                .collect(Collectors.toList());
+
             results.stream().forEach(System.out::println);
-            ObservableList<String> allEntries = FXCollections.observableList(results);
+
+            ObservableList<String> roomEntries = FXCollections.observableList(results);
             entryRoomOptions.setVisible(true);
-            entryRoomOptions.setItems(allEntries);
+            entryRoomOptions.setItems(roomEntries);
         }
     }
 
@@ -246,6 +262,7 @@ public class DirectoryAdminController extends DisplayController implements Initi
         if (activeEntryRoomSelected != null) {
             entryRemoveRoom(activeEntryRoomSelected);
             entryDeleteRoom.setVisible(false); 
+            activeEntryRoomSelected = null; 
         }
         else {
             System.out.println("no room selected"); 
