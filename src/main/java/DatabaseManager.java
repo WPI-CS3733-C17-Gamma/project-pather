@@ -135,6 +135,11 @@ public class DatabaseManager {
      */
     public void write(Map data) {
         try {
+            // Clear/reinit DB
+            // TODO: probably a better way to do this
+            execStatements(dropStatements);
+            execStatements(initStatements);
+
             PreparedStatement insertGraphNode = connection.prepareStatement(
                 "insert into GraphNodes (ID, X, Y, Floor) values (?, ?, ?, ?)");
             PreparedStatement insertEdge = connection.prepareStatement(
@@ -145,11 +150,6 @@ public class DatabaseManager {
                 "insert into Entries (eID, name, title) values (?, ?, ?)");
             PreparedStatement insertRoomEntryAssoc = connection.prepareStatement(
                 "insert into RoomEntryAssoc (eID, rID) values (?, ?)");
-
-            // Clear/reinit DB
-            // TODO: probably a better way to do this
-            execStatements(dropStatements);
-            execStatements(initStatements);
 
             // Insert each node
             for (GraphNode node : data.graph.graphNodes) {
