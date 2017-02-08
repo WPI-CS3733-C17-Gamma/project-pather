@@ -21,8 +21,10 @@ public class Directory {
      */
     public List<String> searchRooms(String key){
         List<String> temp = new ArrayList<String>();
-        if (rooms.get(key) != null) {
-            temp.add(key);
+        for (String s : rooms.keySet()){
+            if (s.contains(key)){
+                temp.add(s);
+            }
         }
         return temp;
     }
