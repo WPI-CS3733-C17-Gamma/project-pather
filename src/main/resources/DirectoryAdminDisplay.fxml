@@ -2,8 +2,14 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
     <bottom>
@@ -11,12 +17,54 @@
             <items>
                 <Button fx:id="help" mnemonicParsing="false" onAction="#help" text="Help" />
             <Button mnemonicParsing="false" onAction="#logout" text="Logout" />
-            <Button mnemonicParsing="false" text="Create" />
-            <Button mnemonicParsing="false" text="Save" />
+            <Button mnemonicParsing="false" onAction="#createEntry" text="Create" />
             </items>
         </ToolBar>
     </bottom>
+   <left>
+      <VBox prefHeight="760.0" prefWidth="283.0" BorderPane.alignment="CENTER">
+         <children>
+            <TextField fx:id="searchBar" onAction="#filterAllEntries" onKeyReleased="#filterAllEntries" promptText="Search">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </TextField>
+            <ListView fx:id="listEntries" prefHeight="735.0" prefWidth="119.0" />
+         </children>
+      </VBox>
+   </left>
    <center>
-      <Label fx:id="helpLabel" onMouseClicked="#help" prefHeight="418.0" prefWidth="363.0" visible="false" BorderPane.alignment="CENTER" />
+      <StackPane prefHeight="150.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label fx:id="helpLabel" onMouseClicked="#help" prefHeight="418.0" prefWidth="363.0" visible="false" />
+            <AnchorPane fx:id="roomEditor" prefHeight="200.0" prefWidth="200.0" visible="false">
+               <children>
+                  <Label layoutX="66.0" layoutY="98.0" text="Name:" />
+                  <Label layoutX="66.0" layoutY="178.0" text="Services:" />
+                  <TextField fx:id="roomName" layoutX="142.0" layoutY="94.0" prefHeight="25.0" prefWidth="156.0" text="Name" />
+                  <TextField fx:id="serviceSearch" layoutX="142.0" layoutY="174.0" prefHeight="25.0" prefWidth="128.0" text="Add Service" />
+                  <Button fx:id="addServiceButton" layoutX="270.0" layoutY="174.0" mnemonicParsing="false" text="+" />
+                  <ListView fx:id="serviceOptions" layoutX="142.0" layoutY="199.0" opacity="0.9" prefHeight="80.0" prefWidth="200.0" visible="false" />
+                  <ListView fx:id="currentServices" layoutX="142.0" layoutY="280.0" prefHeight="200.0" prefWidth="200.0" />
+               </children>
+            </AnchorPane>
+            <AnchorPane fx:id="entryEditor" prefHeight="200.0" prefWidth="200.0" visible="false">
+               <children>
+                  <TextField fx:id="entryName" layoutX="128.0" layoutY="55.0" text="Name" />
+                  <TextField fx:id="entryRoomSearch" layoutX="128.0" layoutY="223.0" onKeyReleased="#filterRooms" prefHeight="25.0" prefWidth="122.0" promptText="search location" />
+                  <TextField fx:id="entryTitle" layoutX="128.0" layoutY="126.0" text="Title" />
+                  <Label layoutX="26.0" layoutY="59.0" text="Name:" />
+                  <Label layoutX="30.0" layoutY="130.0" text="Title:" />
+                  <Label layoutX="30.0" layoutY="227.0" text="Locations:" />
+                  <ListView fx:id="entryRoomOptions" layoutX="128.0" layoutY="255.0" opacity="0.9" prefHeight="69.0" prefWidth="201.0" visible="false" />
+                  <ListView fx:id="entryCurrentLocations" layoutX="128.0" layoutY="350.0" prefHeight="200.0" prefWidth="200.0" />
+                  <Button layoutX="277.0" layoutY="579.0" mnemonicParsing="false" onAction="#saveEntry" onMouseClicked="#saveEntry" prefHeight="30.0" prefWidth="70.0" text="Save" />
+                  <Button fx:id="entryDeleteRoom" layoutX="348.0" layoutY="350.0" mnemonicParsing="false" onAction="#entryDeleteSelectedRoom" style="-fx-background-color: pink;" text="Delete" visible="false" />
+                  <Button layoutX="137.0" layoutY="580.0" mnemonicParsing="false" onAction="#entryCancel" text="Cancel" />
+                  <Button fx:id="entryDeleteEntry" layoutX="433.0" layoutY="685.0" mnemonicParsing="false" onAction="#entryDeleteSelectedEntry" style="-fx-background-color: pink;" text="Delete Entry" />
+               </children>
+            </AnchorPane>
+         </children>
+      </StackPane>
    </center>
 </BorderPane>
