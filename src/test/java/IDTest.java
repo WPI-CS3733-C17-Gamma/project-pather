@@ -15,7 +15,7 @@ public class IDTest extends TestCase{
     public void testId() {
         ArrayList<GraphNode> nodes = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
-            nodes.add(new GraphNode(new FloorPoint(i,i,"")));
+            nodes.add(new GraphNode(i,i,""));
         }
         List<Long> vals = nodes.stream().map(el -> el.id).collect(Collectors.toList());
 

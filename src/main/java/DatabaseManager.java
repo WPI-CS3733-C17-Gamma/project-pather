@@ -73,10 +73,9 @@ public class DatabaseManager {
             // For each result node, add a node to the hashmap by ID
             while(result.next()) {
                 nodes.put(result.getInt(1),
-                          new GraphNode(new FloorPoint(
-                                            result.getInt(2),
-                                            result.getInt(3),
-                                            result.getString(4))));
+                          new GraphNode(result.getInt(2),
+                                        result.getInt(3),
+                                        result.getString(4)));
             }
 
             // Get all edges

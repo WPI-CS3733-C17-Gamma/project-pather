@@ -17,8 +17,8 @@ public class DeleteNodeTest extends TestCase {
 
     @Override
     protected void setUp(){
-        dummyNode = new GraphNode(new FloorPoint(1,2, "floor1"));
-        dummyNode2 = new GraphNode(new FloorPoint(2, 3, "floor2"));
+        dummyNode = new GraphNode(1,2, "floor1");
+        dummyNode2 = new GraphNode(2, 3, "floor2");
         dummynetwork = new GraphNetwork(new LinkedList<GraphNode>());
         dummynetwork1 = new GraphNetwork(new LinkedList<GraphNode>());
     }

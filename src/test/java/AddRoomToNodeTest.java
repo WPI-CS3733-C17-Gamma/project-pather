@@ -11,7 +11,7 @@ public class AddRoomToNodeTest extends TestCase {
    GraphNode dummyNode;
    Directory directory;
    protected void setUp(){
-      dummyNode = new GraphNode(new FloorPoint(1,1,""));
+      dummyNode = new GraphNode(1,1,"");
        directory = new Directory (new HashMap<String, DirectoryEntry> (),
            new HashMap<String, Room>() );
    }
@@ -37,7 +37,7 @@ public class AddRoomToNodeTest extends TestCase {
    // confirm that multiple things can be added and retrieved
     public void testAddMult() {
        Room r = new Room (dummyNode, "dummyRoom");
-       Room r2 = new Room (new GraphNode(new FloorPoint(1,2,"3")), "secondRoom");
+       Room r2 = new Room (new GraphNode(1,2,"3"), "secondRoom");
        boolean successfulAdd = directory.addRoom(r);
        successfulAdd = successfulAdd &&  directory.addRoom(r2);
 

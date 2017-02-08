@@ -7,41 +7,26 @@ import java.util.*;
  * Created by jonandrews on 2/6/17.
  */
 public class DeleteConnectionTest extends TestCase {
-    FloorPoint point11 = new FloorPoint(10, 10, "");
-    FloorPoint point14 = new FloorPoint(10, 40, "");
-    FloorPoint point15 = new FloorPoint(10, 50, "");
-    FloorPoint point34 = new FloorPoint(30, 40, "");
-    FloorPoint point35 = new FloorPoint(30, 50, "");
-    FloorPoint point45 = new FloorPoint(40, 50, "");
-    FloorPoint point55 = new FloorPoint(50, 50, "");
-    FloorPoint point53 = new FloorPoint(50, 30, "");
-    FloorPoint point51 = new FloorPoint(50, 10, "");
-    FloorPoint point41 = new FloorPoint(40, 10, "");
-    FloorPoint point43 = new FloorPoint(40, 30, "");
-    FloorPoint point33 = new FloorPoint(30, 30, "");
-    FloorPoint point31 = new FloorPoint(30, 10, "");
-    FloorPoint point23 = new FloorPoint(20, 30, "");
-    FloorPoint point22 = new FloorPoint(20, 20, "");
+    GraphNode node11 = new GraphNode(10, 10, "");
+    GraphNode node14 = new GraphNode(10, 40, "");
+    GraphNode node15 = new GraphNode(10, 50, "");
+    GraphNode node34 = new GraphNode(30, 40, "");
+    GraphNode node35 = new GraphNode(30, 50, "");
+    GraphNode node45 = new GraphNode(40, 50, "");
+    GraphNode node55 = new GraphNode(50, 50, "");
+    GraphNode node53 = new GraphNode(50, 30, "");
+    GraphNode node51 = new GraphNode(50, 10, "");
+    GraphNode node41 = new GraphNode(40, 10, "");
+    GraphNode node43 = new GraphNode(40, 30, "");
+    GraphNode node33 = new GraphNode(30, 30, "");
+    GraphNode node31 = new GraphNode(30, 10, "");
+    GraphNode node23 = new GraphNode(20, 30, "");
+    GraphNode node22 = new GraphNode(20, 20, "");
 
-    GraphNode node11 = new GraphNode(point11);
-    GraphNode node14 = new GraphNode(point14);
-    GraphNode node15 = new GraphNode(point15);
-    GraphNode node34 = new GraphNode(point34);
-    GraphNode node35 = new GraphNode(point35);
-    GraphNode node45 = new GraphNode(point45);
-    GraphNode node55 = new GraphNode(point55);
-    GraphNode node53 = new GraphNode(point53);
-    GraphNode node51 = new GraphNode(point51);
-    GraphNode node41 = new GraphNode(point41);
-    GraphNode node43 = new GraphNode(point43);
-    GraphNode node33 = new GraphNode(point33);
-    GraphNode node31 = new GraphNode(point31);
-    GraphNode node23 = new GraphNode(point23);
-    GraphNode node22 = new GraphNode(point22);
-
-    LinkedList<GraphNode> betterNodes = new LinkedList<>(Arrays.asList(node11, node14, node15, node34, node35,
-        node45, node55, node53, node51, node41,
-        node43, node33, node31, node23, node22));
+    LinkedList<GraphNode> betterNodes =
+        new LinkedList<>(Arrays.asList(node11, node14, node15, node34, node35,
+                                       node45, node55, node53, node51, node41,
+                                       node43, node33, node31, node23, node22));
     GraphNetwork betterGraph = new GraphNetwork(betterNodes);
 
     Directory d;
@@ -50,8 +35,6 @@ public class DeleteConnectionTest extends TestCase {
     Room bernie = new Room(null, "4B");
     Room charles = new Room(null, "5C");
     Room albert2 = new Room(null, "3A");
-
-
 
     Map testMap;
 

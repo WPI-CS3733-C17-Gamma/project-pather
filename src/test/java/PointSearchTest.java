@@ -37,7 +37,7 @@ public class PointSearchTest extends TestCase {
     @Test
     // ensure that different floors will be ignored
     public void testDifferentFloor() {
-        GraphNode floorTwo = new GraphNode(new FloorPoint(0,0,"two"));
+        GraphNode floorTwo = new GraphNode(0,0,"two");
         GraphNetwork network = new GraphNetwork(new LinkedList<GraphNode>());
         network.addNode(new GraphNode(two));
         network.addNode(floorTwo);
