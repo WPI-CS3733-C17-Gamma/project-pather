@@ -9,16 +9,12 @@ import java.util.stream.Collectors;
 public class GraphNetwork {
     LinkedList<GraphNode> graphNodes = new LinkedList<>();
 
-    HashMap<GraphNode, GraphNode> graphConnections = new HashMap<>();
 
     public GraphNetwork(LinkedList<GraphNode> graphNodes) {
         this.graphNodes = graphNodes;
         //this.graphConnections = graphConnections;
     }
 
-    public HashMap<GraphNode, GraphNode> getGraphConnections(){
-        return graphConnections;
-    }
 
     public static LinkedList<GraphNode> getPath(GraphNode startNode, GraphNode goalNode){
         AStarNode start = new AStarNode(startNode);
@@ -98,12 +94,17 @@ public class GraphNetwork {
      */
     public GraphNode getGraphNode(FloorPoint loc){
         List<GraphNode> sameFloor = getGraphNodesOnFloor(loc.floor);
-        // get the closest point to the node
-        double minDistance = Double.MAX_VALUE;
-        GraphNode closestNode = null;
+        if(sameFloor.isEmpty()) {
+            return null;
+        }
+
+            // get the closest point to the node
+        GraphNode closestNode = sameFloor.get(0);
+        double minDistance = closestNode.location.distance(loc);
 
         // find the minimum distance on the same floor
-        for (GraphNode currentNode : sameFloor) {
+        for (int i = 0 ; i < sameFloor.size(); i++) {
+            GraphNode currentNode = graphNodes.get(i);
             double currentDistance = currentNode.location.distance(loc);
             if(currentDistance < minDistance){
                 minDistance = currentDistance;
@@ -150,7 +151,6 @@ public class GraphNetwork {
            s.adjacent.remove(node);
        }
     }
-
     /**
      * Adds a connection between two nodes
      * @param nodeA
@@ -158,21 +158,13 @@ public class GraphNetwork {
      * @return true if connection was successful
      */
     public boolean addConnection(GraphNode nodeA, GraphNode nodeB){
-
-        if (true) {
-
-            if(graphConnections.containsKey(nodeA) && graphConnections.containsValue(nodeB)){
-
-            } else {
-                graphConnections.put(nodeA, nodeB);
-            }
+        nodeA.addAdjacent(nodeB);
+        nodeB.addAdjacent(nodeA);
+        if(nodeA.getAdjacent().contains(nodeB) && nodeB.getAdjacent().contains(nodeA))
             return true;
-        } else {
+        else
             return false;
-        }
-
     }
-
     /**
      * Deletes the connection between two nodes
      * @param nodeA
@@ -180,15 +172,14 @@ public class GraphNetwork {
      * @return true if successful
      */
     public boolean deleteConnection(GraphNode nodeA, GraphNode nodeB) {
-        if (graphConnections.containsKey(nodeA) && graphConnections.containsValue(nodeB)) {
-            graphConnections.remove(nodeA, nodeB);
+        if (nodeB.adjacent.contains(nodeA)) {
+            //do the thing
+            nodeA.removeAdjacent(nodeB);
+            nodeB.removeAdjacent(nodeA);
+            return true;
         }
-        if (graphConnections.containsKey(nodeA) && graphConnections.containsValue(nodeB)) {
-            return false;
-        }
-        return true;
-    }
-
+        return false;
+}
     LinkedList AStar(GraphNode start, GraphNode end){
         return null;
     }

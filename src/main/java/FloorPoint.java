@@ -39,7 +39,9 @@ public class FloorPoint implements Comparable{
      * @return
      */
     public double distance (FloorPoint point) {
-        return Math.sqrt(point.x * point.x + point.y * point.y);
+        double dist = Math.sqrt((double)(point.x - this.x)* (double)(point.x - this.x)
+            + (double)(point.y - this.y) * (double)(point.y - this.y));
+        return dist;
     }
 
     @Override
