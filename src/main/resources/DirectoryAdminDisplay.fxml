@@ -17,7 +17,7 @@
             <items>
                 <Button fx:id="help" mnemonicParsing="false" onAction="#help" text="Help" />
             <Button mnemonicParsing="false" onAction="#logout" text="Logout" />
-            <Button mnemonicParsing="false" text="Create" />
+            <Button mnemonicParsing="false" onAction="#createEntry" text="Create" />
             <Button mnemonicParsing="false" onAction="#saveEntry" onMouseClicked="#saveEntry" text="Save" />
             <Button mnemonicParsing="false" onAction="#entryCancel" text="Cancel" />
             </items>
@@ -53,13 +53,13 @@
             <AnchorPane fx:id="entryEditor" prefHeight="200.0" prefWidth="200.0" visible="false">
                <children>
                   <TextField fx:id="entryName" layoutX="128.0" layoutY="55.0" text="Name" />
-                  <TextField fx:id="entryRoomSearch" layoutX="128.0" layoutY="223.0" onKeyReleased="#filterRooms" prefHeight="25.0" prefWidth="122.0" text="Locations" />
+                  <TextField fx:id="entryRoomSearch" layoutX="128.0" layoutY="223.0" onKeyReleased="#filterRooms" prefHeight="25.0" prefWidth="122.0" promptText="search location" />
                   <TextField fx:id="entryTitle" layoutX="128.0" layoutY="126.0" text="Title" />
                   <Label layoutX="26.0" layoutY="59.0" text="Name:" />
                   <Label layoutX="30.0" layoutY="130.0" text="Title:" />
                   <Label layoutX="30.0" layoutY="227.0" text="Locations:" />
-                  <ListView fx:id="entryRoomOptions" layoutX="128.0" layoutY="248.0" opacity="0.9" prefHeight="69.0" prefWidth="201.0" visible="false" />
-                  <ListView fx:id="entryCurrentLocations" layoutX="128.0" layoutY="317.0" prefHeight="200.0" prefWidth="200.0" />
+                  <ListView fx:id="entryRoomOptions" layoutX="128.0" layoutY="255.0" opacity="0.9" prefHeight="69.0" prefWidth="201.0" visible="false" />
+                  <ListView fx:id="entryCurrentLocations" layoutX="128.0" layoutY="350.0" prefHeight="200.0" prefWidth="200.0" />
                </children>
             </AnchorPane>
          </children>

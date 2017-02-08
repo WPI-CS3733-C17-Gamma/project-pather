@@ -101,7 +101,12 @@ public class DirectoryAdminController extends DisplayController implements Initi
         return false;
     }
 
-    public void createEntry(String name, String title, List<Room> room) {
+    /**
+     * create a new entry
+     */
+    public void createEntry() {
+        activeDirectoryEntry = new DirectoryEntry("", "", new LinkedList<Room>());
+        displayEntry(activeDirectoryEntry);
     }
 
 
@@ -151,6 +156,8 @@ public class DirectoryAdminController extends DisplayController implements Initi
             .collect(Collectors.toList());
 
         saveEntry(name,title,rooms);
+        serviceSearch.setText("");
+        filterAllEntries();
         activeDirectoryEntry = null;
     }
 
