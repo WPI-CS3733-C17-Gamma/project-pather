@@ -15,5 +15,6 @@
          </children>
       </AnchorPane>
       <Button fx:id="buttonDone" layoutX="1016.0" layoutY="79.0" mnemonicParsing="false" onMouseClicked="#done" text="Done" />
+      <Button fx:id="buttonDelete" layoutX="934.0" layoutY="79.0" mnemonicParsing="false" text="Delete" />
    </children>
 </AnchorPane>

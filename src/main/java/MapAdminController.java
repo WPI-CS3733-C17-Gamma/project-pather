@@ -21,7 +21,6 @@ import java.util.ResourceBundle;
 
 public class MapAdminController extends DisplayController implements Initializable {
 //    MapAdminDisplay display;
-    GraphNode selectedNode;
     GraphNode secondaryNode;
 
     @FXML
@@ -38,8 +37,12 @@ public class MapAdminController extends DisplayController implements Initializab
     private AnchorPane anchorpaneMap;
     @FXML
     private AnchorPane anchorpaneWindow;
+    @FXML
+    private Button buttonDelete;
 
     private GraphNode tempNode ;
+
+    private GraphNode selectedNode;
 
     String mapName;
 
@@ -77,16 +80,13 @@ public class MapAdminController extends DisplayController implements Initializab
     public void initDraw(){
         List<GraphNode> l = getNodes(map, mapName);
         HashMap<GraphNode, GraphNode> g = map.graph.getGraphConnections();
-
+        buttonDelete.setVisible(false);
         for (int i = 0; i < l.size(); i++){
             drawNode(l.get(i).getLocation());
             if(g.containsKey(l.get(i))){
                 drawConnection(l.get(i).location, g.get(l.get(i)).location);
             }
         }
-
-
-
     }
 
 
@@ -131,6 +131,26 @@ public class MapAdminController extends DisplayController implements Initializab
         return null;
     }
 
+    private void selectNode(MouseEvent e){
+        FloorPoint f = getMouseLocation(e);
+        GraphNode graphNode = nearbyNode(f);
+        if (graphNode == null){
+            selectedNode = null;
+        } else {
+            selectedNode = graphNode;
+            paintNode(selectedNode);
+        }
+        buttonDelete.setVisible(true);
+    }
+
+    private void addRoom(){
+
+    }
+
+    private void paintNode(GraphNode n){
+        //anchorpaneMap.getChildren().  //color doesn't change for now
+    }
+
     private void drawNode(FloorPoint loc){
         anchorpaneMap.getChildren().addAll(new Circle((double) loc.getX(), (double) loc.getY() +yDrop, 3, Color.BLUE));
     }
@@ -144,9 +164,12 @@ public class MapAdminController extends DisplayController implements Initializab
      * @param node
      */
     public void deleteNode(GraphNode node){
-
         map.deleteNode(node);
+        anchorpaneMap.getChildren().removeAll();
+        initDraw();
+        buttonDelete.setVisible(false);
     }
+
     /**
      * add a room to the selected node given a node and a name
      * @param node
@@ -177,9 +200,9 @@ public class MapAdminController extends DisplayController implements Initializab
     }
 
     public void deleteConnection(GraphNode nodeA, GraphNode nodeB){
-
-
-
+        map.deleteConnection(nodeA, nodeB);
+        anchorpaneMap.getChildren().removeAll();
+        initDraw();
     }
 
     public void addConnectionPressed(MouseEvent n){
@@ -220,6 +243,8 @@ public class MapAdminController extends DisplayController implements Initializab
     public void isClicked(MouseEvent m){
         if (togglebuttonAddNode.isSelected()) {
             addNodeGraphically(m);
+        } else{
+            selectNode(m);
         }
     }
 
@@ -235,6 +260,8 @@ public class MapAdminController extends DisplayController implements Initializab
             addConnectionReleased(m);
         }
     }
+
+
 
     public void noMoreConnections(){ //checks if connections button is pushed
         if (togglebuttonAddConnections.isSelected()){
@@ -263,10 +290,14 @@ public class MapAdminController extends DisplayController implements Initializab
         imageviewMap.setImage(floor3);
         this.mapName = loc;
     }
-
-
-
-
-
-
 }
+/*
+TO-DO
++ connections have 2 nodes
++ takes current state of map and loads - should work, not tested
+- select connections and delete
+- select nodes and delete
+- add room to node (menu with name)
++ prevent nodes and connections to be made at the same time
++ add exit button
+*/
