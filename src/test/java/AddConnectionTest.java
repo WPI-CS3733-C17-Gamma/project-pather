@@ -78,4 +78,17 @@ public class AddConnectionTest extends TestCase{
         assertTrue(a.getAdjacent().contains(b));
         assertTrue(b.getAdjacent().contains(a));
     }
+    @Test
+    public void testSelfAddConnetion(){
+        assertFalse(a.getAdjacent().contains(a));
+        assertFalse(graph.addConnection(a,a));
+        assertFalse(a.getAdjacent().contains(a));
+    }
+    @Test
+    public void testDoubleAddConnection(){
+        assertTrue(graph.addConnection(a,b));
+        assertFalse(graph.addConnection(a,b));
+//        assertTrue(a.getAdjacent().contains(b));
+//        assertTrue(b.getAdjacent().contains(a));
+    }
 }
