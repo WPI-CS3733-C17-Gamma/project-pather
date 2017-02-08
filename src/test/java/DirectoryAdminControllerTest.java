@@ -52,6 +52,14 @@ public class DirectoryAdminControllerTest {
             new DirectoryEntry("Bill", "Medicine Man", new LinkedList<Room>())));
     }
 
+    @Test ( expected = IllegalArgumentException.class)
+    public void testSaveEntryThatWouldReplace() {
+        // Testing if you change the entry but it would replace a different entry
+        testDirCon.activeDirectoryEntry = testDirCon.map.getEntry("Bill");
+        DirectoryEntry oldJohn = testDirCon.map.getEntry("John");
+        testDirCon.saveEntry("John", "Medicine Man", new LinkedList<>());
+    }
+
     @Test ( expected=IllegalStateException.class )
     public void testSaveEntryStateException() {
         // Testing if nothing was selected when function was called

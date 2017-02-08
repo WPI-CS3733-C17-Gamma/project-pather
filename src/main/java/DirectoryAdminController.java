@@ -3,6 +3,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 
 import java.net.URL;
+import java.util.IllegalFormatCodePointException;
+import java.util.IllegalFormatException;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -26,21 +28,43 @@ public class DirectoryAdminController extends DisplayController implements Initi
               currentMap);
     }
 
+    /** See the method {@link Map#searchEntry(String)} */
     public List<String> searchEntry(String search) {
-        return null;
+        return map.searchEntry(search);
     }
 
-    public DirectoryEntry selectEntry(String entryName) {
-        return null;
+    /** See the method {@link Map#getEntry(String)}
+     * Side Effect: Sets activeDirectoryEntry to the entry that is found
+     * @throws IllegalArgumentException if an entry could not be found*/
+    public void selectEntry(String entryName) throws IllegalArgumentException {
+        activeDirectoryEntry = map.getEntry(entryName);
+        if( activeDirectoryEntry == null ) {
+            throw new IllegalArgumentException();
+        }
+        return;
     }
 
+    /** See the method {@link Map#deleteEntry(DirectoryEntry)} */
     public boolean deleteEntry(DirectoryEntry entry) {
-        return false;
+        return map.deleteEntry(entry);
     }
 
-    public void createEntry(String name, String title, List<Room> room) {
-    }
+     /**
+     * Create a new directory entry in the Directory object in the Map
+     * @param name Name of entry to add
+     * @param title Title of entry to add
+     * @param room List of room the entry is associated with
+     * @throws IllegalArgumentException if there new entry would be a duplicate
+     */
+    public void createEntry(String name, String title, List<Room> room) throws IllegalArgumentException {
+        DirectoryEntry newEntry = new DirectoryEntry(name, title, room);
 
+        if( !map.addEntry(newEntry) ) {
+            throw new IllegalArgumentException("Tried to save entry that would be a duplicate of one"
+                + " already in the directory");
+        }
+        return;
+    }
 
     public void addLocationToEntry(String room) {
     }
@@ -78,11 +102,11 @@ public class DirectoryAdminController extends DisplayController implements Initi
 
     /**
      * activeDirectoryEntry must have the entry that is being edited
-     * Throws error IllegalStateException if entry is not selected
-     * and throws IllegalArgumentException if entry already exits
      * @param name name of the new entry
      * @param title title of the new entry
      * @param room list of room associated with the new entry
+     * @throws IllegalStateException if entry is not selected
+     * @throws IllegalArgumentException if key already exits
      */
     public void saveEntry(String name, String title, List<Room> room) throws IllegalStateException, IllegalArgumentException{
         if( activeDirectoryEntry == null ) {
@@ -92,13 +116,19 @@ public class DirectoryAdminController extends DisplayController implements Initi
 
         DirectoryEntry newEntry = new DirectoryEntry(name, title, room);
 
-        if( map.getEntry(name) != null && map.getEntry(name).equals(newEntry) ) {
-            throw new IllegalArgumentException("Tried to save entry that would be a duplicate of one"
-            + " already in the directory");
+        if( map.getEntry(name) != null ) {
+            if( map.getEntry(name).equals(newEntry) ) {
+                throw new IllegalArgumentException("Tried to save entry that would be a duplicate of one"
+                    + " already in the directory");
+            }
+
+            if( !map.getEntry(name).equals(activeDirectoryEntry)) {
+                throw new IllegalArgumentException("Tried to save entry that would replace another one");
+            }
         }
 
-        System.out.print(activeDirectoryEntry.getName());
-        map.deleteEntry(activeDirectoryEntry.getName());
+        map.deleteEntry(activeDirectoryEntry);
+        activeDirectoryEntry = null;
         map.addEntry(newEntry);
         return;
 
