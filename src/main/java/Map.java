@@ -48,6 +48,7 @@ public class Map {
      * @param room
      */
     public void deleteRoom(String room){
+        directory.deleteRoom(directory.getRoom(room));
     }
     /**
      *

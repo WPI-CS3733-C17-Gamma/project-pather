@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -11,9 +12,13 @@
       <ToggleButton fx:id="togglebuttonAddConnections" layoutX="222.0" layoutY="79.0" mnemonicParsing="false" onMouseClicked="#noMoreNodes" text="Add Connections" />
       <AnchorPane fx:id="anchorpaneMap" layoutY="150.0" prefHeight="625.0" prefWidth="1150.0">
          <children>
-            <ImageView fx:id="imageviewMap" fitHeight="625.0" fitWidth="1150.0" onMouseReleased="#isClicked" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="imageviewMap" fitHeight="625.0" fitWidth="1150.0" onMousePressed="#isPressed" onMouseReleased="#isReleased" pickOnBounds="true" preserveRatio="true" />
          </children>
       </AnchorPane>
       <Button fx:id="buttonDone" layoutX="1016.0" layoutY="79.0" mnemonicParsing="false" onMouseClicked="#done" text="Done" />
+      <Button layoutX="382.0" layoutY="79.0" mnemonicParsing="false" onAction="#deleteSelected" text="Delete" />
+      <Button layoutX="476.0" layoutY="79.0" mnemonicParsing="false" onAction="#deleteConnection" text="Delete Connection" />
+      <Button layoutX="669.0" layoutY="79.0" mnemonicParsing="false" onAction="#addRoom" text="Add or Change Room" />
+      <TextField fx:id="roomName" layoutX="667.0" layoutY="126.0" promptText="Add or Remove Room" />
    </children>
 </AnchorPane>

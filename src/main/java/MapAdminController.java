@@ -2,6 +2,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -21,6 +22,7 @@ public class MapAdminController extends DisplayController implements Initializab
 //    MapAdminDisplay display;
     GraphNode selectedNode;
     GraphNode secondaryNode;
+    Room activeRoom ;
 
     List<Shape> drawnShapes = new ArrayList<>();
 
@@ -39,11 +41,13 @@ public class MapAdminController extends DisplayController implements Initializab
     @FXML
     private AnchorPane anchorpaneWindow;
 
+    @FXML
+    private TextField roomName;
+
     private GraphNode tempNode ;
 
     String mapName;
 
-    double yDrop;
 
 
     /**
@@ -62,7 +66,6 @@ public class MapAdminController extends DisplayController implements Initializab
     public void initialize(URL location, ResourceBundle resources) {
         setMap(location.toString());
         drawMap();
-        yDrop = anchorpaneWindow.getLayoutY();
     }
 
     void update(){
@@ -100,7 +103,7 @@ public class MapAdminController extends DisplayController implements Initializab
      */
     public void addNode(FloorPoint location){
         map.addNode(new GraphNode(location));
-        drawNode(location);
+        drawMap();
     }
 
     public void addNodeGraphically(MouseEvent e){
@@ -124,13 +127,39 @@ public class MapAdminController extends DisplayController implements Initializab
         return tempNode;
     }
 
+    public void addRoom () {
+        System.out.println("Add/Change room");
+        if(activeRoom != null) {
+            String newName = roomName.getText();
+            if(newName == activeRoom.name) {
+                System.out.println("no change");
+            }
+            else if(newName.isEmpty()){
+                System.out.println("DELETE room");
+                map.deleteRoom(activeRoom.name);
+                System.out.println(activeRoom);
+            }
+            // if room is already there
+            else if (map.getRoomFromName(activeRoom.name) == null){
+                map.addRoom(new Room (selectedNode, newName));
+            }
+        }
+    }
+
     private void drawNode(FloorPoint loc){
         FloorPoint imagePoint = graphToImage(loc);
         Circle circ = new Circle(imagePoint.x, imagePoint.y, 3, Color.BLUE);
-        circ.setOnMouseClicked(new EventHandler<MouseEvent>() {
+        circ.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                isClicked(event);
+                isPressed(event);
+            }
+        });
+
+        circ.setOnMouseReleased(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                isReleased(event);
             }
         });
         anchorpaneMap.getChildren().add(circ);
@@ -138,22 +167,30 @@ public class MapAdminController extends DisplayController implements Initializab
 
     }
 
+    public void deleteConnection() {
+        if(selectedNode != null && secondaryNode != null) {
+            System.out.println("delete con");
+            map.deleteConnection(selectedNode, secondaryNode);
+        }
+    }
+
+    //
+    public void deleteSelected () {
+        if(selectedNode != null) {
+            map.deleteNode(selectedNode);
+            selectedNode = null;
+            drawMap();
+        }
+    }
+
+
 
     /**
      * Delete a node from graph and delete the node from the adjacent nodes
      * @param node
      */
     public void deleteNode(GraphNode node){
-
         map.deleteNode(node);
-    }
-    /**
-     * add a room to the selected node given a node and a name
-     * @param node
-     * @param roomName
-     */
-    public void addRoomToNode(GraphNode node, String roomName) {
-        boolean successfulAdd = map.addRoom(new Room(node, roomName));
     }
 
     public void deleteRoomFromNode(GraphNode node) {
@@ -173,7 +210,7 @@ public class MapAdminController extends DisplayController implements Initializab
      */
     public void addConnection(GraphNode nodeA, GraphNode nodeB){
         map.addConnection(nodeA, nodeB);
-        drawConnection(nodeA.location, nodeB.location);
+        drawMap();
     }
 
     public void deleteConnection(GraphNode nodeA, GraphNode nodeB){
@@ -182,9 +219,6 @@ public class MapAdminController extends DisplayController implements Initializab
 
     }
 
-    public void addConnectionPressed(MouseEvent n){
-            tempNode = nearbyNode(n);
-        }
 
 
     public void addConnectionReleased(MouseEvent m) {
@@ -246,38 +280,41 @@ public class MapAdminController extends DisplayController implements Initializab
         return new FloorPoint(newX, newY, graphPoint.getFloor());
     }
 
+    public void displayRoom (GraphNode selected) {
+        Room room = map.getRoomFromNode(selectedNode);
+        if (room != null) {
+            roomName.setText(room.name);
+            activeRoom = room;
+        }
+        else {
+            activeRoom  = new Room(selected, "");
+            roomName.setText("");
+        }
+    }
     /**
      * add node to graph
      * @param m
      */
-    public void isClicked(MouseEvent m){
-        System.out.println("click");
-        if (togglebuttonAddNode.isSelected()) {
-            addNodeGraphically(m);
-        } else {
-            GraphNode nearby = nearbyNode(m);
-            if(selectedNode == null) {
-                selectedNode = nearby;
-                System.out.println("selected");
-            }
-            else {
-                secondaryNode =selectedNode;
-                selectedNode = nearby;
-                System.out.println("replaced selected");
-            }
-        }
-    }
-
     public void isPressed(MouseEvent m){
+        System.out.println("press");
+        GraphNode nearby = nearbyNode(m);
+        secondaryNode = selectedNode;
+        selectedNode = nearby;
+        displayRoom(selectedNode);
 
-        if (togglebuttonAddConnections.isSelected()){
-            addConnectionPressed(m);
-        }
+        // room stuff
     }
 
     public void isReleased(MouseEvent m){
+        System.out.println("release");
+        if (togglebuttonAddNode.isSelected()) {
+            addNodeGraphically(m);
+        }
         if (togglebuttonAddConnections.isSelected()){
-            addConnectionReleased(m);
+            GraphNode nearby = nearbyNode(m);
+            if(selectedNode != null && nearby != null) {
+                addConnection(nearby, selectedNode);
+            }
         }
     }
 
