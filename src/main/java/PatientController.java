@@ -96,14 +96,6 @@ public class PatientController extends DisplayController implements Initializabl
         if(!results.isEmpty()) {
             ObservableList<String> filter = FXCollections.observableArrayList(results);
             options.setItems(filter);
-            options.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent event) {
-                    String selectedString = options.getSelectionModel().getSelectedItem();
-                    System.out.println("clicked on " + selectedString);
-                    select(selectedString);
-                }
-            });
         }
         else {
             options.setVisible(false);
@@ -323,6 +315,14 @@ public class PatientController extends DisplayController implements Initializabl
         this.startNode = new GraphNode(new FloorPoint(100,100,""));
 //        start = map.getRoomFromName("Kiosk");
 
+        options.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                String selectedString = options.getSelectionModel().getSelectedItem();
+                System.out.println("clicked on " + selectedString);
+                select(selectedString);
+            }
+        });
         imageView.toBack();
         imageView.setPreserveRatio(false);
         imageView.setFitHeight(800);

@@ -21,7 +21,6 @@ public class ApplicationController extends Application {
 
         this.pStage = primaryStage;
         // load database
-        map = databaseManager.load();
         createPatientDisplay();
         primaryStage.show();
     }
@@ -29,7 +28,44 @@ public class ApplicationController extends Application {
     // load from database
     public void initialize(){
         databaseManager = new DatabaseManager("main");
+        map = databaseManager.load();
+        Room room = new Room(new GraphNode (new FloorPoint(1,1,"floor3")), "room1");
+        Room room2 = new Room(new GraphNode (new FloorPoint(1,100, "floor3")), "room2");
+        Room room3 = new Room(new GraphNode (new FloorPoint(100,100,"floor3")), "room3");
+        Room room4 = new Room(new GraphNode (new FloorPoint(1000,1,"floor3")), "room4");
+
+        DirectoryEntry ent1 = new DirectoryEntry("en1", "sampleentry", new LinkedList<Room>());
+        DirectoryEntry ent2 = new DirectoryEntry("en2", "sampleentry", new LinkedList<Room>());
+        DirectoryEntry ent3 = new DirectoryEntry("en3", "sampleentry", new LinkedList<Room>());
+        DirectoryEntry ent4 = new DirectoryEntry("en4", "sampleentry", new LinkedList<Room>());
+
+        ent1.addLocation(room);
+
+        ent2.addLocation(room);
+        ent2.addLocation(room2);
+
+        ent3.addLocation(room);
+        ent3.addLocation(room2);
+        ent3.addLocation(room3);
+
+        ent4.addLocation(room);
+        ent4.addLocation(room2);
+        ent4.addLocation(room3);
+        ent4.addLocation(room4);
+
+        map.addRoom(room);
+        map.addRoom(room2);
+        map.addRoom(room3);
+        map.addRoom(room4);
+
+        map.addEntry(ent1);
+        map.addEntry(ent2);
+        map.addEntry(ent3);
+        map.addEntry(ent4);
+
+
     }
+
 
 
     /**

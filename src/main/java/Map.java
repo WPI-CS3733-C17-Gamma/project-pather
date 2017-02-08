@@ -24,6 +24,23 @@ public class Map {
         return directory.searchRooms(term);
     }
 
+    public List<String> subStringSearchRoom(String term) {
+        return directory.subStringSearchRooms(term);
+    }
+
+    /**
+     * @return get all entries in the directory by name
+     */
+    public List<String> getAllEntries () {
+        return directory.getAllEntries();
+    }
+    /**
+     * @return get all entries in the directory by name
+     */
+    public List<String> getAllRooms () {
+        return directory.getAllRooms();
+    }
+
     /**
      *
      * @param term
