@@ -1,0 +1,5 @@
+@charset "UTF-8"
+
+.button{
+	-fx-text-fill: red;
+}
