@@ -31,17 +31,15 @@ public class CreateEntryTest extends TestCase {
 
     @Test ( expected = IllegalArgumentException.class)
     public void testCreateEntryDAC(){
-        boolean exceptionThrown = false;
         assertTrue(2 == d.getEntries().entrySet().size());
         c.createEntry("g", "g", new LinkedList<>());
         assertTrue(d.getEntries().size() == 3);
         try {
             c.createEntry("f", "f", new LinkedList<>());
         } catch (IllegalArgumentException e) {
-            exceptionThrown = true;
+            assertTrue(e instanceof IllegalArgumentException);
         }
         assertTrue(d.getEntries().size() == 3);
-        assertTrue(exceptionThrown);
         for (String s : d.getEntries().keySet()){
             System.err.println(s);
         }
