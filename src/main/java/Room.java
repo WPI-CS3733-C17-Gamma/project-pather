@@ -33,7 +33,7 @@ public class Room extends Ided implements Comparable {
 
     /**
      * Determine if the two room objects are equal by their attributes
-     * @param room the room that needs to be checked against this current instance of the object
+     * @param obj the room that needs to be checked against this current instance of the object
      * @return true if rooms share the same attributes
      */
     @Override

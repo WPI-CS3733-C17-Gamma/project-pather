@@ -238,6 +238,39 @@ public class DatabaseTest extends TestCase{
     }
 
     @Test
+    public void testAdjacentWrite() {
+        GraphNode nodeA = new GraphNode(new FloorPoint(4, 2, "bob1"));
+        GraphNode nodeB = new GraphNode(new FloorPoint(4, 3, "bob1"));
+        GraphNode nodeC = new GraphNode(new FloorPoint(4, 4, "bob1"));
+        GraphNode nodeD = new GraphNode(new FloorPoint(4, 5, "bob1"));
+        nodeA.addAdjacent(nodeB);
+        nodeB.addAdjacent(nodeA);
+
+        nodeB.addAdjacent(nodeC);
+        nodeC.addAdjacent(nodeB);
+
+        nodeC.addAdjacent(nodeA);
+        nodeA.addAdjacent(nodeC);
+
+        nodeD.addAdjacent(nodeA);
+        nodeA.addAdjacent(nodeD);
+
+        GraphNetwork graph = new GraphNetwork(
+            new LinkedList<GraphNode>(Arrays.asList(nodeA, nodeB, nodeC, nodeD)));
+        Directory directory = new Directory(
+            new HashMap<String, DirectoryEntry>(),
+            new HashMap<String, Room>());
+        HashMap<String, Image> mapImages = new HashMap<String, Image>();
+        Map expected = new Map(directory, graph, mapImages);
+
+        DatabaseManager db = new DatabaseManager(DBName);
+        db.write(expected);
+        Map actual = db.load();
+
+        assertEquals(expected.graph.graphNodes, actual.graph.graphNodes);
+    }
+
+    @Test
     public void testEmptyWrite() {
         GraphNetwork graph = new GraphNetwork(
             new LinkedList<GraphNode>());
