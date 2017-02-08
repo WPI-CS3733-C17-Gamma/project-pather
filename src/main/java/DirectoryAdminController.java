@@ -152,10 +152,12 @@ public class DirectoryAdminController extends DisplayController implements Initi
     }
 
     /* Functions for Rooms */
+    /** See method {@link Map#searchRoom(String)} */
     public List<String> searchRoom(String search) {
-        return null;
+        return map.searchRoom(search);
     }
 
+    /** See method {@link Map#addRoom(Room)} */
     public void createRoom(String name, GraphNode node) {
     }
 
