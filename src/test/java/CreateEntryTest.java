@@ -3,6 +3,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 
 public class CreateEntryTest extends TestCase {
 
@@ -18,8 +19,8 @@ public class CreateEntryTest extends TestCase {
 
     @Before
     public void setUp(){
-        e = new  DirectoryEntry("e", "e", null);
-        f = new DirectoryEntry("f", "f", null);
+        e = new  DirectoryEntry("e", "e", new LinkedList<>());
+        f = new DirectoryEntry("f", "f", new LinkedList<>());
         HashMap <String, DirectoryEntry> h = new HashMap<>();
         h.put(e.name, e);
         h.put(f.name, f);
@@ -28,13 +29,19 @@ public class CreateEntryTest extends TestCase {
         c = new DirectoryAdminController(m, null, null);
     }
 
-    @Test
+    @Test ( expected = IllegalArgumentException.class)
     public void testCreateEntryDAC(){
+        boolean exceptionThrown = false;
         assertTrue(2 == d.getEntries().entrySet().size());
-        c.createEntry("g", "g", null);
+        c.createEntry("g", "g", new LinkedList<>());
         assertTrue(d.getEntries().size() == 3);
-        c.createEntry("f", "f", null);
+        try {
+            c.createEntry("f", "f", new LinkedList<>());
+        } catch (IllegalArgumentException e) {
+            exceptionThrown = true;
+        }
         assertTrue(d.getEntries().size() == 3);
+        assertTrue(exceptionThrown);
         for (String s : d.getEntries().keySet()){
             System.err.println(s);
         }
