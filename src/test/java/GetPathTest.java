@@ -1,4 +1,7 @@
 import junit.framework.TestCase;
+import org.junit.Test;
+
+import java.awt.geom.Path2D;
 import java.util.Arrays;
 import java.util.LinkedList;
 
@@ -131,7 +134,11 @@ public class GetPathTest extends TestCase{
         for(GraphNode neighbour: nodes){
             System.err.println(neighbour.toString());
         }
-        LinkedList<GraphNode> path2 = graph.getPath(node1, node5);
+        LinkedList<GraphNode> path2 = new LinkedList<>();
+        try {path2 = graph.getPath(node1, node5);}
+        catch(PathNotFoundException e){
+            assertTrue(false);
+        }
         assertTrue(path1.equals(path2));
     }
 
@@ -141,7 +148,11 @@ public class GetPathTest extends TestCase{
 //        for(GraphNode neighbour: betterNodes) {
 //            System.err.println(neighbour.toString());
 //        }
-        LinkedList<GraphNode> path2 = betterGraph.getPath(node51, node35);
+        LinkedList<GraphNode> path2 = new LinkedList<>();
+        try {path2 = betterGraph.getPath(node51, node35);}
+        catch (PathNotFoundException e){
+            assertTrue(false);
+        }
         for(GraphNode neighbour: path2) {
             System.err.println(neighbour.toString());
         }
@@ -155,7 +166,11 @@ public class GetPathTest extends TestCase{
 //        for(GraphNode neighbour: betterNodes) {
 //            System.err.println(neighbour.toString());
 //        }
-        LinkedList<GraphNode> path2 = betterGraph.getPath(node11, node55);
+        LinkedList<GraphNode> path2 = new LinkedList<>();
+        try {path2 = betterGraph.getPath(node11, node55);}
+        catch (PathNotFoundException e){
+            assertTrue(false);
+        }
         for(GraphNode neighbour: path2) {
             System.err.println(neighbour.toString());
         }
@@ -170,7 +185,22 @@ public class GetPathTest extends TestCase{
         for(GraphNode neighbour: betterNodes) {
             System.err.println(neighbour.toString());
         }
-        LinkedList<GraphNode> path2 = betterGraph.getPath(node14, node33);
+        LinkedList<GraphNode> path2 = new LinkedList<>();
+        try{path2 = betterGraph.getPath(node14, node33);}
+        catch(PathNotFoundException e){
+            assertTrue(false);
+        }
         assertTrue(path1.equals(path2));
+    }
+
+    @Test(expected = PathNotFoundException.class)
+    public void testPathNotFoundException(){
+        Throwable e = null;
+        try{
+            graph.getPath(node1, node11);
+        }catch (Throwable ex){
+            e = ex;
+        }
+        assertTrue(e instanceof PathNotFoundException);
     }
 }

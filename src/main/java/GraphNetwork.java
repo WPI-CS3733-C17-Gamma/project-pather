@@ -6,13 +6,13 @@ import java.util.stream.Collectors;
 public class GraphNetwork {
     LinkedList<GraphNode> graphNodes = new LinkedList<>();
 
-    public GraphNetwork(){}
+    public GraphNetwork() {}
 
     public GraphNetwork(LinkedList<GraphNode> graphNodes) {
         this.graphNodes = graphNodes;
     }
 
-    public static LinkedList<GraphNode> getPath(GraphNode startNode, GraphNode goalNode){
+    public static LinkedList<GraphNode> getPath(GraphNode startNode, GraphNode goalNode) throws PathNotFoundException {
         AStarNode start = new AStarNode(startNode);
         AStarNode goal = new AStarNode(goalNode);
         LinkedList<AStarNode> openSet = new LinkedList<>();
@@ -62,7 +62,7 @@ public class GraphNetwork {
                 neighbour.fScore = tentative_gscore + neighbour.getDistance(goal);
             }
         }
-        return null;
+        throw new PathNotFoundException(startNode, goalNode);
     }
 
     /***

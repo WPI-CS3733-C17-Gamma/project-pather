@@ -21,8 +21,10 @@ public class Directory {
      */
     public List<String> searchRooms(String key){
         List<String> temp = new ArrayList<String>();
-        if (rooms.get(key) != null) {
-            temp.add(key);
+        for (String s : rooms.keySet()){
+            if (s.contains(key)){
+                temp.add(s);
+            }
         }
         return temp;
     }
@@ -77,26 +79,28 @@ public class Directory {
     }
 
     /**
-     *
-     * @param entry
-     * @return
+     * Function to add an entry to the entry list
+     * @param entry The entry to add to the list
+     * @return True normally, false if would replaced an object
      */
     public boolean addEntry(DirectoryEntry entry){
-        entries.put(entry.getName(), entry);
-        return true;
+        if( entries.containsKey(entry.getName()) ) {
+            return false;
+        }
+        return ( entries.put(entry.getName(), entry) == null );
     }
 
     /**
-     *
-     * @param key
-     * @return
+     * The name of the entry must be the key of it in the hashmap
+     * @param entry The entry to remove
+     * @return true if the entry was deleted, false if it was not
      */
-    public boolean deleteEntry(String key){
-        return entries.remove(key, entries.get(key));
+    public boolean deleteEntry(DirectoryEntry entry){
+        return entries.remove(entry.getName(), entry);
     }
 
     /**
-     *
+     * Gets an entry in the directory from the given key
      * @param key the key of the entry to get
      * @return the entry or null if it could not be found
      */
@@ -104,6 +108,14 @@ public class Directory {
         DirectoryEntry entry;
         entry = entries.get(key);
         return entry;
+    }
+
+    /**
+     *
+     * @return the map of all directory entries
+     */
+    public HashMap<String, DirectoryEntry> getEntries(){
+        return this.entries;
     }
 
     /**
