@@ -149,7 +149,8 @@ public class DirectoryAdminController extends DisplayController implements Initi
     }
 
     /**
-     * save entry
+     * save entry, calls the other save entry function to do the heavy lifting
+     * handles the UI for saving
      */
     public void saveEntry () {
         if(activeDirectoryEntry == null) {
@@ -166,10 +167,20 @@ public class DirectoryAdminController extends DisplayController implements Initi
             .map(roomName -> map.getRoomFromName(roomName))
             .collect(Collectors.toList());
 
-        saveEntry(name,title,rooms);
+        try {
+            saveEntry(name,title,rooms);
+        }
+        catch (IllegalArgumentException arg) {
+            System.out.println(arg.toString()); 
+        }
+        catch (IllegalStateException state) {
+            System.out.println(state.toString()); 
+        }
+
         serviceSearch.setText("");
         filterAllEntries();
         activeDirectoryEntry = null;
+        // entryEditor.setVisible(false); 
     }
 
     /**
@@ -189,6 +200,7 @@ public class DirectoryAdminController extends DisplayController implements Initi
         DirectoryEntry newEntry = new DirectoryEntry(name, title, rooms);
 
         if( map.getEntry(name) != null && map.getEntry(name).equals(newEntry) ) {
+            System.out.println("DUPLICATE");
             throw new IllegalArgumentException("Tried to save entry that would be a duplicate of one"
             + " already in the directory");
         }
