@@ -15,20 +15,12 @@ public class Map {
         this.mapImages = mapImages;
     }
 
-    /**
-     *
-     * @param term
-     * @return
-     */
+    /** See method {@link Directory#searchRooms(String)} */
     public List<String> searchRoom(String term){
         return directory.searchRooms(term);
     }
 
-    /**
-     *
-     * @param term
-     * @return
-     */
+    /** See method {@link Directory#searchEntries(String)} */
     public List<String> searchEntry(String term){
         return directory.searchEntries(term);
     }
@@ -71,29 +63,17 @@ public class Map {
         return directory.deleteRoom(roomAtNode);
     }
 
-    /**
-     *
-     * @param entry
-     * @return
-     */
+    /** See method {@link Directory#addEntry(DirectoryEntry)} */
     public boolean addEntry(DirectoryEntry entry){
         return directory.addEntry(entry);
     }
 
-    /**
-     *
-     * @param key
-     * @return
-     */
-    public boolean deleteEntry(String key){
-        return directory.deleteEntry(key);
+    /** See method {@link Directory#deleteEntry(DirectoryEntry)} */
+    public boolean deleteEntry(DirectoryEntry entry){
+        return directory.deleteEntry(entry);
     }
 
-    /**
-     *
-     * @param name
-     * @return
-     */
+    /** See method {@link Directory#getEntry(String)} */
     public DirectoryEntry getEntry(String name){
         return directory.getEntry(name);
     }
