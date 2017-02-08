@@ -19,6 +19,7 @@ public class DirectoryAdminController extends DisplayController implements Initi
 /*    DirectoryAdminDisplay display;*/
     DirectoryEntry activeDirectoryEntry;
     Room activeRoom;
+    String activeEntryRoomSelected; 
 
     // FXML stuff
     @FXML
@@ -61,6 +62,9 @@ public class DirectoryAdminController extends DisplayController implements Initi
 
     @FXML
     ListView<String> entryRoomOptions;
+
+    @FXML
+    Button entryDeleteRoom; 
 
     @FXML
     ListView<String> entryCurrentLocations;
@@ -238,6 +242,19 @@ public class DirectoryAdminController extends DisplayController implements Initi
         }
     }
 
+    public void entryDeleteSelectedRoom () {
+        if (activeEntryRoomSelected != null) {
+            entryRemoveRoom(activeEntryRoomSelected);
+            entryDeleteRoom.setVisible(false); 
+        }
+        else {
+            System.out.println("no room selected"); 
+            entryDeleteRoom.setVisible(false); 
+        }
+
+    }
+
+
     /**
      * remove room from list
      * @param selection
@@ -338,7 +355,9 @@ public class DirectoryAdminController extends DisplayController implements Initi
             public void handle(MouseEvent event) {
                 System.out.println("remove entry");
                 String selectedString = entryCurrentLocations.getSelectionModel().getSelectedItem();
-                entryRemoveRoom(selectedString);
+                activeEntryRoomSelected = selectedString; 
+                entryDeleteRoom.setVisible(true);
+                // entryRemoveRoom(selectedString);
             }
         });
     }
