@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+   <bottom>
+      <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+        <items>
+          <Button fx:id="help" mnemonicParsing="false" onAction="#help" text="Help" />
+            <Button fx:id="MapAdminLogin" mnemonicParsing="false" onAction="#switchToMapAdmin" text="MapAdminDisplay" />
+            <Button fx:id="directoryAdminLogin" mnemonicParsing="false" onAction="#switchToDirectoryAdmin" text="DirectoryAdminDisplay" />
+        </items>
+      </ToolBar>
+   </bottom>
+   <center>
+      <AnchorPane fx:id="anchorPane" prefHeight="1000.0" prefWidth="1200.0" BorderPane.alignment="CENTER">
+         <children>
+            <ImageView fx:id="imageView" fitHeight="800.0" fitWidth="1000.0" layoutX="133.0" layoutY="92.0" pickOnBounds="true" preserveRatio="true" />
+            <TextField fx:id="searchBar" layoutX="600.0" layoutY="30.0" onKeyReleased="#search" prefHeight="25.0" prefWidth="198.0" promptText="Search!">
+               <font>
+                  <Font size="28.0" />
+               </font></TextField>
+            <Label fx:id="helpLabel" contentDisplay="CENTER" layoutX="300.0" layoutY="100.0" onKeyPressed="#help" onMouseClicked="#help" opacity="0.85" prefHeight="341.0" prefWidth="733.0" style="-fx-background-color: ALICEBLUE;" text="Label" textAlignment="CENTER" visible="false">
+               <cursor>
+                  <Cursor fx:constant="S_RESIZE" />
+               </cursor>
+               <font>
+                  <Font size="30.0" />
+               </font>
+            </Label>
+            <ListView fx:id="options" layoutX="600.0" layoutY="90.0" prefHeight="200.0" prefWidth="200.0" visible="false">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor></ListView>
+         </children>
+      </AnchorPane>
+   </center>
+</BorderPane>
