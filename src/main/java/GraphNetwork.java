@@ -1,4 +1,7 @@
+import com.sun.corba.se.impl.orbutil.graph.Graph;
+
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -6,10 +9,15 @@ import java.util.stream.Collectors;
 public class GraphNetwork {
     LinkedList<GraphNode> graphNodes = new LinkedList<>();
 
-    public GraphNetwork(){}
+    HashMap<GraphNode, GraphNode> graphConnections = new HashMap<>();
 
     public GraphNetwork(LinkedList<GraphNode> graphNodes) {
         this.graphNodes = graphNodes;
+        //this.graphConnections = graphConnections;
+    }
+
+    public HashMap<GraphNode, GraphNode> getGraphConnections(){
+        return graphConnections;
     }
 
     public static LinkedList<GraphNode> getPath(GraphNode startNode, GraphNode goalNode){
@@ -150,12 +158,19 @@ public class GraphNetwork {
      * @return true if connection was successful
      */
     public boolean addConnection(GraphNode nodeA, GraphNode nodeB){
-        nodeA.addAdjacent(nodeB);
-        nodeB.addAdjacent(nodeA);
-        if(nodeA.getAdjacent().contains(nodeB) && nodeB.getAdjacent().contains(nodeA))
+
+        if (true) {
+
+            if(graphConnections.containsKey(nodeA) && graphConnections.containsValue(nodeB)){
+
+            } else {
+                graphConnections.put(nodeA, nodeB);
+            }
             return true;
-        else
+        } else {
             return false;
+        }
+
     }
 
     /**
@@ -165,13 +180,13 @@ public class GraphNetwork {
      * @return true if successful
      */
     public boolean deleteConnection(GraphNode nodeA, GraphNode nodeB) {
-        if (nodeB.adjacent.contains(nodeA)) {
-            //do the thing
-            nodeA.removeAdjacent(nodeB);
-            nodeB.removeAdjacent(nodeA);
-            return true;
+        if (graphConnections.containsKey(nodeA) && graphConnections.containsValue(nodeB)) {
+            graphConnections.remove(nodeA, nodeB);
         }
-        return false;
+        if (graphConnections.containsKey(nodeA) && graphConnections.containsValue(nodeB)) {
+            return false;
+        }
+        return true;
     }
 
     LinkedList AStar(GraphNode start, GraphNode end){

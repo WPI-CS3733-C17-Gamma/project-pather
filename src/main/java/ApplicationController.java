@@ -142,3 +142,17 @@ public class ApplicationController extends Application {
         launch(args);
     }
 }
+
+
+/*
+TO-DO
++ connections have 2 nodes - cannot select nodes on dot for some reason...
++ takes current state of map and loads - should work, not tested
+- select nodes and connections and delete
+- add room to node (menu with name) - do after SRC tomorrow
++ prevent nodes and connections to be made at the same time
++ add exit button
+
+
+
+ */
