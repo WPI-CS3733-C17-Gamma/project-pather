@@ -1,5 +1,6 @@
 import java.sql.*;
 import java.util.HashMap;
+import java.util.TreeMap;
 import java.util.LinkedList;
 import javafx.scene.image.Image;
 import org.apache.derby.shared.common.error.DerbySQLIntegrityConstraintViolationException;
@@ -15,7 +16,7 @@ public class DatabaseManager {
             "constraint id2_fk foreign key (ID2) references GraphNodes(ID))",
         "create table Rooms (rID Integer Primary key, Name varchar(30), nID Integer," +
             "constraint fk_gn foreign key (nID) references GraphNodes(ID))",
-        "create table Entries (eID Integer Primary Key, Title varchar(20), Name varchar(30))",
+        "create table Entries (eID Integer Primary Key, Title varchar(20), Name varchar(40))",
         "create table RoomEntryAssoc (eID integer, rID integer," +
             "constraint pk_rea primary key (eID, rID),"+
             "constraint eID_fk foreign key (eID) references Entries(eID),"+
@@ -48,10 +49,10 @@ public class DatabaseManager {
     public Map load(){
         // Map IDs for Rooms, Entries and Nodes to Rooms, Entries, and
         // Nodes, respectively
-        HashMap<Integer, GraphNode> nodes = new HashMap<Integer, GraphNode>();
-        HashMap<Integer, Room> roomsID = new HashMap<Integer, Room>();
-        HashMap<Integer, DirectoryEntry> entriesID =
-            new HashMap<Integer, DirectoryEntry>();
+        TreeMap<Integer, GraphNode> nodes = new TreeMap<Integer, GraphNode>();
+        TreeMap<Integer, Room> roomsID = new TreeMap<Integer, Room>();
+        TreeMap<Integer, DirectoryEntry> entriesID =
+            new TreeMap<Integer, DirectoryEntry>();
 
         HashMap<String, Room> rooms = new HashMap<String, Room>();
         HashMap<String, DirectoryEntry> entries =
@@ -90,7 +91,7 @@ public class DatabaseManager {
             }
 
             // Get all rooms
-            result = s.executeQuery("select * from Rooms");
+            result = s.executeQuery("select * from Rooms order by rID");
             while(result.next()) {
                 Room room = new Room(nodes.get(result.getInt(3)),
                                      result.getString(2));
@@ -99,7 +100,7 @@ public class DatabaseManager {
             }
 
             // Get all Entries
-            result = s.executeQuery("select * from Entries");
+            result = s.executeQuery("select * from Entries order by eID");
             while(result.next()) {
                 LinkedList<Room> locations = new LinkedList<Room>();
 
