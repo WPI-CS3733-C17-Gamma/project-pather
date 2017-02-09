@@ -20,7 +20,6 @@ public class ApplicationController extends Application {
         initialize();
 
         this.pStage = primaryStage;
-        // load database
         createPatientDisplay();
         primaryStage.show();
     }
@@ -31,6 +30,15 @@ public class ApplicationController extends Application {
         map = databaseManager.load();
     }
 
+    /**
+     * reload the state of the database
+     */
+    public Map reload () {
+        System.out.println("reload");
+        map = databaseManager.load();
+        return map;
+    }
+
 
 
     /**
@@ -38,13 +46,12 @@ public class ApplicationController extends Application {
      */
     public void createPatientDisplay(){
         try {
-            databaseManager.write(map);
             FXMLLoader loader = new FXMLLoader(getClass().getResource("PatientDisplay.fxml"));
             PatientController controller = new PatientController(map,this, "Maps/floor3.png");
             loader.setController(controller);
             Parent root = loader.load();
             pStage.setTitle("PatientDisplay");
-            pStage.setScene(new Scene(root, 1200, 1000));
+            pStage.setScene(new Scene(root, 1200, 800));
         }
         catch (Exception e){
             e.printStackTrace();
@@ -62,7 +69,7 @@ public class ApplicationController extends Application {
             loader.setController(controller);
             Parent root = loader.load();
             pStage.setTitle("MapAdmin");
-            pStage.setScene(new Scene(root, 1200, 1000));
+            pStage.setScene(new Scene(root, 1200, 800));
         }
         catch (Exception e){
             e.printStackTrace();
@@ -77,10 +84,11 @@ public class ApplicationController extends Application {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("DirectoryAdminDisplay.fxml"));
             DirectoryAdminController controller = new DirectoryAdminController(map,this, "Maps/floor3.png");
+
             loader.setController(controller);
             Parent root = loader.load();
             pStage.setTitle("DirectoryAdmin");
-            pStage.setScene(new Scene(root, 1200, 1000));
+            pStage.setScene(new Scene(root, 1200, 800));
         }
         catch (Exception e){
             e.printStackTrace();
@@ -106,6 +114,7 @@ public class ApplicationController extends Application {
      * Change back to the patient display
      */
     public void logout(){
+        save();
         createPatientDisplay();
     }
 
@@ -113,6 +122,7 @@ public class ApplicationController extends Application {
      * write current state to database
      */
     public void save () {
+        System.out.println("SAVE");
         databaseManager.write(map);
     }
     /**

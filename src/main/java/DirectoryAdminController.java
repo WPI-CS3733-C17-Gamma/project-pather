@@ -113,6 +113,30 @@ public class DirectoryAdminController extends DisplayController implements Initi
     }
 
     /**
+     *  called by undo button.
+     *  Revert to previous database state
+     *  Reset the state of all the objects
+     */
+    public void undo () {
+        map = applicationController.reload();
+        entryEditor.setVisible(false);
+        searchBar.setText("");
+        activeDirectoryEntry = null;
+        activeRoom = null;
+        activeEntryRoomSelected = null;
+        filterAllEntries();
+    }
+
+    /**
+     * Preview changes without writing to the database
+     * Creates patient display without changing the database
+     */
+    public void preview () {
+        System.out.println("Preview");
+        applicationController.createPatientDisplay();
+    }
+
+    /**
      * Function to associate a room with a directory entry
      * Add room to activeDirectoryEntry, so it must not be null
      * @param room room to add to the entry
@@ -354,7 +378,7 @@ public class DirectoryAdminController extends DisplayController implements Initi
      * go back to patient display
      */
     public void logout () {
-        applicationController.createPatientDisplay();
+        applicationController.logout();
     }
 
     /**

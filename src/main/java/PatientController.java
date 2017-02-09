@@ -14,6 +14,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 
 import java.net.URL;
@@ -204,16 +205,21 @@ public class PatientController extends DisplayController implements Initializabl
      * @return
      */
     FloorPoint toLocal  (GraphNode node) {
-        double imageWidth = imageView.getFitWidth();
-        double imageHeight = imageView.getFitHeight();
+        double imageWidth = imageView.getBoundsInLocal().getWidth();
+        double imageHeight = imageView.getBoundsInLocal().getHeight();
+        double offsetX = imageView.getBoundsInParent().getMinX();
+        double offsetY = imageView.getBoundsInParent().getMinY();
 
-        int newX = (int)(node.location.x / 1000. * imageWidth + imageView.getLayoutX());
-        int newY = (int)(node.location.y / 1000. * imageHeight + imageView.getLayoutY());
+        offsetX = imageView.getLayoutX();
+        offsetY = imageView.getLayoutY();
+
+        System.out.println("off x " + offsetX + "  off y "  + offsetY);
+
+        int newX = (int)(node.location.x * imageWidth / 1000. + offsetX );
+        int newY = (int)(node.location.y * imageHeight / 1000. + offsetY );
         System.out.printf("image width : %f \nimage Height : %f\n", imageWidth, imageHeight);
 
         return new FloorPoint(newX, newY, node.location.floor);
-
-
     }
 
     /**
@@ -257,7 +263,7 @@ public class PatientController extends DisplayController implements Initializabl
      * @param localPoint
      */
     public Shape drawPoint (FloorPoint localPoint) {
-        Circle c = new Circle(localPoint.x, localPoint.y, 10);
+        Circle c = new Circle(localPoint.x, localPoint.y, 5);
         c.setFill(Color.BLUE);
         anchorPane.getChildren().add(c);
         return c;
@@ -274,6 +280,7 @@ public class PatientController extends DisplayController implements Initializabl
         FloorPoint pointB = toLocal(nodeB);
 
         Line line = new Line(pointA.x, pointA.y, pointB.x, pointB.y);
+        line.setStrokeWidth(4);
         line.setFill(Color.BLUE);
         line.setStrokeWidth(1);
 
@@ -313,7 +320,14 @@ public class PatientController extends DisplayController implements Initializabl
 
         // TODO will need to be changed to kiosk
         this.startNode = new GraphNode(100, 100, "");
-//        start = map.getRoomFromName("Kiosk");
+        // this.startNode = map.getRoomFromName("Kiosk").location;
+        try {
+            this.startNode = map.getRoomFromName("Kiosk").location;
+        }
+        catch (Exception e) {
+            System.out.println("No Kiosk");
+        }
+
 
         options.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
@@ -324,11 +338,8 @@ public class PatientController extends DisplayController implements Initializabl
             }
         });
         imageView.toBack();
-        imageView.setPreserveRatio(false);
-        imageView.setFitHeight(800);
-        imageView.setFitWidth(1000);
+//        imageView.setPreserveRatio(false);
         helpLabel.setText("Hello! Thanks for using project-pather.\n\nTo get started, start typing into the search bar. " +
             "\n Then, select the option you would like to get a path to.\n\nTo close this menu, click on it");
-
     }
 }

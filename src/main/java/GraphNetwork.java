@@ -1,4 +1,7 @@
+import com.sun.corba.se.impl.orbutil.graph.Graph;
+
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -10,6 +13,7 @@ public class GraphNetwork {
 
     public GraphNetwork(LinkedList<GraphNode> graphNodes) {
         this.graphNodes = graphNodes;
+        //this.graphConnections = graphConnections;
     }
 
     public static LinkedList<GraphNode> getPath(GraphNode startNode, GraphNode goalNode) throws PathNotFoundException {
@@ -96,12 +100,17 @@ public class GraphNetwork {
      */
     public GraphNode getGraphNode(FloorPoint loc){
         List<GraphNode> sameFloor = getGraphNodesOnFloor(loc.floor);
-        // get the closest point to the node
-        double minDistance = Double.MAX_VALUE;
-        GraphNode closestNode = null;
+        if(sameFloor.isEmpty()) {
+            return null;
+        }
+
+            // get the closest point to the node
+        GraphNode closestNode = sameFloor.get(0);
+        double minDistance = closestNode.location.distance(loc);
 
         // find the minimum distance on the same floor
-        for (GraphNode currentNode : sameFloor) {
+        for (int i = 0 ; i < sameFloor.size(); i++) {
+            GraphNode currentNode = graphNodes.get(i);
             double currentDistance = currentNode.location.distance(loc);
             if(currentDistance < minDistance){
                 minDistance = currentDistance;
@@ -148,7 +157,6 @@ public class GraphNetwork {
            s.adjacent.remove(node);
        }
     }
-
     /**
      * Adds a connection between two nodes
      * @param nodeA
@@ -163,7 +171,6 @@ public class GraphNetwork {
         else
             return false;
     }
-
     /**
      * Deletes the connection between two nodes
      * @param nodeA
@@ -178,8 +185,7 @@ public class GraphNetwork {
             return true;
         }
         return false;
-    }
-
+}
     LinkedList AStar(GraphNode start, GraphNode end){
         return null;
     }

@@ -10,6 +10,20 @@ public class FloorPoint implements Comparable{
         this.floor = floor;
     }
 
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+
+
+    public String getFloor() {
+        return floor;
+    }
+
     public int compareTo(FloorPoint FloorPoint){
         return 0;
     }

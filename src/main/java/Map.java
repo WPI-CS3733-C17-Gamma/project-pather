@@ -57,6 +57,11 @@ public class Map {
         return directory.getRoom(node);
     }
 
+    /**
+     *
+     * @param room
+     * @return true if the room is added, false if it is a duplicate
+     */
     /** See method {@link Directory#addRoom(Room)} */
     public boolean addRoom(Room room){
         return directory.addRoom(room);
@@ -104,6 +109,10 @@ public class Map {
      */
     public boolean deleteNode(GraphNode node){
         graph.deleteNode(node);
+        Room roomOnNode = this.getRoomFromNode(node);
+        if(roomOnNode != null) {
+            deleteRoom(node);
+        }
         return true;
     }
 
