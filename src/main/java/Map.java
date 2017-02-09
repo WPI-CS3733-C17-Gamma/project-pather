@@ -82,6 +82,17 @@ public class Map {
         return directory.deleteRoom(roomAtNode);
     }
 
+    /**
+     * Change the name of an existing room.
+     * Returns true if the room is alredy contained in the directory
+     * @param room
+     * @param newName
+     * @return
+     */
+    public boolean changeRoomName (Room room, String newName) {
+        return directory.changeRoomName(room, newName);
+    }
+
     /** See method {@link Directory#addEntry(DirectoryEntry)} */
     public boolean addEntry(DirectoryEntry entry){
         return directory.addEntry(entry);

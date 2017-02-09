@@ -184,6 +184,19 @@ public class Directory {
         return true;
     }
 
+    /**
+     * Change the name of an existing room
+     * @param room
+     * @param newName
+     * @return
+     */
+    public boolean changeRoomName (Room room, String newName) {
+        boolean containedOldRoom = rooms.remove(room.name, room);
+        room.name = newName;
+        rooms.put(newName, room);
+        return containedOldRoom;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof Directory)) {
