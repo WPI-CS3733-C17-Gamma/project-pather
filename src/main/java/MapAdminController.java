@@ -192,6 +192,9 @@ public class MapAdminController extends DisplayController implements Initializab
             else if (map.getRoomFromName(activeRoom.name) == null){
                 map.addRoom(new Room (selectedNode, newName));
             }
+            else {
+                map.changeRoomName(activeRoom, newName);
+            }
             // change room
         }
     }
@@ -333,6 +336,10 @@ public class MapAdminController extends DisplayController implements Initializab
             roomName.setText("");
         }
     }
+
+    /**
+     * Highlights the primary node in red and secondary node in blue
+     */
     public void highlightSelected () {
         drawnLines.forEach(shape -> shape.setFill(Color.BLUE));
         drawnNodes.values().forEach(shape -> shape.setFill(Color.BLUE));
