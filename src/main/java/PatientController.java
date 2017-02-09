@@ -14,6 +14,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 
 import java.net.URL;
@@ -265,7 +266,7 @@ public class PatientController extends DisplayController implements Initializabl
      * @param localPoint
      */
     public Shape drawPoint (FloorPoint localPoint) {
-        Circle c = new Circle(localPoint.x, localPoint.y, 10);
+        Circle c = new Circle(localPoint.x, localPoint.y, 5);
         c.setFill(Color.BLUE);
         anchorPane.getChildren().add(c);
         return c;
@@ -282,6 +283,7 @@ public class PatientController extends DisplayController implements Initializabl
         FloorPoint pointB = toLocal(nodeB);
 
         Line line = new Line(pointA.x, pointA.y, pointB.x, pointB.y);
+        line.setStrokeWidth(4);
         line.setFill(Color.BLUE);
         line.setStrokeWidth(1);
 
