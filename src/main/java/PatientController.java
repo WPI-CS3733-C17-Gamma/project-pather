@@ -312,7 +312,7 @@ public class PatientController extends DisplayController implements Initializabl
         displayImage();
 
         // TODO will need to be changed to kiosk
-        this.startNode = new GraphNode(new FloorPoint(100,100,""));
+        this.startNode = new GraphNode(100, 100, "");
 //        start = map.getRoomFromName("Kiosk");
 
         options.setOnMouseClicked(new EventHandler<MouseEvent>() {

@@ -14,7 +14,7 @@ public class GetRoomByNodeTest extends TestCase {
     protected void setUp() {
 
         dir = new Directory(new HashMap<>(), new HashMap<>());
-        pos = new GraphNode(new FloorPoint(1,1,"1"));
+        pos = new GraphNode(1,1,"1");
         room = new Room (pos, "dummyNode");
         dir.addRoom(room);
     }
@@ -30,7 +30,7 @@ public class GetRoomByNodeTest extends TestCase {
     @Test
     // make sure no room is found when a incorrect search is done
     public void testFailToFindRoom () {
-        Room getRoom = dir.getRoom(new GraphNode(new FloorPoint(1,2,"1")));
+        Room getRoom = dir.getRoom(new GraphNode(1,2,"1"));
         assertEquals(getRoom, null);
 
 

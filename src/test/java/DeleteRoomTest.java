@@ -11,7 +11,7 @@ public class DeleteRoomTest extends TestCase {
     Directory directory;
     Room dummyRoom;
     protected void setUp(){
-        dummyNode = new GraphNode(new FloorPoint(1,1,""));
+        dummyNode = new GraphNode(1,1,"");
         directory = new Directory (new HashMap<String, DirectoryEntry>(),
             new HashMap<String, Room>() );
         dummyRoom = new Room(dummyNode, "room");

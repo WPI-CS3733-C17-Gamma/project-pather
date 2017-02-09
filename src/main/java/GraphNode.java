@@ -8,13 +8,23 @@ public class GraphNode extends Ided implements Comparable {
 
     /**
      * construct a node with no adjacent nodes
-     * at location p
-     * @param p
+     * params are passed to a constructed FloorPoint
+     * @param x the X coordinate
+     * @param y the y coordinate
+     * @param floor the floor name
      */
-    public GraphNode(FloorPoint p){
-        location = p;
-        this.location = p;
+    public GraphNode(int x, int y, String floor){
+        this.location = new FloorPoint(x, y, floor);
         adjacent = new LinkedList<GraphNode>();
+    }
+
+    /**
+     * construct a node with no adjacent nodes
+     * @param location location for the new node
+     */
+    public GraphNode(FloorPoint location){
+        this.location = location;
+        this.adjacent = new LinkedList<GraphNode>();
     }
 
     public List<GraphNode> getAdjacent(){
