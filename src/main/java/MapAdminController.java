@@ -275,8 +275,8 @@ public class MapAdminController extends DisplayController implements Initializab
 
         Line line = new Line(imagePoint1.x, imagePoint1.y, imagePoint2.x, imagePoint2.y);
         line.setFill(Color.BLACK);
+        line.setMouseTransparent(true);
         anchorpaneMap.getChildren().add(line);
-        GraphNode graphNodeAttatched = map.getGraphNode(x1);
         drawnLines.add(line);
     }
 
