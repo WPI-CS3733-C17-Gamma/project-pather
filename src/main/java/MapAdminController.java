@@ -292,7 +292,7 @@ public class MapAdminController extends DisplayController implements Initializab
     }
 }
 /*
-TO-DO
+TODO
 + connections have 2 nodes
 + takes current state of map and loads - should work, not tested
 - select connections and delete
