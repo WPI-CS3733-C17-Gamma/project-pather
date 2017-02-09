@@ -109,6 +109,10 @@ public class Map {
      */
     public boolean deleteNode(GraphNode node){
         graph.deleteNode(node);
+        Room roomOnNode = this.getRoomFromNode(node);
+        if(roomOnNode != null) {
+            deleteRoom(node);
+        }
         return true;
     }
 

@@ -20,7 +20,6 @@ public class ApplicationController extends Application {
         initialize();
 
         this.pStage = primaryStage;
-        // load database
         createPatientDisplay();
 /*
         map = new Map(
@@ -45,6 +44,15 @@ public class ApplicationController extends Application {
         map = databaseManager.load();
     }
 
+    /**
+     * reload the state of the database
+     */
+    public Map reload () {
+        System.out.println("reload");
+        map = databaseManager.load();
+        return map;
+    }
+
 
 
     /**
@@ -57,7 +65,7 @@ public class ApplicationController extends Application {
             loader.setController(controller);
             Parent root = loader.load();
             pStage.setTitle("PatientDisplay");
-            pStage.setScene(new Scene(root, 1200, 1000));
+            pStage.setScene(new Scene(root, 1200, 800));
         }
         catch (Exception e){
             e.printStackTrace();
@@ -75,7 +83,7 @@ public class ApplicationController extends Application {
             loader.setController(controller);
             Parent root = loader.load();
             pStage.setTitle("MapAdmin");
-            pStage.setScene(new Scene(root, 1200, 1000));
+            pStage.setScene(new Scene(root, 1200, 800));
         }
         catch (Exception e){
             e.printStackTrace();
@@ -94,7 +102,7 @@ public class ApplicationController extends Application {
             loader.setController(controller);
             Parent root = loader.load();
             pStage.setTitle("DirectoryAdmin");
-            pStage.setScene(new Scene(root, 1200, 1000));
+            pStage.setScene(new Scene(root, 1200, 800));
         }
         catch (Exception e){
             e.printStackTrace();
@@ -120,6 +128,7 @@ public class ApplicationController extends Application {
      * Change back to the patient display
      */
     public void logout(){
+        save();
         createPatientDisplay();
     }
 
@@ -127,6 +136,7 @@ public class ApplicationController extends Application {
      * write current state to database
      */
     public void save () {
+        System.out.println("SAVE");
         databaseManager.write(map);
     }
     /**
