@@ -1,7 +1,6 @@
 import junit.framework.TestCase;
 import org.junit.Test;
 
-import java.awt.geom.Path2D;
 import java.util.Arrays;
 import java.util.LinkedList;
 
@@ -69,10 +68,9 @@ public class GetPathTest extends TestCase{
         node1.addAdjacent(node2);
         node1.addAdjacent(node3);
         node2.addAdjacent(node1);
-        node2.addAdjacent(node4);
+        node2.addAdjacent(node3);
         node3.addAdjacent(node1);
         node3.addAdjacent(node4);
-        node4.addAdjacent(node2);
         node4.addAdjacent(node3);
         node4.addAdjacent(node5);
         node5.addAdjacent(node4);
@@ -130,7 +128,7 @@ public class GetPathTest extends TestCase{
     }
 
     public void testGetPath() {
-        LinkedList<GraphNode> path1 = new LinkedList(Arrays.asList(node5, node4, node2, node1));
+        LinkedList<GraphNode> path1 = new LinkedList(Arrays.asList(node5, node4, node3, node1));
         for(GraphNode neighbour: nodes){
             System.err.println(neighbour.toString());
         }
@@ -145,9 +143,6 @@ public class GetPathTest extends TestCase{
 
     public void testGetPath2() {
         LinkedList<GraphNode> path1 = new LinkedList(Arrays.asList(node35, node45, node53, node51));
-//        for(GraphNode neighbour: betterNodes) {
-//            System.err.println(neighbour.toString());
-//        }
         LinkedList<GraphNode> path2 = new LinkedList<>();
         try {path2 = betterGraph.getPath(node51, node35);}
         catch (PathNotFoundException e){
@@ -181,12 +176,15 @@ public class GetPathTest extends TestCase{
 
 
     public void testGetPath4a() {
-        LinkedList<GraphNode> path1 = new LinkedList(Arrays.asList(node33, node34, node15, node14));
-        for(GraphNode neighbour: betterNodes) {
-            System.err.println(neighbour.toString());
-        }
+        LinkedList<GraphNode> path1 = new LinkedList(Arrays.asList(node33, node23, node22, node14));
         LinkedList<GraphNode> path2 = new LinkedList<>();
-        try{path2 = betterGraph.getPath(node14, node33);}
+        try {
+            path2 = betterGraph.getPath(node14, node33);
+            for (GraphNode neighbour : path2) {
+                System.err.println("testGetPath4a ");
+                System.err.println(neighbour.toString());
+            }
+        }
         catch(PathNotFoundException e){
             assertTrue(false);
         }
