@@ -3,15 +3,15 @@ import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+
 import java.net.URL;
 import java.util.LinkedList;
-import java.util.IllegalFormatCodePointException;
-import java.util.IllegalFormatException;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
@@ -23,63 +23,28 @@ public class DirectoryAdminController extends DisplayController implements Initi
     String activeEntryRoomSelected;
 
     // FXML stuff
-    @FXML
-    TextField searchBar;
-
-    @FXML
-    ListView<String> listEntries;
-
-    @FXML
-    AnchorPane roomEditor;
-    @FXML
-    AnchorPane entryEditor;
-
-    @FXML
-    TextField roomName;
-
-    @FXML
-    TextField serviceSearch;
-
-    @FXML
-    Button addServiceButton;
-
-    @FXML
-    ListView<String> serviceOptions;
-
-    @FXML
-    ListView<String> currentServices;
-
-    @FXML
-    TextField entryName;
-
-    @FXML
-    TextField entryTitle;
-
-    @FXML
-    TextField entryRoomSearch;
-
-    @FXML
-    Button entryAddRoomButton;
-
-    @FXML
-    ListView<String> entryRoomOptions;
-
-    @FXML
-    Button entryDeleteRoom;
-
-    @FXML
-    ListView<String> entryCurrentLocations;
-
-
-    @FXML
-    Label helpLabel;
+    @FXML TextField searchBar;
+    @FXML ListView<String> listEntries;
+    @FXML AnchorPane roomEditor;
+    @FXML AnchorPane entryEditor;
+    @FXML TextField roomName;
+    @FXML TextField serviceSearch;
+    @FXML Button addServiceButton;
+    @FXML ListView<String> serviceOptions;
+    @FXML ListView<String> currentServices;
+    @FXML TextField entryName;
+    @FXML TextField entryTitle;
+    @FXML TextField entryRoomSearch;
+    @FXML Button entryAddRoomButton;
+    @FXML ListView<String> entryRoomOptions;
+    @FXML Button entryDeleteRoom;
+    @FXML ListView<String> entryCurrentLocations;
+    @FXML Label helpLabel;
 
     public DirectoryAdminController(Map map,
-                                    /*Kiosk kiosk, */
                                     ApplicationController applicationController,
                                     String currentMap) {
         super(map,
-              /*kiosk,*/
               applicationController,
               currentMap);
     }
@@ -87,6 +52,11 @@ public class DirectoryAdminController extends DisplayController implements Initi
     /** See the method {@link Map#searchEntry(String)} */
     public List<String> searchEntry(String search) {
         return map.searchEntry(search);
+    }
+
+    /** See the method {@link Map#deleteEntry(DirectoryEntry)} */
+    public boolean deleteEntry(DirectoryEntry entry) {
+        return map.deleteEntry(activeDirectoryEntry);
     }
 
     /** See the method {@link Map#getEntry(String)}
@@ -101,19 +71,17 @@ public class DirectoryAdminController extends DisplayController implements Initi
         return;
     }
 
-    /** See the method {@link Map#deleteEntry(DirectoryEntry)} */
-    public boolean deleteEntry(DirectoryEntry entry) {
-        return map.deleteEntry(activeDirectoryEntry);
-    }
-
     /**
-     * create a new entry
+     * create a empty entry for the display
      */
     public void createEntry() {
         activeDirectoryEntry = new DirectoryEntry("", "", new LinkedList<Room>());
         displayEntry(activeDirectoryEntry);
     }
 
+    /**
+     * Removed the activeDirectoryEntry from the entry list
+     */
     public void entryDeleteSelectedEntry () {
         if (activeDirectoryEntry != null) {
             deleteEntry(activeDirectoryEntry);
@@ -144,27 +112,35 @@ public class DirectoryAdminController extends DisplayController implements Initi
         return;
     }
 
+    /**
+     * Function to associate a room with a directory entry
+     * Add room to activeDirectoryEntry, so it must not be null
+     * @param room room to add to the entry
+     */
     public void addLocationToEntry(String room) {
+        activeDirectoryEntry.addLocation(map.getRoomFromName(room));
     }
 
-
-    public void changeTitle(String title) {
-    }
+    /* TODO Figure out if this needs to be deleted */
+    public void changeTitle(String title) {}
 
     /* Functions for Rooms */
-    /** See method {@link Map#searchRoom(String)} */
     public List<String> searchRoom(String search) {
-        return map.searchRoom(search);
+        return null;
     }
 
-    /** See method {@link Map#addRoom(Room)} */
     public void createRoom(String name, GraphNode node) {
+        map.addRoom(new Room(node, name));
     }
 
+    /** See method {@link Map#deleteRoom(Room)} */
     public boolean deleteRoom(Room room) {
-        return false;
+        return map.deleteRoom(room);
     }
 
+    /**
+     * Shows the currently active directory entry with displayEntry
+     */
     public void entryCancel () {
         if(activeDirectoryEntry != null) {
             displayEntry(activeDirectoryEntry);
@@ -270,6 +246,7 @@ public class DirectoryAdminController extends DisplayController implements Initi
 
 
     }
+
     /**
      * filter rooms for entries
      */
@@ -298,6 +275,9 @@ public class DirectoryAdminController extends DisplayController implements Initi
         }
     }
 
+    /**
+     * Function to delete the activeEntryRoomSelected
+     */
     public void entryDeleteSelectedRoom () {
         if (activeEntryRoomSelected != null) {
             entryRemoveRoom(activeEntryRoomSelected);
@@ -312,7 +292,7 @@ public class DirectoryAdminController extends DisplayController implements Initi
     }
 
 
-    /**
+    /** TODO Figure out what this does
      * remove room from list
      * @param selection
      */
@@ -329,8 +309,9 @@ public class DirectoryAdminController extends DisplayController implements Initi
         ObservableList<String> newRoomNames = FXCollections.observableList(newLocs);
         entryCurrentLocations.setItems(newRoomNames);
     }
-    /**
-     *
+
+    /** TODO figure out what this does
+     * Function to add
      * @param selection
      */
     public void entryAddRoom (String selection) {
@@ -377,7 +358,7 @@ public class DirectoryAdminController extends DisplayController implements Initi
     }
 
     /**
-     *
+     * TODO Figure out what this does
      * @param location
      * @param resources
      */
