@@ -31,7 +31,7 @@ public class Directory {
 
     /**
      * Search for a room that contains the key as a substring
-     * @param key
+     * @param key key to search for
      * @return
      */
     public List<String> subStringSearchRooms(String key) {
@@ -44,7 +44,7 @@ public class Directory {
 
     /**
      * return list of all entries
-     * @return
+     * @return a list of all entries as strings
      */
     public List<String> getAllEntries () {
         return entries.keySet().stream().collect(Collectors.toList());
@@ -52,7 +52,7 @@ public class Directory {
 
     /**
      * get list of all room names
-     * @return
+     * @return a list of all room names as strings
      */
     public List<String> getAllRooms () {
         return rooms.keySet().stream().collect(Collectors.toList());
@@ -111,7 +111,7 @@ public class Directory {
     }
 
     /**
-     *
+     * Function to get a hashmap of all entries
      * @return the map of all directory entries
      */
     public HashMap<String, DirectoryEntry> getEntries(){
@@ -119,9 +119,9 @@ public class Directory {
     }
 
     /**
-     *
-     * @param room
-     * @return
+     * Function to add a room to the list of rooms
+     * @param room room to be added
+     * @return true if the room is added, false if it is a duplicate
      */
     public boolean addRoom(Room room){
         if(!rooms.containsKey(room.name)){
@@ -133,8 +133,9 @@ public class Directory {
     }
 
     /**
-     * @param roomName
-     * @return
+     * Function to get a room based on its name
+     * @param roomName name of the room to search for
+     * @return the room, or null if it could not be found
      */
     public Room getRoom(String roomName){
         if(rooms.containsKey(roomName)){
@@ -145,9 +146,9 @@ public class Directory {
     }
 
     /**
-     *
-     * @param node
-     * @return
+     * Gets a room based on its location node
+     * @param node location of the room
+     * @return the room at that location, or null
      */
     public Room getRoom(GraphNode node){
         Optional<Room> roomAtNode = rooms.values().stream()
@@ -165,9 +166,8 @@ public class Directory {
 
     /**
      * remove room from rooms
-     * remove all entries that have this room as a location
-     * @param room
-     * @return
+     * @param room room to delete
+     * @return true if deleted, else false
      */
     public boolean deleteRoom(Room room) {
         if(rooms.containsKey(room.name)){

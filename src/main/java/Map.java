@@ -1,5 +1,6 @@
 import javafx.scene.image.Image;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Map {
@@ -20,47 +21,38 @@ public class Map {
         return directory.searchRooms(term);
     }
 
+    /** See method {@Link Directory#subStringSearchRoom} */
     public List<String> subStringSearchRoom(String term) {
         return directory.subStringSearchRooms(term);
     }
 
     /**
+     * Function to get all entries as a list
      * @return get all entries in the directory by name
      */
     public List<String> getAllEntries () {
         return directory.getAllEntries();
     }
+
     /**
+     * Funcition to get all rooms as a list
      * @return get all entries in the directory by name
      */
     public List<String> getAllRooms () {
         return directory.getAllRooms();
     }
 
-    /**
-     *
-     * @param term
-     * @return
-     */
     /** See method {@link Directory#searchEntries(String)} */
     public List<String> searchEntry(String term){
         return directory.searchEntries(term);
     }
 
-    /**
-     *
-     * @param roomName
-     * @return
-     */
+    /** See method {@link Directory#getRoom(String)} */
     public Room getRoomFromName(String roomName){
         return directory.getRoom(roomName);
     }
 
-    /**
-     *
-     * @param node
-     * @return
-     */
+    /** See method {@link Directory#getRoom(GraphNode)} */
     public Room getRoomFromNode(GraphNode node){
         return directory.getRoom(node);
     }
@@ -68,19 +60,23 @@ public class Map {
     /**
      *
      * @param room
-     */
-    public void deleteRoom(String room){
-        directory.deleteRoom(directory.getRoom(room));
-    }
-    /**
-     *
-     * @param room
      * @return true if the room is added, false if it is a duplicate
      */
+    /** See method {@link Directory#addRoom(Room)} */
     public boolean addRoom(Room room){
         return directory.addRoom(room);
     }
 
+    /** See method {@link Directory#deleteRoom(Room)} */
+    public boolean deleteRoom(Room room){
+        return directory.deleteRoom(room);
+    }
+
+    /**
+     * Function to delete a room by its node
+     * @param node location of the room to delete
+     * @return true if deleted, else false
+     */
     public boolean deleteRoom(GraphNode node) {
         Room roomAtNode = directory.getRoom(node);
         return directory.deleteRoom(roomAtNode);
@@ -101,19 +97,15 @@ public class Map {
         return directory.getEntry(name);
     }
 
-    /**
-     * Add node to graph
-     * @param node node to add
-     * @return
-     */
+    /** See method {@link GraphNetwork#addNode(GraphNode)} */
     public boolean addNode(GraphNode node){
         return graph.addNode(node);
     }
 
     /**
-     *Delete node from graph and delete the node from adjacent nodes
-     * @param node
-     * @return
+     * Delete node from graph and delete the node from adjacent nodes
+     * @param node node to be deleted
+     * @return true
      */
     public boolean deleteNode(GraphNode node){
         graph.deleteNode(node);
@@ -123,27 +115,27 @@ public class Map {
     /**
      * return the graph node closest to the location given
      * ignores points on different floors
-     * @param point
-     * @return
+     * @param point point to get the node for
+     * @return the graph node at the point
      */
     public GraphNode getGraphNode(FloorPoint point){
         return graph.getGraphNode(point);
     }
 
-    /**
-     *
-     * @param start
-     * @param end
-     * @return
-     */
+    /** See method {@Link GraphNetwork#getPath(startNode, goalNode)} */
     public List<GraphNode> getPath(GraphNode start, GraphNode end){
-        return null;
+        try {
+            return graph.getPath(start, end);
+        } catch( PathNotFoundException e) {
+            System.err.println(e.getMessage());
+        }
+        return new LinkedList<>();
     }
 
     /**
      * adds a connection between two nodes
-     * @param nodeA
-     * @param nodeB
+     * @param nodeA First node
+     * @param nodeB Second node
      * @return true if the point is  added to both nodes
      */
     public boolean addConnection(GraphNode nodeA, GraphNode nodeB){
@@ -152,8 +144,8 @@ public class Map {
 
     /**
      * Deletes the connection between two nodes
-     * @param nodeA
-     * @param nodeB
+     * @param nodeA first node
+     * @param nodeB second node
      * @return true if successful
      */
     public boolean deleteConnection(GraphNode nodeA, GraphNode nodeB) {

@@ -35,7 +35,7 @@ public class GraphNetwork {
             openSet.sort(new Comparator<AStarNode>(){
                 @Override
                 public int compare(AStarNode a, AStarNode b) {
-                    return ((int)b.fScore - (int)a.fScore);
+                    return ((int)a.fScore - (int)b.fScore);
                 }
             });
 
@@ -48,7 +48,7 @@ public class GraphNetwork {
             current.node.getAdjacent().sort(new Comparator<GraphNode>(){
                 @Override
                 public int compare(GraphNode a, GraphNode b) {
-                    return ((int)b.distance(goalNode) - (int)a.distance(goalNode));
+                    return ((int)a.distance(goalNode) - (int)b.distance(goalNode));
                 }
             });
             for (GraphNode gNeighbour: current.node.getAdjacent()) {
@@ -56,9 +56,15 @@ public class GraphNetwork {
                 if (closedSet.contains(neighbour))
                     continue;
                 double tentative_gscore = current.gScore + neighbour.getDistance(current);
-                if(!openSet.contains(neighbour))
+                if(!openSet.contains(neighbour)) {
                     openSet.add(neighbour);
-
+                    openSet.sort(new Comparator<AStarNode>(){
+                        @Override
+                        public int compare(AStarNode a, AStarNode b) {
+                            return ((int)a.fScore - (int)b.fScore);
+                        }
+                    });
+                }
                 else if (tentative_gscore >= neighbour.gScore)
                     continue;
                 neighbour.cameFrom = current;

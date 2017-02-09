@@ -16,9 +16,9 @@ public class AddConnectionTest extends TestCase{
     GraphNetwork graph;
 
     protected void setUp() {
-       a = new GraphNode(new FloorPoint(1,1,""));
-       b = new GraphNode(new FloorPoint(1,2,""));
-       c = new GraphNode(new FloorPoint(1,3,""));
+       a = new GraphNode(1,1,"");
+       b = new GraphNode(1,2,"");
+       c = new GraphNode(1,3,"");
         graph = new GraphNetwork(new LinkedList<>(Arrays.asList(a,b,c)));
     }
 

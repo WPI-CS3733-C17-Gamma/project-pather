@@ -62,8 +62,8 @@ public class DatabaseTest extends TestCase{
              "insert into GraphNodes (ID, X, Y, Floor) values (2, 4, 3, 'bob1')"};
         execStatements(statements);
 
-        GraphNode nodeA = new GraphNode(new FloorPoint(4, 2, "bob1"));
-        GraphNode nodeB = new GraphNode(new FloorPoint(4, 3, "bob1"));
+        GraphNode nodeA = new GraphNode(4, 2, "bob1");
+        GraphNode nodeB = new GraphNode(4, 3, "bob1");
         GraphNetwork graph = new GraphNetwork(
             new LinkedList<GraphNode>(Arrays.asList(nodeA, nodeB)));
 
@@ -79,8 +79,8 @@ public class DatabaseTest extends TestCase{
              "insert into Edges (ID1, ID2) values (1, 2)"};
         execStatements(statements);
 
-        GraphNode nodeA = new GraphNode(new FloorPoint(4, 2, "bob1"));
-        GraphNode nodeB = new GraphNode(new FloorPoint(4, 3, "bob1"));
+        GraphNode nodeA = new GraphNode(4, 2, "bob1");
+        GraphNode nodeB = new GraphNode(4, 3, "bob1");
         nodeA.addAdjacent(nodeB);
         nodeB.addAdjacent(nodeA);
         GraphNetwork graph = new GraphNetwork(
@@ -97,7 +97,7 @@ public class DatabaseTest extends TestCase{
              "insert into Rooms (rID, name, nID) values (1, 'derFs Office', 1)"};
         execStatements(statements);
 
-        GraphNode nodeA = new GraphNode(new FloorPoint(4, 2, "bob1"));
+        GraphNode nodeA = new GraphNode(4, 2, "bob1");
         Room roomA = new Room(nodeA, "derFs Office");
 
         HashMap<String, Room> rooms = new HashMap<String, Room>();
@@ -116,7 +116,7 @@ public class DatabaseTest extends TestCase{
              "insert into RoomEntryAssoc (eID, rID) values (1, 1)"};
         execStatements(statements);
 
-        GraphNode nodeA = new GraphNode(new FloorPoint(4, 2, "bob1"));
+        GraphNode nodeA = new GraphNode(4, 2, "bob1");
         Room roomA = new Room(nodeA, "derFs Office");
         DirectoryEntry entryA = new DirectoryEntry(
             "the land of derF", "office", Arrays.asList(roomA));
@@ -139,8 +139,8 @@ public class DatabaseTest extends TestCase{
              "insert into RoomEntryAssoc (eID, rID) values (1, 1)"};
         execStatements(statements);
 
-        GraphNode nodeA = new GraphNode(new FloorPoint(4, 2, "bob1"));
-        GraphNode nodeB = new GraphNode(new FloorPoint(4, 3, "bob1"));
+        GraphNode nodeA = new GraphNode(4, 2, "bob1");
+        GraphNode nodeB = new GraphNode(4, 3, "bob1");
         nodeA.addAdjacent(nodeB);
         nodeB.addAdjacent(nodeA);
 
@@ -186,8 +186,8 @@ public class DatabaseTest extends TestCase{
 
     @Test
     public void testGraphNodeWrite() {
-        GraphNode nodeA = new GraphNode(new FloorPoint(4, 2, "bob1"));
-        GraphNode nodeB = new GraphNode(new FloorPoint(4, 3, "bob1"));
+        GraphNode nodeA = new GraphNode(4, 2, "bob1");
+        GraphNode nodeB = new GraphNode(4, 3, "bob1");
         nodeA.addAdjacent(nodeB);
         nodeB.addAdjacent(nodeA);
 
@@ -208,8 +208,8 @@ public class DatabaseTest extends TestCase{
 
     @Test
     public void testWrite() {
-        GraphNode nodeA = new GraphNode(new FloorPoint(4, 2, "bob1"));
-        GraphNode nodeB = new GraphNode(new FloorPoint(4, 3, "bob1"));
+        GraphNode nodeA = new GraphNode(4, 2, "bob1");
+        GraphNode nodeB = new GraphNode(4, 3, "bob1");
         nodeA.addAdjacent(nodeB);
         nodeB.addAdjacent(nodeA);
 
