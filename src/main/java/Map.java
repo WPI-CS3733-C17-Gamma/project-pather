@@ -20,6 +20,7 @@ public class Map {
         return directory.searchRooms(term);
     }
 
+    /** See method {@Link Directory#subStringSearchRoom} */
     public List<String> subStringSearchRoom(String term) {
         return directory.subStringSearchRooms(term);
     }
@@ -68,16 +69,18 @@ public class Map {
     /**
      *
      * @param room
-     */
-    public void deleteRoom(String room){
-    }
-    /**
-     *
-     * @param room
      * @return true if the room is added, false if it is a duplicate
      */
     public boolean addRoom(Room room){
         return directory.addRoom(room);
+    }
+
+    /**
+     * Delete a room
+     * @param room room to delete
+     */
+    public boolean deleteRoom(Room room){
+        return directory.deleteRoom(room);
     }
 
     public boolean deleteRoom(GraphNode node) {
