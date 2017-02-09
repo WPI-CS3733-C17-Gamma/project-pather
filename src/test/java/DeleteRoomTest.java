@@ -21,9 +21,8 @@ public class DeleteRoomTest extends TestCase {
     public void testDelete() {
         directory.addRoom(dummyRoom);
         boolean successfulDelete = directory.deleteRoom(dummyRoom);
-
         assertTrue(successfulDelete);
-
-
+//        assertNull(directory.getRoom(dummyNode));
+//        assertFalse(directory.deleteRoom(dummyRoom));
     }
 }

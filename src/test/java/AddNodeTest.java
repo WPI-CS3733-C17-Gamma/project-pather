@@ -65,6 +65,14 @@ public class AddNodeTest extends TestCase {
         list.add(g);
         assertEquals(graphNetwork.getGraphNodesOnFloor("one"), list);
     }
+
+    public void testAddDoubleNode(){
+        FloorPoint point = new FloorPoint(3, 6, "one");
+        GraphNode gn = new GraphNode(point);
+        assertTrue(g.addNode(gn));
+        assertFalse(g.addNode(gn));
+
+    }
 //need the new distance method from Saahil
 //    public void testAddNodeFromMAC(){
 //        FloorPoint point = new FloorPoint(3, 6, "one");
