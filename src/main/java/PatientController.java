@@ -213,11 +213,6 @@ public class PatientController extends DisplayController implements Initializabl
         offsetX = imageView.getLayoutX();
         offsetY = imageView.getLayoutY();
 
-
-
-
-
-
         System.out.println("off x " + offsetX + "  off y "  + offsetY);
 
         int newX = (int)(node.location.x * imageWidth / 1000. + offsetX );
@@ -225,8 +220,6 @@ public class PatientController extends DisplayController implements Initializabl
         System.out.printf("image width : %f \nimage Height : %f\n", imageWidth, imageHeight);
 
         return new FloorPoint(newX, newY, node.location.floor);
-
-
     }
 
     /**
@@ -348,6 +341,5 @@ public class PatientController extends DisplayController implements Initializabl
 //        imageView.setPreserveRatio(false);
         helpLabel.setText("Hello! Thanks for using project-pather.\n\nTo get started, start typing into the search bar. " +
             "\n Then, select the option you would like to get a path to.\n\nTo close this menu, click on it");
-
     }
 }
