@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class MapAdminController extends DisplayController implements Initializable {
-//    MapAdminDisplay display;
+    //    MapAdminDisplay display;
     GraphNode selectedNode;
     GraphNode secondaryNode;
     Room activeRoom ;
@@ -46,8 +46,6 @@ public class MapAdminController extends DisplayController implements Initializab
     private ImageView imageviewMap;
     @FXML
     private AnchorPane anchorpaneMap;
-    @FXML
-    private AnchorPane anchorpaneWindow;
 
     @FXML
     private TextField roomName;
@@ -94,9 +92,9 @@ public class MapAdminController extends DisplayController implements Initializab
         drawnNodes.clear();
         anchorpaneMap.getChildren().removeAll(drawnLines);
         drawnLines.clear();
-       map.graph.getGraphNodesOnFloor("floor3")
-       .stream()
-       .forEach(node -> drawNode(node));
+        map.graph.getGraphNodesOnFloor("floor3")
+            .stream()
+            .forEach(node -> drawNode(node));
         highlightSelected();
     }
 
@@ -395,7 +393,7 @@ public class MapAdminController extends DisplayController implements Initializab
 //        }
 //        displayRoom(selectedNode);
 
-        // room stuff
+    // room stuff
 
     public void isReleased(MouseEvent m){
 //        FloorPoint graphPoint = mouseToGraph(m);
@@ -426,12 +424,34 @@ public class MapAdminController extends DisplayController implements Initializab
         }
     }
 
+    /**
+     * save and exit the application
+     */
     public void done(){
-        //Save function here
-        togglebuttonAddNode.setSelected(false);
-        togglebuttonAddConnections.setSelected(false);
+        applicationController.logout();
+    }
+
+
+    /**
+     * create patient display without saving to the database
+     *
+     */
+    public void preview () {
+        System.out.println("Preview");
         applicationController.createPatientDisplay();
     }
+
+    /**
+     * reload the database and reset the state of the gui
+     */
+    public void undo () {
+        map = applicationController.reload();
+        activeRoom = null;
+        selectedNode = null;
+        secondaryNode = null;
+        drawMap();
+    }
+
 
 //----------------------------------------------------------------------------------------------------------------------
 

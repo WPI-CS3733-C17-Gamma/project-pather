@@ -11,9 +11,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" style="-fx-background-color: #d4e3ed;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
     <bottom>
-        <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+        <ToolBar prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #d4e3ed;" BorderPane.alignment="CENTER">
             <items>
                 <Button fx:id="help" mnemonicParsing="false" onAction="#help" text="Help" />
             <Button mnemonicParsing="false" onAction="#createEntry" text="Create" />
