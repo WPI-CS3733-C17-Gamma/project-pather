@@ -169,9 +169,10 @@ public class MapAdminController extends DisplayController implements Initializab
         FloorPoint graphPoint = mouseToGraph(n);
         System.out.println(graphPoint);
 
+
         tempNode = map.getGraphNode(graphPoint);
         System.out.println(tempNode);
-        if (tempNode.location.distance(graphPoint) > 50 ){
+        if (tempNode != null && tempNode.location.distance(graphPoint) > 50 ){
             tempNode = null;
             System.out.println("no close node");
         }
@@ -181,6 +182,7 @@ public class MapAdminController extends DisplayController implements Initializab
     public void addRoom () {
         System.out.println("Add/Change room");
         if(activeRoom != null) {
+            System.out.println("there is a room");
             String newName = roomName.getText();
             if(newName == activeRoom.name) {
                 System.out.println("no change");
@@ -194,6 +196,7 @@ public class MapAdminController extends DisplayController implements Initializab
             else if (map.getRoomFromName(activeRoom.name) == null){
                 map.addRoom(new Room (selectedNode, newName));
             }
+            // change room
         }
     }
 
@@ -332,6 +335,7 @@ public class MapAdminController extends DisplayController implements Initializab
             activeRoom = room;
         }
         else {
+            System.out.println("no romo found");
             activeRoom  = new Room(selected, "");
             roomName.setText("");
         }
@@ -358,8 +362,10 @@ public class MapAdminController extends DisplayController implements Initializab
      */
     public void isPressed(MouseEvent m) {
 
+        System.out.println("new sout");
         System.out.println("press");
         GraphNode nearby = nearbyNode(m);
+        System.out.println("post near node");
         if (addConnection || (!addConnection && !chainAdd && !addNode)) {
             if (nearby != null) {
                 secondaryNode = selectedNode;
@@ -382,6 +388,7 @@ public class MapAdminController extends DisplayController implements Initializab
         else if (addNode) {
             addNode(graphPoint);
         }
+        displayRoom(selectedNode);
         drawMap();
     }
 

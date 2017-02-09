@@ -171,7 +171,7 @@ public class Directory {
      */
     public boolean deleteRoom(Room room) {
         if(rooms.containsKey(room.name)){
-            rooms.remove(room);
+            rooms.remove(room.name);
         }
         else {
             return false;
