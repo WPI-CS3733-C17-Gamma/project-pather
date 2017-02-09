@@ -13,31 +13,17 @@ public class DatabaseTest extends TestCase{
     // Using databases in memory to not clutter up the file system
     private final String DBName = "memory:testDB";
     private Connection conn;
+    DatabaseManager db;
+
+    static int dbID = 0;
 
     @Override
     protected void setUp() {
-        try {
-            conn = DriverManager.getConnection(
-                "jdbc:derby:" + DBName + ";create=true");
-            // Execute all init statements
-            execStatements(DatabaseManager.initStatements);
-        }
-        catch (SQLException e) {
-            // Sometimes these are fatal, sometimes not. Don't think
-            // it's worth the effort to figure out which is which
-            System.err.println(e.getMessage());
-        }
-    }
-
-    @Override
-    protected void tearDown() {
-        try {
-            // drop DB from last test
-            DriverManager.getConnection("jdbc:derby:" + DBName + ";drop=true");
-        }
-        catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
+        db = new DatabaseManager(DBName + Integer.toString(dbID));
+        dbID++;
+        conn = db.connection;
+        // Execute all init statements
+        execStatements(DatabaseManager.initStatements);
     }
 
     private void execStatements(String[] statements) {
@@ -67,7 +53,7 @@ public class DatabaseTest extends TestCase{
         GraphNetwork graph = new GraphNetwork(
             new LinkedList<GraphNode>(Arrays.asList(nodeA, nodeB)));
 
-        Map actual = new DatabaseManager(DBName).load();
+        Map actual = db.load();
         assertEquals(graph, actual.graph);
     }
 
@@ -86,7 +72,7 @@ public class DatabaseTest extends TestCase{
         GraphNetwork graph = new GraphNetwork(
             new LinkedList<GraphNode>(Arrays.asList(nodeA, nodeB)));
 
-        Map actual = new DatabaseManager(DBName).load();
+        Map actual = db.load();
         assertEquals(graph, actual.graph);
     }
 
@@ -103,7 +89,7 @@ public class DatabaseTest extends TestCase{
         HashMap<String, Room> rooms = new HashMap<String, Room>();
         rooms.put(roomA.name, roomA);
 
-        Map actual = new DatabaseManager(DBName).load();
+        Map actual = db.load();
         assertEquals(rooms, actual.directory.rooms);
     }
 
@@ -125,7 +111,7 @@ public class DatabaseTest extends TestCase{
             new HashMap<String, DirectoryEntry>();
         entries.put(entryA.name, entryA);
 
-        Map actual = new DatabaseManager(DBName).load();
+        Map actual = db.load();
         assertEquals(entries, actual.directory.entries);
     }
 
@@ -161,7 +147,6 @@ public class DatabaseTest extends TestCase{
         HashMap<String, Image> mapImages = new HashMap<String, Image>();
         Map expected = new Map(directory, graph, mapImages);
 
-        DatabaseManager db = new DatabaseManager(DBName);
         db.write(expected);
         Map actual = db.load();
 
@@ -178,7 +163,7 @@ public class DatabaseTest extends TestCase{
         HashMap<String, Image> mapImages = new HashMap<String, Image>();
         Map expected = new Map(directory, graph, mapImages);
 
-        Map actual = new DatabaseManager(DBName).load();
+        Map actual = db.load();
         assertEquals(expected, actual);
     }
 
@@ -199,7 +184,6 @@ public class DatabaseTest extends TestCase{
         HashMap<String, Image> mapImages = new HashMap<String, Image>();
         Map expected = new Map(directory, graph, mapImages);
 
-        DatabaseManager db = new DatabaseManager(DBName);
         db.write(expected);
         Map actual = db.load();
 
@@ -230,7 +214,6 @@ public class DatabaseTest extends TestCase{
         HashMap<String, Image> mapImages = new HashMap<String, Image>();
         Map expected = new Map(directory, graph, mapImages);
 
-        DatabaseManager db = new DatabaseManager(DBName);
         db.write(expected);
         Map actual = db.load();
 
@@ -263,7 +246,6 @@ public class DatabaseTest extends TestCase{
         HashMap<String, Image> mapImages = new HashMap<String, Image>();
         Map expected = new Map(directory, graph, mapImages);
 
-        DatabaseManager db = new DatabaseManager(DBName);
         db.write(expected);
         Map actual = db.load();
 
@@ -280,10 +262,8 @@ public class DatabaseTest extends TestCase{
         HashMap<String, Image> mapImages = new HashMap<String, Image>();
         Map expected = new Map(directory, graph, mapImages);
 
-        DatabaseManager db = new DatabaseManager(DBName);
         db.write(expected);
         Map actual = db.load();
-
         assertEquals(expected, actual);
     }
 }
