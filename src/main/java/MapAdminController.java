@@ -15,6 +15,7 @@ import javafx.scene.shape.Shape;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -23,8 +24,13 @@ public class MapAdminController extends DisplayController implements Initializab
     GraphNode selectedNode;
     GraphNode secondaryNode;
     Room activeRoom ;
+    boolean chainAdd;
+    boolean addNode;
+    boolean addConnection;
 
-    List<Shape> drawnShapes = new ArrayList<>();
+
+    HashMap<GraphNode, Shape> drawnNodes = new HashMap<>();
+    List<Shape> drawnLines = new ArrayList<>();
 
     @FXML
     private Button buttonSave;
@@ -34,6 +40,8 @@ public class MapAdminController extends DisplayController implements Initializab
     private ToggleButton togglebuttonAddNode;
     @FXML
     private ToggleButton togglebuttonAddConnections;
+    @FXML
+    private ToggleButton togglebuttonChainAdd;
     @FXML
     private ImageView imageviewMap;
     @FXML
@@ -79,13 +87,17 @@ public class MapAdminController extends DisplayController implements Initializab
 
     /**
      * draw state of graph
+     * and clear
      */
     public void drawMap(){
-        anchorpaneMap.getChildren().removeAll(drawnShapes);
-        drawnShapes.clear();
+        anchorpaneMap.getChildren().removeAll(drawnNodes.values());
+        drawnNodes.clear();
+        anchorpaneMap.getChildren().removeAll(drawnLines);
+        drawnLines.clear();
        map.graph.getGraphNodesOnFloor("floor3")
        .stream()
        .forEach(node -> drawNode(node));
+        highlightSelected();
     }
 
 
@@ -98,17 +110,56 @@ public class MapAdminController extends DisplayController implements Initializab
 //----------------------------------------------------------------------------------------------------------------------
 
     /**
+     * toggle chain add function
+     */
+    public void toggleChainAdd () {
+        chainAdd = !chainAdd;
+        if(chainAdd){
+            addNode = false;
+            addConnection = false;
+
+            togglebuttonAddNode.setSelected(false);
+            togglebuttonAddConnections.setSelected(false);
+
+        }
+    }
+
+    /**
+     * handle toggle button
+     */
+    public void toggleAddNode() {
+        addNode = !addNode;
+        if(addNode){
+            addConnection = false;
+            chainAdd = false;
+
+            togglebuttonAddConnections.setSelected(false);
+            togglebuttonChainAdd.setSelected(false);
+        }
+        System.out.println(addNode);
+    }
+    public void toggleAddConnection() {
+        addConnection = !addConnection;
+        if(addConnection){
+            addNode = false;
+            chainAdd = false;
+            togglebuttonAddNode.setSelected(false);
+            togglebuttonChainAdd.setSelected(false);
+        }
+    }
+    /**
      * Create node from given location. Make new GraphNode
      * @param location location to create a point at
      */
     public void addNode(FloorPoint location){
-        map.addNode(new GraphNode(location));
+        System.out.println("add node @ " + location);
+        GraphNode newNode = new GraphNode(location);
+        map.addNode(newNode);
+        secondaryNode = selectedNode;
+        selectedNode = newNode;
         drawMap();
     }
 
-    public void addNodeGraphically(MouseEvent e){
-        addNode(mouseToGraph(e));
-    }
 
     /**
      *
@@ -120,7 +171,7 @@ public class MapAdminController extends DisplayController implements Initializab
 
         tempNode = map.getGraphNode(graphPoint);
         System.out.println(tempNode);
-        if (tempNode.location.distance(graphPoint) > 10 ){
+        if (tempNode.location.distance(graphPoint) > 50 ){
             tempNode = null;
             System.out.println("no close node");
         }
@@ -148,7 +199,7 @@ public class MapAdminController extends DisplayController implements Initializab
 
     private void drawNode(FloorPoint loc){
         FloorPoint imagePoint = graphToImage(loc);
-        Circle circ = new Circle(imagePoint.x, imagePoint.y, 3, Color.BLUE);
+        Circle circ = new Circle(imagePoint.x, imagePoint.y, 4, Color.BLUE);
         circ.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -163,7 +214,8 @@ public class MapAdminController extends DisplayController implements Initializab
             }
         });
         anchorpaneMap.getChildren().add(circ);
-        drawnShapes.add(circ);
+        GraphNode graphNodeAttatched = map.getGraphNode(loc);
+        drawnNodes.put(graphNodeAttatched, circ);
 
     }
 
@@ -171,6 +223,7 @@ public class MapAdminController extends DisplayController implements Initializab
         if(selectedNode != null && secondaryNode != null) {
             System.out.println("delete con");
             map.deleteConnection(selectedNode, secondaryNode);
+            drawMap();
         }
     }
 
@@ -209,8 +262,10 @@ public class MapAdminController extends DisplayController implements Initializab
      * @param nodeB
      */
     public void addConnection(GraphNode nodeA, GraphNode nodeB){
-        map.addConnection(nodeA, nodeB);
-        drawMap();
+        if(nodeA != null && nodeB != null){
+            map.addConnection(nodeA, nodeB);
+            drawMap();
+        }
     }
 
     public void deleteConnection(GraphNode nodeA, GraphNode nodeB){
@@ -220,22 +275,11 @@ public class MapAdminController extends DisplayController implements Initializab
     }
 
 
-
-    public void addConnectionReleased(MouseEvent m) {
-
-            GraphNode tempFinal = nearbyNode(m);
-            if (tempNode == null || tempFinal == null) {
-                //Add in error exception
-                System.out.println("Missing node");
-            } else if (tempFinal.equals(tempNode)) {
-                //Add in error exception
-                System.out.println("Too close");
-            } else {
-                addConnection(tempNode, tempFinal);
-            }
-        }
-
-
+    /**
+     *
+     * @param x1
+     * @param x2
+     */
     public void drawConnection(FloorPoint x1, FloorPoint x2){
         FloorPoint imagePoint1 = graphToImage(x1);
         FloorPoint imagePoint2 = graphToImage(x2);
@@ -243,7 +287,8 @@ public class MapAdminController extends DisplayController implements Initializab
         Line line = new Line(imagePoint1.x, imagePoint1.y, imagePoint2.x, imagePoint2.y);
         line.setFill(Color.BLACK);
         anchorpaneMap.getChildren().add(line);
-        drawnShapes.add(line);
+        GraphNode graphNodeAttatched = map.getGraphNode(x1);
+        drawnLines.add(line);
     }
 
 
@@ -291,31 +336,81 @@ public class MapAdminController extends DisplayController implements Initializab
             roomName.setText("");
         }
     }
+    public void highlightSelected () {
+        drawnLines.forEach(shape -> shape.setFill(Color.BLUE));
+        drawnNodes.values().forEach(shape -> shape.setFill(Color.BLUE));
+        if(selectedNode != null) {
+            Shape selected1 = drawnNodes.get(selectedNode);
+            if(selected1 != null) {
+                selected1.setFill(Color.RED);
+            }
+        }
+        if (secondaryNode != null) {
+            Shape selected2 = drawnNodes.get(secondaryNode);
+            if(selected2 != null){
+                selected2.setFill(Color.PURPLE);
+            }
+        }
+    }
     /**
      * add node to graph
      * @param m
      */
-    public void isPressed(MouseEvent m){
+    public void isPressed(MouseEvent m) {
+
         System.out.println("press");
         GraphNode nearby = nearbyNode(m);
-        secondaryNode = selectedNode;
-        selectedNode = nearby;
-        displayRoom(selectedNode);
-
-        // room stuff
-    }
-
-    public void isReleased(MouseEvent m){
-        System.out.println("release");
-        if (togglebuttonAddNode.isSelected()) {
-            addNodeGraphically(m);
-        }
-        if (togglebuttonAddConnections.isSelected()){
-            GraphNode nearby = nearbyNode(m);
-            if(selectedNode != null && nearby != null) {
-                addConnection(nearby, selectedNode);
+        if (addConnection || (!addConnection && !chainAdd && !addNode)) {
+            if (nearby != null) {
+                secondaryNode = selectedNode;
+                selectedNode = nearby;
+                nearby = nearbyNode(m);
+                if (addConnection && selectedNode != null && nearby != null) {
+                    System.out.println("addConnection");
+                    addConnection(secondaryNode, selectedNode);
+                }
             }
         }
+        FloorPoint graphPoint = mouseToGraph(m);
+        System.out.println("Mouse to graph" + graphPoint);
+        if (chainAdd) {
+            addNode(graphPoint);
+            if (secondaryNode != null) {
+                addConnection(secondaryNode, selectedNode);
+            }
+        }
+        else if (addNode) {
+            addNode(graphPoint);
+        }
+        drawMap();
+    }
+
+//        if(nearby != null && nearby.equals(selectedNode)) {
+//            // pass
+//        }
+//        else {
+//            secondaryNode = selectedNode;
+//            selectedNode = nearby;
+//        }
+//        displayRoom(selectedNode);
+
+        // room stuff
+
+    public void isReleased(MouseEvent m){
+//        FloorPoint graphPoint = mouseToGraph(m);
+//        System.out.println("release");
+//        if (chainAdd) {
+//            addNode(graphPoint);
+//        }
+//        else if (togglebuttonAddNode.isSelected()) {
+//            addNode(graphPoint);
+//        }
+//        if (togglebuttonAddConnections.isSelected()){
+//            GraphNode nearby = nearbyNode(m);
+//            if(selectedNode != null && nearby != null) {
+//                addConnection(nearby, selectedNode);
+//            }
+//        }
     }
 
     public void noMoreConnections(){ //checks if connections button is pushed
