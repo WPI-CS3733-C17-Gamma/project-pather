@@ -46,7 +46,7 @@ public class MapAdminController extends DisplayController {
      * @param location location to create a point at
      */
     public void addNode(FloorPoint location){
-        //need to add database save code
+        map.addNode(new GraphNode(location));
     }
 
     public void addNodeGraphically(){

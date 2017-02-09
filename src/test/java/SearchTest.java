@@ -19,8 +19,6 @@ public class SearchTest{
     Room albert2 = new Room(null, "3B");
     Room albert3 = new Room(null, "3A");
 
-    static Scanner input = new Scanner(System.in);
-
     PatientController p;
     Map m;
 
@@ -57,7 +55,6 @@ public class SearchTest{
         List<String> temp = new ArrayList<>();
         temp.add("3A");
         List result = d.searchRooms("3A");
-        // System.err.println(result.toString()+"***********************************************");
         assertNotNull(result);
         assertListEquals(result, temp);
         assertListEquals(d.searchRooms("3C"), new ArrayList());

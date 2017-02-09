@@ -123,8 +123,7 @@ public class GraphNetwork {
      */
     public boolean addNode(GraphNode node){
         if(!graphNodes.contains(node)){
-            graphNodes.add(node);
-            return true;
+            return graphNodes.add(node);
         }
         return false;
     }
