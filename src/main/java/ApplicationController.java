@@ -21,8 +21,6 @@ public class ApplicationController extends Application {
 
         this.pStage = primaryStage;
         // load database
-
-        map = databaseManager.load();
         createPatientDisplay();
 /*
         map = new Map(
@@ -44,7 +42,9 @@ public class ApplicationController extends Application {
     // load from database
     public void initialize(){
         databaseManager = new DatabaseManager("main");
+        map = databaseManager.load();
     }
+
 
 
     /**
@@ -52,6 +52,7 @@ public class ApplicationController extends Application {
      */
     public void createPatientDisplay(){
         try {
+            databaseManager.write(map);
             FXMLLoader loader = new FXMLLoader(getClass().getResource("PatientDisplay.fxml"));
             PatientController controller = new PatientController(map,this, "Maps/floor3.png");
             loader.setController(controller);

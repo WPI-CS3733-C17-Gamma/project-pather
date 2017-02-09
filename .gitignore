@@ -65,3 +65,5 @@ fabric.properties
 
 # Derby logging
 derby.log
+
+*.iml

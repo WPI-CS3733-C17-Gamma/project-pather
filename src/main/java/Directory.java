@@ -30,6 +30,35 @@ public class Directory {
     }
 
     /**
+     * Search for a room that contains the key as a substring
+     * @param key
+     * @return
+     */
+    public List<String> subStringSearchRooms(String key) {
+        return rooms.values()
+            .stream()
+            .map(room -> room.name)
+            .filter(name -> name.contains(key))
+            .collect(Collectors.toList());
+    }
+
+    /**
+     * return list of all entries
+     * @return
+     */
+    public List<String> getAllEntries () {
+        return entries.keySet().stream().collect(Collectors.toList());
+    }
+
+    /**
+     * get list of all room names
+     * @return
+     */
+    public List<String> getAllRooms () {
+        return rooms.keySet().stream().collect(Collectors.toList());
+    }
+
+    /**
      * Search through names of all possible entries and return a list of all possible entry names containing that substring
      * @param key the given substring that needs to be searched for
      * @return a list of all possible entry names containing that substring
