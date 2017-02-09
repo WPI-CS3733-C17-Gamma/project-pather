@@ -129,8 +129,7 @@ public class GraphNetwork {
      */
     public boolean addNode(GraphNode node){
         if(!graphNodes.contains(node)){
-            graphNodes.add(node);
-            return true;
+            return graphNodes.add(node);
         }
         return false;
     }
@@ -156,8 +155,10 @@ public class GraphNetwork {
      * @return true if connection was successful
      */
     public boolean addConnection(GraphNode nodeA, GraphNode nodeB){
-        nodeA.addAdjacent(nodeB);
-        nodeB.addAdjacent(nodeA);
+        if(!nodeA.addAdjacent(nodeB))
+            return false;
+        if(!nodeB.addAdjacent(nodeA))
+            return false;
         if(nodeA.getAdjacent().contains(nodeB) && nodeB.getAdjacent().contains(nodeA))
             return true;
         else
