@@ -2,8 +2,8 @@ import java.sql.*;
 import java.util.HashMap;
 import java.util.TreeMap;
 import java.util.LinkedList;
+import java.util.HashSet;
 import javafx.scene.image.Image;
-import org.apache.derby.shared.common.error.DerbySQLIntegrityConstraintViolationException;
 
 public class DatabaseManager {
     String connectionURL;
@@ -140,6 +140,8 @@ public class DatabaseManager {
             execStatements(dropStatements);
             execStatements(initStatements);
 
+            HashSet<Long> addedNodes = new HashSet<Long>();
+
             PreparedStatement insertGraphNode = connection.prepareStatement(
                 "insert into GraphNodes (ID, X, Y, Floor) values (?, ?, ?, ?)");
             PreparedStatement insertEdge = connection.prepareStatement(
@@ -158,17 +160,14 @@ public class DatabaseManager {
                 insertGraphNode.setInt(3, node.location.y);
                 insertGraphNode.setString(4, node.location.floor);
                 insertGraphNode.executeUpdate();
+                addedNodes.add(node.id);
 
                 // Insert an edge for each adjacent node
                 for (GraphNode adjacentNode : node.getAdjacent()) {
-                    insertEdge.setLong(1, node.id);
-                    insertEdge.setLong(2, adjacentNode.id);
-                    try {
+                    if(addedNodes.contains(adjacentNode.id)) {
+                        insertEdge.setLong(1, node.id);
+                        insertEdge.setLong(2, adjacentNode.id);
                         insertEdge.executeUpdate();
-                    }
-                    // handle constraint violations (duplicate adds)
-                    catch (DerbySQLIntegrityConstraintViolationException e) {
-                        System.out.println(e.getMessage());
                     }
                 }
             }
@@ -192,13 +191,7 @@ public class DatabaseManager {
                 for (Room room : entry.location) {
                     insertRoomEntryAssoc.setLong(1, entry.id);
                     insertRoomEntryAssoc.setLong(2, room.id);
-                    try {
-                        insertRoomEntryAssoc.executeUpdate();
-                    }
-                    // handle constraint violations (duplicate adds)
-                    catch (DerbySQLIntegrityConstraintViolationException e) {
-                        System.out.println(e.getMessage());
-                    }
+                    insertRoomEntryAssoc.executeUpdate();
                 }
             }
         }
