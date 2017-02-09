@@ -169,7 +169,6 @@ public class MapAdminController extends DisplayController implements Initializab
         FloorPoint graphPoint = mouseToGraph(n);
         System.out.println(graphPoint);
 
-
         tempNode = map.getGraphNode(graphPoint);
         System.out.println(tempNode);
         if (tempNode != null && tempNode.location.distance(graphPoint) > 50 ){
@@ -202,19 +201,7 @@ public class MapAdminController extends DisplayController implements Initializab
     private void drawNode(FloorPoint loc){
         FloorPoint imagePoint = graphToImage(loc);
         Circle circ = new Circle(imagePoint.x, imagePoint.y, 4, Color.BLUE);
-        circ.setOnMousePressed(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                isPressed(event);
-            }
-        });
-
-        circ.setOnMouseReleased(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                isReleased(event);
-            }
-        });
+        circ.setMouseTransparent(true);
         anchorpaneMap.getChildren().add(circ);
         GraphNode graphNodeAttatched = map.getGraphNode(loc);
         drawnNodes.put(graphNodeAttatched, circ);
@@ -306,8 +293,10 @@ public class MapAdminController extends DisplayController implements Initializab
         double imageWidth = imageviewMap.getFitWidth();
         double imageHeight = imageviewMap.getFitHeight();
 
-        int newX = (int) ( m.getX() / imageWidth * 1000.);
-        int newY = (int) ( m.getY() / imageHeight* 1000.);
+        System.out.println("layout.getx"  + imageviewMap.getLayoutX());
+
+        int newX = (int) ( m.getX()  * 1000. / imageWidth );
+        int newY = (int) ( m.getY() * 1000. / imageHeight);
 
         return new FloorPoint(newX, newY, "floor3");
     }
@@ -321,8 +310,11 @@ public class MapAdminController extends DisplayController implements Initializab
         double imageWidth = imageviewMap.getFitWidth();
         double imageHeight = imageviewMap.getFitHeight();
 
-        int newX = (int) ( graphPoint.getX() * imageWidth / 1000.);
-        int newY = (int) ( graphPoint.getY() * imageHeight / 1000.);
+        double layoutX = imageviewMap.getLayoutX();
+        double layoutY = imageviewMap.getLayoutY();
+
+        int newX = (int) ( graphPoint.getX() * imageWidth / 1000. + layoutX);
+        int newY = (int) ( graphPoint.getY() * imageHeight / 1000. + layoutY);
 
         return new FloorPoint(newX, newY, graphPoint.getFloor());
     }
@@ -360,10 +352,9 @@ public class MapAdminController extends DisplayController implements Initializab
      * @param m
      */
     public void isPressed(MouseEvent m) {
-
+        GraphNode nearby = nearbyNode(m);
         System.out.println("new sout");
         System.out.println("press");
-        GraphNode nearby = nearbyNode(m);
         System.out.println("post near node");
         if (addConnection || (!addConnection && !chainAdd && !addNode)) {
             if (nearby != null) {
