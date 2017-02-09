@@ -52,7 +52,6 @@ public class ApplicationController extends Application {
      */
     public void createPatientDisplay(){
         try {
-            databaseManager.write(map);
             FXMLLoader loader = new FXMLLoader(getClass().getResource("PatientDisplay.fxml"));
             PatientController controller = new PatientController(map,this, "Maps/floor3.png");
             loader.setController(controller);
