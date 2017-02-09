@@ -205,10 +205,18 @@ public class PatientController extends DisplayController implements Initializabl
      */
     FloorPoint toLocal  (GraphNode node) {
         double imageWidth = imageView.getFitWidth();
+//        double imageWidth = imageView.getLayoutBounds().getWidth();
+//        double imageHeight = imageView.getLayoutBounds().getHeight();
+//        double imageWidth = imageView.getBoundsInParent().getWidth();
+//        double imageHeight = imageView.getBoundsInParent().getHeight();
+
+
+
         double imageHeight = imageView.getFitHeight();
 
-        int newX = (int)(node.location.x / 1000. * imageWidth + imageView.getLayoutX());
-        int newY = (int)(node.location.y / 1000. * imageHeight + imageView.getLayoutY());
+
+        int newX = (int)(node.location.x * imageWidth / 1000. + imageView.getLayoutX());
+        int newY = (int)(node.location.y * imageHeight / 1000. + imageView.getLayoutY());
         System.out.printf("image width : %f \nimage Height : %f\n", imageWidth, imageHeight);
 
         return new FloorPoint(newX, newY, node.location.floor);
@@ -313,7 +321,14 @@ public class PatientController extends DisplayController implements Initializabl
 
         // TODO will need to be changed to kiosk
         this.startNode = new GraphNode(100, 100, "");
-//        start = map.getRoomFromName("Kiosk");
+        // this.startNode = map.getRoomFromName("Kiosk").location;
+        try {
+            this.startNode = map.getRoomFromName("Kiosk").location;
+        }
+        catch (Exception e) {
+            System.out.println("No Kiosk");
+        }
+
 
         options.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
@@ -324,9 +339,9 @@ public class PatientController extends DisplayController implements Initializabl
             }
         });
         imageView.toBack();
-        imageView.setPreserveRatio(false);
-        imageView.setFitHeight(800);
-        imageView.setFitWidth(1000);
+//        imageView.setPreserveRatio(false);
+        imageView.setFitHeight(625);
+        imageView.setFitWidth(1150);
         helpLabel.setText("Hello! Thanks for using project-pather.\n\nTo get started, start typing into the search bar. " +
             "\n Then, select the option you would like to get a path to.\n\nTo close this menu, click on it");
 

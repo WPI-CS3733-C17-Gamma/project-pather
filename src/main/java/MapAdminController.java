@@ -189,8 +189,7 @@ public class MapAdminController extends DisplayController implements Initializab
             }
             else if(newName.isEmpty()){
                 System.out.println("DELETE room");
-                map.deleteRoom(activeRoom.name);
-                System.out.println(activeRoom);
+                map.deleteRoom(activeRoom);
             }
             // if room is already there
             else if (map.getRoomFromName(activeRoom.name) == null){
@@ -307,8 +306,8 @@ public class MapAdminController extends DisplayController implements Initializab
         double imageWidth = imageviewMap.getFitWidth();
         double imageHeight = imageviewMap.getFitHeight();
 
-        int newX = (int) ( m.getX() / imageWidth * 1000);
-        int newY = (int) ( m.getY() / imageHeight* 1000);
+        int newX = (int) ( m.getX() / imageWidth * 1000.);
+        int newY = (int) ( m.getY() / imageHeight* 1000.);
 
         return new FloorPoint(newX, newY, "floor3");
     }
