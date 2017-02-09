@@ -290,8 +290,10 @@ public class MapAdminController extends DisplayController implements Initializab
      * @return
      */
     private FloorPoint mouseToGraph(MouseEvent m){
-        double imageWidth = imageviewMap.getFitWidth();
-        double imageHeight = imageviewMap.getFitHeight();
+//        double imageWidth = imageviewMap.getFitWidth();
+//        double imageHeight = imageviewMap.getFitHeight();
+        double imageWidth = imageviewMap.getBoundsInLocal().getWidth();
+        double imageHeight = imageviewMap.getBoundsInLocal().getHeight();
 
         System.out.println("layout.getx"  + imageviewMap.getLayoutX());
 
@@ -307,8 +309,10 @@ public class MapAdminController extends DisplayController implements Initializab
      * @return
      */
     private FloorPoint graphToImage(FloorPoint graphPoint){
-        double imageWidth = imageviewMap.getFitWidth();
-        double imageHeight = imageviewMap.getFitHeight();
+//        double imageWidth = imageviewMap.getFitWidth();
+//        double imageHeight = imageviewMap.getFitHeight();
+        double imageWidth = imageviewMap.getBoundsInLocal().getWidth();
+        double imageHeight = imageviewMap.getBoundsInLocal().getHeight();
 
         double layoutX = imageviewMap.getLayoutX();
         double layoutY = imageviewMap.getLayoutY();

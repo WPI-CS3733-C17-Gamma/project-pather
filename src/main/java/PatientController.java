@@ -205,19 +205,23 @@ public class PatientController extends DisplayController implements Initializabl
      * @return
      */
     FloorPoint toLocal  (GraphNode node) {
-        double imageWidth = imageView.getFitWidth();
-//        double imageWidth = imageView.getLayoutBounds().getWidth();
-//        double imageHeight = imageView.getLayoutBounds().getHeight();
-//        double imageWidth = imageView.getBoundsInParent().getWidth();
-//        double imageHeight = imageView.getBoundsInParent().getHeight();
+        double imageWidth = imageView.getBoundsInLocal().getWidth();
+        double imageHeight = imageView.getBoundsInLocal().getHeight();
+        double offsetX = imageView.getBoundsInParent().getMinX();
+        double offsetY = imageView.getBoundsInParent().getMinY();
+
+        offsetX = imageView.getLayoutX();
+        offsetY = imageView.getLayoutY();
 
 
 
-        double imageHeight = imageView.getFitHeight();
 
 
-        int newX = (int)(node.location.x * imageWidth / 1000. + imageView.getLayoutX());
-        int newY = (int)(node.location.y * imageHeight / 1000. + imageView.getLayoutY());
+
+        System.out.println("off x " + offsetX + "  off y "  + offsetY);
+
+        int newX = (int)(node.location.x * imageWidth / 1000. + offsetX );
+        int newY = (int)(node.location.y * imageHeight / 1000. + offsetY );
         System.out.printf("image width : %f \nimage Height : %f\n", imageWidth, imageHeight);
 
         return new FloorPoint(newX, newY, node.location.floor);
@@ -342,8 +346,6 @@ public class PatientController extends DisplayController implements Initializabl
         });
         imageView.toBack();
 //        imageView.setPreserveRatio(false);
-        imageView.setFitHeight(625);
-        imageView.setFitWidth(1150);
         helpLabel.setText("Hello! Thanks for using project-pather.\n\nTo get started, start typing into the search bar. " +
             "\n Then, select the option you would like to get a path to.\n\nTo close this menu, click on it");
 

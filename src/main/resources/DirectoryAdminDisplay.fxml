@@ -16,8 +16,14 @@
         <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
             <items>
                 <Button fx:id="help" mnemonicParsing="false" onAction="#help" text="Help" />
-            <Button mnemonicParsing="false" onAction="#logout" text="Logout" />
             <Button mnemonicParsing="false" onAction="#createEntry" text="Create" />
+            <AnchorPane prefHeight="15.0" prefWidth="981.0">
+               <children>
+                  <Button layoutX="899.0" layoutY="1.0" mnemonicParsing="false" onAction="#logout" text="Save and Exit" />
+                  <Button layoutX="639.0" layoutY="3.0" mnemonicParsing="false" onAction="#undo" text="Undo" />
+                  <Button layoutX="706.0" layoutY="3.0" mnemonicParsing="false" onAction="#preview" text="Preview" />
+               </children>
+            </AnchorPane>
             </items>
         </ToolBar>
     </bottom>
