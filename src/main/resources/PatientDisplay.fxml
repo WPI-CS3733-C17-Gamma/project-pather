@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" style="-fx-background-color: #d4e3ed;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" style="-fx-background-color: #d4e3ed;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <bottom>
       <ToolBar prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #d4e3ed;" BorderPane.alignment="CENTER">
         <items>
@@ -23,9 +23,9 @@
       </ToolBar>
    </bottom>
    <left>
-      <AnchorPane fx:id="anchorPane" prefHeight="800.0" prefWidth="1200.0" BorderPane.alignment="CENTER">
+      <AnchorPane fx:id="anchorPane" prefHeight="560.0" prefWidth="853.0" BorderPane.alignment="CENTER">
          <children>
-            <ImageView fx:id="imageView" fitHeight="650.0" fitWidth="1053.0" layoutX="69.0" layoutY="100.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="imageView" fitHeight="404.0" fitWidth="759.0" layoutX="123.0" layoutY="134.0" pickOnBounds="true" preserveRatio="true" />
             <TextField fx:id="searchBar" layoutX="69.0" layoutY="22.0" onKeyReleased="#search" prefHeight="25.0" prefWidth="198.0" promptText="Search!">
                <font>
                   <Font size="28.0" />
@@ -42,12 +42,12 @@
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor></ListView>
-            <ImageView fitHeight="53.0" fitWidth="45.0" layoutX="1141.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="53.0" fitWidth="45.0" layoutX="850.0" layoutY="22.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@JonsGammaLogo.png" />
                </image>
             </ImageView>
-            <ImageView fitHeight="109.0" fitWidth="491.0" layoutX="421.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="109.0" fitWidth="491.0" layoutX="280.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@BWFH_logo_rgb%20(1).png" />
                </image>

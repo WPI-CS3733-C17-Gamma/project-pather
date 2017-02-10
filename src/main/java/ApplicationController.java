@@ -51,7 +51,7 @@ public class ApplicationController extends Application {
             loader.setController(controller);
             Parent root = loader.load();
             pStage.setTitle("PatientDisplay");
-            pStage.setScene(new Scene(root, 1200, 800));
+            pStage.setScene(new Scene(root, 1000, 600));
         }
         catch (Exception e){
             e.printStackTrace();
@@ -69,7 +69,7 @@ public class ApplicationController extends Application {
             loader.setController(controller);
             Parent root = loader.load();
             pStage.setTitle("MapAdmin");
-            pStage.setScene(new Scene(root, 1200, 800));
+            pStage.setScene(new Scene(root, 1000, 600));
         }
         catch (Exception e){
             e.printStackTrace();
@@ -88,7 +88,7 @@ public class ApplicationController extends Application {
             loader.setController(controller);
             Parent root = loader.load();
             pStage.setTitle("DirectoryAdmin");
-            pStage.setScene(new Scene(root, 1200, 800));
+            pStage.setScene(new Scene(root, 1000, 600));
         }
         catch (Exception e){
             e.printStackTrace();

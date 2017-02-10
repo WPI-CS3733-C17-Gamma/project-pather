@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 
-<BorderPane maxHeight="-Infinity" minHeight="-Infinity" prefHeight="800.0" prefWidth="1200.0" style="-fx-background-color: #d4e3ed;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" minHeight="-Infinity" prefHeight="600.0" prefWidth="1000.0" style="-fx-background-color: #d4e3ed;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <top>
       <AnchorPane prefHeight="93.0" prefWidth="1200.0" BorderPane.alignment="CENTER">
          <children>
@@ -22,18 +22,18 @@
       </AnchorPane>
    </top>
    <bottom>
-      <AnchorPane prefHeight="58.0" prefWidth="1200.0" BorderPane.alignment="CENTER">
+      <AnchorPane prefHeight="54.0" prefWidth="1171.0" BorderPane.alignment="CENTER">
          <children>
-            <Button fx:id="buttonDone" layoutX="1085.0" layoutY="14.0" mnemonicParsing="false" onAction="#done" onMouseClicked="#done" text="Save and Exit" />
-            <Button layoutX="694.0" layoutY="14.0" mnemonicParsing="false" onAction="#undo" text="Undo" />
-            <Button layoutX="776.0" layoutY="14.0" mnemonicParsing="false" onAction="#preview" text="Preview" />
+            <Button layoutX="618.0" layoutY="14.0" mnemonicParsing="false" onAction="#undo" text="Undo" />
+            <Button layoutX="685.0" layoutY="14.0" mnemonicParsing="false" onAction="#preview" text="Preview" />
             <Button layoutX="57.0" layoutY="14.0" mnemonicParsing="false" text="Help" />
+            <Button fx:id="buttonDone" layoutX="866.0" layoutY="15.0" mnemonicParsing="false" onAction="#done" onMouseClicked="#done" text="Save and Exit" />
          </children></AnchorPane>
    </bottom>
    <center>
       <AnchorPane fx:id="anchorpaneMap" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <ImageView fx:id="imageviewMap" fitHeight="586.0" fitWidth="1018.0" layoutX="91.0" layoutY="14.0" onMousePressed="#isPressed" onMouseReleased="#isReleased" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="imageviewMap" fitHeight="456.0" fitWidth="915.0" layoutX="108.0" layoutY="3.0" onMousePressed="#isPressed" onMouseReleased="#isReleased" pickOnBounds="true" preserveRatio="true" />
          </children>
       </AnchorPane>
    </center>
