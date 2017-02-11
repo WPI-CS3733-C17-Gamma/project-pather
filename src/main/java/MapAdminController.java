@@ -20,15 +20,28 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class MapAdminController extends DisplayController implements Initializable {
+
+    /**
+     * Keep track of the state of the system
+     */
+    public enum State {
+        NONE, // the user is selecting
+        ADD_NODES, // the user is adding nodes
+        CHAIN_ADD, // the user is adding nodes in a chain
+        ADD_CONNECTION, // the user is adding connections
+    }
+
+    State currentState = State.NONE;
+
+
+
     //    MapAdminDisplay display;
     GraphNode selectedNode;
     GraphNode secondaryNode;
     Room activeRoom ;
-    boolean chainAdd;
-    boolean addNode;
-    boolean addConnection;
 
 
+    // keep track of the objects that have been drawn on the screen
     HashMap<GraphNode, Shape> drawnNodes = new HashMap<>();
     List<Shape> drawnLines = new ArrayList<>();
 
@@ -56,6 +69,7 @@ public class MapAdminController extends DisplayController implements Initializab
 
 
 
+
     /**
      *  Construct map admin controller
      * @param map all the data for the program
@@ -64,8 +78,6 @@ public class MapAdminController extends DisplayController implements Initializab
      */
     public MapAdminController(Map map, ApplicationController applicationController, String currentMap) {
         super(map, applicationController, currentMap);
-
-
     }
 
     @Override
@@ -111,38 +123,38 @@ public class MapAdminController extends DisplayController implements Initializab
      * toggle chain add function
      */
     public void toggleChainAdd () {
-        chainAdd = !chainAdd;
-        if(chainAdd){
-            addNode = false;
-            addConnection = false;
-
-            togglebuttonAddNode.setSelected(false);
-            togglebuttonAddConnections.setSelected(false);
+        switch (currentState){
+            case CHAIN_ADD:
+                changeState(State.NONE);
+                break;
+            case NONE:
+                changeState(State.CHAIN_ADD);
+                break;
 
         }
     }
 
     /**
-     * handle toggle button
+     * toggle add node function
      */
     public void toggleAddNode() {
-        addNode = !addNode;
-        if(addNode){
-            addConnection = false;
-            chainAdd = false;
-
-            togglebuttonAddConnections.setSelected(false);
-            togglebuttonChainAdd.setSelected(false);
+        switch (currentState){
+            case ADD_NODES:
+                changeState(State.NONE);
+                break;
+            case NONE:
+                changeState(State.ADD_NODES);
+                break ;
         }
-        System.out.println(addNode);
     }
     public void toggleAddConnection() {
-        addConnection = !addConnection;
-        if(addConnection){
-            addNode = false;
-            chainAdd = false;
-            togglebuttonAddNode.setSelected(false);
-            togglebuttonChainAdd.setSelected(false);
+        switch (currentState){
+            case ADD_CONNECTION:
+                changeState(State.NONE);
+                break;
+            case NONE:
+                changeState(State.CHAIN_ADD);
+                break;
         }
     }
     /**
@@ -252,6 +264,7 @@ public class MapAdminController extends DisplayController implements Initializab
      * @param nodeB
      */
     public void addConnection(GraphNode nodeA, GraphNode nodeB){
+        System.out.println("add conn");
         if(nodeA != null && nodeB != null){
             map.addConnection(nodeA, nodeB);
             drawMap();
@@ -310,8 +323,6 @@ public class MapAdminController extends DisplayController implements Initializab
      * @return
      */
     private FloorPoint graphToImage(FloorPoint graphPoint){
-//        double imageWidth = imageviewMap.getFitWidth();
-//        double imageHeight = imageviewMap.getFitHeight();
         double imageWidth = imageviewMap.getBoundsInLocal().getWidth();
         double imageHeight = imageviewMap.getBoundsInLocal().getHeight();
 
@@ -356,39 +367,106 @@ public class MapAdminController extends DisplayController implements Initializab
             }
         }
     }
+
+    /**
+     * switch state and reset values of stuff (maybe this is optional)
+     * @param state
+     */
+    public void changeState (State state) {
+        selectedNode = null;
+        secondaryNode = null;
+        this.currentState = state;
+
+        switch (state) {
+            case ADD_CONNECTION:
+                togglebuttonChainAdd.setSelected(false);
+                togglebuttonAddConnections.setSelected(true);
+                togglebuttonAddNode.setSelected(false);
+                break;
+            case ADD_NODES:
+                togglebuttonChainAdd.setSelected(false);
+                togglebuttonAddConnections.setSelected(false);
+                togglebuttonAddNode.setSelected(true);
+                break;
+            case CHAIN_ADD:
+                togglebuttonChainAdd.setSelected(true);
+                togglebuttonAddConnections.setSelected(false);
+                togglebuttonAddNode.setSelected(false);
+                break;
+            case NONE:
+                togglebuttonChainAdd.setSelected(false);
+                togglebuttonAddConnections.setSelected(false);
+                togglebuttonAddNode.setSelected(false);
+                break;
+
+        }
+
+        drawMap();
+    }
+
+
     /**
      * add node to graph
      * @param m
      */
     public void isPressed(MouseEvent m) {
-        GraphNode nearby = nearbyNode(m);
-        System.out.println("new sout");
-        System.out.println("press");
-        System.out.println("post near node");
-        if (addConnection || (!addConnection && !chainAdd && !addNode)) {
-            if (nearby != null) {
-                secondaryNode = selectedNode;
-                selectedNode = nearby;
-                nearby = nearbyNode(m);
-                if (addConnection && selectedNode != null && nearby != null) {
-                    System.out.println("addConnection");
-                    addConnection(secondaryNode, selectedNode);
-                }
-            }
-        }
-        FloorPoint graphPoint = mouseToGraph(m);
-        System.out.println("Mouse to graph" + graphPoint);
-        if (chainAdd) {
-            addNode(graphPoint);
-            if (secondaryNode != null) {
-                addConnection(secondaryNode, selectedNode);
-            }
-        }
-        else if (addNode) {
-            addNode(graphPoint);
+        System.out.println(currentState);
+        switch (currentState){
+            case NONE:
+                // Possible state changing logic goes here
+                break;
+            case ADD_NODES:
+                handleMouseEventAddNode(m);
+                break;
+            case CHAIN_ADD:
+                handleMouseEventChainAdd(m);
+                break;
+            case ADD_CONNECTION:
+                handlePressAddConnection(m);
+                break;
         }
         displayRoom(selectedNode);
         drawMap();
+    }
+
+    /**
+     * Handle mouse event for chain add nodes
+     * @param e
+     */
+    public void handleMouseEventChainAdd (MouseEvent e) {
+        FloorPoint graphPoint = mouseToGraph(e);
+        addNode(graphPoint);
+        if (secondaryNode != null) {
+            System.out.println("adding conn");
+            addConnection(secondaryNode, selectedNode);
+        }
+        System.out.println("secondary = null");
+    }
+
+
+    /**
+     * Handle the mouse event for chain add node
+     * @param e
+     */
+    public void handleMouseEventAddNode (MouseEvent e) {
+        FloorPoint graphPoint = mouseToGraph(e);
+        addNode(graphPoint);
+    }
+
+    /**
+     * Handle the mouse event during the add connection state
+     * @param e
+     */
+    public void handlePressAddConnection (MouseEvent e) {
+        GraphNode nearby = nearbyNode(e);
+        if (nearby != null) {
+            secondaryNode = selectedNode;
+            selectedNode = nearby;
+            if (selectedNode != null && nearby != null) {
+                addConnection(secondaryNode, selectedNode);
+            }
+        }
+
     }
 
 //        if(nearby != null && nearby.equals(selectedNode)) {
