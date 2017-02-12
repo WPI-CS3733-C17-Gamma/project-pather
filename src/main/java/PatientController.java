@@ -328,6 +328,7 @@ public class PatientController extends DisplayController implements Initializabl
                 select(selectedString);
             }
         });
+        // the image view should be the bottom pane so circles can be drawn over it
         imageView.toBack();
 //        imageView.setPreserveRatio(false);
         helpLabel.setText("Hello! Thanks for using project-pather.\n\nTo get started, start typing into the search bar. " +

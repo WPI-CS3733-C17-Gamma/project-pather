@@ -307,25 +307,20 @@ public class MapAdminController extends DisplayController implements Initializab
     }
 
 
-
-//----------------------------------------------------------------------------------------------------------------------
-
     /**
      * convert to map coords
      * @param m
      * @return
      */
     private FloorPoint mouseToGraph(MouseEvent m){
-
         Node producer = null;
+        // Find the container for the image
         if (m.getSource() instanceof Node) {
             producer = (Node) m.getSource();
-            System.out.println("Producer is a node");
         }
         else {
-            producer = imageviewMap;
+            return null;
         }
-
         double imageWidth = producer.getBoundsInLocal().getWidth();
         double imageHeight = producer.getBoundsInLocal().getHeight();
 
