@@ -129,13 +129,9 @@ public class MapAdminController extends DisplayController implements Initializab
             case CHAIN_ADD:
                 changeState(State.NONE);
                 break;
-            case NONE:
+            default:
                 changeState(State.CHAIN_ADD);
                 break;
-            default:
-                togglebuttonChainAdd.setSelected(false);
-                break;
-
         }
     }
 
@@ -149,12 +145,9 @@ public class MapAdminController extends DisplayController implements Initializab
             case ADD_NODES:
                 changeState(State.NONE);
                 break;
-            case NONE:
+            default:
                 changeState(State.ADD_NODES);
                 break ;
-            default:
-                togglebuttonAddNode.setSelected(false);
-                break;
         }
     }
 
@@ -168,11 +161,8 @@ public class MapAdminController extends DisplayController implements Initializab
             case ADD_CONNECTION:
                 changeState(State.NONE);
                 break;
-            case NONE:
-                changeState(State.CHAIN_ADD);
-                break;
             default:
-                togglebuttonAddConnections.setSelected(false);
+                changeState(State.ADD_CONNECTION);
                 break;
 
         }
