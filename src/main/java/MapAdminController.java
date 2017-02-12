@@ -1,6 +1,6 @@
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
@@ -45,29 +45,16 @@ public class MapAdminController extends DisplayController implements Initializab
     HashMap<GraphNode, Shape> drawnNodes = new HashMap<>();
     List<Shape> drawnLines = new ArrayList<>();
 
-    @FXML
-    private Button buttonSave;
-    @FXML
-    private Button buttonCancel;
-    @FXML
-    private ToggleButton togglebuttonAddNode;
-    @FXML
-    private ToggleButton togglebuttonAddConnections;
-    @FXML
-    private ToggleButton togglebuttonChainAdd;
-    @FXML
-    private ImageView imageviewMap;
-    @FXML
-    private AnchorPane anchorpaneMap;
-
-    @FXML
-    private TextField roomName;
+    @FXML private Button buttonSave;
+    @FXML private Button buttonCancel;
+    @FXML private ToggleButton togglebuttonAddNode;
+    @FXML private ToggleButton togglebuttonAddConnections;
+    @FXML private ToggleButton togglebuttonChainAdd;
+    @FXML private ImageView imageviewMap;
+    @FXML private AnchorPane anchorpaneMap;
+    @FXML private TextField roomName;
 
     private GraphNode tempNode ;
-
-    String mapName;
-
-
 
 
     /**
@@ -80,17 +67,24 @@ public class MapAdminController extends DisplayController implements Initializab
         super(map, applicationController, currentMap);
     }
 
+    /**
+     * Called when the javaFX pane finishes loading
+     * put startup stuff in here, not in the constructor
+     * (The FXML elements are null in the constructor until this method loads)
+     * @param location
+     * @param resources
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        setMap(location.toString());
+        setMap("floor3");
         drawMap();
     }
 
-    void update(){
-        //needs to update the database with any changes
-
-    }
-
+    /**
+     * TODO
+     * handle login with a string password
+     * @param credentials
+     */
     public void login(String credentials){
         //no need to worry about this for this iteration
     }
@@ -104,25 +98,33 @@ public class MapAdminController extends DisplayController implements Initializab
         drawnNodes.clear();
         anchorpaneMap.getChildren().removeAll(drawnLines);
         drawnLines.clear();
-        map.graph.getGraphNodesOnFloor("floor3")
+        map.graph.getGraphNodesOnFloor(currentMap)
             .stream()
-            .forEach(node -> drawNode(node));
+            .forEach(node -> drawNode(node, imageviewMap));
         highlightSelected();
     }
 
 
-    public void drawNode (GraphNode node ) {
-        drawNode(node.location);
+    /**
+     * Draw the node at the given location.
+     * NOTE: the imageview passed in my be the direct child of
+     * the container the circle is being added to
+     * @param node already scaled to 1000 X 1000
+     * @param imageToDrawOver the image the point must cover
+     */
+    public void drawNode (GraphNode node, ImageView imageToDrawOver) {
+        drawPoint(node.location, imageToDrawOver);
         for (GraphNode adj : node.adjacent) {
             drawConnection(node.location, adj.location);
         }
     }
-//----------------------------------------------------------------------------------------------------------------------
 
     /**
      * toggle chain add function
+     * Does nothing if the user is in a different state alerady
      */
     public void toggleChainAdd () {
+        System.out.println("Toggling chain add");
         switch (currentState){
             case CHAIN_ADD:
                 changeState(State.NONE);
@@ -130,14 +132,19 @@ public class MapAdminController extends DisplayController implements Initializab
             case NONE:
                 changeState(State.CHAIN_ADD);
                 break;
+            default:
+                togglebuttonChainAdd.setSelected(false);
+                break;
 
         }
     }
 
     /**
      * toggle add node function
+     * Does nothing if the user is in a different state already
      */
     public void toggleAddNode() {
+        System.out.printf("Toggling add node");
         switch (currentState){
             case ADD_NODES:
                 changeState(State.NONE);
@@ -145,9 +152,18 @@ public class MapAdminController extends DisplayController implements Initializab
             case NONE:
                 changeState(State.ADD_NODES);
                 break ;
+            default:
+                togglebuttonAddNode.setSelected(false);
+                break;
         }
     }
+
+    /**
+     * Called when the user clicks the toggleAddConnectionButton
+     * Does nothing if the user is in a different state already
+     */
     public void toggleAddConnection() {
+        System.out.println("toggle add connection");
         switch (currentState){
             case ADD_CONNECTION:
                 changeState(State.NONE);
@@ -155,6 +171,10 @@ public class MapAdminController extends DisplayController implements Initializab
             case NONE:
                 changeState(State.CHAIN_ADD);
                 break;
+            default:
+                togglebuttonAddConnections.setSelected(false);
+                break;
+
         }
     }
     /**
@@ -188,6 +208,10 @@ public class MapAdminController extends DisplayController implements Initializab
         return tempNode;
     }
 
+    /**
+     * Add a room to the map.
+     * Take the text from the roomName text field
+     */
     public void addRoom () {
         System.out.println("Add/Change room");
         if(activeRoom != null) {
@@ -211,8 +235,15 @@ public class MapAdminController extends DisplayController implements Initializab
         }
     }
 
-    private void drawNode(FloorPoint loc){
-        FloorPoint imagePoint = graphToImage(loc);
+    /**
+     * Draw point at given location.
+     * That location is given as a 1000 X 1000 coordinate
+     * and coverted to the appropriate size in this function
+     * @param loc
+     * @param imageToDrawOn image view that the point will cover
+     */
+    private void drawPoint (FloorPoint loc, ImageView imageToDrawOn ){
+        FloorPoint imagePoint = graphToImage(loc, imageToDrawOn);
         Circle circ = new Circle(imagePoint.x, imagePoint.y, 4, Color.BLUE);
         circ.setMouseTransparent(true);
         anchorpaneMap.getChildren().add(circ);
@@ -229,7 +260,9 @@ public class MapAdminController extends DisplayController implements Initializab
         }
     }
 
-    //
+    /**
+     * delete the selected node
+     */
     public void deleteSelected () {
         if(selectedNode != null) {
             map.deleteNode(selectedNode);
@@ -237,8 +270,6 @@ public class MapAdminController extends DisplayController implements Initializab
             drawMap();
         }
     }
-
-
 
     /**
      * Delete a node from graph and delete the node from the adjacent nodes
@@ -252,9 +283,6 @@ public class MapAdminController extends DisplayController implements Initializab
         boolean successfulDelete = map.deleteRoom(node);    //why?
     }
 
-
-
-//----------------------------------------------------------------------------------------------------------------------
 
     /**
      * Add connection from nodeA to nodeB and
@@ -271,12 +299,6 @@ public class MapAdminController extends DisplayController implements Initializab
         }
     }
 
-    public void deleteConnection(GraphNode nodeA, GraphNode nodeB){
-
-
-
-    }
-
 
     /**
      *
@@ -284,8 +306,8 @@ public class MapAdminController extends DisplayController implements Initializab
      * @param x2
      */
     public void drawConnection(FloorPoint x1, FloorPoint x2){
-        FloorPoint imagePoint1 = graphToImage(x1);
-        FloorPoint imagePoint2 = graphToImage(x2);
+        FloorPoint imagePoint1 = graphToImage(x1, imageviewMap);
+        FloorPoint imagePoint2 = graphToImage(x2, imageviewMap);
 
         Line line = new Line(imagePoint1.x, imagePoint1.y, imagePoint2.x, imagePoint2.y);
         line.setFill(Color.BLACK);
@@ -304,37 +326,49 @@ public class MapAdminController extends DisplayController implements Initializab
      * @return
      */
     private FloorPoint mouseToGraph(MouseEvent m){
-//        double imageWidth = imageviewMap.getFitWidth();
-//        double imageHeight = imageviewMap.getFitHeight();
-        double imageWidth = imageviewMap.getBoundsInLocal().getWidth();
-        double imageHeight = imageviewMap.getBoundsInLocal().getHeight();
 
-        System.out.println("layout.getx"  + imageviewMap.getLayoutX());
+        Node producer = null;
+        if (m.getSource() instanceof Node) {
+            producer = (Node) m.getSource();
+            System.out.println("Producer is a node");
+        }
+        else {
+            producer = imageviewMap;
+        }
+
+        double imageWidth = producer.getBoundsInLocal().getWidth();
+        double imageHeight = producer.getBoundsInLocal().getHeight();
 
         int newX = (int) ( m.getX()  * 1000. / imageWidth );
         int newY = (int) ( m.getY() * 1000. / imageHeight);
 
-        return new FloorPoint(newX, newY, "floor3");
+        System.out.println("Current Map : " + currentMap);
+        return new FloorPoint(newX, newY, currentMap);
     }
 
     /**
-     * take graph point and make image point
+     * take 1000 x 1000 graph point and scale up to image size
      * @param graphPoint
+     * @param imageToDrawOn image that the point will be placed on
      * @return
      */
-    private FloorPoint graphToImage(FloorPoint graphPoint){
-        double imageWidth = imageviewMap.getBoundsInLocal().getWidth();
-        double imageHeight = imageviewMap.getBoundsInLocal().getHeight();
+    private FloorPoint graphToImage(FloorPoint graphPoint, ImageView imageToDrawOn){
+        double imageWidth = imageToDrawOn.getBoundsInLocal().getWidth();
+        double imageHeight = imageToDrawOn.getBoundsInLocal().getHeight();
+        double layoutX = imageToDrawOn.getLayoutX();
+        double layoutY = imageToDrawOn.getLayoutY();
 
-        double layoutX = imageviewMap.getLayoutX();
-        double layoutY = imageviewMap.getLayoutY();
-
+        // convert the 1000 X 1000 graph point to the image dimensions
         int newX = (int) ( graphPoint.getX() * imageWidth / 1000. + layoutX);
         int newY = (int) ( graphPoint.getY() * imageHeight / 1000. + layoutY);
 
         return new FloorPoint(newX, newY, graphPoint.getFloor());
     }
 
+    /**
+     * If the selected node has a room attached to it, display the name of that room
+     * @param selected
+     */
     public void displayRoom (GraphNode selected) {
         Room room = map.getRoomFromNode(selectedNode);
         if (room != null) {
@@ -342,14 +376,13 @@ public class MapAdminController extends DisplayController implements Initializab
             activeRoom = room;
         }
         else {
-            System.out.println("no romo found");
             activeRoom  = new Room(selected, "");
             roomName.setText("");
         }
     }
 
     /**
-     * Highlights the primary node in red and secondary node in blue
+     * Highlight the primary node in red and secondary node in purple
      */
     public void highlightSelected () {
         drawnLines.forEach(shape -> shape.setFill(Color.BLUE));
@@ -369,13 +402,18 @@ public class MapAdminController extends DisplayController implements Initializab
     }
 
     /**
-     * switch state and reset values of stuff (maybe this is optional)
+     * switch state and reset values of all state objects (maybe this is optional)
+     * You cannot switch to a different state when you are in a state
+     * (we could implement a major mode and minor mode like emacs. But,
+     * one mode at a time is the most simple for now)
+     *
      * @param state
      */
     public void changeState (State state) {
         selectedNode = null;
         secondaryNode = null;
         this.currentState = state;
+        System.out.printf("current state " + currentState + " state " + state);
 
         switch (state) {
             case ADD_CONNECTION:
@@ -389,6 +427,7 @@ public class MapAdminController extends DisplayController implements Initializab
                 togglebuttonAddNode.setSelected(true);
                 break;
             case CHAIN_ADD:
+                System.out.println("Chain Add");
                 togglebuttonChainAdd.setSelected(true);
                 togglebuttonAddConnections.setSelected(false);
                 togglebuttonAddNode.setSelected(false);
@@ -414,6 +453,7 @@ public class MapAdminController extends DisplayController implements Initializab
         switch (currentState){
             case NONE:
                 // Possible state changing logic goes here
+                handleMouseEventDefault(m);
                 break;
             case ADD_NODES:
                 handleMouseEventAddNode(m);
@@ -427,6 +467,19 @@ public class MapAdminController extends DisplayController implements Initializab
         }
         displayRoom(selectedNode);
         drawMap();
+    }
+
+    /**
+     * handle the mouse event when no states are selected
+     * @param e Mouse event generated the container
+     */
+    public void handleMouseEventDefault (MouseEvent e) {
+        GraphNode nearby = nearbyNode(e);
+        if (nearby != null) {
+            secondaryNode = selectedNode;
+            selectedNode = nearby;
+        }
+
     }
 
     /**
@@ -469,44 +522,24 @@ public class MapAdminController extends DisplayController implements Initializab
 
     }
 
-//        if(nearby != null && nearby.equals(selectedNode)) {
-//            // pass
-//        }
-//        else {
-//            secondaryNode = selectedNode;
-//            selectedNode = nearby;
-//        }
-//        displayRoom(selectedNode);
-
-    // room stuff
-
+    /**
+     * Handle the release event
+     * Each state can implement a release event
+     * @param m
+     */
     public void isReleased(MouseEvent m){
-//        FloorPoint graphPoint = mouseToGraph(m);
-//        System.out.println("release");
-//        if (chainAdd) {
-//            addNode(graphPoint);
-//        }
-//        else if (togglebuttonAddNode.isSelected()) {
-//            addNode(graphPoint);
-//        }
-//        if (togglebuttonAddConnections.isSelected()){
-//            GraphNode nearby = nearbyNode(m);
-//            if(selectedNode != null && nearby != null) {
-//                addConnection(nearby, selectedNode);
-//            }
-//        }
-    }
-
-    public void noMoreConnections(){ //checks if connections button is pushed
-        if (togglebuttonAddConnections.isSelected()){
-            togglebuttonAddConnections.setSelected(false);
+        switch (currentState){
+            case NONE:
+                break;
+            case ADD_NODES:
+                break;
+            case CHAIN_ADD:
+                break;
+            case ADD_CONNECTION:
+                break;
         }
-    }
-
-    public void noMoreNodes(){      //checks if nodes button is pushed
-        if (togglebuttonAddNode.isSelected()){
-            togglebuttonAddNode.setSelected(false);
-        }
+        displayRoom(selectedNode);
+        drawMap();
     }
 
     /**
@@ -519,7 +552,6 @@ public class MapAdminController extends DisplayController implements Initializab
 
     /**
      * create patient display without saving to the database
-     *
      */
     public void preview () {
         System.out.println("Preview");
@@ -538,18 +570,14 @@ public class MapAdminController extends DisplayController implements Initializab
     }
 
 
-//----------------------------------------------------------------------------------------------------------------------
-
+    /**
+     * Change the main display map.
+     * @param loc
+     */
     private void setMap(String loc){
         //System.out.println(loc);
-        Image floor3 = new Image("Maps/floor3.png");
-        imageviewMap.setImage(floor3);
-        this.mapName = loc;
+        Image floorImage = applicationController.getImage(loc);
+        imageviewMap.setImage(floorImage);
+        super.currentMap = loc;
     }
-
-
-
-
-
-
 }

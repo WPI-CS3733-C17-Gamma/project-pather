@@ -1,3 +1,5 @@
+import javafx.scene.Scene;
+
 public class DisplayController {
 
     Map map;
