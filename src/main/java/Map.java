@@ -1,4 +1,6 @@
 import javafx.scene.image.Image;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -135,6 +137,26 @@ public class Map {
      */
     public GraphNode getGraphNode(FloorPoint point){
         return graph.getGraphNode(point);
+    }
+
+    public List<SubPath> getPathByFloor(GraphNode start, GraphNode end) {
+        List<GraphNode> fullPath = getPath(start, end);
+        if(fullPath.isEmpty()) {
+            return new ArrayList<>();
+        }
+        List<SubPath> subPaths = new ArrayList<>();
+        SubPath currentPath = new SubPath(fullPath.get(0).location.floor);
+        for (GraphNode node : fullPath) {
+            System.out.println("node : " + node);
+            if (! node.getLocation().floor.equals(currentPath.floor)) {
+                subPaths.add(currentPath);
+                currentPath = new SubPath(node.location.floor) ;
+            }
+            currentPath.path.add(node);
+        }
+        subPaths.add(currentPath);
+
+        return subPaths;
     }
 
     /** See method {@Link GraphNetwork#getPath(startNode, goalNode)} */
