@@ -215,6 +215,30 @@ public class PatientController extends DisplayController implements Initializabl
     }
 
     /**
+     * Display the given sub path over the given image view
+     * Addds all the drawn objects to a list of drawn objects
+     * Changes the image view to the image of the floor the sub path covers
+     * @param mapImage
+     * @param subPath subpath to be drawn
+     */
+    public void displaySubPath (ImageView mapImage, SubPath subPath) {
+        GraphNode prev = null;
+        mapImage.setImage(applicationController.getImage(subPath.floor));
+        List<Shape> listToDraw = new ArrayList<>();
+        // draw path, and all connections from previous
+        for (GraphNode node : subPath.path) {
+            FloorPoint localPoint = graphPointToImage(node, mapImage);
+            listToDraw.add(drawPoint(localPoint));
+            // draw connection
+            if (prev != null) {
+                listToDraw.add(drawConnection(prev, node));
+            }
+            prev = node;
+        }
+        drawnObjects.addAll(listToDraw);
+    }
+
+    /**
      *
      * @param start
      * @param end
