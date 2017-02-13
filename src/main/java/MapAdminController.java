@@ -236,6 +236,9 @@ public class MapAdminController extends DisplayController implements Initializab
     private void drawPoint (FloorPoint loc, ImageView imageToDrawOn ){
         FloorPoint imagePoint = graphToImage(loc, imageToDrawOn);
         Circle circ = new Circle(imagePoint.x, imagePoint.y, 4, Color.BLUE);
+        circ = new Circle(4);
+        circ.setLayoutX(imagePoint.x);
+        circ.setLayoutY(imagePoint.y);
         circ.setMouseTransparent(true);
         anchorpaneMap.getChildren().add(circ);
         GraphNode graphNodeAttatched = map.getGraphNode(loc);
@@ -484,22 +487,14 @@ public class MapAdminController extends DisplayController implements Initializab
         // only in drag event if selected is not null
         Shape selectedShape = drawnNodes.get(selectedNode);
 
-        double imageX = e.getSceneX();
-        double imageY = e.getSceneY();
+        FloorPoint mousePoint = mouseToGraph(e);
+        FloorPoint imagePoint = graphToImage(mousePoint, imageviewMap);
+        System.out.printf("Anchor x %d\nAnchory %d\n\n", imagePoint.x, imagePoint.y);
+        System.out.printf("SHape current x: %f Curerent Y %f\n", selectedShape.getLayoutX(), selectedShape.getLayoutY());
 
-        double imageWidth = imageviewMap.getBoundsInLocal().getWidth();
-        double imageHeight = imageviewMap.getBoundsInLocal().getHeight();
-        double layoutX = imageviewMap.getLayoutX();
-        double layoutY = imageviewMap.getLayoutY();
 
-        // convert the 1000 X 1000 graph point to the image dimensions
-        int newX = (int) (imageX - layoutX);
-        int newY = (int) (imageY - layoutY);
-
-        System.out.printf("Anchor x %d\nAnchory %d\n\n", newX, newY);
-
-        selectedShape.setLayoutX(newX);
-        selectedShape.setLayoutY(newY);
+        selectedShape.setLayoutX(imagePoint.x);
+        selectedShape.setLayoutY(imagePoint.y);
     }
 
     /**
