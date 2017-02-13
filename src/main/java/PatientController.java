@@ -204,7 +204,6 @@ public class PatientController extends DisplayController implements Initializabl
         double offsetX = imageToBeDrawnOver.getLayoutX();
         double offsetY = imageToBeDrawnOver.getLayoutY();
 
-
         System.out.println("off x " + offsetX + "  off y "  + offsetY);
 
         int newX = (int)(node.location.x * imageWidth / 1000. + offsetX );
@@ -212,6 +211,35 @@ public class PatientController extends DisplayController implements Initializabl
         System.out.printf("image width : %f \nimage Height : %f\n", imageWidth, imageHeight);
 
         return new FloorPoint(newX, newY, node.location.floor);
+    }
+
+    /**
+     * Display the given sub path over the given image view
+     * Addds all the drawn objects to a list of drawn objects
+     * Changes the image view to the image of the floor the sub path covers
+     * @param mapImage
+     * @param subPath subpath to be drawn
+     */
+    public void displaySubPath (ImageView mapImage, SubPath subPath) {
+        System.out.println("SubPath");
+        GraphNode prev = null;
+        mapImage.setImage(applicationController.getImage(subPath.floor));
+        List<Shape> listToDraw = new ArrayList<>();
+        // draw path, and all connections from previous
+        for (GraphNode node : subPath.path) {
+            FloorPoint localPoint = graphPointToImage(node, mapImage);
+            System.out.println(localPoint);
+            listToDraw.add(drawPoint(localPoint));
+            // draw connection
+            if (prev != null) {
+                listToDraw.add(drawConnection(prev, node, mapImage));
+            }
+            prev = node;
+        }
+        if(drawnObjects == null) {
+            drawnObjects = new ArrayList<>();
+        }
+        drawnObjects.addAll(listToDraw);
     }
 
     /**
@@ -243,7 +271,7 @@ public class PatientController extends DisplayController implements Initializabl
             listToDraw.add(drawPoint(localPoint));
             // draw connection
             if (prev != null) {
-                listToDraw.add(drawConnection(prev, node));
+                listToDraw.add(drawConnection(prev, node, imageView));
             }
             prev = node;
         }
@@ -267,9 +295,9 @@ public class PatientController extends DisplayController implements Initializabl
      * @param nodeB
      * @return
      */
-    public Shape drawConnection (GraphNode nodeA, GraphNode nodeB) {
-        FloorPoint pointA = graphPointToImage(nodeA, imageView);
-        FloorPoint pointB = graphPointToImage(nodeB, imageView);
+    public Shape drawConnection (GraphNode nodeA, GraphNode nodeB, ImageView imageToBeDrawnOver) {
+        FloorPoint pointA = graphPointToImage(nodeA, imageToBeDrawnOver);
+        FloorPoint pointB = graphPointToImage(nodeB, imageToBeDrawnOver);
 
         Line line = new Line(pointA.x, pointA.y, pointB.x, pointB.y);
         line.setStrokeWidth(4);
@@ -298,8 +326,6 @@ public class PatientController extends DisplayController implements Initializabl
         }
 
     }
-
-
     /**
      * initialize the fxml components etc
      * @param location
