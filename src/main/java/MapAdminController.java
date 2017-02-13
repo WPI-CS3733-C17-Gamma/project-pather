@@ -492,6 +492,12 @@ public class MapAdminController extends DisplayController implements Initializab
         FloorPoint mousePoint = mouseToGraph(e);
         FloorPoint imagePoint = graphToImage(mousePoint, imageviewMap);
 
+        // Do not  points that would fall outside of the map
+        if(mousePoint.x > 999 || mousePoint.x < 1 ||
+            mousePoint.y > 999 || mousePoint.y < 1) {
+            return ;
+        }
+
         // just move the point every drag event
         selectedNode.location = mouseToGraph(e);
         drawMap();
