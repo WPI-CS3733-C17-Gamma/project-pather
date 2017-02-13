@@ -4,18 +4,22 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.LinkedList;
 public class MultiFloorSubPathTest extends TestCase{
+    GraphNode A1;
+    GraphNode A2;
+    GraphNode A3;
+    GraphNode B1;
+    GraphNode B2;
+
+    GraphNetwork network;
+    Map map;
 
     protected void setUp() {
-    }
-
-    @Test
-    public void testOneFloor() {
-        GraphNetwork network = new GraphNetwork();
-        GraphNode A1 = new GraphNode(10,10,"A");
-        GraphNode A2 = new GraphNode(11,10,"A");
-        GraphNode B1 = new GraphNode(12,10,"B");
-        GraphNode A3 = new GraphNode(13,10,"A");
-        GraphNode B2 = new GraphNode(14,10,"B");
+         network = new GraphNetwork();
+         A1 = new GraphNode(10,10,"A");
+         A2 = new GraphNode(11,10,"A");
+         B1 = new GraphNode(12,10,"B");
+         A3 = new GraphNode(13,10,"A");
+         B2 = new GraphNode(14,10,"B");
 
         network.addNode(A1);
         network.addNode(A2);
@@ -24,16 +28,57 @@ public class MultiFloorSubPathTest extends TestCase{
         network.addNode(B2);
 
         network.addConnection(A1,A2);
+        network.addConnection(A2,B1);
+        network.addConnection(B1,A3);
+        network.addConnection(B2,A3);
+        map = new Map(null, network, null);
+    }
 
-        Map m = new Map(null, network, null);
+    @Test
+    // Test case assumes a star is searching in reverse order
+    public void testOneFloor() {
+
         SubPath expected = new SubPath("A");
-        expected.path.add(A1);
         expected.path.add(A2);
+        expected.path.add(A1);
         ArrayList<SubPath> expSubPath = new ArrayList<>();
         expSubPath.add(expected);
 
-        assertEquals("Sub path should be one floor" , expSubPath, m.getPathByFloor(A1,A2) );
+        assertEquals("Sub path should be one floor" , expSubPath, map.getPathByFloor(A1,A2) );
 
     }
 
+    @Test
+    // Test case assumes a star is searching in reverse order
+    public void testTwoFloor() {
+
+        SubPath expected1 = new SubPath("B");
+        expected1.path.add(B1);
+        SubPath expected2 = new SubPath("A");
+        expected2.path.add(A2);
+        expected2.path.add(A1);
+        ArrayList<SubPath> expSubPath = new ArrayList<>();
+        expSubPath.add(expected1);
+        expSubPath.add(expected2);
+
+        assertEquals("Sub path should be one floor" , expSubPath, map.getPathByFloor(A1,B1) );
+    }
+    @Test
+    // Test case assumes a star is searching in reverse order
+    public void testThreeFloor() {
+
+        SubPath expected0 = new SubPath("A");
+        expected0.path.add(A3);
+        SubPath expected1 = new SubPath("B");
+        expected1.path.add(B1);
+        SubPath expected2 = new SubPath("A");
+        expected2.path.add(A2);
+        expected2.path.add(A1);
+        ArrayList<SubPath> expSubPath = new ArrayList<>();
+        expSubPath.add(expected0);
+        expSubPath.add(expected1);
+        expSubPath.add(expected2);
+
+        assertEquals("Sub path should be one floor" , expSubPath, map.getPathByFloor(A1,A3) );
+    }
 }
