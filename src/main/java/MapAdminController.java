@@ -29,6 +29,7 @@ public class MapAdminController extends DisplayController implements Initializab
         ADD_NODES, // the user is adding nodes
         CHAIN_ADD, // the user is adding nodes in a chain
         ADD_CONNECTION, // the user is adding connections
+        DRAG_NODE,
     }
 
     State currentState = State.NONE;
@@ -464,8 +465,58 @@ public class MapAdminController extends DisplayController implements Initializab
             secondaryNode = selectedNode;
             selectedNode = nearby;
         }
-
     }
+
+    /**
+     * handle drag even
+     * @param e
+     */
+    public void handleDragEvent (MouseEvent e) {
+        System.out.println("Drag Event" );
+        switch (currentState) {
+            case NONE:
+                if(selectedNode != null) {
+                    currentState = State.DRAG_NODE;
+                }
+                break;
+        }
+
+        // only in drag event if selected is not null
+        Shape selectedShape = drawnNodes.get(selectedNode);
+
+        double imageX = e.getSceneX();
+        double imageY = e.getSceneY();
+
+        double imageWidth = imageviewMap.getBoundsInLocal().getWidth();
+        double imageHeight = imageviewMap.getBoundsInLocal().getHeight();
+        double layoutX = imageviewMap.getLayoutX();
+        double layoutY = imageviewMap.getLayoutY();
+
+        // convert the 1000 X 1000 graph point to the image dimensions
+        int newX = (int) (imageX - layoutX);
+        int newY = (int) (imageY - layoutY);
+
+        System.out.printf("Anchor x %d\nAnchory %d\n\n", newX, newY);
+
+        selectedShape.setLayoutX(newX);
+        selectedShape.setLayoutY(newY);
+    }
+
+    /**
+     * handle drop event from fxml
+     * @param e
+     */
+    public void handleDragDropEvent (MouseEvent e) {
+        if (selectedNode != null) {
+            selectedNode.location = mouseToGraph(e);
+            drawMap();
+        }
+        System.out.println("Drop Event");
+    }
+
+
+
+
 
     /**
      * Handle mouse event for chain add nodes
@@ -521,6 +572,10 @@ public class MapAdminController extends DisplayController implements Initializab
             case CHAIN_ADD:
                 break;
             case ADD_CONNECTION:
+                break;
+            case DRAG_NODE:
+                handleDragDropEvent(m);
+                changeState(State.NONE);
                 break;
         }
         displayRoom(selectedNode);
