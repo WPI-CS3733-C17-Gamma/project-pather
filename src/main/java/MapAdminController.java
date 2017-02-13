@@ -493,8 +493,10 @@ public class MapAdminController extends DisplayController implements Initializab
         System.out.printf("SHape current x: %f Curerent Y %f\n", selectedShape.getLayoutX(), selectedShape.getLayoutY());
 
 
-        selectedShape.setLayoutX(imagePoint.x);
-        selectedShape.setLayoutY(imagePoint.y);
+        selectedNode.location = mouseToGraph(e);
+        drawMap();
+//        selectedShape.setLayoutX(imagePoint.x);
+//        selectedShape.setLayoutY(imagePoint.y);
     }
 
     /**
