@@ -2,6 +2,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.util.HashMap;
@@ -14,20 +15,32 @@ public class ApplicationController extends Application {
     DisplayController currentDisplayController;
     Map map ;
     Stage pStage;
+    Scene currentScene;
+
+    // NOTE with proxy pattern this will change to a prox image
+    HashMap<String, Image> images;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
         initialize();
-
         this.pStage = primaryStage;
         createPatientDisplay();
         primaryStage.show();
     }
 
-    // load from database
+    /**
+     * Load from the database and setup images
+     */
     public void initialize(){
         databaseManager = new DatabaseManager("main");
         map = databaseManager.load();
+        images = new HashMap<>();
+        images.put("floor3", new Image("Maps/floor3.png"));
+        images.put("floor4", new Image("Maps/floor4.png"));
+        images.put("floor5", new Image("Maps/floor5.png"));
+        images.put("floor6", new Image("Maps/floor6.png"));
+        images.put("floor7", new Image("Maps/floor7.png"));
+
     }
 
     /**
@@ -47,11 +60,12 @@ public class ApplicationController extends Application {
     public void createPatientDisplay(){
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("PatientDisplay.fxml"));
-            PatientController controller = new PatientController(map,this, "Maps/floor3.png");
+            PatientController controller = new PatientController(map,this, "floor3");
             loader.setController(controller);
             Parent root = loader.load();
             pStage.setTitle("PatientDisplay");
-            pStage.setScene(new Scene(root, 1000, 600));
+            currentScene =  new Scene(root, 1000, 600);
+            pStage.setScene(currentScene);
         }
         catch (Exception e){
             e.printStackTrace();
@@ -60,16 +74,26 @@ public class ApplicationController extends Application {
     }
 
     /**
+     * Get the floor with the given name
+     * @param floor
+     * @return
+     */
+    public Image getImage (String floor) {
+        return images.get(floor);
+    }
+
+    /**
      * create map admin display
      */
     public void createMapAdminDisplay(){
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("AdminDisplay.fxml"));
-            MapAdminController controller = new MapAdminController(map,this, "Maps/floor3.png");
+            MapAdminController controller = new MapAdminController(map,this, "floor3");
             loader.setController(controller);
             Parent root = loader.load();
             pStage.setTitle("MapAdmin");
-            pStage.setScene(new Scene(root, 1000, 600));
+            currentScene =  new Scene(root, 1000, 600);
+            pStage.setScene(currentScene);
         }
         catch (Exception e){
             e.printStackTrace();
@@ -83,12 +107,13 @@ public class ApplicationController extends Application {
     public void createDirectoryAdminDisplay(){
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("DirectoryAdminDisplay.fxml"));
-            DirectoryAdminController controller = new DirectoryAdminController(map,this, "Maps/floor3.png");
+            DirectoryAdminController controller = new DirectoryAdminController(map,this, "floor3");
 
             loader.setController(controller);
             Parent root = loader.load();
+            currentScene =  new Scene(root, 1000, 600);
+            pStage.setScene(currentScene);
             pStage.setTitle("DirectoryAdmin");
-            pStage.setScene(new Scene(root, 1000, 600));
         }
         catch (Exception e){
             e.printStackTrace();
@@ -116,6 +141,14 @@ public class ApplicationController extends Application {
     public void logout(){
         save();
         createPatientDisplay();
+    }
+
+    /**
+     * get the current java fx scene
+     * @return
+     */
+    public Scene getCurrentScene() {
+        return currentScene;
     }
 
     /**
