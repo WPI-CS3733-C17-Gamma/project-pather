@@ -92,6 +92,34 @@ public class GraphNetwork {
     }
 
     /**
+     * Generates a list of textual directions for the path
+     * @param path the path to get directions for
+     * @return a List of string directions
+     */
+    public static List<String> get_directions(List<GraphNode> path) {
+        int nodeNum = 0;
+        for (GraphNode node : path) {
+            // No directions for first and last node
+            if (nodeNum == 0 || nodeNum = path.size()) {
+                continue;
+            }
+            double angle = node.getAngle(path[nodeNum - 1], path[nodeNum + 1]);
+            if (angle < 80) { // Sharp Right
+            }
+            else if (angle >= 80 && angle <= 170) { // Right
+            }
+            else if (angle > 170 && angle < 190) { // Straight
+            }
+            else if (angle >= 190 && angle <= 280) { // Left
+            }
+            else if (angle >= 280) { // Sharp Left
+            }
+            nodeNum++;
+        }
+        return null;
+    }
+
+    /**
      * return the node closest to the point on the same floor
      * Does not reject points based off distance, this must be handled
      * by the caller
