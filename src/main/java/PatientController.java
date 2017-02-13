@@ -327,8 +327,7 @@ public class PatientController extends DisplayController implements Initializabl
 
     }
 
-
-    public void testFunction () {
+public void testFunction () {
         System.out.println("TESTING");
         ImageView mapView = new ImageView();
         mapView.setFitWidth(100);
@@ -352,11 +351,6 @@ public class PatientController extends DisplayController implements Initializabl
 
 
         displaySubPath(mapView, path);
-
-
-
-
-
     }
 
 
