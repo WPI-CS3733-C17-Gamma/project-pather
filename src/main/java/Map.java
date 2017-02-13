@@ -136,6 +136,15 @@ public class Map {
         return graph.getGraphNode(point);
     }
 
+    /**
+     * Returns a list of SubPaths.
+     * Each subpath contains a string floor name
+     * and a list of nodes to draw.
+     * @param start
+     * @param end
+     * @return
+     * @throws PathNotFoundException
+     */
     public List<SubPath> getPathByFloor(GraphNode start, GraphNode end) throws PathNotFoundException {
         List<GraphNode> fullPath = graph.getPath(start, end);
         if(fullPath.isEmpty()) {

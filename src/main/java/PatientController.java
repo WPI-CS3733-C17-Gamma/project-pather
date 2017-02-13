@@ -326,34 +326,6 @@ public class PatientController extends DisplayController implements Initializabl
         }
 
     }
-
-public void testFunction () {
-        System.out.println("TESTING");
-        ImageView mapView = new ImageView();
-        mapView.setFitWidth(100);
-        mapView.setFitHeight(100);
-        mapView.setLayoutX(300);
-        mapView.setLayoutY(100);
-        mapView.setVisible(true);
-        mapView.toFront();
-        anchorPane.getChildren().add(mapView);
-
-
-        SubPath path = new SubPath("floor4");
-        GraphNode a = new GraphNode(0,0,"floor4");
-        GraphNode b = new GraphNode (100,100,"floor4");
-        GraphNode c = new GraphNode (100,200, "floor4");
-        GraphNode d = new GraphNode (1000,1000,"floor4");
-        path.path.add(a);
-        path.path.add(b);
-        path.path.add(c);
-        path.path.add(d);
-
-
-        displaySubPath(mapView, path);
-    }
-
-
     /**
      * initialize the fxml components etc
      * @param location
