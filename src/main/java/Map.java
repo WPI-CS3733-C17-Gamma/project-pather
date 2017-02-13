@@ -1,9 +1,6 @@
 import javafx.scene.image.Image;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class Map {
     Directory directory;
@@ -139,11 +136,12 @@ public class Map {
         return graph.getGraphNode(point);
     }
 
-    public List<SubPath> getPathByFloor(GraphNode start, GraphNode end) {
-        List<GraphNode> fullPath = getPath(start, end);
+    public List<SubPath> getPathByFloor(GraphNode start, GraphNode end) throws PathNotFoundException {
+        List<GraphNode> fullPath = graph.getPath(start, end);
         if(fullPath.isEmpty()) {
             return new ArrayList<>();
         }
+        Collections.reverse(fullPath);
         List<SubPath> subPaths = new ArrayList<>();
         SubPath currentPath = new SubPath(fullPath.get(0).location.floor);
         for (GraphNode node : fullPath) {
