@@ -52,6 +52,7 @@
                   <Image url="@BWFH_logo_rgb%20(1).png" />
                </image>
             </ImageView>
+            <Button layoutX="27.0" layoutY="398.0" mnemonicParsing="false" onAction="#testFunction" text="Test" />
          </children>
       </AnchorPane>
    </left>
