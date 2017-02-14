@@ -1,3 +1,5 @@
+import javafx.animation.PathTransition;
+import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -11,10 +13,10 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Line;
-import javafx.scene.shape.Shape;
+import javafx.scene.shape.*;
+import javafx.util.Duration;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -48,6 +50,7 @@ public class PatientController extends DisplayController implements Initializabl
     @FXML private AnchorPane searchAnchorPane;
     @FXML private ImageView patientImageView;
     @FXML private Button exitButton;
+    @FXML private HBox hello;
 
     /**
      *
@@ -373,5 +376,17 @@ public class PatientController extends DisplayController implements Initializabl
             "\n\nTo get started, start typing into the search bar. " +
             "\n Then, select the option you would like to get a path to." +
             "\n\nTo close this menu, click on this");
+    }
+
+
+    public void test(){
+        Path path = new Path();
+        path.getElements().add(new MoveTo(63, 575));
+        PathTransition pathTransition = new PathTransition();
+        pathTransition.setDuration(Duration.millis(400));
+        pathTransition.setNode(hello);
+        pathTransition.setCycleCount(Timeline.INDEFINITE);
+        pathTransition.setAutoReverse(true);
+        pathTransition.play();
     }
 }
