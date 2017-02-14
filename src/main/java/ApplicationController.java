@@ -2,10 +2,10 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
 
-import java.util.HashMap;
-import java.util.LinkedList;
+import java.io.IOException;
 
 public class ApplicationController extends Application {
 
@@ -13,7 +13,10 @@ public class ApplicationController extends Application {
     // probably not needed
     DisplayController currentDisplayController;
     Map map ;
+
     Stage pStage;
+    Stage loginStage;
+    Login login;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -62,14 +65,15 @@ public class ApplicationController extends Application {
     /**
      * create map admin display
      */
-    public void createMapAdminDisplay(){
+    public void createMapAdminDisplay(Login login){
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("AdminDisplay.fxml"));
-            MapAdminController controller = new MapAdminController(map,this, "Maps/floor3.png");
-            loader.setController(controller);
-            Parent root = loader.load();
-            pStage.setTitle("MapAdmin");
-            pStage.setScene(new Scene(root, 1000, 600));
+                this.login = login;
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("AdminDisplay.fxml"));
+                MapAdminController controller = new MapAdminController(map, this, "Maps/floor3.png");
+                loader.setController(controller);
+                Parent root = loader.load();
+                pStage.setTitle("MapAdmin");
+                pStage.setScene(new Scene(root, 1000, 600));
         }
         catch (Exception e){
             e.printStackTrace();
@@ -80,15 +84,16 @@ public class ApplicationController extends Application {
     /**
      * Create map directory admin app
      */
-    public void createDirectoryAdminDisplay(){
+    public void createDirectoryAdminDisplay(Login login){
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("DirectoryAdminDisplay.fxml"));
-            DirectoryAdminController controller = new DirectoryAdminController(map,this, "Maps/floor3.png");
+                this.login = login;
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("DirectoryAdminDisplay.fxml"));
+                DirectoryAdminController controller = new DirectoryAdminController(map, this, "Maps/floor3.png");
+                loader.setController(controller);
+                Parent root = loader.load();
+                pStage.setTitle("DirectoryAdmin");
+                pStage.setScene(new Scene(root, 1000, 600));
 
-            loader.setController(controller);
-            Parent root = loader.load();
-            pStage.setTitle("DirectoryAdmin");
-            pStage.setScene(new Scene(root, 1000, 600));
         }
         catch (Exception e){
             e.printStackTrace();
@@ -97,23 +102,40 @@ public class ApplicationController extends Application {
     }
 
     /**
-     * login to map admin
-     * @param login
+     * login to admin
+     *
      */
-    public void loginMapAdmin(String login){
+    public void createLoginAdmin(){     //not signing in... also add "wrong username or password"
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("LoginDisplay.fxml"));
+        LoginController loginController = new LoginController(this);
+        Scene newScene;
+        try{
+            loader.setController(loginController);
+            newScene = new Scene(loader.load());
+            loginStage = new Stage();
+            loginStage.initOwner(pStage);
+            loginStage.setScene(newScene);
+            loginStage.showAndWait();
+        } catch (IOException e){
+            System.out.println(e.toString());
+        } catch (Exception e){
+            System.out.println(e.toString());
+        }
+
+
     }
 
-    /**
-     * login to directory admin
-     * @param login
-     */
-    public void loginDirectoryAdmin(String login){
-    }
 
     /**
      * Change back to the patient display
      */
     public void logout(){
+        try{
+            login.signOut();
+        } catch(NullPointerException n){
+            System.out.println("Logout Error - no login class detected");
+        }
+
         save();
         createPatientDisplay();
     }

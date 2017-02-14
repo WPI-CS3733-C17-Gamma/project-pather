@@ -17,8 +17,7 @@
       <ToolBar prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #d4e3ed;" BorderPane.alignment="CENTER">
         <items>
           <Button fx:id="help" mnemonicParsing="false" onAction="#help" text="Help" />
-            <Button fx:id="MapAdminLogin" mnemonicParsing="false" onAction="#switchToMapAdmin" text="MapAdminDisplay" />
-            <Button fx:id="directoryAdminLogin" mnemonicParsing="false" onAction="#switchToDirectoryAdmin" text="DirectoryAdminDisplay" />
+            <Button fx:id="AdminLogin" mnemonicParsing="false" onMouseClicked="#logIn" text="Log In" />
         </items>
       </ToolBar>
    </bottom>
