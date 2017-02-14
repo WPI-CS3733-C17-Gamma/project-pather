@@ -96,27 +96,45 @@ public class GraphNetwork {
      * @param path the path to get directions for
      * @return a List of string directions
      */
-    public static List<String> get_directions(List<GraphNode> path) {
-        int nodeNum = 0;
+    public static List<String> getDirections(List<GraphNode> path) {
+        //TODO make sure path is in the right order or find a way to reverse it
+        LinkedList<String>  directions = new LinkedList<>();
+
+        int nodeNum = -1;
         for (GraphNode node : path) {
+            nodeNum++;
             // No directions for first and last node
-            if (nodeNum == 0 || nodeNum = path.size()) {
+            if (nodeNum == 0 || nodeNum >= path.size() - 1) {
                 continue;
             }
-            double angle = node.getAngle(path[nodeNum - 1], path[nodeNum + 1]);
-            if (angle < 80) { // Sharp Right
+            // No directions if there is only one path option
+            /*if (node.getAdjacent().size() <= 2) {
+                continue;
+            }*/
+            // Get a direction from the angle
+            double angle = node.getAngle(path.get(nodeNum - 1), path.get(nodeNum + 1));
+            if (angle < 80) {
+                // Sharp Right
+                directions.add("Take a sharp right");
             }
-            else if (angle >= 80 && angle <= 170) { // Right
+            else if (angle >= 80 && angle <= 170) {
+                // Right
+                directions.add("Take a right");
             }
-            else if (angle > 170 && angle < 190) { // Straight
+            else if (angle > 170 && angle < 190) {
+                // Straight
+                directions.add("Continue going straight");
             }
-            else if (angle >= 190 && angle <= 280) { // Left
+            else if (angle >= 190 && angle <= 280) {
+                // Left
+                directions.add("Take a left");
             }
-            else if (angle >= 280) { // Sharp Left
+            else if (angle >= 280) {
+                // Sharp Left
+                directions.add("Take a sharp left");
             }
-            nodeNum++;
         }
-        return null;
+        return directions;
     }
 
     /**

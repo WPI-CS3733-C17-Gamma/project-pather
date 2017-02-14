@@ -70,7 +70,13 @@ public class GraphNode extends Ided implements Comparable {
         return this.location.distance(graphNode.location);
     }
 
-    @Override
+    /** See method {@link FloorPoint#getAngle(FloorPoint, FloorPoint)} */
+    public double getAngle(GraphNode pB, GraphNode pC) {
+        return this.location.getAngle(pB.getLocation(), pC.getLocation());
+    }
+
+
+        @Override
     public int compareTo(Object o) {
         return 0;
     }
