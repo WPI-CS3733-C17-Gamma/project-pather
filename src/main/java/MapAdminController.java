@@ -31,7 +31,8 @@ public class MapAdminController extends DisplayController implements Initializab
         ADD_NODES, // the user is adding nodes
         CHAIN_ADD, // the user is adding nodes in a chain
         ADD_CONNECTION, // the user is adding connections
-        ADD_ELEVATOR
+        ADD_ELEVATOR, 
+        DRAG_NODE,
     }
 
     State currentState = State.NONE;
@@ -285,7 +286,10 @@ public class MapAdminController extends DisplayController implements Initializab
      */
     private void drawPoint (FloorPoint loc, ImageView imageToDrawOn ){
         FloorPoint imagePoint = graphToImage(loc, imageToDrawOn);
-        Circle circ = new Circle(imagePoint.x, imagePoint.y, 4, Color.BLUE);
+        // draw  point with layout x and y, not actual x and y
+        Circle circ = new Circle(4);
+        circ.setLayoutX(imagePoint.x);
+        circ.setLayoutY(imagePoint.y);
         circ.setMouseTransparent(true);
         anchorpaneMap.getChildren().add(circ);
         GraphNode graphNodeAttatched = map.getGraphNode(loc);
@@ -350,6 +354,7 @@ public class MapAdminController extends DisplayController implements Initializab
         FloorPoint imagePoint1 = graphToImage(x1, imageviewMap);
         FloorPoint imagePoint2 = graphToImage(x2, imageviewMap);
 
+        // it is okay for line to use hard set layout x and y because this doesn't need to change
         Line line = new Line(imagePoint1.x, imagePoint1.y, imagePoint2.x, imagePoint2.y);
         line.setFill(Color.BLACK);
         line.setMouseTransparent(true);
@@ -542,8 +547,49 @@ public class MapAdminController extends DisplayController implements Initializab
             secondaryNode = selectedNode;
             selectedNode = nearby;
         }
-
     }
+
+    /**
+     * handle drag event
+     * @param e
+     */
+    public void handleDragEvent (MouseEvent e) {
+        System.out.println("Drag Event" );
+        switch (currentState) {
+            case NONE:
+                if(selectedNode != null) {
+                    currentState = State.DRAG_NODE;
+                }
+                break;
+        }
+
+        // only in drag event if selected is not null
+        Shape selectedShape = drawnNodes.get(selectedNode);
+
+        // convert from image --> gapph --> anchor pane and draw circle there
+        FloorPoint mousePoint = mouseToGraph(e);
+        FloorPoint imagePoint = graphToImage(mousePoint, imageviewMap);
+
+        // Do not  points that would fall outside of the map
+        if(mousePoint.x > 999 || mousePoint.x < 1 ||
+            mousePoint.y > 999 || mousePoint.y < 1) {
+            return ;
+        }
+
+        // just move the point every drag event
+        selectedNode.location = mouseToGraph(e);
+        drawMap();
+    }
+
+    /**
+     * handle drop event from fxml
+     * @param e
+     */
+    public void handleDragDropEvent (MouseEvent e) {
+        changeState(State.NONE);
+        System.out.println("Drop Event");
+    }
+
 
     /**
      * Handle mouse event for chain add nodes
@@ -600,6 +646,10 @@ public class MapAdminController extends DisplayController implements Initializab
             case CHAIN_ADD:
                 break;
             case ADD_CONNECTION:
+                break;
+            case DRAG_NODE:
+                handleDragDropEvent(m);
+                changeState(State.NONE);
                 break;
         }
         displayRoom(selectedNode);
