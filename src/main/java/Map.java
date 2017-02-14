@@ -130,6 +130,20 @@ public class Map {
         }
     }
 
+    /**
+     * Delete an elevator and all other elevator nodes
+     * it is connected to
+     * @param elevator
+     */
+    public void deleteElevator (GraphNode elevator) {
+        if (elevator.isElevator()) {
+            for (GraphNode adjacentElevator : elevator.getAdjacent()) {
+                this.deleteNode(adjacentElevator);
+            }
+        }
+        this.deleteNode(elevator);
+    }
+
     /** See method {@link GraphNetwork#addNode(GraphNode)} */
     public boolean addNode(GraphNode node){
         return graph.addNode(node);
