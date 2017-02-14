@@ -39,7 +39,7 @@ public class GraphNode extends Ided implements Comparable {
     public boolean addAdjacent(GraphNode node){
         // add adjacent  node if the connection does not exist and the
         // connection is different from this
-        if (adjacent.contains(node) || this.equals(node)) {
+        if (adjacent.contains(node) || this.location.equals(node.location)) {
             return false;
         }
         else {
