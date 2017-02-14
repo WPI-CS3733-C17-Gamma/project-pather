@@ -34,7 +34,7 @@
          </image>
       </ImageView>
       <Button fx:id="help" layoutX="825.0" layoutY="14.0" mnemonicParsing="false" onAction="#help" onKeyPressed="#help" prefHeight="50.0" prefWidth="50.0" styleClass="helpButton" stylesheets="@design.css" />
-      <Button layoutX="915.0" layoutY="14.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" styleClass="adminButton" stylesheets="@design.css" />
+      <Button fx:id="adminButton" layoutX="915.0" layoutY="14.0" mnemonicParsing="false" onMouseClicked="#switchToDirectoryAdmin" prefHeight="50.0" prefWidth="50.0" styleClass="adminButton" stylesheets="@design.css" />
       <AnchorPane fx:id="searchAnchorPane" layoutY="-4.0" prefHeight="607.0" prefWidth="1000.0" styleClass="patientBackground" stylesheets="@design.css" visible="false">
          <children>
             <Button fx:id="exitButton" layoutX="940.0" mnemonicParsing="false" onAction="#exitSearch" prefHeight="33.0" prefWidth="47.0" styleClass="exitButton" stylesheets="@design.css" text="X" visible="false" />

@@ -48,6 +48,7 @@ public class PatientController extends DisplayController implements Initializabl
     @FXML private AnchorPane searchAnchorPane;
     @FXML private ImageView patientImageView;
     @FXML private Button exitButton;
+    @FXML private Button adminButton;
 
     /**
      *

@@ -6,7 +6,6 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.util.HashMap;
-import java.util.LinkedList;
 
 public class ApplicationController extends Application {
 
@@ -89,7 +88,7 @@ public class ApplicationController extends Application {
      */
     public void createMapAdminDisplay(){
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("AdminDisplay.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("MapAdminDisplay.fxml"));
             MapAdminController controller = new MapAdminController(map,this, "floor3");
             loader.setController(controller);
             Parent root = loader.load();
