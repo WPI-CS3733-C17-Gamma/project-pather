@@ -86,7 +86,7 @@ public class GraphNetwork {
 
         while(current.cameFrom != null){
             current = current.cameFrom;
-            total_path.add(current.node);
+            total_path.add(0, current.node);
         }
         return total_path;
     }
