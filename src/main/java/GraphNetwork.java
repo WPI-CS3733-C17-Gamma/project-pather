@@ -115,11 +115,11 @@ public class GraphNetwork {
             double angle = node.getAngle(path.get(nodeNum - 1), path.get(nodeNum + 1));
             if (angle < 80) {
                 // Sharp Right
-                directions.add("Take a sharp right");
+                directions.add("Take a sharp left");
             }
             else if (angle >= 80 && angle <= 170) {
                 // Right
-                directions.add("Take a right");
+                directions.add("Take a left");
             }
             else if (angle > 170 && angle < 190) {
                 // Straight
@@ -127,11 +127,11 @@ public class GraphNetwork {
             }
             else if (angle >= 190 && angle <= 280) {
                 // Left
-                directions.add("Take a left");
+                directions.add("Take a right");
             }
             else if (angle >= 280) {
                 // Sharp Left
-                directions.add("Take a sharp left");
+                directions.add("Take a sharp right");
             }
         }
         return directions;

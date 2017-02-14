@@ -26,7 +26,7 @@ public class TextualDirectionsTest {
 
     @Test
     public void testGetDirections() throws Exception {
-        assertEquals("[Take a left, Take a left, Take a right]", GraphNetwork.getDirections(path).toString());
+        assertEquals("[Take a right, Take a right, Take a left]", GraphNetwork.getDirections(path).toString());
     }
 
 }
