@@ -107,6 +107,29 @@ public class Map {
         return directory.getEntry(name);
     }
 
+    /**
+     * Add an elevator at the given Point to all floors given
+     * @param point x,y location
+     * @param floors list of floors to connect the elevator through
+     */
+    public void addElevator (FloorPoint point, List<String> floors) {
+        List<GraphNode> elevators = new ArrayList<>();
+        // make elevators
+        for (String floor : floors) {
+            FloorPoint currentFloor = new FloorPoint(point.x, point.y, floor);
+            GraphNode newNode = new GraphNode(currentFloor);
+            graph.addNode(newNode);
+            elevators.add(newNode);
+        }
+
+        // connect elevators
+        for (GraphNode elevatorA : elevators) {
+            for (GraphNode elevatorB : elevators) {
+                graph.addConnection(elevatorA, elevatorB);
+            }
+        }
+    }
+
     /** See method {@link GraphNetwork#addNode(GraphNode)} */
     public boolean addNode(GraphNode node){
         return graph.addNode(node);
