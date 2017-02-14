@@ -35,6 +35,8 @@ public class ApplicationController extends Application {
         databaseManager = new DatabaseManager("main");
         map = databaseManager.load();
         images = new HashMap<>();
+        images.put("floor1", new Image("Maps/floor1.png"));
+        images.put("floor2", new Image("Maps/floor2.png"));
         images.put("floor3", new Image("Maps/floor3.png"));
         images.put("floor4", new Image("Maps/floor4.png"));
         images.put("floor5", new Image("Maps/floor5.png"));

@@ -5,54 +5,58 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" style="-fx-background-color: #d4e3ed;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
-   <bottom>
-      <ToolBar prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #d4e3ed;" BorderPane.alignment="CENTER">
-        <items>
-          <Button fx:id="help" mnemonicParsing="false" onAction="#help" text="Help" />
-            <Button fx:id="MapAdminLogin" mnemonicParsing="false" onAction="#switchToMapAdmin" text="MapAdminDisplay" />
-            <Button fx:id="directoryAdminLogin" mnemonicParsing="false" onAction="#switchToDirectoryAdmin" text="DirectoryAdminDisplay" />
-        </items>
-      </ToolBar>
-   </bottom>
-   <left>
-      <AnchorPane fx:id="anchorPane" prefHeight="560.0" prefWidth="853.0" BorderPane.alignment="CENTER">
+<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" styleClass="background" stylesheets="@design.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ImageView fx:id="imageView" fitHeight="454.0" fitWidth="800.0" layoutX="100.0" layoutY="103.0" pickOnBounds="true" preserveRatio="true" />
+      <Label fx:id="helpLabel" contentDisplay="CENTER" layoutX="117.0" layoutY="123.0" onKeyPressed="#help" onMouseClicked="#help" opacity="0.0" prefHeight="341.0" prefWidth="733.0" styleClass="helpBox" stylesheets="@design.css" text="Label" textAlignment="CENTER" visible="false">
+         <cursor>
+            <Cursor fx:constant="S_RESIZE" />
+         </cursor>
+         <font>
+            <Font size="30.0" />
+         </font>
+      </Label>
+      <ListView fx:id="options" layoutX="40.0" layoutY="73.0" prefHeight="200.0" prefWidth="212.0" visible="false">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </ListView>
+      <ImageView fitHeight="57.0" fitWidth="374.0" layoutX="343.0" layoutY="22.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@BWFH_logo_rgb%20(1).png" />
+         </image>
+      </ImageView>
+      <Button fx:id="help" layoutX="825.0" layoutY="14.0" mnemonicParsing="false" onAction="#help" onKeyPressed="#help" prefHeight="50.0" prefWidth="50.0" styleClass="helpButton" stylesheets="@design.css" />
+      <Button layoutX="915.0" layoutY="14.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" styleClass="adminButton" stylesheets="@design.css" />
+      <AnchorPane fx:id="searchAnchorPane" layoutY="-4.0" prefHeight="607.0" prefWidth="1000.0" styleClass="patientBackground" stylesheets="@design.css" visible="false">
          <children>
-            <ImageView fx:id="imageView" fitHeight="404.0" fitWidth="759.0" layoutX="123.0" layoutY="134.0" pickOnBounds="true" preserveRatio="true" />
-            <TextField fx:id="searchBar" layoutX="69.0" layoutY="22.0" onKeyReleased="#search" prefHeight="25.0" prefWidth="198.0" promptText="Search!">
-               <font>
-                  <Font size="28.0" />
-               </font></TextField>
-            <Label fx:id="helpLabel" contentDisplay="CENTER" layoutX="300.0" layoutY="100.0" onKeyPressed="#help" onMouseClicked="#help" opacity="0.85" prefHeight="341.0" prefWidth="733.0" style="-fx-background-color: ALICEBLUE;" text="Label" textAlignment="CENTER" visible="false">
-               <cursor>
-                  <Cursor fx:constant="S_RESIZE" />
-               </cursor>
-               <font>
-                  <Font size="30.0" />
-               </font>
-            </Label>
-            <ListView fx:id="options" layoutX="67.0" layoutY="94.0" prefHeight="200.0" prefWidth="200.0" visible="false">
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor></ListView>
-            <ImageView fitHeight="53.0" fitWidth="45.0" layoutX="850.0" layoutY="22.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@JonsGammaLogo.png" />
-               </image>
-            </ImageView>
-            <ImageView fitHeight="109.0" fitWidth="491.0" layoutX="280.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@BWFH_logo_rgb%20(1).png" />
-               </image>
-            </ImageView>
+            <Button fx:id="exitButton" layoutX="940.0" mnemonicParsing="false" onAction="#exitSearch" prefHeight="33.0" prefWidth="47.0" styleClass="exitButton" stylesheets="@design.css" text="X" visible="false" />
+            <HBox layoutX="27.0" layoutY="485.0" prefHeight="100.0" prefWidth="926.0" visible="false" />
+            <VBox prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <ImageView fx:id="patientImageView" fitHeight="453.0" fitWidth="977.0" pickOnBounds="true" preserveRatio="true" visible="false" />
+                  <HBox prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
          </children>
       </AnchorPane>
-   </left>
-</BorderPane>
+      <TextField fx:id="searchBar" layoutX="24.0" layoutY="26.0" onMousePressed="#startSearch" prefHeight="47.0" prefWidth="248.0" promptText="Search!" styleClass="search" stylesheets="@design.css">
+         <font>
+            <Font size="28.0" />
+         </font>
+      </TextField>
+   </children>
+</AnchorPane>

@@ -3,6 +3,7 @@ import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
@@ -22,24 +23,31 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
-
 /**
  * controls all interaction with the patient display
  */
 public class PatientController extends DisplayController implements Initializable {
+
+    private enum state{
+        PATIENT_DEFAULT,
+        PATIENT_SEARCH
+    }
+
+    state displayState;
     // kiosk location
     GraphNode startNode;
     // list of shapes that have been drawn on the screen
     List<Shape> drawnObjects;
     // FXML Things
     @FXML private TextField searchBar;
-
     @FXML private ListView<String> options;
     @FXML private ImageView imageView;
-
     @FXML private AnchorPane anchorPane;
-
     @FXML private Label helpLabel;
+
+    @FXML private AnchorPane searchAnchorPane;
+    @FXML private ImageView patientImageView;
+    @FXML private Button exitButton;
 
     /**
      *
@@ -52,6 +60,8 @@ public class PatientController extends DisplayController implements Initializabl
                              ApplicationController applicationController,
                              String currentMap){
         super(map,applicationController, currentMap);
+
+        displayState = state.PATIENT_DEFAULT;
     }
 
     /**
@@ -59,7 +69,36 @@ public class PatientController extends DisplayController implements Initializabl
      */
     public void displayImage() {
         Image floor = super.applicationController.getImage(currentMap);
-        imageView.setImage(floor);
+        if (displayState == state.PATIENT_DEFAULT){
+            imageView.setImage(floor);
+        }
+        if (displayState == state.PATIENT_SEARCH){
+            patientImageView.setImage(floor);
+        }
+    }
+
+    /**
+     *
+     */
+    public void startSearch(){
+        if (this.displayState == state.PATIENT_DEFAULT){
+            patientImageView.setVisible(true);
+            searchAnchorPane.setVisible(true);
+            exitButton.setVisible(true);
+            this.displayState = state.PATIENT_SEARCH;
+            displayImage();
+        }
+        search();
+    }
+
+    public void exitSearch(){
+        if (this.displayState == state.PATIENT_SEARCH){
+            patientImageView.setVisible(false);
+            searchAnchorPane.setVisible(false);
+            exitButton.setVisible(false);
+            this.displayState = state.PATIENT_DEFAULT;
+            displayImage();
+        }
     }
 
     /**
@@ -296,7 +335,6 @@ public class PatientController extends DisplayController implements Initializabl
         else {
            helpLabel.setVisible(true);
         }
-
     }
 
 
@@ -331,7 +369,9 @@ public class PatientController extends DisplayController implements Initializabl
         // the image view should be the bottom pane so circles can be drawn over it
         imageView.toBack();
 //        imageView.setPreserveRatio(false);
-        helpLabel.setText("Hello! Thanks for using project-pather.\n\nTo get started, start typing into the search bar. " +
-            "\n Then, select the option you would like to get a path to.\n\nTo close this menu, click on it");
+        helpLabel.setText("Hello! Thanks for using project-pather." +
+            "\n\nTo get started, start typing into the search bar. " +
+            "\n Then, select the option you would like to get a path to." +
+            "\n\nTo close this menu, click on this");
     }
 }
