@@ -10,9 +10,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
-
 <?scenebuilder-stylesheet design.css?>
 
 <StackPane fx:id="stackPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" styleClass="background" stylesheets="@design.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
@@ -35,11 +33,12 @@
               </ImageView>
               <Button fx:id="help" layoutX="825.0" layoutY="14.0" mnemonicParsing="false" onAction="#help" onKeyPressed="#help" prefHeight="50.0" prefWidth="50.0" styleClass="helpButton" stylesheets="@design.css" />
               <Button fx:id="adminButton" layoutX="915.0" layoutY="14.0" mnemonicParsing="false" onAction="#toggleAdminWindow" prefHeight="50.0" prefWidth="50.0" styleClass="adminMenuButton" stylesheets="@design.css" />
-              <AnchorPane fx:id="searchAnchorPane" layoutY="-4.0" prefHeight="607.0" prefWidth="1000.0" styleClass="patientBackground" stylesheets="@design.css" visible="false">
+              <AnchorPane fx:id="searchAnchorPane" layoutY="-4.0" prefHeight="607.0" prefWidth="1000.0" styleClass="patientBackground" stylesheets="@design.css">
                  <children>
                     <ImageView fx:id="patientImageView" fitHeight="558.0" fitWidth="945.0" layoutX="20.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
                     <Button fx:id="exitButton" layoutX="940.0" mnemonicParsing="false" onAction="#exitSearch" prefHeight="33.0" prefWidth="47.0" styleClass="exitButton" stylesheets="@design.css" text="X" />
-                    <Button layoutY="553.0" mnemonicParsing="false" onAction="#hideMultiMapAnimation" text="Button" />
+                    <Button layoutY="533.0" mnemonicParsing="false" onAction="#hideMultiMapAnimation" text="Hide Menu" />
+                    <Button fx:id="testtest" layoutY="478.0" mnemonicParsing="false" onAction="#showMultiMapAnimation" text="Show Menu" />
                  </children>
               </AnchorPane>
               <TextField fx:id="searchBar" layoutX="24.0" layoutY="26.0" onKeyReleased="#search" onMousePressed="#startSearch" prefHeight="47.0" prefWidth="248.0" promptText="Search!" styleClass="search" stylesheets="@design.css">
@@ -52,12 +51,7 @@
                     <Cursor fx:constant="HAND" />
                  </cursor>
               </ListView>
-              <Button fx:id="testtest" layoutY="500.0" mnemonicParsing="false" onAction="#showMultiMapAnimation" text="Button" />
-              <HBox fx:id="multiMapDisplayMenu" alignment="CENTER" layoutX="40.0" layoutY="600.0" maxHeight="95.0" maxWidth="814.0" minHeight="95.0" minWidth="814.0" prefHeight="95.0" prefWidth="814.0">
-                 <children>
-                    <Circle fill="DODGERBLUE" radius="42.0" stroke="BLACK" strokeType="INSIDE" />
-                 </children>
-              </HBox>
+              <HBox fx:id="multiMapDisplayMenu" alignment="CENTER" layoutX="40.0" layoutY="600.0" maxHeight="95.0" maxWidth="814.0" minHeight="95.0" minWidth="814.0" prefHeight="95.0" prefWidth="814.0" />
            </children>
         </AnchorPane>
         <AnchorPane fx:id="adminPane" prefHeight="200.0" prefWidth="200.0" styleClass="background" stylesheets="@design.css" visible="false">
