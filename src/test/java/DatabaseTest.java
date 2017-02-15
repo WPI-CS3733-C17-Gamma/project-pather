@@ -1,13 +1,13 @@
 import javafx.scene.image.Image;
-import java.util.HashMap;
-import java.util.List;
-import java.util.LinkedList;
-import java.util.Arrays;
-import java.sql.*;
-
 import junit.framework.TestCase;
 import org.junit.Test;
-import static org.junit.Assert.*;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedList;
 
 public class DatabaseTest extends TestCase{
     // Using databases in memory to not clutter up the file system

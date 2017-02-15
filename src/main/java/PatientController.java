@@ -47,10 +47,12 @@ public class PatientController extends DisplayController implements Initializabl
     @FXML private TextField searchBar;
     @FXML private ListView<String> options;
     @FXML private ImageView imageView;
+    @FXML private Label textDirectionsTextBox;
     @FXML private AnchorPane anchorPane;
     @FXML private Label helpLabel;
 
     @FXML private AnchorPane searchAnchorPane;
+    @FXML private Button help;
     @FXML private ImageView patientImageView;
     @FXML private Button exitButton;
     @FXML private HBox multiMapDisplayMenu;
@@ -58,6 +60,8 @@ public class PatientController extends DisplayController implements Initializabl
     @FXML private Button directoryAdminButton;
     @FXML private Button mapAdminButton;
     @FXML private AnchorPane adminPane;
+    @FXML private Button patientDisplayButton;
+    @FXML private Button login;
 
     private List<SubPath> currentPath;
 
@@ -103,6 +107,7 @@ public class PatientController extends DisplayController implements Initializabl
     }
 
     public void exitSearch(){
+        System.out.println("Exit button works");
         if (this.displayState == state.PATIENT_SEARCH){
 //            patientImageView.setVisible(false);
             searchAnchorPane.setVisible(false);
@@ -173,7 +178,7 @@ public class PatientController extends DisplayController implements Initializabl
      * swtich to map admin
      */
     public void switchToMapAdmin() {
-        applicationController.createMapAdminDisplay();
+        applicationController.createMapAdminDisplay(new Login());//*********************************
     }
 
 
@@ -182,7 +187,7 @@ public class PatientController extends DisplayController implements Initializabl
      */
     public void switchToDirectoryAdmin () {
         System.out.println("SWITCHING TO DIR ADMIN");
-        applicationController.createDirectoryAdminDisplay();
+        applicationController.createDirectoryAdminDisplay(new Login());//************************
     }
 
     /**
@@ -254,6 +259,7 @@ public class PatientController extends DisplayController implements Initializabl
         for (Shape shape : drawnObjects) {
             anchorPane.getChildren().remove(shape);
         }
+        textDirectionsTextBox.setVisible(false);
     }
 
     /**
@@ -366,6 +372,21 @@ public class PatientController extends DisplayController implements Initializabl
     }
 
     /**
+     * Function to get textual directions and print it on screen
+     * @param path the path to be converted to text
+     */
+    public void displayTextDirections(List<GraphNode> path) {
+        textDirectionsTextBox.setVisible(true);
+        List<String> directions = map.getTextualDirections(path);
+        String dir = "";
+        for(String line : directions) {
+            dir += (line + "\n");
+        }
+        textDirectionsTextBox.setText(dir);
+        return;
+    }
+
+    /**
      * given local point, draw the point
      * @param localPoint
      */
@@ -396,11 +417,9 @@ public class PatientController extends DisplayController implements Initializabl
         return line;
     }
 
-    /**
-     * Will be implemented later
-     * @param login
-     */
-    public void loginDirectoryAdmin(String login) {
+
+    public void logIn () {
+        applicationController.createLoginAdmin();
     }
 
     public void help () {
