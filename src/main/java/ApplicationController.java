@@ -15,6 +15,7 @@ public class ApplicationController extends Application {
     DisplayController currentDisplayController;
     Map map ;
     Stage pStage;
+
     Stage loginStage;
     Login login;
     Scene currentScene;
@@ -99,6 +100,7 @@ public class ApplicationController extends Application {
                 pStage.setTitle("MapAdmin");
                 pStage.setScene(new Scene(root, 1000, 600));
                 pStage.show();
+
         }
         catch (Exception e){
             e.printStackTrace();
