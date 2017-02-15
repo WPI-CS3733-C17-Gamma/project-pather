@@ -308,6 +308,7 @@ public class PatientController extends DisplayController implements Initializabl
                 i.setImage(applicationController.getImage(p.floor));
                multiMapDisplayMenu.getChildren().add(i);
             }
+            showMultiMapAnimation();
         } catch (PathNotFoundException e) {
             System.out.println("No path can be drawn");
         }
