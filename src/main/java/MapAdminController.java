@@ -581,6 +581,7 @@ public class MapAdminController extends DisplayController implements Initializab
      * save and exit the application
      */
     public void done(){
+
         applicationController.logout();
     }
 

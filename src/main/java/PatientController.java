@@ -113,22 +113,6 @@ public class PatientController extends DisplayController implements Initializabl
     }
 
     /**
-     * swtich to map admin
-     */
-    public void switchToMapAdmin() {
-        applicationController.createMapAdminDisplay();
-    }
-
-
-    /**
-     * swtich to directory admin
-     */
-    public void switchToDirectoryAdmin () {
-        System.out.println("SWITCHING TO DIR ADMIN");
-        applicationController.createDirectoryAdminDisplay();
-    }
-
-    /**
      * select the clicked option
      * @param option
      * @return
@@ -328,11 +312,9 @@ public class PatientController extends DisplayController implements Initializabl
         return line;
     }
 
-    /**
-     * Will be implemented later
-     * @param login
-     */
-    public void loginDirectoryAdmin(String login) {
+
+    public void logIn () {
+        applicationController.createLoginAdmin();
     }
 
     public void help () {
