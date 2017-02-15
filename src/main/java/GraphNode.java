@@ -125,7 +125,7 @@ public class GraphNode extends Ided implements Comparable {
 
 
     /**
-     * Return true when this node is attached to another node
+     * Return true when this node is attached to another node on a different floor
      * @return
      */
     public boolean isElevator () {

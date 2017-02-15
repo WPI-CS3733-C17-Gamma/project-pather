@@ -1,10 +1,10 @@
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleButton;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -37,13 +37,11 @@ public class MapAdminController extends DisplayController implements Initializab
     }
 
     State currentState = State.NONE;
-
-
-
     //    MapAdminDisplay display;
     GraphNode selectedNode;
     GraphNode secondaryNode;
     Room activeRoom ;
+    List<String> elevatorFloors = new ArrayList<>();
 
 
     // keep track of the objects that have been drawn on the screen
@@ -60,7 +58,9 @@ public class MapAdminController extends DisplayController implements Initializab
     @FXML private AnchorPane anchorpaneMap;
     @FXML private TextField roomName;
 
-    @FXML private ListView<String> floorOptions;
+    @FXML private ListView<String> elevatorFloorOptions;
+    @FXML private ListView<String> changeFloorOptions;
+    @FXML private ToggleButton togglebuttonChangeFloor;
 
     private GraphNode tempNode ;
 
@@ -84,6 +84,28 @@ public class MapAdminController extends DisplayController implements Initializab
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        /**
+         * Add click listener to the list of floor options
+         */
+        elevatorFloorOptions.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        elevatorFloorOptions.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                String selectedString = elevatorFloorOptions.getSelectionModel().getSelectedItem();
+                selectFloor(selectedString);
+            }
+        });
+        elevatorFloorOptions.toFront();
+        changeFloorOptions.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                String selectedString = changeFloorOptions.getSelectionModel().getSelectedItem();
+                setMap(selectedString);
+            }
+        });
+        imageviewMap.toBack();
+
         setMap("floor3");
         drawMap();
     }
@@ -144,7 +166,8 @@ public class MapAdminController extends DisplayController implements Initializab
      */
     private void drawElevator(FloorPoint loc, ImageView imageToDrawOn) {
         FloorPoint imagePoint = graphToImage(loc, imageToDrawOn);
-        Rectangle rect = new Rectangle(imagePoint.x, imagePoint.y, 8,8);
+        int width = 8, height = 8;
+        Rectangle rect = new Rectangle(imagePoint.x - width / 2, imagePoint.y - height / 2 , width,height);
         rect.setFill(Color.BLACK);
         rect.setMouseTransparent(true);
         anchorpaneMap.getChildren().add(rect);
@@ -152,6 +175,10 @@ public class MapAdminController extends DisplayController implements Initializab
         drawnNodes.put(graphNodeAttatched.id, rect);
     }
 
+    /**
+     * Changes the state to add elevator,
+     * or toggles off the add elevator state
+     */
     public void toggleAddElevator () {
         switch (currentState){
             case ADD_ELEVATOR:
@@ -209,6 +236,22 @@ public class MapAdminController extends DisplayController implements Initializab
 
         }
     }
+
+    /**
+     * Open the menu to switch between floors
+     */
+    public void toggleSwitchMap () {
+        toggleSwitchMap(togglebuttonChangeFloor.isSelected());
+    }
+    public void toggleSwitchMap (boolean selected) {
+        togglebuttonChangeFloor.setSelected(selected);
+        changeFloorOptions.setVisible(selected);
+        List<String> options = applicationController.getAllFloors();
+        ObservableList<String> observOptions= FXCollections.observableArrayList(options);
+        changeFloorOptions.setItems(observOptions);
+    }
+
+
     /**
      * Create node from given location. Make new GraphNode
      * @param location location to create a point at
@@ -227,7 +270,6 @@ public class MapAdminController extends DisplayController implements Initializab
      * @param location
      */
     public void addElevator(FloorPoint location, List<String> floors){
-        System.out.println("Add elevator @ " + location);
         map.addElevator(location, floors);
         secondaryNode = selectedNode;
         selectedNode = map.getGraphNode(location);
@@ -291,6 +333,10 @@ public class MapAdminController extends DisplayController implements Initializab
 
     }
 
+    /**
+     * Deletes the connection between the two selected nodes,
+     * if one exists
+     */
     public void deleteConnection() {
         if(selectedNode != null && secondaryNode != null) {
             map.deleteConnection(selectedNode, secondaryNode);
@@ -309,6 +355,9 @@ public class MapAdminController extends DisplayController implements Initializab
         }
     }
 
+    /**
+     * Delete the selected node if it is an elevator
+     */
     public void deleteElevator () {
         if (selectedNode != null ) {
             if(selectedNode.isElevator()) {
@@ -462,37 +511,66 @@ public class MapAdminController extends DisplayController implements Initializab
                 togglebuttonAddConnections.setSelected(true);
                 togglebuttonAddNode.setSelected(false);
                 togglebuttonAddElevator.setSelected(false);
+                elevatorFloorOptions.setVisible(false);
                 break;
             case ADD_NODES:
                 togglebuttonChainAdd.setSelected(false);
                 togglebuttonAddConnections.setSelected(false);
                 togglebuttonAddNode.setSelected(true);
                 togglebuttonAddElevator.setSelected(false);
+                elevatorFloorOptions.setVisible(false);
                 break;
             case CHAIN_ADD:
                 togglebuttonChainAdd.setSelected(true);
                 togglebuttonAddConnections.setSelected(false);
                 togglebuttonAddNode.setSelected(false);
                 togglebuttonAddElevator.setSelected(false);
+                elevatorFloorOptions.setVisible(false);
                 break;
             case ADD_ELEVATOR:
                 togglebuttonChainAdd.setSelected(false);
                 togglebuttonAddConnections.setSelected(false);
                 togglebuttonAddNode.setSelected(false);
                 togglebuttonAddElevator.setSelected(true);
+                elevatorFloorOptions.setVisible(true);
+                displayElevatorOptions();
                 break;
             case NONE:
                 togglebuttonChainAdd.setSelected(false);
                 togglebuttonAddConnections.setSelected(false);
                 togglebuttonAddNode.setSelected(false);
                 togglebuttonAddElevator.setSelected(false);
+                elevatorFloorOptions.setVisible(false);
                 break;
-
         }
+        toggleSwitchMap(false);
 
         drawMap();
     }
 
+    /**
+     * When in add elevator, display the elevatorFloor options
+     */
+    public void displayElevatorOptions () {
+       List<String> options = applicationController.getAllFloors();
+       ObservableList<String> observOptions= FXCollections.observableArrayList(options);
+       elevatorFloorOptions.setItems(observOptions);
+       elevatorFloorOptions.getSelectionModel().clearSelection();
+        for (String floor : elevatorFloors) {
+            elevatorFloorOptions.getSelectionModel().select(floor);
+        }
+
+    }
+
+    public void selectFloor (String floor) {
+        if (!elevatorFloors.contains(floor)){
+            elevatorFloors.add(floor);
+        }
+        else {
+            elevatorFloors.remove(floor);
+        }
+        displayElevatorOptions();
+    }
 
     /**
      * add node to graph
@@ -528,12 +606,7 @@ public class MapAdminController extends DisplayController implements Initializab
      */
     public void handleMouseEventAddElevator (MouseEvent e) {
         FloorPoint graphPoint = mouseToGraph(e);
-
-        List<String> floors = new ArrayList<>();
-        floors.add("floor3");
-        floors.add("floor4");
-
-        addElevator(graphPoint, floors);
+        addElevator(graphPoint, elevatorFloors);
     }
     /**
      * handle the mouse event when no states are selected
@@ -675,12 +748,6 @@ public class MapAdminController extends DisplayController implements Initializab
         drawMap();
     }
 
-    public void changeFloorFour () {
-        setMap ("floor4");
-    }
-    public void changeFloorThree() {
-        setMap ("floor3");
-    }
 
     /**
      * Change the main display map.
@@ -690,6 +757,10 @@ public class MapAdminController extends DisplayController implements Initializab
         Image floorImage = applicationController.getImage(loc);
         imageviewMap.setImage(floorImage);
         super.currentMap = loc;
+        // must make elevator on current floor
+        if(! elevatorFloors.contains(loc)) {
+            elevatorFloors.add(loc);
+        }
         drawMap();
     }
 }

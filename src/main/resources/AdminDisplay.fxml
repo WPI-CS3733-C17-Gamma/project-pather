@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleButton?>
@@ -11,17 +10,19 @@
 
 <BorderPane maxHeight="-Infinity" minHeight="-Infinity" prefHeight="600.0" prefWidth="1000.0" style="-fx-background-color: #d4e3ed;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <top>
-      <AnchorPane prefHeight="93.0" prefWidth="1200.0" BorderPane.alignment="CENTER">
+      <AnchorPane prefHeight="168.0" prefWidth="1000.0" BorderPane.alignment="CENTER">
          <children>
             <ToggleButton fx:id="togglebuttonChainAdd" layoutX="14.0" layoutY="16.0" mnemonicParsing="false" onAction="#toggleChainAdd" text="Chain Add" />
-            <TextField fx:id="roomName" layoutX="707.0" layoutY="50.0" promptText="Add or Remove Room" />
-            <ToggleButton fx:id="togglebuttonAddNode" layoutX="116.0" layoutY="16.0" mnemonicParsing="false" onAction="#toggleAddNode" text="Add Node" />
-            <ToggleButton fx:id="togglebuttonAddConnections" layoutX="344.0" layoutY="16.0" mnemonicParsing="false" onAction="#toggleAddConnection" text="Add Connections" />
-            <Button layoutX="235.0" layoutY="16.0" mnemonicParsing="false" onAction="#deleteSelected" text="Delete" />
-            <Button layoutX="536.0" layoutY="16.0" mnemonicParsing="false" onAction="#deleteConnection" text="Delete Connection" />
-            <Button layoutX="707.0" layoutY="16.0" mnemonicParsing="false" onAction="#addRoom" prefHeight="31.0" prefWidth="181.0" text="Add or Change Room" />
-            <ToggleButton fx:id="togglebuttonAddElevator" layoutX="116.0" layoutY="50.0" mnemonicParsing="false" onAction="#toggleAddElevator" text="Add Elevator" />
-            <Button layoutX="234.0" layoutY="50.0" mnemonicParsing="false" onAction="#deleteElevator" text="Delete Elevator" />
+            <TextField fx:id="roomName" layoutX="573.0" layoutY="50.0" promptText="Add or Remove Room" />
+            <ToggleButton fx:id="togglebuttonAddNode" layoutX="103.0" layoutY="16.0" mnemonicParsing="false" onAction="#toggleAddNode" text="Add Node" />
+            <ToggleButton fx:id="togglebuttonAddConnections" layoutX="192.0" layoutY="16.0" mnemonicParsing="false" onAction="#toggleAddConnection" text="Add Connections" />
+            <Button layoutX="14.0" layoutY="50.0" mnemonicParsing="false" onAction="#deleteSelected" text="Delete" />
+            <Button layoutX="76.0" layoutY="50.0" mnemonicParsing="false" onAction="#deleteConnection" text="Delete Connection" />
+            <Button layoutX="573.0" layoutY="16.0" mnemonicParsing="false" onAction="#addRoom" prefHeight="31.0" prefWidth="181.0" text="Add or Change Room" />
+            <ToggleButton fx:id="togglebuttonAddElevator" layoutX="372.0" layoutY="16.0" mnemonicParsing="false" onAction="#toggleAddElevator" text="Add Elevator" />
+            <Button layoutX="219.0" layoutY="50.0" mnemonicParsing="false" onAction="#deleteElevator" text="Delete Elevator" />
+            <ToggleButton fx:id="togglebuttonChangeFloor" layoutX="816.0" layoutY="16.0" mnemonicParsing="false" onAction="#toggleSwitchMap" text="Change Floor" />
+            <ListView fx:id="elevatorFloorOptions" layoutX="372.0" layoutY="47.0" prefHeight="73.0" prefWidth="168.0" visible="false" />
          </children>
       </AnchorPane>
    </top>
@@ -35,16 +36,10 @@
          </children></AnchorPane>
    </bottom>
    <center>
-      <AnchorPane fx:id="anchorpaneMap" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <AnchorPane fx:id="anchorpaneMap" prefHeight="433.0" prefWidth="1000.0" BorderPane.alignment="CENTER">
          <children>
-            <ListView fx:id="floorOptions" layoutX="108.0" layoutY="-11.0" prefHeight="75.0" prefWidth="200.0" visible="false" />
-            <ImageView fx:id="imageviewMap" fitHeight="456.0" fitWidth="915.0" layoutX="108.0" layoutY="3.0" onMouseDragged="#handleDragEvent" onMousePressed="#isPressed" onMouseReleased="#isReleased" pickOnBounds="true" preserveRatio="true" />
-            <ButtonBar layoutX="777.0" layoutY="7.0" prefHeight="40.0" prefWidth="232.0">
-              <buttons>
-                  <Button mnemonicParsing="false" onAction="#changeFloorThree" text="Floor3" />
-                <Button mnemonicParsing="false" onAction="#changeFloorFour" text="Floor4" />
-              </buttons>
-            </ButtonBar>
+            <ImageView fx:id="imageviewMap" fitHeight="413.0" fitWidth="835.0" layoutX="53.0" layoutY="-38.0" onMouseDragged="#handleDragEvent" onMousePressed="#isPressed" onMouseReleased="#isReleased" pickOnBounds="true" preserveRatio="true" />
+            <ListView fx:id="changeFloorOptions" layoutX="817.0" layoutY="-95.0" prefHeight="324.0" prefWidth="142.0" visible="false" />
          </children>
       </AnchorPane>
    </center>
