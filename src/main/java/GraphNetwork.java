@@ -97,7 +97,6 @@ public class GraphNetwork {
      * @return a List of string directions
      */
     public static List<String> getDirections(List<GraphNode> path) {
-        //TODO make sure path is in the right order or find a way to reverse it
         LinkedList<String>  directions = new LinkedList<>();
 
         int nodeNum = -1;
@@ -107,6 +106,7 @@ public class GraphNetwork {
             if (nodeNum == 0 || nodeNum >= path.size() - 1) {
                 continue;
             }
+            //TODO decide what we should do about this
             // No directions if there is only one path option
             /*if (node.getAdjacent().size() <= 2) {
                 continue;

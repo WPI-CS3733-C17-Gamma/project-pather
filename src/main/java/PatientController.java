@@ -36,6 +36,7 @@ public class PatientController extends DisplayController implements Initializabl
 
     @FXML private ListView<String> options;
     @FXML private ImageView imageView;
+    @FXML private Label textDirectionsTextBox;
 
     @FXML private AnchorPane anchorPane;
 
@@ -188,6 +189,7 @@ public class PatientController extends DisplayController implements Initializabl
         for (Shape shape : drawnObjects) {
             anchorPane.getChildren().remove(shape);
         }
+        textDirectionsTextBox.setVisible(false);
     }
 
     /**
@@ -251,6 +253,8 @@ public class PatientController extends DisplayController implements Initializabl
         List<GraphNode> path = map.getPath(start, end);
         if(path != null && !path.isEmpty()) {
             displayPath(path);
+            //TODO add condition for showing text directions (maybe)
+            displayTextDirections(path);
         }
         // should throw error
         else {
@@ -276,6 +280,21 @@ public class PatientController extends DisplayController implements Initializabl
             prev = node;
         }
         drawnObjects = listToDraw;
+    }
+
+    /**
+     * Function to get textual directions and print it on screen
+     * @param path the path to be converted to text
+     */
+    public void displayTextDirections(List<GraphNode> path) {
+        textDirectionsTextBox.setVisible(true);
+        List<String> directions = map.getTextualDirections(path);
+        String dir = "";
+        for(String line : directions) {
+            dir += (line + "\n");
+        }
+        textDirectionsTextBox.setText(dir);
+        return;
     }
 
     /**
