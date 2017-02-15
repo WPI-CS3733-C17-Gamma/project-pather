@@ -1,4 +1,4 @@
-import java.util.Comparator;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,12 +29,7 @@ public class GraphNetwork {
 
         while(openSet.size() > 0){
             //Sort List of nodes
-            openSet.sort(new Comparator<AStarNode>(){
-                @Override
-                public int compare(AStarNode a, AStarNode b) {
-                    return ((int)a.fScore - (int)b.fScore);
-                }
-            });
+            Collections.sort(openSet);
 
             current = openSet.getFirst();
             if(current.equals(goal))
@@ -42,12 +37,8 @@ public class GraphNetwork {
 
             openSet.remove(current);
             closedSet.add(current);
-            current.node.getAdjacent().sort(new Comparator<GraphNode>(){
-                @Override
-                public int compare(GraphNode a, GraphNode b) {
-                    return ((int)a.distance(goalNode) - (int)b.distance(goalNode));
-                }
-            });
+            current.node.getAdjacent().sort(
+                (GraphNode a, GraphNode b) -> ((int)a.distance(goalNode) - (int)b.distance(goalNode)));
             for (GraphNode gNeighbour: current.node.getAdjacent()) {
                 AStarNode neighbour = new AStarNode(gNeighbour);
                 if (closedSet.contains(neighbour))
@@ -55,12 +46,7 @@ public class GraphNetwork {
                 double tentative_gscore = current.gScore + neighbour.getDistance(current);
                 if(!openSet.contains(neighbour)) {
                     openSet.add(neighbour);
-                    openSet.sort(new Comparator<AStarNode>(){
-                        @Override
-                        public int compare(AStarNode a, AStarNode b) {
-                            return ((int)a.fScore - (int)b.fScore);
-                        }
-                    });
+                    Collections.sort(openSet);
                 }
                 else if (tentative_gscore >= neighbour.gScore)
                     continue;
