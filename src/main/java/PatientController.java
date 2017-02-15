@@ -120,12 +120,6 @@ public class PatientController extends DisplayController implements Initializabl
         //(update) the display the list of room
     }
 
-    public void login(){
-
-
-    }
-
-
     /**
      * select the clicked option
      * @param option
@@ -281,7 +275,6 @@ public class PatientController extends DisplayController implements Initializabl
 
 
     public void logIn () {
-
         applicationController.createLoginAdmin();
     }
 

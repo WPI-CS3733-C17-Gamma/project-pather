@@ -23,6 +23,7 @@ public class ApplicationController extends Application {
         initialize();
 
         this.pStage = primaryStage;
+        loginStage = new Stage();
         createPatientDisplay();
         primaryStage.show();
     }
@@ -74,6 +75,7 @@ public class ApplicationController extends Application {
                 Parent root = loader.load();
                 pStage.setTitle("MapAdmin");
                 pStage.setScene(new Scene(root, 1000, 600));
+                pStage.show();
         }
         catch (Exception e){
             e.printStackTrace();
@@ -93,7 +95,7 @@ public class ApplicationController extends Application {
                 Parent root = loader.load();
                 pStage.setTitle("DirectoryAdmin");
                 pStage.setScene(new Scene(root, 1000, 600));
-
+                pStage.show();
         }
         catch (Exception e){
             e.printStackTrace();
@@ -107,18 +109,19 @@ public class ApplicationController extends Application {
      */
     public void createLoginAdmin(){     //not signing in... also add "wrong username or password"
         FXMLLoader loader = new FXMLLoader(getClass().getResource("LoginDisplay.fxml"));
-        LoginController loginController = new LoginController(this);
+        LoginController loginController = new LoginController(this, loginStage);
         Scene newScene;
         try{
             loader.setController(loginController);
-            newScene = new Scene(loader.load());
-            loginStage = new Stage();
-            loginStage.initOwner(pStage);
-            loginStage.setScene(newScene);
-            loginStage.showAndWait();
+            Parent root = loader.load();
+            loginStage.setTitle("Login");
+            loginStage.setScene(new Scene(root, 350, 150));
+            loginStage.show();
         } catch (IOException e){
+            e.printStackTrace();
             System.out.println(e.toString());
         } catch (Exception e){
+            e.printStackTrace();
             System.out.println(e.toString());
         }
 

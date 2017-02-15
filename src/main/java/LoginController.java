@@ -1,6 +1,8 @@
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 /**
  * Created by alext on 2/13/2017.
@@ -11,6 +13,8 @@ public class LoginController {
     private PasswordField passwordBox;
     @FXML
     private TextField textboxUsername;
+    @FXML
+    private Label labelWrongCreds;
 
 
     private String inputPassword = "";
@@ -18,8 +22,11 @@ public class LoginController {
     private ApplicationController applicationController;
     private Login login;
 
-    LoginController(ApplicationController a){
+    private Stage stage;
+
+    LoginController(ApplicationController a, Stage s){
         applicationController = a;
+        stage = s;
         login = new Login();
     }
 
@@ -29,14 +36,27 @@ public class LoginController {
 
     public void signInMap(){
         if (getCredentials()) {
+            stage.hide();
             applicationController.createMapAdminDisplay(login);
+        } else {
+            passwordBox.clear();
+            labelWrongCreds.setVisible(true);
         }
     }
 
     public void signInDirectory(){
         if (getCredentials()){
+            stage.hide();
             applicationController.createDirectoryAdminDisplay(login);
+
+        } else {
+            passwordBox.clear();
+            labelWrongCreds.setVisible(true);
         }
+    }
+
+    public void isSelected(){       //for auto-disapearing
+            labelWrongCreds.setVisible(false);
     }
 
 
