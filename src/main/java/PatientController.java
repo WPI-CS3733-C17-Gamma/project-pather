@@ -85,7 +85,7 @@ public class PatientController extends DisplayController implements Initializabl
      * display the image on the main patient screen
      */
     public void displayImage() {
-        Image floor = super.applicationController.getImage(currentMap);
+        Image floor = applicationController.getImage(currentMap);
         if (displayState == state.PATIENT_DEFAULT){
             imageView.setImage(floor);
         }
@@ -124,7 +124,7 @@ public class PatientController extends DisplayController implements Initializabl
     public void search () {
         clearSearchDisplay();
         String search = searchBar.getText();
-        if (search.length() > 0) {
+        if (!search.isEmpty()) {
             options.setVisible(true);
         }
         else {
@@ -205,8 +205,7 @@ public class PatientController extends DisplayController implements Initializabl
             List<Room> locs = entry.getLocation();
 
             // if no location, should (probably) throw error
-            if(locs.size() == 0) {
-                System.out.println("No location");
+            if(locs.isEmpty()) {
                 return null;
             }
             // take first option if only one

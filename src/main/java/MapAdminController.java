@@ -762,7 +762,7 @@ public class MapAdminController extends DisplayController implements Initializab
     private void setMap(String loc){
         Image floorImage = applicationController.getImage(loc);
         imageviewMap.setImage(floorImage);
-        super.currentMap = loc;
+        currentMap = loc;
         // must make elevator on current floor
         if(! elevatorFloors.contains(loc)) {
             elevatorFloors.add(loc);

@@ -27,7 +27,7 @@ public class GraphNetwork {
 
         start.fScore = start.getDistance(goal);
 
-        while(openSet.size() > 0){
+        while(!openSet.isEmpty()){
             //Sort List of nodes
             Collections.sort(openSet);
 

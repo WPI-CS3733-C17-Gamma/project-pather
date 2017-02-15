@@ -52,10 +52,10 @@ public class AddConnectionTest extends TestCase{
     @Test
     // ensure that a node cannot be connected to itself
     public void testSelfAddAdjacent() {
-        assertTrue(a.getAdjacent().size() == 0);
+        assertTrue(a.getAdjacent().isEmpty());
         Map m = new Map(null, graph);
         boolean added = m.addConnection(a, a);
-        assertTrue(a.getAdjacent().size() == 0);
+        assertTrue(a.getAdjacent().isEmpty());
         assertFalse(added);
     }
 
