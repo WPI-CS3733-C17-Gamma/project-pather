@@ -51,7 +51,7 @@
 }
 
 .adminMenuButton{
-	-fx-background-image: url(adminA-icon-skull-totenkopf.png);
+	-fx-background-image: url(admin-icon-skull-totenkopf.png);
 	-fx-background-color: none;
 	-fx-background-size: 50px 50px;
 	-fx-opacity: 60%;

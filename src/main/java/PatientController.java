@@ -39,7 +39,7 @@ public class PatientController extends DisplayController implements Initializabl
 
     state displayState;
     // kiosk location
-    GraphNode startNode;
+    GraphNode startNode = applicationController.kiosk;
     // list of shapes that have been drawn on the screen
     List<Shape> drawnObjects;
     // FXML Things
@@ -79,7 +79,7 @@ public class PatientController extends DisplayController implements Initializabl
             imageView.setImage(floor);
         }
         if (displayState == state.PATIENT_SEARCH){
-            patientImageView.setImage(floor);
+//            patientImageView.setImage(floor);
         }
     }
 
@@ -94,15 +94,15 @@ public class PatientController extends DisplayController implements Initializabl
             this.displayState = state.PATIENT_SEARCH;
             displayImage();
         }
-        search();
     }
 
     public void exitSearch(){
         if (this.displayState == state.PATIENT_SEARCH){
-            patientImageView.setVisible(false);
+//            patientImageView.setVisible(false);
             searchAnchorPane.setVisible(false);
-            exitButton.setVisible(false);
+//            exitButton.setVisible(false);
             this.displayState = state.PATIENT_DEFAULT;
+            clearDisplay();
             displayImage();
         }
     }
@@ -111,13 +111,13 @@ public class PatientController extends DisplayController implements Initializabl
      * perform search
      */
     public void search () {
-        clearDisplay();
         String search = searchBar.getText();
         if (search.length() > 0) {
             options.setVisible(true);
         }
         else {
             options.setVisible(false);
+            clearDisplay();
             return;
         }
         System.out.println("search : " + search);
@@ -227,12 +227,15 @@ public class PatientController extends DisplayController implements Initializabl
      * Remove all the points that have been drawn on the map
      */
     public void clearDisplay () {
-        if(drawnObjects == null) {
-            return;
-        }
-        for (Shape shape : drawnObjects) {
-            anchorPane.getChildren().remove(shape);
-        }
+        hideMultiMapAnimation();
+        patientImageView.setImage(null);
+        multiMapDisplayMenu.getChildren().clear();
+//        if(drawnObjects == null) {
+//            return;
+//        }
+//        for (Shape shape : drawnObjects) {
+//            anchorPane.getChildren().remove(shape);
+//        }
     }
 
     /**
@@ -293,12 +296,18 @@ public class PatientController extends DisplayController implements Initializabl
      * @param end
      */
     public void getPath (GraphNode start, GraphNode end) {
-        List<GraphNode> path = map.getPath(start, end);
-        if(path != null && !path.isEmpty()) {
-            displayPath(path);
-        }
-        // should throw error
-        else {
+        try {
+            List<SubPath> path = map.getPathByFloor(start, end);
+            displaySubPath(patientImageView, path.get(0));
+            for (SubPath p : path){
+                ImageView i = new ImageView();
+                i.setPreserveRatio(true);
+                i.setFitHeight(95);
+                i.setFitWidth(165);
+                i.setImage(applicationController.getImage(p.floor));
+               multiMapDisplayMenu.getChildren().add(i);
+            }
+        } catch (PathNotFoundException e) {
             System.out.println("No path can be drawn");
         }
     }
@@ -382,12 +391,12 @@ public class PatientController extends DisplayController implements Initializabl
 
         // TODO will need to be changed to kiosk
         this.startNode = new GraphNode(100, 100, "");
-        try {
-            this.startNode = map.getRoomFromName("Kiosk").location;
-        }
-        catch (Exception e) {
-            System.out.println("No Kiosk");
-        }
+//        try {
+//            this.startNode = map.getRoomFromName("Kiosk").location;
+//        }
+//        catch (Exception e) {
+//            System.out.println("No Kiosk");
+//        }
 
 
         options.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -412,8 +421,20 @@ public class PatientController extends DisplayController implements Initializabl
         timeline.setCycleCount(1);
         timeline.setAutoReverse(true);
         final KeyValue kv = new KeyValue(multiMapDisplayMenu.layoutYProperty(), 475);
-        final KeyFrame kf = new KeyFrame(Duration.millis(500), kv);
+        final KeyFrame kf = new KeyFrame(Duration.millis(300), kv);
         timeline.getKeyFrames().add(kf);
         timeline.play();
+        System.out.println("hello2");
+    }
+
+    public void hideMultiMapAnimation(){
+        final Timeline timeline = new Timeline();
+        timeline.setCycleCount(1);
+        timeline.setAutoReverse(true);
+        final KeyValue kv = new KeyValue(multiMapDisplayMenu.layoutYProperty(), 600);
+        final KeyFrame kf = new KeyFrame(Duration.millis(100), kv);
+        timeline.getKeyFrames().add(kf);
+        timeline.play();
+        System.out.println("hello3");
     }
 }

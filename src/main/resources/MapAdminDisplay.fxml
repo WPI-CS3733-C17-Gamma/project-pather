@@ -18,6 +18,7 @@
             <Button layoutX="235.0" layoutY="16.0" mnemonicParsing="false" onAction="#deleteSelected" text="Delete" />
             <Button layoutX="536.0" layoutY="16.0" mnemonicParsing="false" onAction="#deleteConnection" text="Delete Connection" />
             <Button layoutX="707.0" layoutY="16.0" mnemonicParsing="false" onAction="#addRoom" prefHeight="31.0" prefWidth="181.0" text="Add or Change Room" />
+            <Button fx:id="ChangeDirectory" layoutX="914.0" layoutY="16.0" mnemonicParsing="false" onMousePressed="#switchToDirectoryAdmin" text="ChangeDirectory" />
          </children>
       </AnchorPane>
    </top>

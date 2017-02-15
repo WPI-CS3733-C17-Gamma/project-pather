@@ -15,6 +15,7 @@ public class ApplicationController extends Application {
     Map map ;
     Stage pStage;
     Scene currentScene;
+    GraphNode kiosk = new GraphNode(5, 6, "one");
 
     // NOTE with proxy pattern this will change to a prox image
     HashMap<String, Image> images;
@@ -33,6 +34,24 @@ public class ApplicationController extends Application {
     public void initialize(){
         databaseManager = new DatabaseManager("main");
         map = databaseManager.load();
+
+        //Dummy Nodes/Rooms for tests
+        GraphNode
+            b = new GraphNode(100, 20, "one"),
+            c = new GraphNode(70, 150, "two"),
+            d = new GraphNode(5, 6, "two"),
+            e = new GraphNode(200, 100, "two");
+        map.addNode(b);
+        map.addNode(c);
+        map.addNode(d);
+        map.addNode(e);
+        map.addRoom(new Room(b, "1A"));
+        map.addRoom(new Room(e, "2B"));
+        System.out.println(map.addConnection(kiosk, b));
+        map.addConnection(b, c);
+        map.addConnection(c, d);
+        map.addConnection(d, e);
+
         images = new HashMap<>();
         images.put("floor1", new Image("Maps/floor1.png"));
         images.put("floor2", new Image("Maps/floor2.png"));
