@@ -142,18 +142,19 @@ public class GraphNetwork {
      * @return
      */
     public GraphNode getGraphNode(FloorPoint loc){
+
+
         List<GraphNode> sameFloor = getGraphNodesOnFloor(loc.floor);
         if(sameFloor.isEmpty()) {
             return null;
         }
-
-            // get the closest point to the node
+        // get the closest point to the node
         GraphNode closestNode = sameFloor.get(0);
         double minDistance = closestNode.location.distance(loc);
 
         // find the minimum distance on the same floor
         for (int i = 0 ; i < sameFloor.size(); i++) {
-            GraphNode currentNode = graphNodes.get(i);
+            GraphNode currentNode = sameFloor.get(i);
             double currentDistance = currentNode.location.distance(loc);
             if(currentDistance < minDistance){
                 minDistance = currentDistance;
@@ -169,10 +170,11 @@ public class GraphNetwork {
      * @return
      */
     public List<GraphNode> getGraphNodesOnFloor(String floor) {
-       List<GraphNode> sameFloor = graphNodes.stream()
-               .filter(node -> node.location.floor.equals(floor))
-               .collect(Collectors.toList());
-       return sameFloor;
+      List<GraphNode> sameFloor = graphNodes.stream()
+              .filter(node -> node.location.floor.equals(floor))
+              .collect(Collectors.toList());
+
+      return sameFloor;
     }
 
     /**

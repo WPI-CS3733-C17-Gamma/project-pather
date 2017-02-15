@@ -107,7 +107,7 @@ public class DeleteConnectionTest extends TestCase {
         d.addRoom(bernie);
         d.addRoom(charles);
 
-        testMap = new Map(d, betterGraph, new HashMap<>());
+        testMap = new Map(d, betterGraph);
     }
 
     public void testDeleteConnection() {

@@ -7,6 +7,9 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ApplicationController extends Application {
 
@@ -40,6 +43,8 @@ public class ApplicationController extends Application {
         databaseManager = new DatabaseManager("main");
         map = databaseManager.load();
         images = new HashMap<>();
+        images.put("floor1", new Image("Maps/floor1.png"));
+        images.put("floor2", new Image("Maps/floor2.png"));
         images.put("floor3", new Image("Maps/floor3.png"));
         images.put("floor4", new Image("Maps/floor4.png"));
         images.put("floor5", new Image("Maps/floor5.png"));
@@ -57,6 +62,14 @@ public class ApplicationController extends Application {
         return map;
     }
 
+    /**
+     * Get list of all floors in the application
+     * TODO move this to map
+     * @return
+     */
+    public List<String> getAllFloors () {
+        return images.keySet().stream().collect(Collectors.toList());
+    }
 
 
     /**
