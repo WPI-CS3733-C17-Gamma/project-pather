@@ -1,9 +1,10 @@
+import javafx.scene.image.Image;
+
 import java.sql.*;
 import java.util.HashMap;
-import java.util.TreeMap;
-import java.util.LinkedList;
 import java.util.HashSet;
-import javafx.scene.image.Image;
+import java.util.LinkedList;
+import java.util.TreeMap;
 
 public class DatabaseManager {
     String connectionURL;

@@ -2,7 +2,6 @@ import junit.framework.TestCase;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 public class MultiFloorSubPathTest extends TestCase{
     GraphNode A1;
     GraphNode A2;
