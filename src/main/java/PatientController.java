@@ -305,6 +305,7 @@ public class PatientController extends DisplayController implements Initializabl
                 i.setPreserveRatio(true);
                 i.setFitHeight(95);
                 i.setFitWidth(165);
+                i.setOnMousePressed(e -> mapChoice(e));
                 i.setImage(applicationController.getImage(p.floor));
                multiMapDisplayMenu.getChildren().add(i);
             }
@@ -312,6 +313,10 @@ public class PatientController extends DisplayController implements Initializabl
         } catch (PathNotFoundException e) {
             System.out.println("No path can be drawn");
         }
+    }
+
+    public void mapChoice(MouseEvent e){
+
     }
 
     /**
