@@ -79,6 +79,11 @@ public class GraphNode extends Ided implements Comparable {
     }
 
     @Override
+    public int hashCode() {
+        return location.x + 10 * location.y + 100 * location.floor.hashCode() ;
+    }
+
+    @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof GraphNode)) {
             return false;

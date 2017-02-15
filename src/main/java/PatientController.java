@@ -75,7 +75,6 @@ public class PatientController extends DisplayController implements Initializabl
             options.setVisible(false);
             return;
         }
-        System.out.println("search : " + search);
         List<String> results = search(search);
         displayResults(results);
     }
@@ -123,7 +122,6 @@ public class PatientController extends DisplayController implements Initializabl
      * swtich to directory admin
      */
     public void switchToDirectoryAdmin () {
-        System.out.println("SWITCHING TO DIR ADMIN");
         applicationController.createDirectoryAdminDisplay();
     }
 
@@ -134,21 +132,17 @@ public class PatientController extends DisplayController implements Initializabl
      */
     public GraphNode select(String option) {
         searchBar.setText(option);
-        System.out.println("select");
         DirectoryEntry entry = map.getEntry(option);
         // if the selected entry is an entry not a room
         if (entry != null) {
-            System.out.println("Found Entry!");
             List<Room> locs = entry.getLocation();
 
             // if no location, should (probably) throw error
             if(locs.size() == 0) {
-                System.out.println("No location");
                 return null;
             }
             // take first option if only one
             else if (locs.size() == 1) {
-                System.out.println(locs.get(0).location);
                 displayResults(new LinkedList<>());
                 getPath(startNode, locs.get(0).location);
                 return locs.get(0).location;
@@ -165,13 +159,11 @@ public class PatientController extends DisplayController implements Initializabl
         else {
             Room room =  map.getRoomFromName(option);
             if (room != null) {
-                System.out.println("FOUND ROOM! : " + room);
                 displayResults(new LinkedList<>());
                 getPath(startNode, room.location);
                 return room.location;
             }
             else {
-                System.out.println("no entry :( ");
             }
         }
 
@@ -204,7 +196,6 @@ public class PatientController extends DisplayController implements Initializabl
         double offsetX = imageToBeDrawnOver.getLayoutX();
         double offsetY = imageToBeDrawnOver.getLayoutY();
 
-        System.out.println("off x " + offsetX + "  off y "  + offsetY);
 
         int newX = (int)(node.location.x * imageWidth / 1000. + offsetX );
         int newY = (int)(node.location.y * imageHeight / 1000. + offsetY );
@@ -221,14 +212,12 @@ public class PatientController extends DisplayController implements Initializabl
      * @param subPath subpath to be drawn
      */
     public void displaySubPath (ImageView mapImage, SubPath subPath) {
-        System.out.println("SubPath");
         GraphNode prev = null;
         mapImage.setImage(applicationController.getImage(subPath.floor));
         List<Shape> listToDraw = new ArrayList<>();
         // draw path, and all connections from previous
         for (GraphNode node : subPath.path) {
             FloorPoint localPoint = graphPointToImage(node, mapImage);
-            System.out.println(localPoint);
             listToDraw.add(drawPoint(localPoint));
             // draw connection
             if (prev != null) {
@@ -254,7 +243,6 @@ public class PatientController extends DisplayController implements Initializabl
         }
         // should throw error
         else {
-            System.out.println("No path can be drawn");
         }
     }
 
@@ -317,7 +305,6 @@ public class PatientController extends DisplayController implements Initializabl
     }
 
     public void help () {
-        System.out.println("Here is how to use this...");
         if (helpLabel.isVisible()) {
             helpLabel.setVisible(false);
         }
@@ -333,7 +320,6 @@ public class PatientController extends DisplayController implements Initializabl
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        System.out.println("INIT");
         displayImage();
 
         // TODO will need to be changed to kiosk
@@ -342,7 +328,6 @@ public class PatientController extends DisplayController implements Initializabl
             this.startNode = map.getRoomFromName("Kiosk").location;
         }
         catch (Exception e) {
-            System.out.println("No Kiosk");
         }
 
 
@@ -350,7 +335,6 @@ public class PatientController extends DisplayController implements Initializabl
             @Override
             public void handle(MouseEvent event) {
                 String selectedString = options.getSelectionModel().getSelectedItem();
-                System.out.println("clicked on " + selectedString);
                 select(selectedString);
             }
         });

@@ -113,6 +113,7 @@ public class Map {
      * @param floors list of floors to connect the elevator through
      */
     public void addElevator (FloorPoint point, List<String> floors) {
+        System.out.println("In map create elevator @ : " + point);
         List<GraphNode> elevators = new ArrayList<>();
         // make elevators
         for (String floor : floors) {

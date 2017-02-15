@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 public class MapAdminController extends DisplayController implements Initializable {
 
@@ -31,7 +32,7 @@ public class MapAdminController extends DisplayController implements Initializab
         ADD_NODES, // the user is adding nodes
         CHAIN_ADD, // the user is adding nodes in a chain
         ADD_CONNECTION, // the user is adding connections
-        ADD_ELEVATOR, 
+        ADD_ELEVATOR,
         DRAG_NODE,
     }
 
@@ -46,7 +47,7 @@ public class MapAdminController extends DisplayController implements Initializab
 
 
     // keep track of the objects that have been drawn on the screen
-    HashMap<GraphNode, Shape> drawnNodes = new HashMap<>();
+    HashMap<Long, Shape> drawnNodes = new HashMap<>();
     List<Shape> drawnLines = new ArrayList<>();
 
     @FXML private Button buttonSave;
@@ -105,6 +106,9 @@ public class MapAdminController extends DisplayController implements Initializab
         drawnNodes.clear();
         anchorpaneMap.getChildren().removeAll(drawnLines);
         drawnLines.clear();
+        anchorpaneMap.getChildren().removeAll(
+            anchorpaneMap.getChildren().stream().filter(node -> node instanceof Shape).collect(Collectors.toList())
+        );
         map.graph.getGraphNodesOnFloor(currentMap)
             .stream()
             .forEach(node -> drawNode(node, imageviewMap));
@@ -120,15 +124,16 @@ public class MapAdminController extends DisplayController implements Initializab
      * @param imageToDrawOver the image the point must cover
      */
     public void drawNode (GraphNode node, ImageView imageToDrawOver) {
-
         if (node.isElevator()) {
-            drawElevator (node.location, imageToDrawOver) ;
+            drawElevator(node.location, imageToDrawOver);
         }
         else {
             drawPoint(node.location, imageToDrawOver);
         }
         for (GraphNode adj : node.adjacent) {
-            drawConnection(node.location, adj.location);
+            if(adj.location.floor.equals(currentMap)){
+                drawConnection(node.location, adj.location);
+            }
         }
     }
 
@@ -139,17 +144,15 @@ public class MapAdminController extends DisplayController implements Initializab
      */
     private void drawElevator(FloorPoint loc, ImageView imageToDrawOn) {
         FloorPoint imagePoint = graphToImage(loc, imageToDrawOn);
-        Rectangle rect = new Rectangle(8,8,Color.PINK);
-        rect.setLayoutX(imagePoint.x);
-        rect.setLayoutY(imagePoint.y);
+        Rectangle rect = new Rectangle(imagePoint.x, imagePoint.y, 8,8);
+        rect.setFill(Color.BLACK);
         rect.setMouseTransparent(true);
         anchorpaneMap.getChildren().add(rect);
         GraphNode graphNodeAttatched = map.getGraphNode(loc);
-        drawnNodes.put(graphNodeAttatched, rect);
+        drawnNodes.put(graphNodeAttatched.id, rect);
     }
 
     public void toggleAddElevator () {
-        System.out.println("Toggling add elevator");
         switch (currentState){
             case ADD_ELEVATOR:
                 changeState(State.NONE);
@@ -166,7 +169,6 @@ public class MapAdminController extends DisplayController implements Initializab
      * Does nothing if the user is in a different state alerady
      */
     public void toggleChainAdd () {
-        System.out.println("Toggling chain add");
         switch (currentState){
             case CHAIN_ADD:
                 changeState(State.NONE);
@@ -182,7 +184,6 @@ public class MapAdminController extends DisplayController implements Initializab
      * Does nothing if the user is in a different state already
      */
     public void toggleAddNode() {
-        System.out.printf("Toggling add node");
         switch (currentState){
             case ADD_NODES:
                 changeState(State.NONE);
@@ -198,7 +199,6 @@ public class MapAdminController extends DisplayController implements Initializab
      * Does nothing if the user is in a different state already
      */
     public void toggleAddConnection() {
-        System.out.println("toggle add connection");
         switch (currentState){
             case ADD_CONNECTION:
                 changeState(State.NONE);
@@ -214,7 +214,6 @@ public class MapAdminController extends DisplayController implements Initializab
      * @param location location to create a point at
      */
     public void addNode(FloorPoint location){
-        System.out.println("add node @ " + location);
         GraphNode newNode = new GraphNode(location);
         map.addNode(newNode);
         secondaryNode = selectedNode;
@@ -228,8 +227,10 @@ public class MapAdminController extends DisplayController implements Initializab
      * @param location
      */
     public void addElevator(FloorPoint location, List<String> floors){
-        System.out.println("elevator node @ " + location);
+        System.out.println("Add elevator @ " + location);
         map.addElevator(location, floors);
+        secondaryNode = selectedNode;
+        selectedNode = map.getGraphNode(location);
         drawMap();
     }
 
@@ -239,13 +240,10 @@ public class MapAdminController extends DisplayController implements Initializab
      */
     public GraphNode nearbyNode (MouseEvent n) {
         FloorPoint graphPoint = mouseToGraph(n);
-        System.out.println("GraphPoint : " + graphPoint);
 
         tempNode = map.getGraphNode(graphPoint);
-        System.out.println(tempNode);
         if (tempNode != null && tempNode.location.distance(graphPoint) > 50 ){
             tempNode = null;
-            System.out.println("no close node");
         }
         return tempNode;
     }
@@ -255,15 +253,11 @@ public class MapAdminController extends DisplayController implements Initializab
      * Take the text from the roomName text field
      */
     public void addRoom () {
-        System.out.println("Add/Change room");
         if(activeRoom != null) {
-            System.out.println("there is a room");
             String newName = roomName.getText();
             if(newName == activeRoom.name) {
-                System.out.println("no change");
             }
             else if(newName.isEmpty()){
-                System.out.println("DELETE room");
                 map.deleteRoom(activeRoom);
             }
             // if room is already there
@@ -293,13 +287,12 @@ public class MapAdminController extends DisplayController implements Initializab
         circ.setMouseTransparent(true);
         anchorpaneMap.getChildren().add(circ);
         GraphNode graphNodeAttatched = map.getGraphNode(loc);
-        drawnNodes.put(graphNodeAttatched, circ);
+        drawnNodes.put(graphNodeAttatched.id, circ);
 
     }
 
     public void deleteConnection() {
         if(selectedNode != null && secondaryNode != null) {
-            System.out.println("delete con");
             map.deleteConnection(selectedNode, secondaryNode);
             drawMap();
         }
@@ -337,7 +330,6 @@ public class MapAdminController extends DisplayController implements Initializab
      * @param nodeB
      */
     public void addConnection(GraphNode nodeA, GraphNode nodeB){
-        System.out.println("add conn");
         if(nodeA != null && nodeB != null){
             map.addConnection(nodeA, nodeB);
             drawMap();
@@ -383,7 +375,6 @@ public class MapAdminController extends DisplayController implements Initializab
         int newX = (int) ( m.getX()  * 1000. / imageWidth );
         int newY = (int) ( m.getY() * 1000. / imageHeight);
 
-        System.out.println("Current Map : " + currentMap);
         return new FloorPoint(newX, newY, currentMap);
     }
 
@@ -426,16 +417,16 @@ public class MapAdminController extends DisplayController implements Initializab
      * Highlight the primary node in red and secondary node in purple
      */
     public void highlightSelected () {
-        drawnLines.forEach(shape -> shape.setFill(Color.BLUE));
+//        drawnLines.forEach(shape -> shape.setFill(Color.BLUE));
         drawnNodes.values().forEach(shape -> shape.setFill(Color.BLUE));
         if(selectedNode != null) {
-            Shape selected1 = drawnNodes.get(selectedNode);
+            Shape selected1 = drawnNodes.get(selectedNode.id);
             if(selected1 != null) {
                 selected1.setFill(Color.RED);
             }
         }
         if (secondaryNode != null) {
-            Shape selected2 = drawnNodes.get(secondaryNode);
+            Shape selected2 = drawnNodes.get(secondaryNode.id);
             if(selected2 != null){
                 selected2.setFill(Color.PURPLE);
             }
@@ -454,7 +445,6 @@ public class MapAdminController extends DisplayController implements Initializab
         selectedNode = null;
         secondaryNode = null;
         this.currentState = state;
-        System.out.printf("current state " + currentState + " state " + state);
 
         switch (state) {
             case ADD_CONNECTION:
@@ -499,7 +489,6 @@ public class MapAdminController extends DisplayController implements Initializab
      * @param m
      */
     public void isPressed(MouseEvent m) {
-        System.out.println(currentState);
         switch (currentState){
             case NONE:
                 // Possible state changing logic goes here
@@ -528,7 +517,6 @@ public class MapAdminController extends DisplayController implements Initializab
      * @param e
      */
     public void handleMouseEventAddElevator (MouseEvent e) {
-        System.out.println("Add Elevator");
         FloorPoint graphPoint = mouseToGraph(e);
 
         List<String> floors = new ArrayList<>();
@@ -554,7 +542,6 @@ public class MapAdminController extends DisplayController implements Initializab
      * @param e
      */
     public void handleDragEvent (MouseEvent e) {
-        System.out.println("Drag Event" );
         switch (currentState) {
             case NONE:
                 if(selectedNode != null) {
@@ -562,9 +549,6 @@ public class MapAdminController extends DisplayController implements Initializab
                 }
                 break;
         }
-
-        // only in drag event if selected is not null
-        Shape selectedShape = drawnNodes.get(selectedNode);
 
         // convert from image --> gapph --> anchor pane and draw circle there
         FloorPoint mousePoint = mouseToGraph(e);
@@ -576,8 +560,10 @@ public class MapAdminController extends DisplayController implements Initializab
             return ;
         }
 
+        if(selectedNode != null) {
+            selectedNode.location = mouseToGraph(e);
+        }
         // just move the point every drag event
-        selectedNode.location = mouseToGraph(e);
         drawMap();
     }
 
@@ -587,7 +573,6 @@ public class MapAdminController extends DisplayController implements Initializab
      */
     public void handleDragDropEvent (MouseEvent e) {
         changeState(State.NONE);
-        System.out.println("Drop Event");
     }
 
 
@@ -599,10 +584,8 @@ public class MapAdminController extends DisplayController implements Initializab
         FloorPoint graphPoint = mouseToGraph(e);
         addNode(graphPoint);
         if (secondaryNode != null) {
-            System.out.println("adding conn");
             addConnection(secondaryNode, selectedNode);
         }
-        System.out.println("secondary = null");
     }
 
 
@@ -668,7 +651,6 @@ public class MapAdminController extends DisplayController implements Initializab
      * create patient display without saving to the database
      */
     public void preview () {
-        System.out.println("Preview");
         applicationController.createPatientDisplay();
     }
 
@@ -689,7 +671,6 @@ public class MapAdminController extends DisplayController implements Initializab
      * @param loc
      */
     private void setMap(String loc){
-        //System.out.println(loc);
         Image floorImage = applicationController.getImage(loc);
         imageviewMap.setImage(floorImage);
         super.currentMap = loc;
