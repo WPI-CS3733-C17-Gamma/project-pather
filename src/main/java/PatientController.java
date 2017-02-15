@@ -1,3 +1,5 @@
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
 import javafx.animation.PathTransition;
 import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
@@ -51,6 +53,7 @@ public class PatientController extends DisplayController implements Initializabl
     @FXML private ImageView patientImageView;
     @FXML private Button exitButton;
     @FXML private HBox hello;
+    @FXML private Button adminButton;
 
     /**
      *
@@ -85,9 +88,9 @@ public class PatientController extends DisplayController implements Initializabl
      */
     public void startSearch(){
         if (this.displayState == state.PATIENT_DEFAULT){
-            patientImageView.setVisible(true);
+//            patientImageView.setVisible(true);
             searchAnchorPane.setVisible(true);
-            exitButton.setVisible(true);
+//            exitButton.setVisible(true);
             this.displayState = state.PATIENT_SEARCH;
             displayImage();
         }
@@ -380,13 +383,24 @@ public class PatientController extends DisplayController implements Initializabl
 
 
     public void test(){
-        Path path = new Path();
-        path.getElements().add(new MoveTo(63, 575));
-        PathTransition pathTransition = new PathTransition();
-        pathTransition.setDuration(Duration.millis(400));
-        pathTransition.setNode(hello);
-        pathTransition.setCycleCount(Timeline.INDEFINITE);
-        pathTransition.setAutoReverse(true);
-        pathTransition.play();
+//        Path path = new Path();
+//        path.getElements().add(new MoveTo(hello.getLayoutX(), hello.getLayoutY()));
+//        path.getElements().add(new MoveTo(hello.getLayoutX(), 623));
+//        //path.getElements().add(new CubicCurveTo(380, 0, 380, 120, 200, 120));
+//        PathTransition pathTransition = new PathTransition();
+//        pathTransition.setPath(path);
+//        pathTransition.setDuration(Duration.millis(5000));
+//        pathTransition.setNode(hello);
+//        pathTransition.setCycleCount(1);
+//        pathTransition.setAutoReverse(false);
+//        pathTransition.play();
+
+        final Timeline timeline = new Timeline();
+        timeline.setCycleCount(1);
+        timeline.setAutoReverse(true);
+        final KeyValue kv = new KeyValue(hello.layoutYProperty(), 300);
+        final KeyFrame kf = new KeyFrame(Duration.millis(500), kv);
+        timeline.getKeyFrames().add(kf);
+        timeline.play();
     }
 }

@@ -1,7 +1,7 @@
 .button{
 	-fx-text-fill: black;
 	-fx-background-color: #F4F4F9;
-	-fx-font-size: 18px; 
+	-fx-font-size: 18px;
 	-fx-box-shadow: 10px 10px 5px #888888;
 }
 /*1b449c*/
@@ -15,7 +15,7 @@
 }
 
 .search{
-	-fx-border-radius: 20px; 
+	-fx-border-radius: 20px;
 	-fx-background-radius: 20px;
 	-fx-border-color: #1b449c;
 	-fx-font-size: 20px;
@@ -29,22 +29,43 @@
 	-fx-stroke: none;
 }
 
-.adminButton{
-	-fx-background-image: url(admin-icon-skull-totenkopf.png); 
+.directoryAdminButton{
+	-fx-font-family:system;
+	-fx-font-size: 30px, 30px;
+	-fx-border-radius: 5px;
+	-fx-background-radius: 5px;
+	-fx-blend-mode:blue;
+	-fx-background-color:#cccccc;
+	-fx-scale-x: 1;
+	-fx-scale-y: 1;
+}
+.mapAdminButton{
+	-fx-font-family:system;
+	-fx-font-size: 30px, 30px;
+	-fx-border-radius: 5px;
+	-fx-background-radius: 5px;
+	-fx-blend-mode:blue;
+	-fx-background-color:#cccccc;
+	-fx-scale-x: 1;
+	-fx-scale-y: 1;
+}
+
+.adminMenuButton{
+	-fx-background-image: url(adminA-icon-skull-totenkopf.png);
 	-fx-background-color: none;
 	-fx-background-size: 50px 50px;
 	-fx-opacity: 60%;
 }
 
 .helpButton{
-	-fx-background-image: url(help-icon-12.png); 
+	-fx-background-image: url(help-icon-12.png);
 	-fx-background-size: 50px 50px;
 	-fx-opacity: 60%;
 }
 
 .helpBox{
 	-fx-background-color: #bababa;
-	-fx-opacity: 85%; 
+	-fx-opacity: 85%;
 	-fx-background-radius: 20px;
 }
 

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
@@ -9,8 +10,6 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" styleClass="background" stylesheets="@design.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
@@ -38,13 +37,7 @@
       <Button layoutX="915.0" layoutY="14.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" styleClass="adminButton" stylesheets="@design.css" />
       <AnchorPane fx:id="searchAnchorPane" layoutY="-4.0" prefHeight="607.0" prefWidth="1000.0" styleClass="patientBackground" stylesheets="@design.css" visible="false">
          <children>
-            <Button fx:id="exitButton" layoutX="940.0" mnemonicParsing="false" onAction="#exitSearch" prefHeight="33.0" prefWidth="47.0" styleClass="exitButton" stylesheets="@design.css" text="X" visible="false" />
-            <HBox layoutX="27.0" layoutY="485.0" prefHeight="100.0" prefWidth="926.0" visible="false" />
-            <VBox alignment="BOTTOM_LEFT" layoutX="65.0" layoutY="431.0" prefHeight="286.0" prefWidth="814.0" visible="false">
-               <children>
-                  <HBox alignment="BOTTOM_LEFT" prefHeight="150.0" prefWidth="767.0" visible="false" />
-               </children>
-            </VBox>
+            <Button fx:id="exitButton" layoutX="940.0" mnemonicParsing="false" onAction="#exitSearch" prefHeight="33.0" prefWidth="47.0" styleClass="exitButton" stylesheets="@design.css" text="X" />
          </children>
       </AnchorPane>
       <TextField fx:id="searchBar" layoutX="24.0" layoutY="26.0" onMousePressed="#startSearch" prefHeight="47.0" prefWidth="248.0" promptText="Search!" styleClass="search" stylesheets="@design.css">
@@ -52,11 +45,26 @@
             <Font size="28.0" />
          </font>
       </TextField>
-      <HBox fx:id="hello" layoutX="63.0" layoutY="600.0" prefHeight="100.0" prefWidth="926.0">
+      <Button fx:id="testtest" layoutY="500.0" mnemonicParsing="false" onAction="#test" text="Button" />
+      <HBox fx:id="hello" alignment="CENTER" layoutX="40.0" layoutY="600.0" prefHeight="95.0" prefWidth="814.0">
          <children>
-            <Circle fill="DODGERBLUE" radius="75.0" stroke="BLACK" strokeType="INSIDE" />
+            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@Maps/floor2.png" />
+               </image>
+               <HBox.margin>
+                  <Insets right="100.0" />
+               </HBox.margin>
+            </ImageView>
+            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@Maps/floor1.png" />
+               </image>
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+            </ImageView>
          </children>
       </HBox>
-      <Button fx:id="testtest" layoutX="24.0" layoutY="90.0" mnemonicParsing="false" onDragDetected="#test" text="Button" />
    </children>
 </AnchorPane>
