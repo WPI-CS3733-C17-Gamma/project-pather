@@ -1,7 +1,6 @@
 import javafx.scene.image.Image;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+
+import java.util.*;
 
 public class Map {
     Directory directory;
@@ -57,11 +56,6 @@ public class Map {
         return directory.getRoom(node);
     }
 
-    /**
-     *
-     * @param room
-     * @return true if the room is added, false if it is a duplicate
-     */
     /** See method {@link Directory#addRoom(Room)} */
     public boolean addRoom(Room room){
         return directory.addRoom(room);
@@ -137,6 +131,36 @@ public class Map {
         return graph.getGraphNode(point);
     }
 
+    /**
+     * Returns a list of SubPaths.
+     * Each subpath contains a string floor name
+     * and a list of nodes to draw.
+     * @param start
+     * @param end
+     * @return
+     * @throws PathNotFoundException
+     */
+    public List<SubPath> getPathByFloor(GraphNode start, GraphNode end) throws PathNotFoundException {
+        List<GraphNode> fullPath = graph.getPath(start, end);
+        if(fullPath.isEmpty()) {
+            return new ArrayList<>();
+        }
+        Collections.reverse(fullPath);
+        List<SubPath> subPaths = new ArrayList<>();
+        SubPath currentPath = new SubPath(fullPath.get(0).location.floor);
+        for (GraphNode node : fullPath) {
+            System.out.println("node : " + node);
+            if (! node.getLocation().floor.equals(currentPath.floor)) {
+                subPaths.add(currentPath);
+                currentPath = new SubPath(node.location.floor) ;
+            }
+            currentPath.path.add(node);
+        }
+        subPaths.add(currentPath);
+
+        return subPaths;
+    }
+
     /** See method {@Link GraphNetwork#getPath(startNode, goalNode)} */
     public List<GraphNode> getPath(GraphNode start, GraphNode end){
         try {
@@ -145,6 +169,11 @@ public class Map {
             System.err.println(e.getMessage());
         }
         return new LinkedList<>();
+    }
+
+    /** See method {@link GraphNetwork#getDirections(List)} */
+    public List<String> getTextualDirections(List<GraphNode> path) {
+        return graph.getDirections(path);
     }
 
     /**

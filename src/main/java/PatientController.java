@@ -5,7 +5,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -14,7 +13,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 
 import java.net.URL;
@@ -31,24 +29,18 @@ import java.util.stream.Collectors;
 public class PatientController extends DisplayController implements Initializable {
     // kiosk location
     GraphNode startNode;
-    // main application controller
-    ApplicationController appController;
     // list of shapes that have been drawn on the screen
     List<Shape> drawnObjects;
     // FXML Things
-    @FXML
-    private TextField searchBar;
+    @FXML private TextField searchBar;
 
-    @FXML
-    private ListView<String> options;
-    @FXML
-    private ImageView imageView;
+    @FXML private ListView<String> options;
+    @FXML private ImageView imageView;
+    @FXML private Label textDirectionsTextBox;
 
-    @FXML
-    private AnchorPane anchorPane;
+    @FXML private AnchorPane anchorPane;
 
-    @FXML
-    private Label helpLabel;
+    @FXML private Label helpLabel;
 
     /**
      *
@@ -64,11 +56,11 @@ public class PatientController extends DisplayController implements Initializabl
     }
 
     /**
-     * draw an image (the map)
+     * display the image
      */
     public void displayImage() {
-        Image floor3 = new Image("Maps/floor3.png");
-        imageView.setImage(floor3);
+        Image floor = super.applicationController.getImage(currentMap);
+        imageView.setImage(floor);
     }
 
     /**
@@ -181,21 +173,22 @@ public class PatientController extends DisplayController implements Initializabl
         for (Shape shape : drawnObjects) {
             anchorPane.getChildren().remove(shape);
         }
+        textDirectionsTextBox.setVisible(false);
     }
 
     /**
-     * convert local coordinates of map to 1000 / 1000
+     * convert the graph 1000 * 1000 coordinate to the size of the image view
+     * The point must be added to the direct parent of the image view for this to work
+     * OR all points must be added ot the scene
      * @param node
+     * @param imageToBeDrawnOver image the the coordinate must be scaled to
      * @return
      */
-    FloorPoint toLocal  (GraphNode node) {
-        double imageWidth = imageView.getBoundsInLocal().getWidth();
-        double imageHeight = imageView.getBoundsInLocal().getHeight();
-        double offsetX = imageView.getBoundsInParent().getMinX();
-        double offsetY = imageView.getBoundsInParent().getMinY();
-
-        offsetX = imageView.getLayoutX();
-        offsetY = imageView.getLayoutY();
+    FloorPoint graphPointToImage (GraphNode node, ImageView imageToBeDrawnOver) {
+        double imageWidth = imageToBeDrawnOver.getBoundsInLocal().getWidth();
+        double imageHeight = imageToBeDrawnOver.getBoundsInLocal().getHeight();
+        double offsetX = imageToBeDrawnOver.getLayoutX();
+        double offsetY = imageToBeDrawnOver.getLayoutY();
 
         System.out.println("off x " + offsetX + "  off y "  + offsetY);
 
@@ -207,6 +200,35 @@ public class PatientController extends DisplayController implements Initializabl
     }
 
     /**
+     * Display the given sub path over the given image view
+     * Addds all the drawn objects to a list of drawn objects
+     * Changes the image view to the image of the floor the sub path covers
+     * @param mapImage
+     * @param subPath subpath to be drawn
+     */
+    public void displaySubPath (ImageView mapImage, SubPath subPath) {
+        System.out.println("SubPath");
+        GraphNode prev = null;
+        mapImage.setImage(applicationController.getImage(subPath.floor));
+        List<Shape> listToDraw = new ArrayList<>();
+        // draw path, and all connections from previous
+        for (GraphNode node : subPath.path) {
+            FloorPoint localPoint = graphPointToImage(node, mapImage);
+            System.out.println(localPoint);
+            listToDraw.add(drawPoint(localPoint));
+            // draw connection
+            if (prev != null) {
+                listToDraw.add(drawConnection(prev, node, mapImage));
+            }
+            prev = node;
+        }
+        if(drawnObjects == null) {
+            drawnObjects = new ArrayList<>();
+        }
+        drawnObjects.addAll(listToDraw);
+    }
+
+    /**
      *
      * @param start
      * @param end
@@ -215,6 +237,8 @@ public class PatientController extends DisplayController implements Initializabl
         List<GraphNode> path = map.getPath(start, end);
         if(path != null && !path.isEmpty()) {
             displayPath(path);
+            //TODO add condition for showing text directions (maybe)
+            displayTextDirections(path);
         }
         // should throw error
         else {
@@ -231,15 +255,30 @@ public class PatientController extends DisplayController implements Initializabl
         List<Shape> listToDraw = new ArrayList<>();
         // draw path, and all connections from previous
         for (GraphNode node : path) {
-            FloorPoint localPoint = toLocal(node);
+            FloorPoint localPoint = graphPointToImage(node, imageView);
             listToDraw.add(drawPoint(localPoint));
             // draw connection
             if (prev != null) {
-                listToDraw.add(drawConnection(prev, node));
+                listToDraw.add(drawConnection(prev, node, imageView));
             }
             prev = node;
         }
         drawnObjects = listToDraw;
+    }
+
+    /**
+     * Function to get textual directions and print it on screen
+     * @param path the path to be converted to text
+     */
+    public void displayTextDirections(List<GraphNode> path) {
+        textDirectionsTextBox.setVisible(true);
+        List<String> directions = map.getTextualDirections(path);
+        String dir = "";
+        for(String line : directions) {
+            dir += (line + "\n");
+        }
+        textDirectionsTextBox.setText(dir);
+        return;
     }
 
     /**
@@ -259,9 +298,9 @@ public class PatientController extends DisplayController implements Initializabl
      * @param nodeB
      * @return
      */
-    public Shape drawConnection (GraphNode nodeA, GraphNode nodeB) {
-        FloorPoint pointA = toLocal(nodeA);
-        FloorPoint pointB = toLocal(nodeB);
+    public Shape drawConnection (GraphNode nodeA, GraphNode nodeB, ImageView imageToBeDrawnOver) {
+        FloorPoint pointA = graphPointToImage(nodeA, imageToBeDrawnOver);
+        FloorPoint pointB = graphPointToImage(nodeB, imageToBeDrawnOver);
 
         Line line = new Line(pointA.x, pointA.y, pointB.x, pointB.y);
         line.setStrokeWidth(4);
@@ -288,8 +327,6 @@ public class PatientController extends DisplayController implements Initializabl
         }
 
     }
-
-
     /**
      * initialize the fxml components etc
      * @param location
@@ -302,7 +339,6 @@ public class PatientController extends DisplayController implements Initializabl
 
         // TODO will need to be changed to kiosk
         this.startNode = new GraphNode(100, 100, "");
-        // this.startNode = map.getRoomFromName("Kiosk").location;
         try {
             this.startNode = map.getRoomFromName("Kiosk").location;
         }
@@ -319,6 +355,7 @@ public class PatientController extends DisplayController implements Initializabl
                 select(selectedString);
             }
         });
+        // the image view should be the bottom pane so circles can be drawn over it
         imageView.toBack();
 //        imageView.setPreserveRatio(false);
         helpLabel.setText("Hello! Thanks for using project-pather.\n\nTo get started, start typing into the search bar. " +

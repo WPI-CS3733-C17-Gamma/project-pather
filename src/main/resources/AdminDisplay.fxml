@@ -13,8 +13,8 @@
          <children>
             <ToggleButton fx:id="togglebuttonChainAdd" layoutX="14.0" layoutY="16.0" mnemonicParsing="false" onAction="#toggleChainAdd" text="Chain Add" />
             <TextField fx:id="roomName" layoutX="707.0" layoutY="50.0" promptText="Add or Remove Room" />
-            <ToggleButton fx:id="togglebuttonAddNode" layoutX="116.0" layoutY="16.0" mnemonicParsing="false" onAction="#toggleAddNode" onMouseClicked="#noMoreConnections" text="Add Node" />
-            <ToggleButton fx:id="togglebuttonAddConnections" layoutX="344.0" layoutY="16.0" mnemonicParsing="false" onAction="#toggleAddConnection" onMouseClicked="#noMoreNodes" text="Add Connections" />
+            <ToggleButton fx:id="togglebuttonAddNode" layoutX="116.0" layoutY="16.0" mnemonicParsing="false" onAction="#toggleAddNode" text="Add Node" />
+            <ToggleButton fx:id="togglebuttonAddConnections" layoutX="344.0" layoutY="16.0" mnemonicParsing="false" onAction="#toggleAddConnection" text="Add Connections" />
             <Button layoutX="235.0" layoutY="16.0" mnemonicParsing="false" onAction="#deleteSelected" text="Delete" />
             <Button layoutX="536.0" layoutY="16.0" mnemonicParsing="false" onAction="#deleteConnection" text="Delete Connection" />
             <Button layoutX="707.0" layoutY="16.0" mnemonicParsing="false" onAction="#addRoom" prefHeight="31.0" prefWidth="181.0" text="Add or Change Room" />
@@ -33,7 +33,7 @@
    <center>
       <AnchorPane fx:id="anchorpaneMap" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <ImageView fx:id="imageviewMap" fitHeight="456.0" fitWidth="915.0" layoutX="108.0" layoutY="3.0" onMousePressed="#isPressed" onMouseReleased="#isReleased" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="imageviewMap" fitHeight="456.0" fitWidth="915.0" layoutX="108.0" layoutY="3.0" onMouseDragged="#handleDragEvent" onMousePressed="#isPressed" onMouseReleased="#isReleased" pickOnBounds="true" preserveRatio="true" />
          </children>
       </AnchorPane>
    </center>

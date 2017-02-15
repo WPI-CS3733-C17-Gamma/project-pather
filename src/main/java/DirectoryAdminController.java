@@ -254,6 +254,10 @@ public class DirectoryAdminController extends DisplayController implements Initi
 
     }
 
+    /**
+     * Take the active entry and display it in the entry editor
+     * @param activeEntry
+     */
     public void displayEntry (DirectoryEntry activeEntry) {
         entryEditor.setVisible(true);
         entryName.setText(activeEntry.getName());
@@ -263,6 +267,7 @@ public class DirectoryAdminController extends DisplayController implements Initi
             .stream()
             .map(room -> room.name)
             .collect(Collectors.toList());
+        // FXCollections takes a normal list of strings and makes it viewable
         ObservableList<String> roomNames = FXCollections.observableList(locsAsString);
         entryCurrentLocations.setItems(roomNames);
 
@@ -391,10 +396,9 @@ public class DirectoryAdminController extends DisplayController implements Initi
         System.out.println("INIT");
         helpLabel.setText("Welcome to the directory entry editor.\n You're an admin, you don't need help" );
 
-        // get both entries then rooms
+        // get both entries
         List<String> entryList = map.getAllEntries();
         entryList.sort(String::compareTo);
-//        entryList.admindAll(map.getAllRooms());
         ObservableList<String> allEntries = FXCollections.observableList(entryList);
         listEntries.setItems(allEntries);
         listEntries.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -405,6 +409,7 @@ public class DirectoryAdminController extends DisplayController implements Initi
             }
         });
 
+        // add click handler for the dropdown list of poossible locations
         entryRoomOptions.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -412,6 +417,7 @@ public class DirectoryAdminController extends DisplayController implements Initi
                 entryAddRoom(selectedString);
             }
         });
+        // add click handlers to the list of currentRooms
         entryCurrentLocations.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {

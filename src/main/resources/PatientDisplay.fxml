@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" style="-fx-background-color: #d4e3ed;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" style="-fx-background-color: #d4e3ed;" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1">
    <bottom>
       <ToolBar prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #d4e3ed;" BorderPane.alignment="CENTER">
         <items>
@@ -24,7 +24,7 @@
    <left>
       <AnchorPane fx:id="anchorPane" prefHeight="560.0" prefWidth="853.0" BorderPane.alignment="CENTER">
          <children>
-            <ImageView fx:id="imageView" fitHeight="404.0" fitWidth="759.0" layoutX="123.0" layoutY="134.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="imageView" fitHeight="404.0" fitWidth="759.0" layoutX="99.0" layoutY="134.0" pickOnBounds="true" preserveRatio="true" />
             <TextField fx:id="searchBar" layoutX="69.0" layoutY="22.0" onKeyReleased="#search" prefHeight="25.0" prefWidth="198.0" promptText="Search!">
                <font>
                   <Font size="28.0" />
@@ -51,6 +51,7 @@
                   <Image url="@BWFH_logo_rgb%20(1).png" />
                </image>
             </ImageView>
+            <Label fx:id="textDirectionsTextBox" alignment="TOP_LEFT" layoutX="833.0" layoutY="134.0" prefHeight="426.0" prefWidth="143.0" text="Test Directions Please Ignore" visible="false" wrapText="true" />
          </children>
       </AnchorPane>
    </left>
