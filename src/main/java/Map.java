@@ -201,7 +201,6 @@ public class Map {
         List<SubPath> subPaths = new ArrayList<>();
         SubPath currentPath = new SubPath(fullPath.get(0).location.floor);
         for (GraphNode node : fullPath) {
-            System.out.println("node : " + node);
             if (! node.getLocation().floor.equals(currentPath.floor)) {
                 subPaths.add(currentPath);
                 currentPath = new SubPath(node.location.floor) ;

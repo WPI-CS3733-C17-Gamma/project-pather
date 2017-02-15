@@ -328,6 +328,7 @@ public class PatientController extends DisplayController implements Initializabl
             this.startNode = map.getRoomFromName("Kiosk").location;
         }
         catch (Exception e) {
+            System.out.println("No Kiosk");
         }
 
 
