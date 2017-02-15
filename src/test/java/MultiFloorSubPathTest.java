@@ -30,7 +30,7 @@ public class MultiFloorSubPathTest extends TestCase{
         network.addConnection(A2,B1);
         network.addConnection(B1,A3);
         network.addConnection(B2,A3);
-        map = new Map(null, network, null);
+        map = new Map(null, network);
     }
 
     @Test

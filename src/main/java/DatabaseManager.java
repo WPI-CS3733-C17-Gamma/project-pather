@@ -126,9 +126,8 @@ public class DatabaseManager {
         Directory directory = new Directory(entries, rooms);
         GraphNetwork graph = new GraphNetwork(
             new LinkedList<GraphNode>(nodes.values()));
-        HashMap<String, Image> mapImages = new HashMap<String, Image>();
 
-        return new Map(directory, graph, mapImages);
+        return new Map(directory, graph);
     }
 
     /** Write a map to the database

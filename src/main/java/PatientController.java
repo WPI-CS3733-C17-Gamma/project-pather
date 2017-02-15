@@ -1,12 +1,8 @@
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
@@ -14,12 +10,10 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Shape;
-import javafx.util.Duration;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -28,43 +22,25 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
+
 /**
  * controls all interaction with the patient display
  */
 public class PatientController extends DisplayController implements Initializable {
-
-    //what type/state of display the Patient Display is currently displaying
-    private enum state{
-        PATIENT_DEFAULT,
-        PATIENT_SEARCH
-    }
-
-    state displayState;
     // kiosk location
     GraphNode startNode;
     // list of shapes that have been drawn on the screen
     List<Shape> drawnObjects;
     // FXML Things
     @FXML private TextField searchBar;
+
     @FXML private ListView<String> options;
     @FXML private ImageView imageView;
     @FXML private Label textDirectionsTextBox;
+
     @FXML private AnchorPane anchorPane;
+
     @FXML private Label helpLabel;
-
-    @FXML private AnchorPane searchAnchorPane;
-    @FXML private Button help;
-    @FXML private ImageView patientImageView;
-    @FXML private Button exitButton;
-    @FXML private HBox multiMapDisplayMenu;
-    @FXML private Button adminButton;
-    @FXML private Button directoryAdminButton;
-    @FXML private Button mapAdminButton;
-    @FXML private AnchorPane adminPane;
-    @FXML private Button patientDisplayButton;
-    @FXML private Button login;
-
-    private List<SubPath> currentPath;
 
     /**
      *
@@ -77,52 +53,21 @@ public class PatientController extends DisplayController implements Initializabl
                              ApplicationController applicationController,
                              String currentMap){
         super(map,applicationController, currentMap);
-
-        displayState = state.PATIENT_DEFAULT;
     }
 
     /**
-     * display the image on the main patient screen
+     * display the image
      */
     public void displayImage() {
         Image floor = super.applicationController.getImage(currentMap);
-        if (displayState == state.PATIENT_DEFAULT){
-            imageView.setImage(floor);
-        }
-//        if (displayState == state.PATIENT_SEARCH){
-//            patientImageView.setImage(floor);
-//        }
+        imageView.setImage(floor);
     }
 
     /**
-     * shows the patient search interface (the dark one)
-     */
-    public void startSearch(){
-        if (this.displayState == state.PATIENT_DEFAULT){//switch state
-            searchAnchorPane.setVisible(true);
-            this.displayState = state.PATIENT_SEARCH;
-            displayImage();
-        }
-    }
-
-    /**
-     * hides the patient search interface and returns to the default patient interface
-     */
-    public void exitSearch(){
-        System.out.println("Exit button works");
-        if (this.displayState == state.PATIENT_SEARCH){//switch state
-            searchAnchorPane.setVisible(false);
-            this.displayState = state.PATIENT_DEFAULT;
-            clearSearchDisplay();
-            displayImage();//display the original image
-        }
-    }
-
-    /**
-     * perform search; get text from the textfield
+     * perform search
      */
     public void search () {
-        clearSearchDisplay();
+        clearDisplay();
         String search = searchBar.getText();
         if (search.length() > 0) {
             options.setVisible(true);
@@ -131,7 +76,6 @@ public class PatientController extends DisplayController implements Initializabl
             options.setVisible(false);
             return;
         }
-        System.out.println("search : " + search);
         List<String> results = search(search);
         displayResults(results);
     }
@@ -168,17 +112,10 @@ public class PatientController extends DisplayController implements Initializabl
     }
 
     /**
-     * Toggles admin display
-     */
-    public void toggleAdminWindow(){
-        adminPane.setVisible(!adminPane.isVisible());
-    }
-
-    /**
      * swtich to map admin
      */
     public void switchToMapAdmin() {
-        applicationController.createMapAdminDisplay(new Login());//*********************************
+        applicationController.createMapAdminDisplay();
     }
 
 
@@ -186,8 +123,7 @@ public class PatientController extends DisplayController implements Initializabl
      * swtich to directory admin
      */
     public void switchToDirectoryAdmin () {
-        System.out.println("SWITCHING TO DIR ADMIN");
-        applicationController.createDirectoryAdminDisplay(new Login());//************************
+        applicationController.createDirectoryAdminDisplay();
     }
 
     /**
@@ -197,21 +133,17 @@ public class PatientController extends DisplayController implements Initializabl
      */
     public GraphNode select(String option) {
         searchBar.setText(option);
-        System.out.println("select");
         DirectoryEntry entry = map.getEntry(option);
         // if the selected entry is an entry not a room
         if (entry != null) {
-            System.out.println("Found Entry!");
             List<Room> locs = entry.getLocation();
 
             // if no location, should (probably) throw error
             if(locs.size() == 0) {
-                System.out.println("No location");
                 return null;
             }
             // take first option if only one
             else if (locs.size() == 1) {
-                System.out.println(locs.get(0).location);
                 displayResults(new LinkedList<>());
                 getPath(startNode, locs.get(0).location);
                 return locs.get(0).location;
@@ -228,13 +160,11 @@ public class PatientController extends DisplayController implements Initializabl
         else {
             Room room =  map.getRoomFromName(option);
             if (room != null) {
-                System.out.println("FOUND ROOM! : " + room);
                 displayResults(new LinkedList<>());
                 getPath(startNode, room.location);
                 return room.location;
             }
             else {
-                System.out.println("no entry :( ");
             }
         }
 
@@ -242,19 +172,9 @@ public class PatientController extends DisplayController implements Initializabl
     }
 
     /**
-     * remove search result
-     */
-    public void clearSearchDisplay(){
-        hideMultiMapAnimation();//hide the hBox thingy
-        multiMapDisplayMenu.getChildren().clear();//clear the hBox menu thingy
-        clearDisplay();
-    }
-
-    /**
      * Remove all the points that have been drawn on the map
      */
     public void clearDisplay () {
-        patientImageView.setImage(null);
         if(drawnObjects == null) {
             return;
         }
@@ -278,7 +198,6 @@ public class PatientController extends DisplayController implements Initializabl
         double offsetX = imageToBeDrawnOver.getLayoutX();
         double offsetY = imageToBeDrawnOver.getLayoutY();
 
-        System.out.println("off x " + offsetX + "  off y "  + offsetY);
 
         int newX = (int)(node.location.x * imageWidth / 1000. + offsetX );
         int newY = (int)(node.location.y * imageHeight / 1000. + offsetY );
@@ -286,81 +205,6 @@ public class PatientController extends DisplayController implements Initializabl
 
         return new FloorPoint(newX, newY, node.location.floor);
     }
-
-
-
-    /**
-     * get paths across multiple floor and display different resulted floors on the search interface (the large ImageView and the hBox)
-     * @param start the starting location
-     * @param end the ending location
-     */
-    public void getPath (GraphNode start, GraphNode end) {
-        try {
-            currentPath = map.getPathByFloor(start, end);
-            displaySubPath(patientImageView, currentPath.get(0));
-            for (int x = 0; x < currentPath.size(); x++){
-                SubPath p = currentPath.get(x);
-                ImageView i = new ImageView();
-                i.setPreserveRatio(true);
-                i.setFitHeight(95);
-                i.setFitWidth(165);
-                i.setOnMousePressed(e -> mapChoice(e));
-                i.setImage(applicationController.getImage(p.floor));
-                i.setId(x + "floor in list");
-//                i.getStyleClass().add("tinyMapMenu");
-//                i.applyCss();
-                System.out.println(i.getId());
-               multiMapDisplayMenu.getChildren().add(i);
-            }
-            showMultiMapAnimation();
-        } catch (PathNotFoundException e) {
-            System.out.println("No path can be drawn");
-        }
-    }
-
-    /**
-     * toggle between resulted maps when clicking on the corresponding imageView in the HBox
-     * @param e
-     */
-    public void mapChoice(MouseEvent e){
-        try {
-            ImageView iv = (ImageView) e.getSource();
-            System.out.println(iv.getId() + "*******");
-            SubPath path = currentPath.get((int) iv.getId().charAt(0) - 48);//ascii conversion
-            displaySubPath(patientImageView, path);
-        }catch(ClassCastException cc){
-            System.err.println("you are implementing this method in a wrong place");
-        }
-    }
-
-    /**
-     * show the HBox from the bottom
-     */
-    public void showMultiMapAnimation(){
-        final Timeline timeline = new Timeline();
-        timeline.setCycleCount(1);
-        timeline.setAutoReverse(true);
-        final KeyValue kv = new KeyValue(multiMapDisplayMenu.layoutYProperty(), 475);
-        final KeyFrame kf = new KeyFrame(Duration.millis(300), kv);
-        timeline.getKeyFrames().add(kf);
-        timeline.play();
-        System.out.println("hello2");
-    }
-
-    /**
-     * hide the HBox
-     */
-    public void hideMultiMapAnimation(){
-        final Timeline timeline = new Timeline();
-        timeline.setCycleCount(1);
-        timeline.setAutoReverse(true);
-        final KeyValue kv = new KeyValue(multiMapDisplayMenu.layoutYProperty(), 600);
-        final KeyFrame kf = new KeyFrame(Duration.millis(100), kv);
-        timeline.getKeyFrames().add(kf);
-        timeline.play();
-        System.out.println("hello3");
-    }
-
 
     /**
      * Display the given sub path over the given image view
@@ -370,15 +214,12 @@ public class PatientController extends DisplayController implements Initializabl
      * @param subPath subpath to be drawn
      */
     public void displaySubPath (ImageView mapImage, SubPath subPath) {
-        clearDisplay();
-        System.out.println("SubPath");
         GraphNode prev = null;
         mapImage.setImage(applicationController.getImage(subPath.floor));
         List<Shape> listToDraw = new ArrayList<>();
         // draw path, and all connections from previous
         for (GraphNode node : subPath.path) {
             FloorPoint localPoint = graphPointToImage(node, mapImage);
-            System.out.println(localPoint);
             listToDraw.add(drawPoint(localPoint));
             // draw connection
             if (prev != null) {
@@ -390,6 +231,23 @@ public class PatientController extends DisplayController implements Initializabl
             drawnObjects = new ArrayList<>();
         }
         drawnObjects.addAll(listToDraw);
+    }
+
+    /**
+     *
+     * @param start
+     * @param end
+     */
+    public void getPath (GraphNode start, GraphNode end) {
+        List<GraphNode> path = map.getPath(start, end);
+        if(path != null && !path.isEmpty()) {
+            displayPath(path);
+            //TODO add condition for showing text directions (maybe)
+            displayTextDirections(path);
+        }
+        // should throw error
+        else {
+        }
     }
 
     /**
@@ -411,7 +269,6 @@ public class PatientController extends DisplayController implements Initializabl
         }
         drawnObjects = listToDraw;
     }
-
 
     /**
      * Function to get textual directions and print it on screen
@@ -465,13 +322,13 @@ public class PatientController extends DisplayController implements Initializabl
     }
 
     public void help () {
-        System.out.println("Here is how to use this...");
         if (helpLabel.isVisible()) {
             helpLabel.setVisible(false);
         }
         else {
            helpLabel.setVisible(true);
         }
+
     }
     /**
      * initialize the fxml components etc
@@ -480,7 +337,6 @@ public class PatientController extends DisplayController implements Initializabl
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        System.out.println("INIT");
         displayImage();
 
         // TODO will need to be changed to kiosk
@@ -497,18 +353,13 @@ public class PatientController extends DisplayController implements Initializabl
             @Override
             public void handle(MouseEvent event) {
                 String selectedString = options.getSelectionModel().getSelectedItem();
-                System.out.println("clicked on " + selectedString);
                 select(selectedString);
             }
         });
         // the image view should be the bottom pane so circles can be drawn over it
         imageView.toBack();
 //        imageView.setPreserveRatio(false);
-        helpLabel.setText("Hello! Thanks for using project-pather." +
-            "\n\nTo get started, start typing into the search bar. " +
-            "\n Then, select the option you would like to get a path to." +
-            "\n\nTo close this menu, click on this");
+        helpLabel.setText("Hello! Thanks for using project-pather.\n\nTo get started, start typing into the search bar. " +
+            "\n Then, select the option you would like to get a path to.\n\nTo close this menu, click on it");
     }
-
-
 }

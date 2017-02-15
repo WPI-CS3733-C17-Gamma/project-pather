@@ -22,7 +22,7 @@ public class DirectoryAdminControllerTest {
         entries.put("Dude", new DirectoryEntry("Dude", "The Dude", new LinkedList<Room>()));
 
         Directory dir = new Directory(entries, null);
-        Map map = new Map(dir, null, null);
+        Map map = new Map(dir, null);
         DirectoryAdminController dirCon = new DirectoryAdminController(map,
             null,
             null);
