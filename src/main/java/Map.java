@@ -6,14 +6,11 @@ import java.util.List;
 public class Map {
     Directory directory;
     GraphNetwork graph;
-    HashMap<String, Image> mapImages;
 
     public Map(Directory directory,
-               GraphNetwork graph,
-               HashMap<String, Image> mapImages) {
+               GraphNetwork graph) {
         this.directory = directory;
         this.graph = graph;
-        this.mapImages = mapImages;
     }
 
     /** See method {@link Directory#searchRooms(String)} */
@@ -243,13 +240,6 @@ public class Map {
         return this.graph.deleteConnection(nodeA, nodeB);
     }
 
-    /**
-     * @return the images stored in the Map object
-     */
-    public HashMap<String, Image> getImages(){
-        return this.mapImages;
-    }
-
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof Map)) {
@@ -261,8 +251,7 @@ public class Map {
 
         Map rhs = (Map) obj;
         return this.directory.equals(rhs.directory) &&
-            this.graph.equals(rhs.graph) &&
-            this.mapImages.equals(rhs.mapImages);
+            this.graph.equals(rhs.graph);
     }
 
 }

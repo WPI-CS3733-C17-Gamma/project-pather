@@ -25,7 +25,7 @@ public class CreateEntryTest extends TestCase {
         h.put(e.name, e);
         h.put(f.name, f);
         d = new Directory(h, new HashMap<>());
-        m = new Map(d, null, null);
+        m = new Map(d, null);
         c = new DirectoryAdminController(m, null, null);
     }
 

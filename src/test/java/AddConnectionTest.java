@@ -42,7 +42,7 @@ public class AddConnectionTest extends TestCase{
     @Test
     // ensure that given two nodes, the graph controller will connect them both to eachother
     public void testTwoWayConnection() {
-        Map m = new Map(null, graph, null);
+        Map m = new Map(null, graph);
         boolean added = m.addConnection(a, b);
         assertEquals(a.getAdjacent().get(0), b);
         assertEquals(b.getAdjacent().get(0), a);
@@ -53,7 +53,7 @@ public class AddConnectionTest extends TestCase{
     // ensure that a node cannot be connected to itself
     public void testSelfAddAdjacent() {
         assertTrue(a.getAdjacent().size() == 0);
-        Map m = new Map(null, graph, null);
+        Map m = new Map(null, graph);
         boolean added = m.addConnection(a, a);
         assertTrue(a.getAdjacent().size() == 0);
         assertFalse(added);
@@ -70,7 +70,7 @@ public class AddConnectionTest extends TestCase{
     }
     @Test
     public void testAddConectionMap(){
-        Map map= new Map(null, graph, null);
+        Map map = new Map(null, graph);
         assertFalse(a.getAdjacent().contains(b));
         assertFalse(b.getAdjacent().contains(a));
         map.addConnection(a, b);

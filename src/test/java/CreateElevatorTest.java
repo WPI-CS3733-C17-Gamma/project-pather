@@ -15,7 +15,7 @@ public class CreateElevatorTest extends TestCase {
     protected void setUp() {
         floors = new ArrayList<>();
         network = new GraphNetwork();
-        map = new Map(null, network, null);
+        map = new Map(null, network);
     }
 
 
