@@ -124,18 +124,11 @@ public class GraphNetwork {
      * @return
      */
     public List<GraphNode> getGraphNodesOnFloor(String floor) {
-//       List<GraphNode> sameFloor = graphNodes.stream()
-//               .filter(node -> node.location.floor.equals(floor))
-//               .collect(Collectors.toList());
+      List<GraphNode> sameFloor = graphNodes.stream()
+              .filter(node -> node.location.floor.equals(floor))
+              .collect(Collectors.toList());
 
-        ArrayList<GraphNode> sameFloor = new ArrayList<>() ;
-        for (GraphNode node : graphNodes) {
-            if (node.location.floor.equals(floor)) {
-                sameFloor.add(node);
-            }
-        }
-
-       return sameFloor;
+      return sameFloor;
     }
 
     /**

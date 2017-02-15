@@ -665,6 +665,12 @@ public class MapAdminController extends DisplayController implements Initializab
         drawMap();
     }
 
+    public void changeFloorFour () {
+        setMap ("floor4");
+    }
+    public void changeFloorThree() {
+        setMap ("floor3");
+    }
 
     /**
      * Change the main display map.
@@ -674,5 +680,6 @@ public class MapAdminController extends DisplayController implements Initializab
         Image floorImage = applicationController.getImage(loc);
         imageviewMap.setImage(floorImage);
         super.currentMap = loc;
+        drawMap();
     }
 }
