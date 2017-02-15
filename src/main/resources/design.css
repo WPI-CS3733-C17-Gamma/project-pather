@@ -78,5 +78,7 @@
 }
 
 .tinyMapMenu{
-	
+	-fx-background-color: #F4F4F9; 
+	-fx-border-color: red; 
+	-fx-border-width: 20px; 
 }

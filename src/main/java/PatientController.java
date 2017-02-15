@@ -327,6 +327,8 @@ public class PatientController extends DisplayController implements Initializabl
                 i.setOnMousePressed(e -> mapChoice(e));
                 i.setImage(applicationController.getImage(p.floor));
                 i.setId(x + "floor in list");
+//                i.getStyleClass().add("tinyMapMenu");
+//                i.applyCss();
                 System.out.println(i.getId());
                multiMapDisplayMenu.getChildren().add(i);
             }
