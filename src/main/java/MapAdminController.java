@@ -309,6 +309,16 @@ public class MapAdminController extends DisplayController implements Initializab
         }
     }
 
+    public void deleteElevator () {
+        if (selectedNode != null ) {
+            if(selectedNode.isElevator()) {
+                boolean isEl = map.deleteElevator(selectedNode);
+                selectedNode = null;
+                drawMap();
+            }
+        }
+    }
+
     /**
      * Delete a node from graph and delete the node from the adjacent nodes
      * @param node

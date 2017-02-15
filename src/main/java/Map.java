@@ -136,13 +136,15 @@ public class Map {
      * it is connected to
      * @param elevator
      */
-    public void deleteElevator (GraphNode elevator) {
+    public boolean deleteElevator (GraphNode elevator) {
         if (elevator.isElevator()) {
             for (GraphNode adjacentElevator : elevator.getAdjacent()) {
                 this.deleteNode(adjacentElevator);
             }
+            this.deleteNode(elevator);
+            return true;
         }
-        this.deleteNode(elevator);
+        return false;
     }
 
     /** See method {@link GraphNetwork#addNode(GraphNode)} */
