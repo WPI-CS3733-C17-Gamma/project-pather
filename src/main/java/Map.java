@@ -138,9 +138,16 @@ public class Map {
      */
     public boolean deleteElevator (GraphNode elevator) {
         if (elevator.isElevator()) {
-            for (GraphNode adjacentElevator : elevator.getAdjacent()) {
-                this.deleteNode(adjacentElevator);
+            //  copy adjacent list because it will be modified by deleting!
+            List<GraphNode> copy = new ArrayList<GraphNode>();
+            copy.addAll(elevator.getConnectedElevators());
+
+            // delete each adjacent elevator
+            for (GraphNode adjacentElevator : copy) {
+                graph.deleteNode(adjacentElevator);
             }
+
+            // delete the elevator that was marked for deletion
             this.deleteNode(elevator);
             return true;
         }
