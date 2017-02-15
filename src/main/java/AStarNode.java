@@ -1,5 +1,3 @@
-import java.util.Objects;
-
 public class AStarNode{
     GraphNode node;
     public double fScore = 1000000;
