@@ -1,6 +1,5 @@
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
-import javafx.animation.PathTransition;
 import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,7 +16,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.*;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
+import javafx.scene.shape.Shape;
 import javafx.util.Duration;
 
 import java.net.URL;
@@ -54,6 +55,9 @@ public class PatientController extends DisplayController implements Initializabl
     @FXML private Button exitButton;
     @FXML private HBox multiMapDisplayMenu;
     @FXML private Button adminButton;
+    @FXML private Button directoryAdminButton;
+    @FXML private Button mapAdminButton;
+    @FXML private AnchorPane adminPane;
 
     private List<SubPath> currentPath;
 
@@ -156,6 +160,13 @@ public class PatientController extends DisplayController implements Initializabl
             return map.searchEntry(room2);
         }
         //(update) the display the list of room
+    }
+
+    /**
+     * Toggles admin display
+     */
+    public void toggleAdminWindow(){
+        adminPane.setVisible(!adminPane.isVisible());
     }
 
     /**

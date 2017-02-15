@@ -9,49 +9,61 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" styleClass="background" stylesheets="@design.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
-   <children>
-      <ImageView fx:id="imageView" fitHeight="454.0" fitWidth="800.0" layoutX="100.0" layoutY="103.0" pickOnBounds="true" preserveRatio="true" />
-      <Label fx:id="helpLabel" contentDisplay="CENTER" layoutX="117.0" layoutY="123.0" onKeyPressed="#help" onMouseClicked="#help" opacity="0.0" prefHeight="341.0" prefWidth="733.0" styleClass="helpBox" stylesheets="@design.css" text="Label" textAlignment="CENTER" visible="false">
-         <cursor>
-            <Cursor fx:constant="S_RESIZE" />
-         </cursor>
-         <font>
-            <Font size="30.0" />
-         </font>
-      </Label>
-      <ImageView fitHeight="57.0" fitWidth="374.0" layoutX="343.0" layoutY="22.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@BWFH_logo_rgb%20(1).png" />
-         </image>
-      </ImageView>
-      <Button fx:id="help" layoutX="825.0" layoutY="14.0" mnemonicParsing="false" onAction="#help" onKeyPressed="#help" prefHeight="50.0" prefWidth="50.0" styleClass="helpButton" stylesheets="@design.css" />
-      <Button layoutX="915.0" layoutY="14.0" mnemonicParsing="false" onAction="#switchToMapAdmin" prefHeight="50.0" prefWidth="50.0" styleClass="adminButton" stylesheets="@design.css" />
-      <AnchorPane fx:id="searchAnchorPane" layoutY="-4.0" prefHeight="607.0" prefWidth="1000.0" styleClass="patientBackground" stylesheets="@design.css" visible="false">
-         <children>
-            <ImageView fx:id="patientImageView" fitHeight="558.0" fitWidth="945.0" layoutX="20.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
-            <Button fx:id="exitButton" layoutX="940.0" mnemonicParsing="false" onAction="#exitSearch" prefHeight="33.0" prefWidth="47.0" styleClass="exitButton" stylesheets="@design.css" text="X" />
-            <Button layoutY="553.0" mnemonicParsing="false" onAction="#hideMultiMapAnimation" text="Button" />
-         </children>
-      </AnchorPane>
-      <TextField fx:id="searchBar" layoutX="24.0" layoutY="26.0" onKeyReleased="#search" onMousePressed="#startSearch" prefHeight="47.0" prefWidth="248.0" promptText="Search!" styleClass="search" stylesheets="@design.css">
-         <font>
-            <Font size="28.0" />
-         </font>
-      </TextField>
-      <ListView fx:id="options" layoutX="40.0" layoutY="73.0" prefHeight="200.0" prefWidth="212.0" visible="false">
-         <cursor>
-            <Cursor fx:constant="HAND" />
-         </cursor>
-      </ListView>
-      <Button fx:id="testtest" layoutY="500.0" mnemonicParsing="false" onAction="#showMultiMapAnimation" text="Button" />
-      <HBox fx:id="multiMapDisplayMenu" alignment="CENTER" layoutX="40.0" layoutY="600.0" maxHeight="95.0" maxWidth="814.0" minHeight="95.0" minWidth="814.0" prefHeight="95.0" prefWidth="814.0">
-         <children>
-            <Circle fill="DODGERBLUE" radius="42.0" stroke="BLACK" strokeType="INSIDE" />
-         </children>
-      </HBox>
-   </children>
-</AnchorPane>
+<StackPane fx:id="stackPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" styleClass="background" stylesheets="@design.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" styleClass="background" stylesheets="@design.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+           <children>
+              <ImageView fx:id="imageView" fitHeight="454.0" fitWidth="800.0" layoutX="100.0" layoutY="103.0" pickOnBounds="true" preserveRatio="true" />
+              <Label fx:id="helpLabel" contentDisplay="CENTER" layoutX="117.0" layoutY="123.0" onKeyPressed="#help" onMouseClicked="#help" opacity="0.0" prefHeight="341.0" prefWidth="733.0" styleClass="helpBox" stylesheets="@design.css" text="Label" textAlignment="CENTER" visible="false">
+                 <cursor>
+                    <Cursor fx:constant="S_RESIZE" />
+                 </cursor>
+                 <font>
+                    <Font size="30.0" />
+                 </font>
+              </Label>
+              <ImageView fitHeight="57.0" fitWidth="374.0" layoutX="343.0" layoutY="22.0" pickOnBounds="true" preserveRatio="true">
+                 <image>
+                    <Image url="@BWFH_logo_rgb%20(1).png" />
+                 </image>
+              </ImageView>
+              <Button fx:id="help" layoutX="825.0" layoutY="14.0" mnemonicParsing="false" onAction="#help" onKeyPressed="#help" prefHeight="50.0" prefWidth="50.0" styleClass="helpButton" stylesheets="@design.css" />
+              <Button fx:id="adminButton" layoutX="915.0" layoutY="14.0" mnemonicParsing="false" onAction="#toggleAdminWindow" prefHeight="50.0" prefWidth="50.0" styleClass="adminMenuButton" stylesheets="@design.css" />
+              <AnchorPane fx:id="searchAnchorPane" layoutY="-4.0" prefHeight="607.0" prefWidth="1000.0" styleClass="patientBackground" stylesheets="@design.css" visible="false">
+                 <children>
+                    <ImageView fx:id="patientImageView" fitHeight="558.0" fitWidth="945.0" layoutX="20.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
+                    <Button fx:id="exitButton" layoutX="940.0" mnemonicParsing="false" onAction="#exitSearch" prefHeight="33.0" prefWidth="47.0" styleClass="exitButton" stylesheets="@design.css" text="X" />
+                    <Button layoutY="553.0" mnemonicParsing="false" onAction="#hideMultiMapAnimation" text="Button" />
+                 </children>
+              </AnchorPane>
+              <TextField fx:id="searchBar" layoutX="24.0" layoutY="26.0" onKeyReleased="#search" onMousePressed="#startSearch" prefHeight="47.0" prefWidth="248.0" promptText="Search!" styleClass="search" stylesheets="@design.css">
+                 <font>
+                    <Font size="28.0" />
+                 </font>
+              </TextField>
+              <ListView fx:id="options" layoutX="40.0" layoutY="73.0" prefHeight="200.0" prefWidth="212.0" visible="false">
+                 <cursor>
+                    <Cursor fx:constant="HAND" />
+                 </cursor>
+              </ListView>
+              <Button fx:id="testtest" layoutY="500.0" mnemonicParsing="false" onAction="#showMultiMapAnimation" text="Button" />
+              <HBox fx:id="multiMapDisplayMenu" alignment="CENTER" layoutX="40.0" layoutY="600.0" maxHeight="95.0" maxWidth="814.0" minHeight="95.0" minWidth="814.0" prefHeight="95.0" prefWidth="814.0">
+                 <children>
+                    <Circle fill="DODGERBLUE" radius="42.0" stroke="BLACK" strokeType="INSIDE" />
+                 </children>
+              </HBox>
+           </children>
+        </AnchorPane>
+        <AnchorPane fx:id="adminPane" prefHeight="200.0" prefWidth="200.0" styleClass="background" stylesheets="@design.css" visible="false">
+            <children>
+                <Button fx:id="directoryAdminButton" layoutX="300.0" layoutY="150.0" mnemonicParsing="false" onAction="#switchToDirectoryAdmin" prefHeight="80.0" prefWidth="400.0" styleClass="directoryAdminButton" stylesheets="@design.css" text="Manage List of Entries" />
+                <Button fx:id="mapAdminButton" layoutX="300.0" layoutY="300.0" mnemonicParsing="false" onAction="#switchToMapAdmin" prefHeight="80.0" prefWidth="400.0" styleClass="mapAdminButton" stylesheets="@design.css" text="Modify Maps" />
+                <Button fx:id="patientDisplayButton" layoutX="915.0" layoutY="14.0" mnemonicParsing="false" onAction="#toggleAdminWindow" prefHeight="50.0" prefWidth="50.0" styleClass="adminMenuButton" stylesheets="@design.css" />
+            </children>
+        </AnchorPane>
+    </children>
+</StackPane>
