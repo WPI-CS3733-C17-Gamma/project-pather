@@ -285,35 +285,7 @@ public class PatientController extends DisplayController implements Initializabl
         return new FloorPoint(newX, newY, node.location.floor);
     }
 
-    /**
-     * Display the given sub path over the given image view
-     * Addds all the drawn objects to a list of drawn objects
-     * Changes the image view to the image of the floor the sub path covers
-     * @param mapImage
-     * @param subPath subpath to be drawn
-     */
-    public void displaySubPath (ImageView mapImage, SubPath subPath) {
-        clearDisplay();
-        System.out.println("SubPath");
-        GraphNode prev = null;
-        mapImage.setImage(applicationController.getImage(subPath.floor));
-        List<Shape> listToDraw = new ArrayList<>();
-        // draw path, and all connections from previous
-        for (GraphNode node : subPath.path) {
-            FloorPoint localPoint = graphPointToImage(node, mapImage);
-            System.out.println(localPoint);
-            listToDraw.add(drawPoint(localPoint));
-            // draw connection
-            if (prev != null) {
-                listToDraw.add(drawConnection(prev, node, mapImage));
-            }
-            prev = node;
-        }
-        if(drawnObjects == null) {
-            drawnObjects = new ArrayList<>();
-        }
-        drawnObjects.addAll(listToDraw);
-    }
+
 
     /**
      *
@@ -351,6 +323,59 @@ public class PatientController extends DisplayController implements Initializabl
         displaySubPath(patientImageView, path);
     }
 
+    public void showMultiMapAnimation(){
+        final Timeline timeline = new Timeline();
+        timeline.setCycleCount(1);
+        timeline.setAutoReverse(true);
+        final KeyValue kv = new KeyValue(multiMapDisplayMenu.layoutYProperty(), 475);
+        final KeyFrame kf = new KeyFrame(Duration.millis(300), kv);
+        timeline.getKeyFrames().add(kf);
+        timeline.play();
+        System.out.println("hello2");
+    }
+
+    public void hideMultiMapAnimation(){
+        final Timeline timeline = new Timeline();
+        timeline.setCycleCount(1);
+        timeline.setAutoReverse(true);
+        final KeyValue kv = new KeyValue(multiMapDisplayMenu.layoutYProperty(), 600);
+        final KeyFrame kf = new KeyFrame(Duration.millis(100), kv);
+        timeline.getKeyFrames().add(kf);
+        timeline.play();
+        System.out.println("hello3");
+    }
+
+
+    /**
+     * Display the given sub path over the given image view
+     * Addds all the drawn objects to a list of drawn objects
+     * Changes the image view to the image of the floor the sub path covers
+     * @param mapImage
+     * @param subPath subpath to be drawn
+     */
+    public void displaySubPath (ImageView mapImage, SubPath subPath) {
+        clearDisplay();
+        System.out.println("SubPath");
+        GraphNode prev = null;
+        mapImage.setImage(applicationController.getImage(subPath.floor));
+        List<Shape> listToDraw = new ArrayList<>();
+        // draw path, and all connections from previous
+        for (GraphNode node : subPath.path) {
+            FloorPoint localPoint = graphPointToImage(node, mapImage);
+            System.out.println(localPoint);
+            listToDraw.add(drawPoint(localPoint));
+            // draw connection
+            if (prev != null) {
+                listToDraw.add(drawConnection(prev, node, mapImage));
+            }
+            prev = node;
+        }
+        if(drawnObjects == null) {
+            drawnObjects = new ArrayList<>();
+        }
+        drawnObjects.addAll(listToDraw);
+    }
+
     /**
      * draw path on screen
      * @param path
@@ -370,6 +395,7 @@ public class PatientController extends DisplayController implements Initializabl
         }
         drawnObjects = listToDraw;
     }
+
 
     /**
      * Function to get textual directions and print it on screen
@@ -468,25 +494,5 @@ public class PatientController extends DisplayController implements Initializabl
             "\n\nTo close this menu, click on this");
     }
 
-    public void showMultiMapAnimation(){
-        final Timeline timeline = new Timeline();
-        timeline.setCycleCount(1);
-        timeline.setAutoReverse(true);
-        final KeyValue kv = new KeyValue(multiMapDisplayMenu.layoutYProperty(), 475);
-        final KeyFrame kf = new KeyFrame(Duration.millis(300), kv);
-        timeline.getKeyFrames().add(kf);
-        timeline.play();
-        System.out.println("hello2");
-    }
 
-    public void hideMultiMapAnimation(){
-        final Timeline timeline = new Timeline();
-        timeline.setCycleCount(1);
-        timeline.setAutoReverse(true);
-        final KeyValue kv = new KeyValue(multiMapDisplayMenu.layoutYProperty(), 600);
-        final KeyFrame kf = new KeyFrame(Duration.millis(100), kv);
-        timeline.getKeyFrames().add(kf);
-        timeline.play();
-        System.out.println("hello3");
-    }
 }
