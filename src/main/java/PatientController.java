@@ -33,6 +33,7 @@ import java.util.stream.Collectors;
  */
 public class PatientController extends DisplayController implements Initializable {
 
+    //what type/state of display the Patient Display is currently displaying
     private enum state{
         PATIENT_DEFAULT,
         PATIENT_SEARCH
@@ -81,45 +82,44 @@ public class PatientController extends DisplayController implements Initializabl
     }
 
     /**
-     * display the image
+     * display the image on the main patient screen
      */
     public void displayImage() {
         Image floor = super.applicationController.getImage(currentMap);
         if (displayState == state.PATIENT_DEFAULT){
             imageView.setImage(floor);
         }
-        if (displayState == state.PATIENT_SEARCH){
+//        if (displayState == state.PATIENT_SEARCH){
 //            patientImageView.setImage(floor);
-        }
+//        }
     }
 
     /**
-     *
+     * shows the patient search interface (the dark one)
      */
     public void startSearch(){
-        if (this.displayState == state.PATIENT_DEFAULT){
-//            patientImageView.setVisible(true);
+        if (this.displayState == state.PATIENT_DEFAULT){//switch state
             searchAnchorPane.setVisible(true);
-//            exitButton.setVisible(true);
             this.displayState = state.PATIENT_SEARCH;
             displayImage();
         }
     }
 
+    /**
+     * hides the patient search interface and returns to the default patient interface
+     */
     public void exitSearch(){
         System.out.println("Exit button works");
-        if (this.displayState == state.PATIENT_SEARCH){
-//            patientImageView.setVisible(false);
+        if (this.displayState == state.PATIENT_SEARCH){//switch state
             searchAnchorPane.setVisible(false);
-//            exitButton.setVisible(false);
             this.displayState = state.PATIENT_DEFAULT;
             clearSearchDisplay();
-            displayImage();
+            displayImage();//display the original image
         }
     }
 
     /**
-     * perform search
+     * perform search; get text from the textfield
      */
     public void search () {
         clearSearchDisplay();
@@ -241,10 +241,12 @@ public class PatientController extends DisplayController implements Initializabl
         return null;
     }
 
+    /**
+     * remove search result
+     */
     public void clearSearchDisplay(){
-        hideMultiMapAnimation();
-//        patientImageView.setImage(null);
-        multiMapDisplayMenu.getChildren().clear();
+        hideMultiMapAnimation();//hide the hBox thingy
+        multiMapDisplayMenu.getChildren().clear();//clear the hBox menu thingy
         clearDisplay();
     }
 
@@ -288,9 +290,9 @@ public class PatientController extends DisplayController implements Initializabl
 
 
     /**
-     *
-     * @param start
-     * @param end
+     * get paths across multiple floor and display different resulted floors on the search interface (the large ImageView and the hBox)
+     * @param start the starting location
+     * @param end the ending location
      */
     public void getPath (GraphNode start, GraphNode end) {
         try {
@@ -316,13 +318,24 @@ public class PatientController extends DisplayController implements Initializabl
         }
     }
 
+    /**
+     * toggle between resulted maps when clicking on the corresponding imageView in the HBox
+     * @param e
+     */
     public void mapChoice(MouseEvent e){
-        ImageView iv = (ImageView) e.getSource();
-        System.out.println(iv.getId() + "*******");
-        SubPath path = currentPath.get((int)iv.getId().charAt(0) - 48);//ascii conversion
-        displaySubPath(patientImageView, path);
+        try {
+            ImageView iv = (ImageView) e.getSource();
+            System.out.println(iv.getId() + "*******");
+            SubPath path = currentPath.get((int) iv.getId().charAt(0) - 48);//ascii conversion
+            displaySubPath(patientImageView, path);
+        }catch(ClassCastException cc){
+            System.err.println("you are implementing this method in a wrong place");
+        }
     }
 
+    /**
+     * show the HBox from the bottom
+     */
     public void showMultiMapAnimation(){
         final Timeline timeline = new Timeline();
         timeline.setCycleCount(1);
@@ -334,6 +347,9 @@ public class PatientController extends DisplayController implements Initializabl
         System.out.println("hello2");
     }
 
+    /**
+     * hide the HBox
+     */
     public void hideMultiMapAnimation(){
         final Timeline timeline = new Timeline();
         timeline.setCycleCount(1);
