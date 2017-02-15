@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
@@ -35,8 +34,9 @@
       </ImageView>
       <Button fx:id="help" layoutX="825.0" layoutY="14.0" mnemonicParsing="false" onAction="#help" onKeyPressed="#help" prefHeight="50.0" prefWidth="50.0" styleClass="helpButton" stylesheets="@design.css" />
       <Button layoutX="915.0" layoutY="14.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" styleClass="adminButton" stylesheets="@design.css" />
-      <AnchorPane fx:id="searchAnchorPane" layoutY="-4.0" prefHeight="607.0" prefWidth="1000.0" styleClass="patientBackground" stylesheets="@design.css" visible="false">
+      <AnchorPane fx:id="searchAnchorPane" layoutY="-4.0" prefHeight="607.0" prefWidth="1000.0" styleClass="patientBackground" stylesheets="@design.css">
          <children>
+            <ImageView fx:id="patientImageView" fitHeight="558.0" fitWidth="945.0" layoutX="20.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
             <Button fx:id="exitButton" layoutX="940.0" mnemonicParsing="false" onAction="#exitSearch" prefHeight="33.0" prefWidth="47.0" styleClass="exitButton" stylesheets="@design.css" text="X" />
          </children>
       </AnchorPane>
@@ -46,25 +46,6 @@
          </font>
       </TextField>
       <Button fx:id="testtest" layoutY="500.0" mnemonicParsing="false" onAction="#test" text="Button" />
-      <HBox fx:id="hello" alignment="CENTER" layoutX="40.0" layoutY="600.0" prefHeight="95.0" prefWidth="814.0">
-         <children>
-            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@Maps/floor2.png" />
-               </image>
-               <HBox.margin>
-                  <Insets right="100.0" />
-               </HBox.margin>
-            </ImageView>
-            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@Maps/floor1.png" />
-               </image>
-               <HBox.margin>
-                  <Insets />
-               </HBox.margin>
-            </ImageView>
-         </children>
-      </HBox>
+      <HBox fx:id="hello" alignment="CENTER" layoutX="40.0" layoutY="600.0" prefHeight="95.0" prefWidth="814.0" />
    </children>
 </AnchorPane>

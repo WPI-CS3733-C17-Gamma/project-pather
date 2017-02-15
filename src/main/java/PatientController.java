@@ -52,7 +52,7 @@ public class PatientController extends DisplayController implements Initializabl
     @FXML private AnchorPane searchAnchorPane;
     @FXML private ImageView patientImageView;
     @FXML private Button exitButton;
-    @FXML private HBox hello;
+    @FXML private HBox multiMapDisplayMenu;
     @FXML private Button adminButton;
 
     /**
@@ -407,12 +407,11 @@ public class PatientController extends DisplayController implements Initializabl
             "\n\nTo close this menu, click on this");
     }
 
-
-    public void test(){
+    public void showMultiMapAnimation(){
         final Timeline timeline = new Timeline();
         timeline.setCycleCount(1);
         timeline.setAutoReverse(true);
-        final KeyValue kv = new KeyValue(hello.layoutYProperty(), 300);
+        final KeyValue kv = new KeyValue(multiMapDisplayMenu.layoutYProperty(), 475);
         final KeyFrame kf = new KeyFrame(Duration.millis(500), kv);
         timeline.getKeyFrames().add(kf);
         timeline.play();
