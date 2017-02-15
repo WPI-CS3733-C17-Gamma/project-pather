@@ -1,13 +1,10 @@
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedList;
 
 import static org.junit.Assert.*;
-
-
-import java.util.HashMap;
 
 /**
  * Created by Isaac on 2/6/2017.

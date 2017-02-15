@@ -613,10 +613,15 @@ public class MapAdminController extends DisplayController implements Initializab
      * @param e Mouse event generated the container
      */
     public void handleMouseEventDefault (MouseEvent e) {
-        GraphNode nearby = nearbyNode(e);
-        if (nearby != null) {
-            secondaryNode = selectedNode;
-            selectedNode = nearby;
+        if(e.getClickCount() == 2){
+            addNode(mouseToGraph(e));
+        }
+        else {
+            GraphNode nearby = nearbyNode(e);
+            if (nearby != null) {
+                secondaryNode = selectedNode;
+                selectedNode = nearby;
+            }
         }
     }
 
@@ -726,6 +731,7 @@ public class MapAdminController extends DisplayController implements Initializab
      * save and exit the application
      */
     public void done(){
+
         applicationController.logout();
     }
 

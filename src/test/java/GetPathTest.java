@@ -107,7 +107,7 @@ public class GetPathTest extends TestCase{
     }
 
     public void testGetPath() {
-        LinkedList<GraphNode> path1 = new LinkedList(Arrays.asList(node5, node4, node3, node1));
+        LinkedList<GraphNode> path1 = new LinkedList(Arrays.asList(node1, node3, node4, node5));
         for(GraphNode neighbour: nodes){
             System.err.println(neighbour.toString());
         }
@@ -121,7 +121,7 @@ public class GetPathTest extends TestCase{
 
 
     public void testGetPath2() {
-        LinkedList<GraphNode> path1 = new LinkedList(Arrays.asList(node35, node45, node53, node51));
+        LinkedList<GraphNode> path1 = new LinkedList(Arrays.asList(node51, node53, node45, node35));
         LinkedList<GraphNode> path2 = new LinkedList<>();
         try {path2 = betterGraph.getPath(node51, node35);}
         catch (PathNotFoundException e){
@@ -135,8 +135,8 @@ public class GetPathTest extends TestCase{
 
 
     public void testGetPath3() {
-        LinkedList<GraphNode> path1 = new LinkedList(Arrays.asList(node55, node45, node35, node34,
-                                                                   node33, node31, node11));
+        LinkedList<GraphNode> path1 = new LinkedList(Arrays.asList(node11, node31, node33, node34,
+                                                                   node35, node45, node55));
 //        for(GraphNode neighbour: betterNodes) {
 //            System.err.println(neighbour.toString());
 //        }
@@ -155,7 +155,7 @@ public class GetPathTest extends TestCase{
 
 
     public void testGetPath4a() {
-        LinkedList<GraphNode> path1 = new LinkedList(Arrays.asList(node33, node23, node22, node14));
+        LinkedList<GraphNode> path1 = new LinkedList(Arrays.asList(node14, node22, node23, node33));
         LinkedList<GraphNode> path2 = new LinkedList<>();
         try {
             path2 = betterGraph.getPath(node14, node33);

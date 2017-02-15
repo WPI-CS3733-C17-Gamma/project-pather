@@ -1,5 +1,3 @@
-import java.util.Objects;
-
 public class Room extends Ided implements Comparable {
 
     GraphNode location;
