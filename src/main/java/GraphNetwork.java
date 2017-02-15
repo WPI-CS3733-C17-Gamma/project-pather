@@ -193,7 +193,6 @@ public class GraphNetwork {
      * Delete a node from graph and delete the node from the adjacent nodes
      * @param node
      */
-
     public void deleteNode(GraphNode node){
         // 1. remove node from list
         graphNodes.remove(node);
@@ -202,6 +201,7 @@ public class GraphNetwork {
            s.adjacent.remove(node);
        }
     }
+
     /**
      * Adds a connection between two nodes
      * @param nodeA
@@ -216,6 +216,7 @@ public class GraphNetwork {
         else
             return false;
     }
+
     /**
      * Deletes the connection between two nodes
      * @param nodeA
@@ -230,9 +231,6 @@ public class GraphNetwork {
             return true;
         }
         return false;
-}
-    LinkedList AStar(GraphNode start, GraphNode end){
-        return null;
     }
 
     @Override
