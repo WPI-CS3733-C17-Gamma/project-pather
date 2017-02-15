@@ -94,7 +94,7 @@ public class ApplicationController extends Application {
         try {
                 this.login = login;
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("AdminDisplay.fxml"));
-                MapAdminController controller = new MapAdminController(map, this, "Maps/floor3.png");
+                MapAdminController controller = new MapAdminController(map, this, "floor3.png");
                 loader.setController(controller);
                 Parent root = loader.load();
                 pStage.setTitle("MapAdmin");
@@ -115,7 +115,7 @@ public class ApplicationController extends Application {
         try {
                 this.login = login;
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("DirectoryAdminDisplay.fxml"));
-                DirectoryAdminController controller = new DirectoryAdminController(map, this, "Maps/floor3.png");
+                DirectoryAdminController controller = new DirectoryAdminController(map, this, "floor3.png");
                 loader.setController(controller);
                 Parent root = loader.load();
                 pStage.setTitle("DirectoryAdmin");
