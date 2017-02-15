@@ -383,18 +383,6 @@ public class PatientController extends DisplayController implements Initializabl
 
 
     public void test(){
-//        Path path = new Path();
-//        path.getElements().add(new MoveTo(hello.getLayoutX(), hello.getLayoutY()));
-//        path.getElements().add(new MoveTo(hello.getLayoutX(), 623));
-//        //path.getElements().add(new CubicCurveTo(380, 0, 380, 120, 200, 120));
-//        PathTransition pathTransition = new PathTransition();
-//        pathTransition.setPath(path);
-//        pathTransition.setDuration(Duration.millis(5000));
-//        pathTransition.setNode(hello);
-//        pathTransition.setCycleCount(1);
-//        pathTransition.setAutoReverse(false);
-//        pathTransition.play();
-
         final Timeline timeline = new Timeline();
         timeline.setCycleCount(1);
         timeline.setAutoReverse(true);
