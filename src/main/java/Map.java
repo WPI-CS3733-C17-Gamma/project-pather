@@ -56,11 +56,6 @@ public class Map {
         return directory.getRoom(node);
     }
 
-    /**
-     *
-     * @param room
-     * @return true if the room is added, false if it is a duplicate
-     */
     /** See method {@link Directory#addRoom(Room)} */
     public boolean addRoom(Room room){
         return directory.addRoom(room);
@@ -174,6 +169,11 @@ public class Map {
             System.err.println(e.getMessage());
         }
         return new LinkedList<>();
+    }
+
+    /** See method {@link GraphNetwork#getDirections(List)} */
+    public List<String> getTextualDirections(List<GraphNode> path) {
+        return graph.getDirections(path);
     }
 
     /**
