@@ -39,7 +39,7 @@ public class PatientController extends DisplayController implements Initializabl
 
     state displayState;
     // kiosk location
-    GraphNode startNode = applicationController.kiosk;
+    GraphNode startNode;// = applicationController.kiosk;
     // list of shapes that have been drawn on the screen
     List<Shape> drawnObjects;
     // FXML Things
@@ -111,13 +111,13 @@ public class PatientController extends DisplayController implements Initializabl
      * perform search
      */
     public void search () {
+        clearDisplay();
         String search = searchBar.getText();
         if (search.length() > 0) {
             options.setVisible(true);
         }
         else {
             options.setVisible(false);
-            clearDisplay();
             return;
         }
         System.out.println("search : " + search);
@@ -269,6 +269,7 @@ public class PatientController extends DisplayController implements Initializabl
      * @param subPath subpath to be drawn
      */
     public void displaySubPath (ImageView mapImage, SubPath subPath) {
+//        clearDisplay();
         System.out.println("SubPath");
         GraphNode prev = null;
         mapImage.setImage(applicationController.getImage(subPath.floor));
@@ -391,12 +392,12 @@ public class PatientController extends DisplayController implements Initializabl
 
         // TODO will need to be changed to kiosk
         this.startNode = new GraphNode(100, 100, "");
-//        try {
-//            this.startNode = map.getRoomFromName("Kiosk").location;
-//        }
-//        catch (Exception e) {
-//            System.out.println("No Kiosk");
-//        }
+        try {
+            this.startNode = map.getRoomFromName("Kiosk").location;
+        }
+        catch (Exception e) {
+            System.out.println("No Kiosk");
+        }
 
 
         options.setOnMouseClicked(new EventHandler<MouseEvent>() {

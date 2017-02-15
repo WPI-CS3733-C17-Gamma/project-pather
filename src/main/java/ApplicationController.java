@@ -45,6 +45,7 @@ public class ApplicationController extends Application {
         map.addNode(c);
         map.addNode(d);
         map.addNode(e);
+        map.addRoom(new Room(kiosk, "Kiosk"));
         map.addRoom(new Room(b, "1A"));
         map.addRoom(new Room(e, "2B"));
         System.out.println(map.addConnection(kiosk, b));
