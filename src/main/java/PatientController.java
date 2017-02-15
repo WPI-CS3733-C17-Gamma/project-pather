@@ -55,6 +55,8 @@ public class PatientController extends DisplayController implements Initializabl
     @FXML private HBox multiMapDisplayMenu;
     @FXML private Button adminButton;
 
+    private List<SubPath> currentPath;
+
     /**
      *
      * @param map
@@ -102,7 +104,7 @@ public class PatientController extends DisplayController implements Initializabl
             searchAnchorPane.setVisible(false);
 //            exitButton.setVisible(false);
             this.displayState = state.PATIENT_DEFAULT;
-            clearDisplay();
+            clearSearchDisplay();
             displayImage();
         }
     }
@@ -111,7 +113,7 @@ public class PatientController extends DisplayController implements Initializabl
      * perform search
      */
     public void search () {
-        clearDisplay();
+        clearSearchDisplay();
         String search = searchBar.getText();
         if (search.length() > 0) {
             options.setVisible(true);
@@ -223,19 +225,24 @@ public class PatientController extends DisplayController implements Initializabl
         return null;
     }
 
+    public void clearSearchDisplay(){
+        hideMultiMapAnimation();
+//        patientImageView.setImage(null);
+        multiMapDisplayMenu.getChildren().clear();
+        clearDisplay();
+    }
+
     /**
      * Remove all the points that have been drawn on the map
      */
     public void clearDisplay () {
-        hideMultiMapAnimation();
         patientImageView.setImage(null);
-        multiMapDisplayMenu.getChildren().clear();
-//        if(drawnObjects == null) {
-//            return;
-//        }
-//        for (Shape shape : drawnObjects) {
-//            anchorPane.getChildren().remove(shape);
-//        }
+        if(drawnObjects == null) {
+            return;
+        }
+        for (Shape shape : drawnObjects) {
+            anchorPane.getChildren().remove(shape);
+        }
     }
 
     /**
@@ -269,7 +276,7 @@ public class PatientController extends DisplayController implements Initializabl
      * @param subPath subpath to be drawn
      */
     public void displaySubPath (ImageView mapImage, SubPath subPath) {
-//        clearDisplay();
+        clearDisplay();
         System.out.println("SubPath");
         GraphNode prev = null;
         mapImage.setImage(applicationController.getImage(subPath.floor));
@@ -298,15 +305,18 @@ public class PatientController extends DisplayController implements Initializabl
      */
     public void getPath (GraphNode start, GraphNode end) {
         try {
-            List<SubPath> path = map.getPathByFloor(start, end);
-            displaySubPath(patientImageView, path.get(0));
-            for (SubPath p : path){
+            currentPath = map.getPathByFloor(start, end);
+            displaySubPath(patientImageView, currentPath.get(0));
+            for (int x = 0; x < currentPath.size(); x++){
+                SubPath p = currentPath.get(x);
                 ImageView i = new ImageView();
                 i.setPreserveRatio(true);
                 i.setFitHeight(95);
                 i.setFitWidth(165);
                 i.setOnMousePressed(e -> mapChoice(e));
                 i.setImage(applicationController.getImage(p.floor));
+                i.setId(x + "floor in list");
+                System.out.println(i.getId());
                multiMapDisplayMenu.getChildren().add(i);
             }
             showMultiMapAnimation();
@@ -316,7 +326,10 @@ public class PatientController extends DisplayController implements Initializabl
     }
 
     public void mapChoice(MouseEvent e){
-
+        ImageView iv = (ImageView) e.getSource();
+        System.out.println(iv.getId() + "*******");
+        SubPath path = currentPath.get((int)iv.getId().charAt(0) - 48);//ascii conversion
+        displaySubPath(patientImageView, path);
     }
 
     /**
