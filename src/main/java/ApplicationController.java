@@ -15,7 +15,6 @@ public class ApplicationController extends Application {
     Map map ;
     Stage pStage;
     Scene currentScene;
-    GraphNode kiosk = new GraphNode(5, 6, "one");
 
     // NOTE with proxy pattern this will change to a prox image
     HashMap<String, Image> images;
@@ -35,23 +34,26 @@ public class ApplicationController extends Application {
         databaseManager = new DatabaseManager("main");
         map = databaseManager.load();
 
-        //Dummy Nodes/Rooms for tests
-        GraphNode
-            b = new GraphNode(100, 20, "one"),
-            c = new GraphNode(70, 150, "two"),
-            d = new GraphNode(5, 6, "two"),
-            e = new GraphNode(200, 100, "two");
-        map.addNode(b);
-        map.addNode(c);
-        map.addNode(d);
-        map.addNode(e);
-        map.addRoom(new Room(kiosk, "Kiosk"));
-        map.addRoom(new Room(b, "1A"));
-        map.addRoom(new Room(e, "2B"));
-        System.out.println(map.addConnection(kiosk, b));
-        map.addConnection(b, c);
-        map.addConnection(c, d);
-        map.addConnection(d, e);
+//        //TODO Testing only
+//        GraphNode kiosk = new GraphNode(5, 6, "floor1");
+//        //Dummy Nodes/Rooms for tests
+//        GraphNode
+//            b = new GraphNode(100, 20, "floor1"),
+//            c = new GraphNode(70, 150, "floor2"),
+//            d = new GraphNode(5, 6, "floor2"),
+//            e = new GraphNode(200, 100, "floor2");
+//        map.addNode(b);
+//        map.addNode(c);
+//        map.addNode(d);
+//        map.addNode(e);
+//        map.addRoom(new Room(kiosk, "Kiosk"));
+//        map.addRoom(new Room(b, "1A"));
+//        map.addRoom(new Room(e, "2B"));
+//        System.out.println(map.addConnection(kiosk, b));
+//        map.addConnection(b, c);
+//        map.addConnection(c, d);
+//        map.addConnection(d, e);
+//        //End Testing *****************************************************
 
         images = new HashMap<>();
         images.put("floor1", new Image("Maps/floor1.png"));

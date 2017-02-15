@@ -40,7 +40,7 @@ public class PatientController extends DisplayController implements Initializabl
 
     state displayState;
     // kiosk location
-    GraphNode startNode;// = applicationController.kiosk;
+    GraphNode startNode;
     // list of shapes that have been drawn on the screen
     List<Shape> drawnObjects;
     // FXML Things
