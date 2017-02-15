@@ -2,9 +2,10 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.stage.Popup;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
-
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.io.IOException;
 
 public class ApplicationController extends Application {
@@ -13,10 +14,13 @@ public class ApplicationController extends Application {
     // probably not needed
     DisplayController currentDisplayController;
     Map map ;
-
     Stage pStage;
     Stage loginStage;
     Login login;
+    Scene currentScene;
+
+    // NOTE with proxy pattern this will change to a prox image
+    HashMap<String, Image> images;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -28,10 +32,19 @@ public class ApplicationController extends Application {
         primaryStage.show();
     }
 
-    // load from database
+    /**
+     * Load from the database and setup images
+     */
     public void initialize(){
         databaseManager = new DatabaseManager("main");
         map = databaseManager.load();
+        images = new HashMap<>();
+        images.put("floor3", new Image("Maps/floor3.png"));
+        images.put("floor4", new Image("Maps/floor4.png"));
+        images.put("floor5", new Image("Maps/floor5.png"));
+        images.put("floor6", new Image("Maps/floor6.png"));
+        images.put("floor7", new Image("Maps/floor7.png"));
+
     }
 
     /**
@@ -51,16 +64,26 @@ public class ApplicationController extends Application {
     public void createPatientDisplay(){
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("PatientDisplay.fxml"));
-            PatientController controller = new PatientController(map,this, "Maps/floor3.png");
+            PatientController controller = new PatientController(map,this, "floor3");
             loader.setController(controller);
             Parent root = loader.load();
             pStage.setTitle("PatientDisplay");
-            pStage.setScene(new Scene(root, 1000, 600));
+            currentScene =  new Scene(root, 1000, 600);
+            pStage.setScene(currentScene);
         }
         catch (Exception e){
             e.printStackTrace();
             System.out.println(e.toString());
         }
+    }
+
+    /**
+     * Get the floor with the given name
+     * @param floor
+     * @return
+     */
+    public Image getImage (String floor) {
+        return images.get(floor);
     }
 
     /**
@@ -141,6 +164,14 @@ public class ApplicationController extends Application {
 
         save();
         createPatientDisplay();
+    }
+
+    /**
+     * get the current java fx scene
+     * @return
+     */
+    public Scene getCurrentScene() {
+        return currentScene;
     }
 
     /**

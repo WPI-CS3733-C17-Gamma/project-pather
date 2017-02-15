@@ -18,7 +18,20 @@ public class FloorPoint implements Comparable{
         return y;
     }
 
-
+    /**
+     * Get the angle between the given points with this point as the center
+     * @param pB the first point
+     * @param pC the second point
+     * @return the angle
+     */
+    public double getAngle(FloorPoint pB, FloorPoint pC) {
+        double result =  Math.toDegrees(Math.atan2(pC.y - this.y, pC.x - this.x) -
+                                        Math.atan2(pB.y - this.y, pB.x - this.x));
+        if (result < 0) {
+            result += 360;
+        }
+        return result;
+    }
 
     public String getFloor() {
         return floor;

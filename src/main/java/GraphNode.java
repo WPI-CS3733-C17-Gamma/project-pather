@@ -39,7 +39,7 @@ public class GraphNode extends Ided implements Comparable {
     public boolean addAdjacent(GraphNode node){
         // add adjacent  node if the connection does not exist and the
         // connection is different from this
-        if (adjacent.contains(node) || this.equals(node)) {
+        if (adjacent.contains(node) || this.location.equals(node.location)) {
             return false;
         }
         else {
@@ -70,7 +70,13 @@ public class GraphNode extends Ided implements Comparable {
         return this.location.distance(graphNode.location);
     }
 
-    @Override
+    /** See method {@link FloorPoint#getAngle(FloorPoint, FloorPoint)} */
+    public double getAngle(GraphNode pB, GraphNode pC) {
+        return this.location.getAngle(pB.getLocation(), pC.getLocation());
+    }
+
+
+        @Override
     public int compareTo(Object o) {
         return 0;
     }
