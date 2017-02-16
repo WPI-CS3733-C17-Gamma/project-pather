@@ -82,11 +82,12 @@
               <Button fx:id="adminButton" layoutX="915.0" layoutY="14.0" mnemonicParsing="false" onAction="#logIn" prefHeight="50.0" prefWidth="50.0" styleClass="adminMenuButton" stylesheets="@design.css" />
               <AnchorPane fx:id="searchAnchorPane" layoutY="-4.0" prefHeight="607.0" prefWidth="1000.0" styleClass="patientBackground" stylesheets="@design.css" visible="false">
                  <children>
-                     <Label fx:id="textDirectionsTextBox" alignment="TOP_LEFT" layoutX="833.0" layoutY="134.0" prefHeight="426.0" prefWidth="143.0" text="Test Directions Please Ignore" visible="false" wrapText="true" />
                     <ImageView fx:id="patientImageView" fitHeight="558.0" fitWidth="945.0" layoutX="20.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
                     <Button fx:id="exitButton" layoutX="940.0" mnemonicParsing="false" onAction="#exitSearch" prefHeight="33.0" prefWidth="47.0" styleClass="exitButton" stylesheets="@design.css" text="X" />
-                    <Button layoutY="533.0" mnemonicParsing="false" onAction="#hideMultiMapAnimation" text="Hide Menu" />
-                    <Button fx:id="testtest" layoutY="478.0" mnemonicParsing="false" onAction="#showMultiMapAnimation" text="Show Menu" />
+                     <Label fx:id="textDirectionsTextBox" alignment="TOP_LEFT" layoutX="738.0" layoutY="65.0" prefHeight="390.0" prefWidth="248.0" styleClass="textDirection" stylesheets="@design.css" text="Test Directions Please Ignore" visible="false" wrapText="true" />
+                    <Button layoutX="870.0" layoutY="544.0" mnemonicParsing="false" onAction="#hideMultiMapAnimation" text="Hide Menu" />
+                    <Button fx:id="testtest" layoutX="868.0" layoutY="496.0" mnemonicParsing="false" onAction="#showMultiMapAnimation" text="Show Menu" />
+                  <Button fx:id="TextDirection" layoutX="811.0" layoutY="456.0" mnemonicParsing="false" onMousePressed="#textDirection" text="Show Text Direction" />
                  </children>
               </AnchorPane>
               <TextField fx:id="searchBar" layoutX="24.0" layoutY="26.0" onKeyReleased="#search" onMousePressed="#startSearch" prefHeight="47.0" prefWidth="248.0" promptText="Search!" styleClass="search" stylesheets="@design.css">
@@ -99,7 +100,7 @@
                     <Cursor fx:constant="HAND" />
                  </cursor>
               </ListView>
-              <HBox fx:id="multiMapDisplayMenu" alignment="CENTER" layoutX="40.0" layoutY="600.0" maxHeight="95.0" maxWidth="814.0" minHeight="95.0" minWidth="814.0" prefHeight="95.0" prefWidth="814.0" />
+              <HBox fx:id="multiMapDisplayMenu" alignment="CENTER_LEFT" layoutX="20.0" layoutY="600.0" maxHeight="95.0" maxWidth="814.0" minHeight="95.0" minWidth="814.0" prefHeight="95.0" prefWidth="814.0" spacing="20.0" styleClass="resultMenu" stylesheets="@design.css" />
            </children>
         </AnchorPane>
         <AnchorPane fx:id="adminPane" prefHeight="200.0" prefWidth="200.0" styleClass="background" stylesheets="@design.css" visible="false">
