@@ -13,53 +13,6 @@
 <?import javafx.scene.text.Font?>
 <?scenebuilder-stylesheet design.css?>
 
-<!--=======-->
-<!--<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" style="-fx-background-color: #d4e3ed;" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1">-->
-<!--<bottom>-->
-<!--<ToolBar prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #d4e3ed;" BorderPane.alignment="CENTER">-->
-<!--<items>-->
-<!--<Button fx:id="help" mnemonicParsing="false" onAction="#help" text="Help" />-->
-<!--<Button fx:id="AdminLogin" mnemonicParsing="false" onMouseClicked="#logIn" text="Log In" />-->
-<!--</items>-->
-<!--</ToolBar>-->
-<!--</bottom>-->
-<!--<left>-->
-<!--<AnchorPane fx:id="anchorPane" prefHeight="560.0" prefWidth="853.0" BorderPane.alignment="CENTER">-->
-<!--<children>-->
-<!--<ImageView fx:id="imageView" fitHeight="404.0" fitWidth="759.0" layoutX="99.0" layoutY="134.0" pickOnBounds="true" preserveRatio="true" />-->
-<!--<TextField fx:id="searchBar" layoutX="69.0" layoutY="22.0" onKeyReleased="#search" prefHeight="25.0" prefWidth="198.0" promptText="Search!">-->
-<!--<font>-->
-<!--<Font size="28.0" />-->
-<!--</font></TextField>-->
-<!--<Label fx:id="helpLabel" contentDisplay="CENTER" layoutX="300.0" layoutY="100.0" onKeyPressed="#help" onMouseClicked="#help" opacity="0.85" prefHeight="341.0" prefWidth="733.0" style="-fx-background-color: ALICEBLUE;" text="Label" textAlignment="CENTER" visible="false">-->
-<!--<cursor>-->
-<!--<Cursor fx:constant="S_RESIZE" />-->
-<!--</cursor>-->
-<!--<font>-->
-<!--<Font size="30.0" />-->
-<!--</font>-->
-<!--</Label>-->
-<!--<ListView fx:id="options" layoutX="67.0" layoutY="94.0" prefHeight="200.0" prefWidth="200.0" visible="false">-->
-<!--<cursor>-->
-<!--<Cursor fx:constant="HAND" />-->
-<!--</cursor></ListView>-->
-<!--<ImageView fitHeight="53.0" fitWidth="45.0" layoutX="850.0" layoutY="22.0" pickOnBounds="true" preserveRatio="true">-->
-<!--<image>-->
-<!--<Image url="@JonsGammaLogo.png" />-->
-<!--</image>-->
-<!--</ImageView>-->
-<!--<ImageView fitHeight="109.0" fitWidth="491.0" layoutX="280.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">-->
-<!--<image>-->
-<!--<Image url="@BWFH_logo_rgb%20(1).png" />-->
-<!--</image>-->
-<!--</ImageView>-->
-<!--<Label fx:id="textDirectionsTextBox" alignment="TOP_LEFT" layoutX="833.0" layoutY="134.0" prefHeight="426.0" prefWidth="143.0" text="Test Directions Please Ignore" visible="false" wrapText="true" />-->
-<!--</children>-->
-<!--</AnchorPane>-->
-<!--</left>-->
-<!--</BorderPane>-->
-<!--&gt;>>>>>> master-->
-
 <StackPane fx:id="stackPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" styleClass="background" stylesheets="@design.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" styleClass="background" stylesheets="@design.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
