@@ -1,18 +1,16 @@
-import javafx.scene.image.Image;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 public class Map {
     Directory directory;
     GraphNetwork graph;
-    HashMap<String, Image> mapImages;
 
     public Map(Directory directory,
-               GraphNetwork graph,
-               HashMap<String, Image> mapImages) {
+               GraphNetwork graph) {
         this.directory = directory;
         this.graph = graph;
-        this.mapImages = mapImages;
     }
 
     /** See method {@link Directory#searchRooms(String)} */
@@ -102,6 +100,53 @@ public class Map {
         return directory.getEntry(name);
     }
 
+    /**
+     * Add an elevator at the given Point to all floors given
+     * @param point x,y location
+     * @param floors list of floors to connect the elevator through
+     */
+    public void addElevator (FloorPoint point, List<String> floors) {
+        System.out.println("In map create elevator @ : " + point);
+        List<GraphNode> elevators = new ArrayList<>();
+        // make elevators
+        for (String floor : floors) {
+            FloorPoint currentFloor = new FloorPoint(point.x, point.y, floor);
+            GraphNode newNode = new GraphNode(currentFloor);
+            graph.addNode(newNode);
+            elevators.add(newNode);
+        }
+
+        // connect elevators
+        for (GraphNode elevatorA : elevators) {
+            for (GraphNode elevatorB : elevators) {
+                graph.addConnection(elevatorA, elevatorB);
+            }
+        }
+    }
+
+    /**
+     * Delete an elevator and all other elevator nodes
+     * it is connected to
+     * @param elevator
+     */
+    public boolean deleteElevator (GraphNode elevator) {
+        if (elevator.isElevator()) {
+            //  copy adjacent list because it will be modified by deleting!
+            List<GraphNode> copy = new ArrayList<GraphNode>();
+            copy.addAll(elevator.getConnectedElevators());
+
+            // delete each adjacent elevator
+            for (GraphNode adjacentElevator : copy) {
+                graph.deleteNode(adjacentElevator);
+            }
+
+            // delete the elevator that was marked for deletion
+            this.deleteNode(elevator);
+            return true;
+        }
+        return false;
+    }
+
     /** See method {@link GraphNetwork#addNode(GraphNode)} */
     public boolean addNode(GraphNode node){
         return graph.addNode(node);
@@ -149,7 +194,6 @@ public class Map {
         List<SubPath> subPaths = new ArrayList<>();
         SubPath currentPath = new SubPath(fullPath.get(0).location.floor);
         for (GraphNode node : fullPath) {
-            System.out.println("node : " + node);
             if (! node.getLocation().floor.equals(currentPath.floor)) {
                 subPaths.add(currentPath);
                 currentPath = new SubPath(node.location.floor) ;
@@ -196,13 +240,6 @@ public class Map {
         return this.graph.deleteConnection(nodeA, nodeB);
     }
 
-    /**
-     * @return the images stored in the Map object
-     */
-    public HashMap<String, Image> getImages(){
-        return this.mapImages;
-    }
-
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof Map)) {
@@ -214,8 +251,7 @@ public class Map {
 
         Map rhs = (Map) obj;
         return this.directory.equals(rhs.directory) &&
-            this.graph.equals(rhs.graph) &&
-            this.mapImages.equals(rhs.mapImages);
+            this.graph.equals(rhs.graph);
     }
 
 }
