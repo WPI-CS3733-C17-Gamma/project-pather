@@ -52,7 +52,6 @@ public class LoginController {
         if (getCredentials()){
             stage.hide();
             applicationController.createDirectoryAdminDisplay(login);
-
         } else {
             passwordBox.clear();
             labelWrongCreds.setVisible(true);
