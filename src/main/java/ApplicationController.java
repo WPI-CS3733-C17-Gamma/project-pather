@@ -110,7 +110,7 @@ public class ApplicationController extends Application {
             loader.setController(controller);
             Parent root = loader.load();
             pStage.setTitle("PatientDisplay");
-            currentScene =  new Scene(root, screenBounds.getWidth(), screenBounds.getHeight());
+            currentScene = new Scene (root, 1000, 600);
             pStage.setScene(currentScene);
             currentScene.widthProperty().addListener(new ChangeListener<Number>() {
                 @Override public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneWidth, Number newSceneWidth) {
@@ -124,6 +124,7 @@ public class ApplicationController extends Application {
                     System.out.println("Height: " + newSceneHeight);
                 }
             });
+            pStage.setFullScreen(true);
         }
         catch (Exception e){
             e.printStackTrace();
