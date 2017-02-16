@@ -4,6 +4,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -16,7 +17,7 @@ public class ApplicationController extends Application {
     Map map ;
     Stage pStage;
 
-    Stage loginStage;
+    Stage AdminStage;
     Login login;
     Scene currentScene;
 
@@ -28,7 +29,7 @@ public class ApplicationController extends Application {
         initialize();
 
         this.pStage = primaryStage;
-        loginStage = new Stage();
+        AdminStage = new Stage();
         createPatientDisplay();
         primaryStage.show();
     }
@@ -94,6 +95,7 @@ public class ApplicationController extends Application {
             Parent root = loader.load();
             pStage.setTitle("PatientDisplay");
             currentScene =  new Scene(root, 1000, 600);
+            pStage.setFullScreen(true);
             pStage.setScene(currentScene);
         }
         catch (Exception e){
@@ -115,15 +117,19 @@ public class ApplicationController extends Application {
      * create map admin display
      */
     public void createMapAdminDisplay(Login login){
+        AdminStage.close();
+        AdminStage = new Stage(StageStyle.UNDECORATED);
+        AdminStage.setResizable(false);
+        AdminStage.initOwner(pStage);
         try {
                 this.login = login;
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("MapAdminDisplay.fxml"));
                 MapAdminController controller = new MapAdminController(map, this, "floor3.png");
                 loader.setController(controller);
                 Parent root = loader.load();
-                loginStage.setTitle("MapAdmin");
-                loginStage.setScene(new Scene(root, 600, 600));
-                loginStage.show();
+                AdminStage.setTitle("MapAdmin");
+                AdminStage.setScene(new Scene(root, 600, 600));
+                AdminStage.show();
 
         }
         catch (Exception e){
@@ -136,15 +142,19 @@ public class ApplicationController extends Application {
      * Create map directory admin app
      */
     public void createDirectoryAdminDisplay(Login login){
+        AdminStage.close();
+        AdminStage = new Stage(StageStyle.UNDECORATED);
+        AdminStage.setResizable(false);
+        AdminStage.initOwner(pStage);
         try {
                 this.login = login;
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("DirectoryAdminDisplay.fxml"));
                 DirectoryAdminController controller = new DirectoryAdminController(map, this, "floor3.png");
                 loader.setController(controller);
                 Parent root = loader.load();
-                loginStage.setTitle("DirectoryAdmin");
-                loginStage.setScene(new Scene(root, 600, 600));
-                loginStage.show();
+                AdminStage.setTitle("DirectoryAdmin");
+                AdminStage.setScene(new Scene(root, 600, 600));
+                AdminStage.show();
         }
         catch (Exception e){
             e.printStackTrace();
@@ -157,15 +167,17 @@ public class ApplicationController extends Application {
      *
      */
     public void createLoginAdmin(){     //not signing in... also add "wrong username or password"
+        AdminStage = new Stage();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("LoginDisplay.fxml"));
-        LoginController loginController = new LoginController(this, loginStage);
+        LoginController loginController = new LoginController(this, AdminStage);
         Scene newScene;
         try{
             loader.setController(loginController);
             Parent root = loader.load();
-            loginStage.setTitle("Login");
-            loginStage.setScene(new Scene(root, 350, 150));
-            loginStage.show();
+            AdminStage.setTitle("Login");
+            AdminStage.initOwner(pStage);
+            AdminStage.setScene(new Scene(root, 350, 150));
+            AdminStage.show();
         } catch (IOException e){
             e.printStackTrace();
             System.out.println(e.toString());
@@ -179,7 +191,7 @@ public class ApplicationController extends Application {
 
 
     /**
-     * Change back to the patient display
+     * Closes Admin Display
      */
     public void logout(){
         try{
@@ -189,7 +201,8 @@ public class ApplicationController extends Application {
         }
 
         save();
-        createPatientDisplay();
+        AdminStage.close();
+        //createPatientDisplay();
     }
 
     /**
