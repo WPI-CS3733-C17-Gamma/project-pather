@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -72,13 +73,18 @@ public class GraphNode extends Ided implements Comparable {
 
     /** See method {@link FloorPoint#getAngle(FloorPoint, FloorPoint)} */
     public double getAngle(GraphNode pB, GraphNode pC) {
-        return this.location.getAngle(pB.getLocation(), pC.getLocation());
+        return this.location.getAngle(pB.location, pC.location);
     }
 
 
         @Override
     public int compareTo(Object o) {
         return 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return location.x + 10 * location.y + 100 * location.floor.hashCode() ;
     }
 
     @Override
@@ -121,7 +127,45 @@ public class GraphNode extends Ided implements Comparable {
         return this.location.equals(rhs.location) && allFpEqual;
     }
 
+
+    /**
+     * Return true when this node is attached to another node on a different floor
+     * @return
+     */
+    public boolean isElevator () {
+        boolean isElev = false;
+        for (GraphNode adj : adjacent) {
+            if ( ! adj.getLocation().getFloor().equals(this.getLocation().getFloor())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    /**
+     * Get list of nodes that are connected by elevator (not including self)
+     * @return
+     */
+    public List<GraphNode> getConnectedElevators () {
+        List<GraphNode> elevators = new ArrayList<GraphNode> () ;
+
+        for (GraphNode adj : adjacent) {
+            if ( ! adj.getLocation().getFloor().equals(this.getLocation().getFloor())) {
+                elevators.add(adj);
+            }
+        }
+        return elevators;
+    }
+
+
     public String toString(){
-        return "<Node at " + location.toString();
+
+        String s = "<Node at " + location.toString() + "> adj : " ;
+        for (GraphNode adj : this.adjacent) {
+            s += adj.location.toString() + ", " ;
+        }
+
+        return s;
     }
 }
