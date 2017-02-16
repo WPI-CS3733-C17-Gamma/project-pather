@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?scenebuilder-stylesheet design.css?>
-
-<?import javafx.scene.control.*?>
 <?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.InnerShadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
+
 <StackPane fx:id="stackPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" styleClass="background" stylesheets="@design.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" styleClass="background" stylesheets="@design.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
@@ -38,10 +44,13 @@
                   <Button fx:id="TextDirection" layoutX="811.0" layoutY="456.0" mnemonicParsing="false" onMousePressed="#textDirection" text="Show Text Direction" />
                  </children>
               </AnchorPane>
-              <TextField fx:id="searchBar" layoutX="24.0" layoutY="26.0" onKeyReleased="#search" onMousePressed="#startSearch" prefHeight="47.0" prefWidth="248.0" promptText="Search!" styleClass="search" stylesheets="@design.css">
+              <TextField fx:id="searchBar" layoutX="24.0" layoutY="26.0" onKeyReleased="#search" onMousePressed="#startSearch" prefHeight="47.0" prefWidth="248.0" promptText="Search!" style="-fx-border-radius: 20; -fx-background-radius: 20;" styleClass="search" stylesheets="@design.css">
                  <font>
                     <Font size="28.0" />
                  </font>
+               <effect>
+                  <InnerShadow />
+               </effect>
               </TextField>
               <ListView fx:id="options" layoutX="40.0" layoutY="73.0" prefHeight="200.0" prefWidth="212.0" visible="false">
                  <cursor>

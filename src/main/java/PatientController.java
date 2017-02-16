@@ -530,5 +530,22 @@ public class PatientController extends DisplayController implements Initializabl
             "\n\nTo close this menu, click on this");
     }
 
-
+    /**
+     * Resizes Window's Width
+     * @param oldSceneWidth
+     * @param newSceneWidth
+     */
+    public void scaleWidth(Number oldSceneWidth, Number newSceneWidth){
+        anchorPane.setScaleX(anchorPane.getScaleX()*newSceneWidth.doubleValue()/oldSceneWidth.doubleValue());
+        //imageView.setScaleX(imageView.getScaleX()*newSceneWidth.doubleValue()/oldSceneWidth.doubleValue());
+    }
+    /**
+     * Resizes Window's Height
+     * @param oldSceneHeight
+     * @param newSceneHeight
+     */
+    public void scaleHeight(Number oldSceneHeight, Number newSceneHeight){
+        anchorPane.setScaleY(anchorPane.getScaleY()*newSceneHeight.doubleValue()/oldSceneHeight.doubleValue());
+        //imageView.setScaleX(imageView.getScaleY()*newSceneHeight.doubleValue()/oldSceneHeight.doubleValue());
+    }
 }
