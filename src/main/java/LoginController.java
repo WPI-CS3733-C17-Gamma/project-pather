@@ -1,7 +1,9 @@
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 /**
@@ -9,12 +11,12 @@ import javafx.stage.Stage;
  */
 public class LoginController {
 
-    @FXML
-    private PasswordField passwordBox;
-    @FXML
-    private TextField textboxUsername;
-    @FXML
-    private Label labelWrongCreds;
+    @FXML private PasswordField passwordBox;
+    @FXML private TextField textboxUsername;
+    @FXML private Label labelWrongCreds;
+    @FXML private AnchorPane loginPage;
+    @FXML private Button loginButton;
+    @FXML private AnchorPane adminPane;
 
 
     private String inputPassword = "";
@@ -60,5 +62,10 @@ public class LoginController {
     }
 
 
-
+    public void showAdminMenu(){
+        loginPage.setVisible(false);
+        adminPane.setVisible(true);
+        stage.setHeight(500);
+        stage.setWidth(900);
+    }
 }

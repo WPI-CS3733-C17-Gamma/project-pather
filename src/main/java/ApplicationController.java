@@ -121,9 +121,9 @@ public class ApplicationController extends Application {
                 MapAdminController controller = new MapAdminController(map, this, "floor3.png");
                 loader.setController(controller);
                 Parent root = loader.load();
-                pStage.setTitle("MapAdmin");
-                pStage.setScene(new Scene(root, 1000, 600));
-                pStage.show();
+                loginStage.setTitle("MapAdmin");
+                loginStage.setScene(new Scene(root, 1000, 600));
+                loginStage.show();
 
         }
         catch (Exception e){
@@ -142,9 +142,9 @@ public class ApplicationController extends Application {
                 DirectoryAdminController controller = new DirectoryAdminController(map, this, "floor3.png");
                 loader.setController(controller);
                 Parent root = loader.load();
-                pStage.setTitle("DirectoryAdmin");
-                pStage.setScene(new Scene(root, 1000, 600));
-                pStage.show();
+                loginStage.setTitle("DirectoryAdmin");
+                loginStage.setScene(new Scene(root, 1000, 600));
+                loginStage.show();
         }
         catch (Exception e){
             e.printStackTrace();
