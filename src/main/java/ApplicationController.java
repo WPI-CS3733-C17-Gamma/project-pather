@@ -3,6 +3,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -95,7 +96,7 @@ public class ApplicationController extends Application {
             Parent root = loader.load();
             pStage.setTitle("PatientDisplay");
             currentScene =  new Scene(root, 1000, 600);
-            pStage.setFullScreen(true);
+            //pStage.setFullScreen(true);
             pStage.setScene(currentScene);
         }
         catch (Exception e){
@@ -118,7 +119,7 @@ public class ApplicationController extends Application {
      */
     public void createMapAdminDisplay(Login login){
         AdminStage.close();
-        AdminStage = new Stage(StageStyle.UNDECORATED);
+        AdminStage = new Stage(StageStyle.UTILITY);
         AdminStage.setResizable(false);
         AdminStage.initOwner(pStage);
         try {
@@ -143,7 +144,8 @@ public class ApplicationController extends Application {
      */
     public void createDirectoryAdminDisplay(Login login){
         AdminStage.close();
-        AdminStage = new Stage(StageStyle.UNDECORATED);
+        AdminStage = new Stage(StageStyle.UTILITY);
+        AdminStage.initModality(Modality.NONE);
         AdminStage.setResizable(false);
         AdminStage.initOwner(pStage);
         try {
