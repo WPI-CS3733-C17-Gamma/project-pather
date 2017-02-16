@@ -23,7 +23,7 @@ public class ApplicationController extends Application {
     Scene currentScene;
 
     // NOTE with proxy pattern this will change to a prox image
-    HashMap<String, Image> images;
+    HashMap<String, ProxyImage> images;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -42,35 +42,15 @@ public class ApplicationController extends Application {
         databaseManager = new DatabaseManager("main");
         map = databaseManager.load();
 
-        //TODO Testing only
-//        GraphNode kiosk = new GraphNode(5, 6, "floor1");
-//        //Dummy Nodes/Rooms for tests
-//        GraphNode
-//            b = new GraphNode(100, 20, "floor1"),
-//            c = new GraphNode(70, 150, "floor2"),
-//            d = new GraphNode(5, 6, "floor2"),
-//            e = new GraphNode(200, 100, "floor2");
-//        map.addNode(b);
-//        map.addNode(c);
-//        map.addNode(d);
-//        map.addNode(e);
-//        map.addRoom(new Room(kiosk, "Kiosk"));
-//        map.addRoom(new Room(b, "1A"));
-//        map.addRoom(new Room(e, "2B"));
-//        System.out.println(map.addConnection(kiosk, b));
-//        map.addConnection(b, c);
-//        map.addConnection(c, d);
-//        map.addConnection(d, e);
-        //End Testing *****************************************************
 
         images = new HashMap<>();
-        images.put("floor1", new Image("Maps/floor1.png"));
-        images.put("floor2", new Image("Maps/floor2.png"));
-        images.put("floor3", new Image("Maps/floor3.png"));
-        images.put("floor4", new Image("Maps/floor4.png"));
-        images.put("floor5", new Image("Maps/floor5.png"));
-        images.put("floor6", new Image("Maps/floor6.png"));
-        images.put("floor7", new Image("Maps/floor7.png"));
+        images.put("floor1", new ProxyImage("Maps/floor1.png"));
+        images.put("floor2", new ProxyImage("Maps/floor2.png"));
+        images.put("floor3", new ProxyImage("Maps/floor3.png"));
+        images.put("floor4", new ProxyImage("Maps/floor4.png"));
+        images.put("floor5", new ProxyImage("Maps/floor5.png"));
+        images.put("floor6", new ProxyImage("Maps/floor6.png"));
+        images.put("floor7", new ProxyImage("Maps/floor7.png"));
 
     }
 
@@ -114,11 +94,23 @@ public class ApplicationController extends Application {
 
     /**
      * Get the floor with the given name
-     * @param floor
+     * @param floor - floor name to retrieve
      * @return
      */
     public Image getImage (String floor) {
-        return images.get(floor);
+        ProxyImage proxyFloor = images.get(floor);
+        if (proxyFloor != null) {
+            try {
+                return proxyFloor.getValue();
+            }
+            catch (IllegalArgumentException e){
+                e.printStackTrace();
+                return null;
+            }
+        }
+        else {
+            return null;
+        }
     }
 
     /**

@@ -1,11 +1,27 @@
-import java.lang.reflect.Method;
+import javafx.scene.image.Image;
 
 /**
- * Created by Saahil on 2/15/2017.
+ * ProxyImage serves as a proxy class for the real image
  */
-public class ProxyImage implements java.lang.reflect.InvocationHandler {
+public class ProxyImage implements IProxyImage {
+
+    private RealImage realImage;
+
+    /**
+     * Get the value of the real image.
+     * Delegates this function to the real image
+     * @return
+     */
     @Override
-    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        return null;
+    public Image getValue() {
+        return realImage.getValue();
+    }
+
+    /**
+     * Construct the proxy image to load the given string
+     * @param imageName - name of image this proxyimage is responsible for
+     */
+    public ProxyImage (String imageName) {
+        realImage = new RealImage(imageName);
     }
 }
