@@ -7,6 +7,8 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ApplicationController extends Application {
 
@@ -81,6 +83,14 @@ public class ApplicationController extends Application {
         return map;
     }
 
+    /**
+     * Get list of all floors in the application
+     * TODO move this to map
+     * @return
+     */
+    public List<String> getAllFloors () {
+        return images.keySet().stream().collect(Collectors.toList());
+    }
 
 
     /**
