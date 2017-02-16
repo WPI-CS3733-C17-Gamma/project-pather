@@ -1,4 +1,4 @@
-import java.util.Comparator;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,14 +27,9 @@ public class GraphNetwork {
 
         start.fScore = start.getDistance(goal);
 
-        while(openSet.size() > 0){
+        while(!openSet.isEmpty()){
             //Sort List of nodes
-            openSet.sort(new Comparator<AStarNode>(){
-                @Override
-                public int compare(AStarNode a, AStarNode b) {
-                    return ((int)a.fScore - (int)b.fScore);
-                }
-            });
+            Collections.sort(openSet);
 
             current = openSet.getFirst();
             if(current.equals(goal))
@@ -42,12 +37,8 @@ public class GraphNetwork {
 
             openSet.remove(current);
             closedSet.add(current);
-            current.node.getAdjacent().sort(new Comparator<GraphNode>(){
-                @Override
-                public int compare(GraphNode a, GraphNode b) {
-                    return ((int)a.distance(goalNode) - (int)b.distance(goalNode));
-                }
-            });
+            current.node.getAdjacent().sort(
+                (GraphNode a, GraphNode b) -> ((int)a.distance(goalNode) - (int)b.distance(goalNode)));
             for (GraphNode gNeighbour: current.node.getAdjacent()) {
                 AStarNode neighbour = new AStarNode(gNeighbour);
                 if (closedSet.contains(neighbour))
@@ -55,12 +46,7 @@ public class GraphNetwork {
                 double tentative_gscore = current.gScore + neighbour.getDistance(current);
                 if(!openSet.contains(neighbour)) {
                     openSet.add(neighbour);
-                    openSet.sort(new Comparator<AStarNode>(){
-                        @Override
-                        public int compare(AStarNode a, AStarNode b) {
-                            return ((int)a.fScore - (int)b.fScore);
-                        }
-                    });
+                    Collections.sort(openSet);
                 }
                 else if (tentative_gscore >= neighbour.gScore)
                     continue;
@@ -193,7 +179,6 @@ public class GraphNetwork {
      * Delete a node from graph and delete the node from the adjacent nodes
      * @param node
      */
-
     public void deleteNode(GraphNode node){
         // 1. remove node from list
         graphNodes.remove(node);
@@ -202,6 +187,7 @@ public class GraphNetwork {
            s.adjacent.remove(node);
        }
     }
+
     /**
      * Adds a connection between two nodes
      * @param nodeA
@@ -216,6 +202,7 @@ public class GraphNetwork {
         else
             return false;
     }
+
     /**
      * Deletes the connection between two nodes
      * @param nodeA
@@ -230,9 +217,6 @@ public class GraphNetwork {
             return true;
         }
         return false;
-}
-    LinkedList AStar(GraphNode start, GraphNode end){
-        return null;
     }
 
     @Override

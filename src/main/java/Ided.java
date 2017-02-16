@@ -9,10 +9,4 @@ public class Ided {
      * Unique ID for every object to be added to the database
      */
     public final long id = UNIQUE_ID_GENERATOR.incrementAndGet();
-
-    /**
-     * default constructor
-     */
-    public Ided () {
-    }
 }
