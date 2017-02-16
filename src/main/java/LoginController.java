@@ -37,6 +37,8 @@ public class LoginController {
     }
 
     public void signInMap(){
+        stage.setHeight(650);
+        stage.setWidth(600);
         if (getCredentials()) {
             stage.hide();
             applicationController.createMapAdminDisplay(login);

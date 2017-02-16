@@ -117,12 +117,12 @@ public class ApplicationController extends Application {
     public void createMapAdminDisplay(Login login){
         try {
                 this.login = login;
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("AdminDisplay.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("MapAdminDisplay.fxml"));
                 MapAdminController controller = new MapAdminController(map, this, "floor3.png");
                 loader.setController(controller);
                 Parent root = loader.load();
                 loginStage.setTitle("MapAdmin");
-                loginStage.setScene(new Scene(root, 1000, 600));
+                loginStage.setScene(new Scene(root, 600, 600));
                 loginStage.show();
 
         }
@@ -143,7 +143,7 @@ public class ApplicationController extends Application {
                 loader.setController(controller);
                 Parent root = loader.load();
                 loginStage.setTitle("DirectoryAdmin");
-                loginStage.setScene(new Scene(root, 1000, 600));
+                loginStage.setScene(new Scene(root, 600, 600));
                 loginStage.show();
         }
         catch (Exception e){
