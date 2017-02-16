@@ -1,8 +1,12 @@
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -97,14 +101,30 @@ public class ApplicationController extends Application {
      * load the patient display into the frame
      */
     public void createPatientDisplay(){
+
+        Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("PatientDisplay.fxml"));
             PatientController controller = new PatientController(map,this, "floor3");
             loader.setController(controller);
             Parent root = loader.load();
             pStage.setTitle("PatientDisplay");
-            currentScene =  new Scene(root, 1000, 600);
+            currentScene = new Scene (root, 1000, 600);
             pStage.setScene(currentScene);
+            currentScene.widthProperty().addListener(new ChangeListener<Number>() {
+                @Override public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneWidth, Number newSceneWidth) {
+                    System.out.println("Width: " + newSceneWidth);
+                    controller.scaleWidth(oldSceneWidth, newSceneWidth);
+                }
+            });
+            currentScene.heightProperty().addListener(new ChangeListener<Number>() {
+                @Override public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneHeight, Number newSceneHeight) {
+                    controller.scaleHeight(oldSceneHeight, newSceneHeight);
+                    System.out.println("Height: " + newSceneHeight);
+                }
+            });
+            pStage.setFullScreen(true);
         }
         catch (Exception e){
             e.printStackTrace();
