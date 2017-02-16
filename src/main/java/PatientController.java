@@ -36,7 +36,8 @@ public class PatientController extends DisplayController implements Initializabl
     //what type/state of display the Patient Display is currently displaying
     private enum state{
         PATIENT_DEFAULT,
-        PATIENT_SEARCH
+        PATIENT_SEARCH,
+        DISPLAYING_TEXT_DIRECTION
     }
 
     state displayState;
@@ -63,8 +64,10 @@ public class PatientController extends DisplayController implements Initializabl
     @FXML private AnchorPane adminPane;
     @FXML private Button patientDisplayButton;
     @FXML private Button login;
+    @FXML private Button TextDirection;
 
     private List<SubPath> currentPath;
+    private int currentSubPath;
 
     /**
      *
@@ -110,7 +113,7 @@ public class PatientController extends DisplayController implements Initializabl
      */
     public void exitSearch(){
         System.out.println("Exit button works");
-        if (this.displayState == state.PATIENT_SEARCH){//switch state
+        if (this.displayState == state.PATIENT_SEARCH || this.displayState == state.DISPLAYING_TEXT_DIRECTION ){//switch state
             searchAnchorPane.setVisible(false);
             this.displayState = state.PATIENT_DEFAULT;
             clearSearchDisplay();
@@ -297,8 +300,9 @@ public class PatientController extends DisplayController implements Initializabl
     public void getPath (GraphNode start, GraphNode end) {
         try {
             currentPath = map.getPathByFloor(start, end);
-            displaySubPath(patientImageView, currentPath.get(0));
-            for (int x = 0; x < currentPath.size(); x++){
+            displaySubPath(patientImageView, currentPath.get(currentPath.size() - 1));
+            currentSubPath = currentPath.size() - 1;
+            for (int x = currentPath.size() - 1; x >= 0 ; x--){
                 SubPath p = currentPath.get(x);
                 ImageView i = new ImageView();
                 i.setPreserveRatio(true);
@@ -326,8 +330,12 @@ public class PatientController extends DisplayController implements Initializabl
         try {
             ImageView iv = (ImageView) e.getSource();
             System.out.println(iv.getId() + "*******");
-            SubPath path = currentPath.get((int) iv.getId().charAt(0) - 48);//ascii conversion
+            currentSubPath = (int) iv.getId().charAt(0) - 48;
+            SubPath path = currentPath.get(currentSubPath);//ascii conversion
             displaySubPath(patientImageView, path);
+            if (displayState == state.DISPLAYING_TEXT_DIRECTION){
+                displayTextDirections(currentPath.get(currentSubPath).path);
+            }
         }catch(ClassCastException cc){
             System.err.println("you are implementing this method in a wrong place");
         }
@@ -410,6 +418,19 @@ public class PatientController extends DisplayController implements Initializabl
             prev = node;
         }
         drawnObjects = listToDraw;
+    }
+
+    public void textDirection(){
+        if (textDirectionsTextBox.isVisible()){
+            displayState = state.PATIENT_SEARCH;
+            textDirectionsTextBox.setVisible(false);
+            TextDirection.setText("Show Text Direction");
+        }
+        else {
+            displayState = state.DISPLAYING_TEXT_DIRECTION;
+            TextDirection.setText("Hide Text Direction");
+            displayTextDirections(currentPath.get(currentSubPath).path);
+        }
     }
 
 
