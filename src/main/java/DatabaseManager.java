@@ -1,5 +1,3 @@
-import javafx.scene.image.Image;
-
 import java.sql.*;
 import java.util.HashMap;
 import java.util.HashSet;
