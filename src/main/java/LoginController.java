@@ -71,5 +71,6 @@ public class LoginController {
         adminPane.setVisible(true);
         stage.setHeight(500);
         stage.setWidth(900);
+        stage.centerOnScreen();
     }
 }

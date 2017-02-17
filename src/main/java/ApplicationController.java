@@ -160,6 +160,7 @@ public class ApplicationController extends Application {
                 Parent root = loader.load();
                 adminStage.setTitle("MapAdmin");
                 adminStage.setScene(new Scene(root, 600, 600));
+                adminStage.centerOnScreen();
                 adminStage.show();
 
         }
