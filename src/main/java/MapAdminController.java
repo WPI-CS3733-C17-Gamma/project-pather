@@ -1,5 +1,6 @@
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -7,6 +8,7 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
@@ -43,10 +45,12 @@ public class MapAdminController extends DisplayController implements Initializab
     Room activeRoom ;
     List<String> elevatorFloors = new ArrayList<>();
 
-
     // keep track of the objects that have been drawn on the screen
     HashMap<Long, Shape> drawnNodes = new HashMap<>();
     List<Shape> drawnLines = new ArrayList<>();
+
+    //For the context menu (right click menu)
+    //ContextMenu contextMenu;
 
     @FXML private Button buttonSave;
     @FXML private Button buttonCancel;
@@ -108,6 +112,23 @@ public class MapAdminController extends DisplayController implements Initializab
 
         setMap("floor3");
         drawMap();
+
+        /*contextMenu = new ContextMenu();
+        System.out.println("initialized");
+        MenuItem addNode = new MenuItem("Add Node");
+        MenuItem deleteNode = new MenuItem("Delete node");
+        MenuItem addConnection = new MenuItem("Add Connection");
+        MenuItem deleteConnection = new MenuItem("Delete Connection");
+        MenuItem addElevator = new MenuItem("Add Elevator");
+        MenuItem deleteElevator = new MenuItem("Delete Elevator");
+        contextMenu.getItems().addAll(addNode, deleteNode, new SeparatorMenuItem(),
+                                    addConnection, deleteConnection, new SeparatorMenuItem(),
+                                    addElevator, deleteElevator);
+
+        imageviewMap.setContextMenu(contextMenu);*/     //Saving for next iteration, spent a lot of time on it
+
+
+
     }
 
     /**
@@ -608,6 +629,8 @@ public class MapAdminController extends DisplayController implements Initializab
         FloorPoint graphPoint = mouseToGraph(e);
         addElevator(graphPoint, elevatorFloors);
     }
+
+
     /**
      * handle the mouse event when no states are selected
      * @param e Mouse event generated the container
@@ -674,6 +697,29 @@ public class MapAdminController extends DisplayController implements Initializab
         if (secondaryNode != null) {
             addConnection(secondaryNode, selectedNode);
         }
+    }
+    @FXML
+    public void handleKey(KeyEvent key){
+        System.out.println("Key Pressed: " + key.getCode());
+        switch(key.getCode()){
+            case DELETE:
+                deleteSelected();
+                System.out.println("deleted");
+                break;
+            case N:
+                togglebuttonAddNode.setSelected(true);
+                break;
+            case C:
+                togglebuttonAddConnections.setSelected(true);
+                break;
+            case E:
+                togglebuttonAddElevator.setSelected(true);
+                break;
+            case A:
+                togglebuttonChainAdd.setSelected(true);
+                break;
+        }
+
     }
 
 
