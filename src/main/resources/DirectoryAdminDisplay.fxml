@@ -51,7 +51,7 @@
                         <ListView fx:id="currentServices" layoutX="179.0" layoutY="127.0" prefHeight="200.0" prefWidth="200.0" />
                     </children>
                 </AnchorPane>
-                <AnchorPane fx:id="entryEditor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="553.0" prefWidth="363.0" visible="false">
+                <AnchorPane fx:id="entryEditor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="553.0" prefWidth="363.0">
                     <children>
                         <TextField fx:id="entryName" layoutX="120.0" layoutY="55.0" text="Name" />
                         <TextField fx:id="entryRoomSearch" layoutX="120.0" layoutY="165.0" onKeyReleased="#filterRooms" prefHeight="25.0" prefWidth="122.0" promptText="search location" />
@@ -62,7 +62,7 @@
                         <ListView fx:id="entryRoomOptions" layoutX="115.0" layoutY="186.0" opacity="0.9" prefHeight="69.0" prefWidth="201.0" visible="false" />
                         <ListView fx:id="entryCurrentLocations" layoutX="93.0" layoutY="263.0" prefHeight="200.0" prefWidth="200.0" />
                         <Button layoutX="154.0" layoutY="470.0" mnemonicParsing="false" onAction="#saveEntry" onMouseClicked="#saveEntry" prefHeight="25.0" prefWidth="70.0" text="Save" />
-                        <Button fx:id="entryDeleteRoom" layoutX="348.0" layoutY="350.0" mnemonicParsing="false" onAction="#entryDeleteSelectedRoom" style="-fx-background-color: pink;" text="Delete" visible="false" />
+                        <Button fx:id="entryDeleteRoom" layoutX="295.0" layoutY="350.0" mnemonicParsing="false" onAction="#entryDeleteSelectedRoom" style="-fx-background-color: pink;" text="Delete" visible="false" />
                         <Button layoutX="93.0" layoutY="470.0" mnemonicParsing="false" onAction="#entryCancel" prefHeight="27.0" prefWidth="52.0" text="Cancel" />
                         <Button fx:id="entryDeleteEntry" layoutX="232.0" layoutY="470.0" mnemonicParsing="false" onAction="#entryDeleteSelectedEntry" style="-fx-background-color: pink;" text="Delete Entry" />
                     </children>

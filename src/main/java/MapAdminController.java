@@ -1,6 +1,5 @@
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -689,26 +688,26 @@ public class MapAdminController extends DisplayController implements Initializab
         }
     }
     @FXML
-    public void handleKey(KeyEvent key){
-        System.out.println("Key Pressed: " + key.getCode());
-        switch(key.getCode()){
-            case DELETE:
-                deleteSelected();
-                System.out.println("deleted");
-                break;
-            case N:
-                changeState(State.ADD_NODES);
-                break;
-            case C:
-                changeState(State.ADD_CONNECTION);
-                break;
-            case E:
-                changeState(State.ADD_ELEVATOR);
-                break;
-            case A:
-                changeState(State.CHAIN_ADD);
-                break;
-        }
+    public void handleKey(KeyEvent key){ //TODO fix this
+//        System.out.println("Key Pressed: " + key.getCode());
+//        switch(key.getCode()){
+//            case DELETE:
+//                deleteSelected();
+//                System.out.println("deleted");
+//                break;
+//            case N:
+//                changeState(State.ADD_NODES);
+//                break;
+//            case C:
+//                changeState(State.ADD_CONNECTION);
+//                break;
+//            case E:
+//                changeState(State.ADD_ELEVATOR);
+//                break;
+//            case A:
+//                changeState(State.CHAIN_ADD);
+//                break;
+//        }
 
     }
 
