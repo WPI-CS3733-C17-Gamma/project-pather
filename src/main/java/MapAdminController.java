@@ -631,15 +631,10 @@ public class MapAdminController extends DisplayController implements Initializab
      * @param e Mouse event generated the container
      */
     public void handleMouseEventDefault (MouseEvent e) {
-        if(e.getClickCount() == 2){
-            addNode(mouseToGraph(e));
-        }
-        else {
-            GraphNode nearby = nearbyNode(e);
-            if (nearby != null) {
-                secondaryNode = selectedNode;
-                selectedNode = nearby;
-            }
+        GraphNode nearby = nearbyNode(e);
+        if (nearby != null) {
+            secondaryNode = selectedNode;
+            selectedNode = nearby;
         }
     }
 
