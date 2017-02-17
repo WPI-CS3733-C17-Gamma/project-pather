@@ -269,6 +269,7 @@ public class MapAdminController extends DisplayController implements Initializab
         List<String> options = applicationController.getAllFloors();
         ObservableList<String> observOptions= FXCollections.observableArrayList(options);
         changeFloorOptions.setItems(observOptions);
+        changeFloorOptions.toFront();
     }
 
 
