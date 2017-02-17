@@ -22,10 +22,7 @@ import javafx.scene.shape.Shape;
 import javafx.util.Duration;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -367,7 +364,7 @@ public class PatientController extends DisplayController implements Initializabl
         timeline.play();
         System.out.println("hello3");
     }
-
+    
 
     /**
      * Display the given sub path over the given image view
@@ -382,15 +379,24 @@ public class PatientController extends DisplayController implements Initializabl
         GraphNode prev = null;
         mapImage.setImage(applicationController.getImage(subPath.floor));
         List<Shape> listToDraw = new ArrayList<>();
+
+        Iterator<GraphNode> iterator = subPath.path.iterator();
+        if (iterator.hasNext()){
+            prev = iterator.next();
+            FloorPoint localPoint = graphPointToImage(prev, mapImage);
+            System.out.println(localPoint);
+            listToDraw.add(drawStartPoint(localPoint));
+        }
         // draw path, and all connections from previous
-        for (GraphNode node : subPath.path) {
+        while(iterator.hasNext()){
+            GraphNode node = iterator.next();
             FloorPoint localPoint = graphPointToImage(node, mapImage);
             System.out.println(localPoint);
-            listToDraw.add(drawPoint(localPoint));
-            // draw connection
-            if (prev != null) {
-                listToDraw.add(drawConnection(prev, node, mapImage));
+            if (!iterator.hasNext()){
+                listToDraw.add(drawEndPoint(localPoint));
             }
+            // draw connection
+                listToDraw.add(drawConnection(prev, node, mapImage));
             prev = node;
         }
         if(drawnObjects == null) {
@@ -398,26 +404,45 @@ public class PatientController extends DisplayController implements Initializabl
         }
         drawnObjects.addAll(listToDraw);
     }
+    /**
+     * given local point, draw the point
+     * @param localPoint
+     */
+    public Shape drawStartPoint (FloorPoint localPoint) {
+        Circle c = new Circle(localPoint.x, localPoint.y, 10);
+        c.setFill(Color.BLUE);
+        anchorPane.getChildren().add(c);
+        return c;
+    }
+
+    public Shape drawEndPoint (FloorPoint localPoint) {
+        Circle c = new Circle(localPoint.x, localPoint.y, 10);
+        c.setFill(Color.RED);
+        anchorPane.getChildren().add(c);
+        return c;
+    }
+
 
     /**
-     * draw path on screen
-     * @param path
+     * draw the line between two nodes
+     * @param nodeA
+     * @param nodeB
+     * @return
      */
-    public void displayPath(List<GraphNode> path) {
-        GraphNode prev = null;
-        List<Shape> listToDraw = new ArrayList<>();
-        // draw path, and all connections from previous
-        for (GraphNode node : path) {
-            FloorPoint localPoint = graphPointToImage(node, imageView);
-            listToDraw.add(drawPoint(localPoint));
-            // draw connection
-            if (prev != null) {
-                listToDraw.add(drawConnection(prev, node, imageView));
-            }
-            prev = node;
-        }
-        drawnObjects = listToDraw;
+    public Shape drawConnection (GraphNode nodeA, GraphNode nodeB, ImageView imageToBeDrawnOver) {
+        FloorPoint pointA = graphPointToImage(nodeA, imageToBeDrawnOver);
+        FloorPoint pointB = graphPointToImage(nodeB, imageToBeDrawnOver);
+
+        Line line = new Line(pointA.x, pointA.y, pointB.x, pointB.y);
+        line.setStrokeWidth(4);
+        line.setFill(Color.BLUE);
+        line.setStrokeWidth(1);
+
+        anchorPane.getChildren().add(line);
+
+        return line;
     }
+
 
     public void textDirection(){
         if (textDirectionsTextBox.isVisible()){
@@ -446,37 +471,6 @@ public class PatientController extends DisplayController implements Initializabl
         }
         textDirectionsTextBox.setText(dir);
         return;
-    }
-
-    /**
-     * given local point, draw the point
-     * @param localPoint
-     */
-    public Shape drawPoint (FloorPoint localPoint) {
-        Circle c = new Circle(localPoint.x, localPoint.y, 5);
-        c.setFill(Color.BLUE);
-        anchorPane.getChildren().add(c);
-        return c;
-    }
-
-    /**
-     * draw the line between two nodes
-     * @param nodeA
-     * @param nodeB
-     * @return
-     */
-    public Shape drawConnection (GraphNode nodeA, GraphNode nodeB, ImageView imageToBeDrawnOver) {
-        FloorPoint pointA = graphPointToImage(nodeA, imageToBeDrawnOver);
-        FloorPoint pointB = graphPointToImage(nodeB, imageToBeDrawnOver);
-
-        Line line = new Line(pointA.x, pointA.y, pointB.x, pointB.y);
-        line.setStrokeWidth(4);
-        line.setFill(Color.BLUE);
-        line.setStrokeWidth(1);
-
-        anchorPane.getChildren().add(line);
-
-        return line;
     }
 
 
