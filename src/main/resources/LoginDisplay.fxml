@@ -21,12 +21,5 @@
       </Label>
    </children>
 </AnchorPane>
-<AnchorPane fx:id="adminPane" prefHeight="200.0" prefWidth="200.0" styleClass="background" stylesheets="@design.css" visible="false">
-<children>
-    <Button fx:id="buttonSubmitDirectory" layoutX="300.0" layoutY="150.0" mnemonicParsing="false" onAction="#signInDirectory" prefHeight="80.0" prefWidth="400.0" styleClass="directoryAdminButton" stylesheets="@design.css" text="Manage List of Entries" />
-    <Button fx:id="buttonSubmitMap" layoutX="300.0" layoutY="300.0" mnemonicParsing="false" onAction="#signInMap" prefHeight="80.0" prefWidth="400.0" styleClass="mapAdminButton" stylesheets="@design.css" text="Modify Maps" />
-    <!--<Button fx:id="patientDisplayButton" layoutX="915.0" layoutY="14.0" mnemonicParsing="false" onAction="#toggleAdminWindow" prefHeight="50.0" prefWidth="50.0" styleClass="adminMenuButton" stylesheets="@design.css" />-->
-</children>
-</AnchorPane>
     </children>
 </StackPane>

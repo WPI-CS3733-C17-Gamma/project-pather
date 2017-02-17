@@ -16,8 +16,6 @@ public class LoginController {
     @FXML private Label labelWrongCreds;
     @FXML private AnchorPane loginPage;
     @FXML private Button loginButton;
-    @FXML private AnchorPane adminPane;
-
 
     private String inputPassword = "";
 
@@ -36,41 +34,21 @@ public class LoginController {
         return login.signIn(textboxUsername.getText(), passwordBox.getText());
     }
 
-    public void signInMap(){
-        stage.setHeight(650);
-        stage.setWidth(600);
-        if (getCredentials()) {
-            stage.hide();
-            applicationController.createMapAdminDisplay(login);
-        } else {
-            passwordBox.clear();
-            labelWrongCreds.setVisible(true);
-        }
-    }
-
-    public void signInDirectory(){
-        if (getCredentials()){
-            stage.hide();
-            applicationController.createDirectoryAdminDisplay(login);
-        } else {
-            passwordBox.clear();
-            labelWrongCreds.setVisible(true);
-        }
-    }
-
-
     public void isSelected(){       //for auto-disapearing
-            labelWrongCreds.setVisible(false);
+        labelWrongCreds.setVisible(false);
     }
 
     /**
      * Displays options for map and directory admin
      */
     public void showAdminMenu(){
-        loginPage.setVisible(false);
-        adminPane.setVisible(true);
-        stage.setHeight(500);
-        stage.setWidth(900);
-        stage.centerOnScreen();
+        if (getCredentials()) {
+            loginPage.setVisible(false);
+            stage.hide();
+            applicationController.createDirectoryAdminDisplay(login);
+        } else {
+            passwordBox.clear();
+            labelWrongCreds.setVisible(true);
+        }
     }
 }
