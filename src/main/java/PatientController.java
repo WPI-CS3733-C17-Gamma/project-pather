@@ -6,6 +6,7 @@ import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -13,8 +14,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
@@ -65,6 +65,7 @@ public class PatientController extends DisplayController implements Initializabl
 
     private List<SubPath> currentPath;
     private int currentSubPath;
+    private LinkedList<Label> roomLabels = new LinkedList<>();
 
     /**
      *
@@ -251,7 +252,7 @@ public class PatientController extends DisplayController implements Initializabl
     }
 
     /**
-     * Remove all the points that have been drawn on the map
+     * Remove all the points and labels that have been drawn on the map
      */
     public void clearDisplay () {
         patientImageView.setImage(null);
@@ -260,6 +261,9 @@ public class PatientController extends DisplayController implements Initializabl
         }
         for (Shape shape : drawnObjects) {
             anchorPane.getChildren().remove(shape);
+        }
+        for (Label label :roomLabels){
+            anchorPane.getChildren().remove(label);
         }
         textDirectionsTextBox.setVisible(false);
     }
@@ -379,6 +383,7 @@ public class PatientController extends DisplayController implements Initializabl
      * @param subPath subpath to be drawn
      */
     public void displaySubPath (ImageView mapImage, SubPath subPath) {
+
         clearDisplay();
         System.out.println("SubPath");
         GraphNode prev = null;
@@ -408,6 +413,8 @@ public class PatientController extends DisplayController implements Initializabl
             drawnObjects = new ArrayList<>();
         }
         drawnObjects.addAll(listToDraw);
+        roomLabels = getRoomLabels(subPath);
+        displayRoomLabels(roomLabels);
     }
     /**
      * given local point, draw the starting point of a sub path
@@ -558,5 +565,52 @@ public class PatientController extends DisplayController implements Initializabl
     public void scaleHeight(Number oldSceneHeight, Number newSceneHeight){
         anchorPane.setScaleY(anchorPane.getScaleY()*newSceneHeight.doubleValue()/oldSceneHeight.doubleValue());
         //imageView.setScaleX(imageView.getScaleY()*newSceneHeight.doubleValue()/oldSceneHeight.doubleValue());
+    }
+
+    /**
+     * gets Room description on screen
+     * @param subpath
+     */
+    public LinkedList<Label> getRoomLabels(SubPath subpath){
+        LinkedList<Label> labels = new LinkedList<>();
+        Room room;
+
+        List<GraphNode> path = subpath.path;
+
+        for (GraphNode node: path){
+            Label current = new Label();
+            room = map.getRoomFromNode(node);
+            FloorPoint point;
+            int roomx;
+            int roomy;
+
+            if(room != null) {
+                point = graphPointToImage(room.location, patientImageView);
+                roomx = point.x + 5;
+                roomy = point.y;
+
+                current.setText(room.name);
+                current.setLayoutX(roomx);
+                current.setLayoutY(roomy);
+                current.setBorder(new Border(new BorderStroke(Color.BLACK,BorderStrokeStyle.SOLID,new CornerRadii(4),BorderWidths.DEFAULT)));
+                current.setBackground(new Background(new BackgroundFill(Color.rgb(124,231,247), new CornerRadii(4),
+                    new Insets(0.0,0.0,0.0,0.0))));
+                labels.add(current);
+            }
+
+
+        }
+
+        return labels;
+    }
+
+    /**
+     * Display labels on Map
+     * @param labels
+     */
+    public void displayRoomLabels(LinkedList<Label> labels){
+        for(Label label: labels){
+            anchorPane.getChildren().add(label);
+        }
     }
 }
