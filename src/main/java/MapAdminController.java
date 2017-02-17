@@ -707,16 +707,16 @@ public class MapAdminController extends DisplayController implements Initializab
                 System.out.println("deleted");
                 break;
             case N:
-                togglebuttonAddNode.setSelected(true);
+                changeState(State.ADD_NODES);
                 break;
             case C:
-                togglebuttonAddConnections.setSelected(true);
+                changeState(State.ADD_CONNECTION);
                 break;
             case E:
-                togglebuttonAddElevator.setSelected(true);
+                changeState(State.ADD_ELEVATOR);
                 break;
             case A:
-                togglebuttonChainAdd.setSelected(true);
+                changeState(State.CHAIN_ADD);
                 break;
         }
 
@@ -814,5 +814,12 @@ public class MapAdminController extends DisplayController implements Initializab
             elevatorFloors.add(loc);
         }
         drawMap();
+    }
+
+    /**
+     * Switches to Directory Admin
+     */
+    public void switchToDirectoryAdmin(){
+        applicationController.createDirectoryAdminDisplay(new Login());//TODO fix this pl0x
     }
 }

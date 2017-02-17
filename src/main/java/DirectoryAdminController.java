@@ -430,5 +430,11 @@ public class DirectoryAdminController extends DisplayController implements Initi
         });
     }
 
+    /**
+     * Switches to Mao Admin
+     */
+    public void switchToMapAdmin(){
+        applicationController.createMapAdminDisplay(new Login());//TODO fix this pl0x
+    }
 }
 

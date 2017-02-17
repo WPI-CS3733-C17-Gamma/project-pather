@@ -1,7 +1,9 @@
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 /**
@@ -9,12 +11,12 @@ import javafx.stage.Stage;
  */
 public class LoginController {
 
-    @FXML
-    private PasswordField passwordBox;
-    @FXML
-    private TextField textboxUsername;
-    @FXML
-    private Label labelWrongCreds;
+    @FXML private PasswordField passwordBox;
+    @FXML private TextField textboxUsername;
+    @FXML private Label labelWrongCreds;
+    @FXML private AnchorPane loginPage;
+    @FXML private Button loginButton;
+    @FXML private AnchorPane adminPane;
 
 
     private String inputPassword = "";
@@ -35,6 +37,8 @@ public class LoginController {
     }
 
     public void signInMap(){
+        stage.setHeight(650);
+        stage.setWidth(600);
         if (getCredentials()) {
             stage.hide();
             applicationController.createMapAdminDisplay(login);
@@ -48,17 +52,24 @@ public class LoginController {
         if (getCredentials()){
             stage.hide();
             applicationController.createDirectoryAdminDisplay(login);
-
         } else {
             passwordBox.clear();
             labelWrongCreds.setVisible(true);
         }
     }
 
+
     public void isSelected(){       //for auto-disapearing
             labelWrongCreds.setVisible(false);
     }
 
-
-
+    /**
+     * Displays options for map and directory admin
+     */
+    public void showAdminMenu(){
+        loginPage.setVisible(false);
+        adminPane.setVisible(true);
+        stage.setHeight(500);
+        stage.setWidth(900);
+    }
 }

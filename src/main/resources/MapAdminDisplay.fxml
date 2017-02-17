@@ -1,35 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.*?>
-<BorderPane maxHeight="-Infinity" minHeight="-Infinity" prefHeight="600.0" prefWidth="1000.0" style="-fx-background-color: #d4e3ed;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyReleased="#handleKey" prefHeight="600.0" prefWidth="600.0" style="-fx-background-color: #d4e3ed;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
     <top>
-        <AnchorPane prefHeight="93.0" prefWidth="1200.0" BorderPane.alignment="CENTER">
+        <AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="100.0" prefWidth="600.0" BorderPane.alignment="CENTER">
             <children>
-                <ToggleButton fx:id="togglebuttonChainAdd" layoutX="14.0" layoutY="16.0" mnemonicParsing="false" onAction="#toggleChainAdd" text="Chain Add" />
-                <TextField fx:id="roomName" layoutX="707.0" layoutY="50.0" promptText="Add or Remove Room" />
-                <ToggleButton fx:id="togglebuttonAddNode" layoutX="116.0" layoutY="16.0" mnemonicParsing="false" onAction="#toggleAddNode" text="Add Node" />
-                <ToggleButton fx:id="togglebuttonAddConnections" layoutX="344.0" layoutY="16.0" mnemonicParsing="false" onAction="#toggleAddConnection" text="Add Connections" />
-                <Button layoutX="235.0" layoutY="16.0" mnemonicParsing="false" onAction="#deleteSelected" text="Delete" />
-                <Button layoutX="536.0" layoutY="16.0" mnemonicParsing="false" onAction="#deleteConnection" text="Delete Connection" />
-                <Button layoutX="707.0" layoutY="16.0" mnemonicParsing="false" onAction="#addRoom" prefHeight="31.0" prefWidth="181.0" text="Add or Change Room" />
+                <ToggleButton fx:id="togglebuttonChainAdd" layoutY="70.0" mnemonicParsing="false" onAction="#toggleChainAdd" prefHeight="26.0" prefWidth="91.0" text="Chain Add" />
+                <TextField fx:id="roomName" layoutX="440.0" layoutY="30.0" prefHeight="26.0" prefWidth="158.0" promptText="Add or Remove Room" />
+                <ToggleButton fx:id="togglebuttonAddNode" mnemonicParsing="false" onAction="#toggleAddNode" text="+ Node" />
+                <ToggleButton fx:id="togglebuttonAddConnections" layoutX="80.0" mnemonicParsing="false" onAction="#toggleAddConnection" text="+ Connections" />
+                <Button layoutY="30.0" mnemonicParsing="false" onAction="#deleteSelected" prefHeight="26.0" prefWidth="69.0" text="- Node" />
+                <Button layoutX="80.0" layoutY="30.0" mnemonicParsing="false" onAction="#deleteConnection" prefHeight="26.0" prefWidth="115.0" text="- Connection" />
+                <Button layoutX="440.0" mnemonicParsing="false" onAction="#addRoom" prefHeight="26.0" prefWidth="159.0" text="Add or Change Room" />
+                <ToggleButton fx:id="togglebuttonAddElevator" layoutX="200.0" mnemonicParsing="false" onAction="#toggleAddElevator" prefHeight="26.0" prefWidth="118.0" text="Add Elevator" />
+                <Button layoutX="200.0" layoutY="30.0" mnemonicParsing="false" onAction="#deleteElevator" text="Delete Elevator" />
+                <ToggleButton fx:id="togglebuttonChangeFloor" layoutX="330.0" mnemonicParsing="false" onAction="#toggleSwitchMap" prefHeight="26.0" prefWidth="100.0" text="Change Floor" />
+                <ListView fx:id="elevatorFloorOptions" layoutX="372.0" layoutY="47.0" prefHeight="73.0" prefWidth="168.0" visible="false" />
             </children>
         </AnchorPane>
     </top>
     <bottom>
-        <AnchorPane prefHeight="54.0" prefWidth="1171.0" BorderPane.alignment="CENTER">
+        <AnchorPane minWidth="-Infinity" prefHeight="54.0" prefWidth="600.0" BorderPane.alignment="CENTER">
             <children>
-                <Button layoutX="618.0" layoutY="14.0" mnemonicParsing="false" onAction="#undo" text="Undo" />
-                <Button layoutX="685.0" layoutY="14.0" mnemonicParsing="false" onAction="#preview" text="Preview" />
-                <Button layoutX="57.0" layoutY="14.0" mnemonicParsing="false" text="Help" />
-                <Button fx:id="buttonDone" layoutX="866.0" layoutY="15.0" mnemonicParsing="false" onAction="#done" onMouseClicked="#done" text="Save and Exit" />
+                <Button layoutY="15.0" mnemonicParsing="false" onAction="#undo" text="Undo" />
+                <Button layoutX="350.0" layoutY="15.0" mnemonicParsing="false" onAction="#preview" text="Preview" />
+                <Button layoutX="57.0" layoutY="15.0" mnemonicParsing="false" text="Help" />
+                <Button fx:id="buttonDone" layoutX="450.0" layoutY="15.0" mnemonicParsing="false" onAction="#done" onMouseClicked="#done" text="Save and Exit" />
+            <Button fx:id="switchToDirectoryAdmin" layoutX="137.0" layoutY="15.0" mnemonicParsing="false" onAction="#switchToDirectoryAdmin" prefHeight="26.0" prefWidth="190.0" text="SwitchToDirectoryAdmin" />
             </children></AnchorPane>
     </bottom>
     <center>
-        <AnchorPane fx:id="anchorpaneMap" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+        <AnchorPane fx:id="anchorpaneMap" minWidth="-Infinity" prefHeight="433.0" prefWidth="600.0" BorderPane.alignment="CENTER">
             <children>
-                <ImageView fx:id="imageviewMap" fitHeight="456.0" fitWidth="915.0" layoutX="108.0" layoutY="3.0" onMouseDragged="#handleDragEvent" onMousePressed="#isPressed" onMouseReleased="#isReleased" pickOnBounds="true" preserveRatio="true" />
+                <ImageView fx:id="imageviewMap" fitHeight="413.0" fitWidth="600.0" onMouseDragged="#handleDragEvent" onMousePressed="#isPressed" onMouseReleased="#isReleased" pickOnBounds="true" preserveRatio="true" />
+                <ListView fx:id="changeFloorOptions" layoutX="460.0" prefHeight="324.0" prefWidth="142.0" visible="false" />
             </children>
         </AnchorPane>
     </center>
