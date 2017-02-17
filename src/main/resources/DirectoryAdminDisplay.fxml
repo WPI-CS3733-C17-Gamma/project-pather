@@ -19,6 +19,7 @@
                   <Button mnemonicParsing="false" onAction="#undo" text="Undo" />
                   <Button mnemonicParsing="false" onAction="#preview" text="Preview" />
                   <Button fx:id="help" mnemonicParsing="false" onAction="#help" text="Help" />
+            <Button fx:id="switchToMapAdmin" mnemonicParsing="false" onAction="#switchToMapAdmin" text="SwitchToMapAdmin" />
                   <Button mnemonicParsing="false" onAction="#logout" text="Save and Exit" />
             </items>
         </ToolBar>

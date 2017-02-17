@@ -769,4 +769,11 @@ public class MapAdminController extends DisplayController implements Initializab
         }
         drawMap();
     }
+
+    /**
+     * Switches to Directory Admin
+     */
+    public void switchToDirectoryAdmin(){
+        applicationController.createDirectoryAdminDisplay(new Login());//TODO fix this pl0x
+    }
 }
