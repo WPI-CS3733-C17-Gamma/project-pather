@@ -295,21 +295,21 @@ public class MapAdminController extends DisplayController implements Initializab
      * Take the text from the roomName text field
      */
     public void addRoom () {
-        if(activeRoom != null) {
-            String newName = roomName.getText();
-            if(newName == activeRoom.name) {
-            }
-            else if(newName.isEmpty()){
+        String newName = roomName.getText();
+        Room existingRoom = map.getRoomFromName(newName);
+        if (newName.isEmpty()) {
+            if (activeRoom != null) {
                 map.deleteRoom(activeRoom);
             }
-            // if room is already there
-            else if (map.getRoomFromName(activeRoom.name) == null){
-                map.addRoom(new Room (selectedNode, newName));
-            }
-            else {
-                map.changeRoomName(activeRoom, newName);
-            }
-            // change room
+        }
+        // check if room is already there
+        else if (existingRoom == null) {
+            map.addRoom(new Room(selectedNode, newName));
+        }
+        // Setting room location and name
+        else {
+            map.changeRoomName(existingRoom, newName);
+            existingRoom.setLocation(selectedNode);
         }
     }
 
@@ -375,11 +375,6 @@ public class MapAdminController extends DisplayController implements Initializab
     public void deleteNode(GraphNode node){
         map.deleteNode(node);
     }
-
-    public void deleteRoomFromNode(GraphNode node) {
-        boolean successfulDelete = map.deleteRoom(node);    //why?
-    }
-
 
     /**
      * Add connection from nodeA to nodeB and
@@ -467,8 +462,8 @@ public class MapAdminController extends DisplayController implements Initializab
             activeRoom = room;
         }
         else {
-            activeRoom  = new Room(selected, "");
             roomName.setText("");
+            activeRoom = null;
         }
     }
 

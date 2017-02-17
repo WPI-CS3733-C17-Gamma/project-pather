@@ -152,7 +152,7 @@ public class Directory {
      */
     public Room getRoom(GraphNode node){
         Optional<Room> roomAtNode = rooms.values().stream()
-            .filter(room -> room.location.equals(node))
+            .filter(room -> room.location != null && room.location.equals(node))
             .findFirst();
 
         if (roomAtNode.isPresent()) {

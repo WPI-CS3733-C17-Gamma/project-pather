@@ -8,14 +8,14 @@ public class DatabaseManager {
     String connectionURL;
     Connection connection;
     public static final String[] initStatements = {
-        "create table GraphNodes (ID integer primary key, X integer, Y integer, Floor varchar(20))",
+        "create table GraphNodes (ID integer primary key, X integer, Y integer, Floor varchar(100))",
         "create table Edges (ID1 integer, ID2 integer," +
             "constraint pk_e Primary key (ID1, ID2)," +
             "constraint id1_fk foreign key (ID1) references GraphNodes(ID)," +
             "constraint id2_fk foreign key (ID2) references GraphNodes(ID))",
         "create table Rooms (rID Integer Primary key, Name varchar(30), nID Integer," +
             "constraint fk_gn foreign key (nID) references GraphNodes(ID))",
-        "create table Entries (eID Integer Primary Key, Title varchar(20), Name varchar(40))",
+        "create table Entries (eID Integer Primary Key, Title varchar(100), Name varchar(100))",
         "create table RoomEntryAssoc (eID integer, rID integer," +
             "constraint pk_rea primary key (eID, rID),"+
             "constraint eID_fk foreign key (eID) references Entries(eID),"+
@@ -174,7 +174,12 @@ public class DatabaseManager {
             for (Room room : data.directory.rooms.values()) {
                 insertRoom.setLong(1, room.id);
                 insertRoom.setString(2, room.name);
-                insertRoom.setLong(3, room.location.id);
+                if (room.hasLocation()) {
+                    insertRoom.setLong(3, room.location.id);
+                }
+                else {
+                    insertRoom.setNull(3, Types.INTEGER);
+                }
                 insertRoom.executeUpdate();
             }
 
