@@ -8,7 +8,16 @@ public class Room extends Ided implements Comparable {
         this.name = name;
     }
 
+    public GraphNode getLocation(GraphNode loc){
+        return this.location;
+    }
+
     public void setLocation(GraphNode loc){
+        this.location = loc;
+    }
+
+    public boolean hasLocation() {
+        return location != null;
     }
 
     /**

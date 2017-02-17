@@ -297,6 +297,9 @@ public class PatientController extends DisplayController implements Initializabl
      * @param end the ending location
      */
     public void getPath (GraphNode start, GraphNode end) {
+        if (start == null || end == null) {
+            System.out.println("Start or end is null!");
+        }
         try {
             currentPath = map.getPathByFloor(start, end);
             displaySubPath(patientImageView, currentPath.get(currentPath.size() - 1));
