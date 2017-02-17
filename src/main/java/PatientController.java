@@ -410,7 +410,7 @@ public class PatientController extends DisplayController implements Initializabl
      */
     public Shape drawStartPoint (FloorPoint localPoint) {
         Circle c = new Circle(localPoint.x, localPoint.y, 10);
-        c.setFill(Color.YELLOW);
+        c.setFill(Color.GREEN);
         anchorPane.getChildren().add(c);
         return c;
     }
