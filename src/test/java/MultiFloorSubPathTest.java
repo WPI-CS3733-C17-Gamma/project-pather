@@ -38,8 +38,8 @@ public class MultiFloorSubPathTest extends TestCase{
     public void testOneFloor() throws PathNotFoundException {
 
         SubPath expected = new SubPath("A");
-        expected.path.add(A2);
         expected.path.add(A1);
+        expected.path.add(A2);
         ArrayList<SubPath> expSubPath = new ArrayList<>();
         expSubPath.add(expected);
 
@@ -52,13 +52,13 @@ public class MultiFloorSubPathTest extends TestCase{
     public void testTwoFloor() throws PathNotFoundException {
 
         SubPath expected1 = new SubPath("A");
-        expected1.path.add(A2);
         expected1.path.add(A1);
+        expected1.path.add(A2);
         SubPath expected2 = new SubPath("B");
         expected2.path.add(B1);
         ArrayList<SubPath> expSubPath = new ArrayList<>();
-        expSubPath.add(expected2);
         expSubPath.add(expected1);
+        expSubPath.add(expected2);
 
         assertEquals("Sub path should be one floor" , expSubPath, map.getPathByFloor(A1,B1) );
     }
@@ -67,16 +67,16 @@ public class MultiFloorSubPathTest extends TestCase{
     public void testThreeFloor() throws PathNotFoundException {
 
         SubPath expected0 = new SubPath("A");
-        expected0.path.add(A2);
         expected0.path.add(A1);
+        expected0.path.add(A2);
         SubPath expected1 = new SubPath("B");
         expected1.path.add(B1);
         SubPath expected2 = new SubPath("A");
         expected2.path.add(A3);
         ArrayList<SubPath> expSubPath = new ArrayList<>();
-        expSubPath.add(expected2);
-        expSubPath.add(expected1);
         expSubPath.add(expected0);
+        expSubPath.add(expected1);
+        expSubPath.add(expected2);
 
         assertEquals("Sub path should be one floor" , expSubPath, map.getPathByFloor(A1,A3) );
     }
