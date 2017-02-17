@@ -25,21 +25,21 @@ public class CreateEntryTest extends TestCase {
         h.put(e.name, e);
         h.put(f.name, f);
         d = new Directory(h, new HashMap<>());
-        m = new Map(d, null, null);
+        m = new Map(d, null);
         c = new DirectoryAdminController(m, null, null);
     }
 
     @Test ( expected = IllegalArgumentException.class)
     public void testCreateEntryDAC(){
-        assertTrue(2 == d.getEntries().entrySet().size());
+        assertEquals(2, d.getEntries().entrySet().size());
         c.createEntry("g", "g", new LinkedList<>());
-        assertTrue(d.getEntries().size() == 3);
+        assertEquals(3, d.getEntries().size());
         try {
             c.createEntry("f", "f", new LinkedList<>());
         } catch (IllegalArgumentException e) {
             assertTrue(e instanceof IllegalArgumentException);
         }
-        assertTrue(d.getEntries().size() == 3);
+        assertEquals(3, d.getEntries().size());
         for (String s : d.getEntries().keySet()){
             System.err.println(s);
         }

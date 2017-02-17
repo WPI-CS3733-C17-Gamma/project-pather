@@ -1,4 +1,4 @@
-public class FloorPoint implements Comparable{
+public class FloorPoint {
 
     public final int x;
     public final int y;
@@ -18,6 +18,21 @@ public class FloorPoint implements Comparable{
         return y;
     }
 
+    public String getFloor() {
+        return floor;
+    }
+
+   /**
+     * return the cartisian distance between another point
+     * @param point
+     * @return
+     */
+    public double distance (FloorPoint point) {
+        int diffx = this.x - point.x;
+        int diffy = this.y - point.y;
+        return Math.sqrt(Math.pow(diffx, 2) + Math.pow(diffy,2));
+    }
+
     /**
      * Get the angle between the given points with this point as the center
      * @param pB the first point
@@ -31,30 +46,6 @@ public class FloorPoint implements Comparable{
             result += 360;
         }
         return result;
-    }
-
-    public String getFloor() {
-        return floor;
-    }
-
-    public int compareTo(FloorPoint FloorPoint){
-        return 0;
-    }
-
-    @Override
-    public int compareTo(Object o) {
-        return 0;
-    }
-
-    /**
-     * return the cartisian distance between another point
-     * @param point
-     * @return
-     */
-    public double distance (FloorPoint point) {
-        int diffx = this.x - point.x;
-        int diffy = this.y - point.y;
-        return Math.sqrt(Math.pow(diffx, 2) + Math.pow(diffy,2));
     }
 
     @Override

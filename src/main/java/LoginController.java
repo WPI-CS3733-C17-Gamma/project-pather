@@ -58,11 +58,14 @@ public class LoginController {
         }
     }
 
+
     public void isSelected(){       //for auto-disapearing
             labelWrongCreds.setVisible(false);
     }
 
-
+    /**
+     * Displays options for map and directory admin
+     */
     public void showAdminMenu(){
         loginPage.setVisible(false);
         adminPane.setVisible(true);

@@ -1,4 +1,3 @@
-import javafx.scene.image.Image;
 import junit.framework.TestCase;
 import org.junit.Test;
 
@@ -144,8 +143,7 @@ public class DatabaseTest extends TestCase{
         GraphNetwork graph = new GraphNetwork(
             new LinkedList<GraphNode>(Arrays.asList(nodeA, nodeB)));
         Directory directory = new Directory(entries, rooms);
-        HashMap<String, Image> mapImages = new HashMap<String, Image>();
-        Map expected = new Map(directory, graph, mapImages);
+        Map expected = new Map(directory, graph);
 
         db.write(expected);
         Map actual = db.load();
@@ -160,8 +158,7 @@ public class DatabaseTest extends TestCase{
         Directory directory = new Directory(
             new HashMap<String, DirectoryEntry>(),
             new HashMap<String, Room>());
-        HashMap<String, Image> mapImages = new HashMap<String, Image>();
-        Map expected = new Map(directory, graph, mapImages);
+        Map expected = new Map(directory, graph);
 
         Map actual = db.load();
         assertEquals(expected, actual);
@@ -181,8 +178,7 @@ public class DatabaseTest extends TestCase{
         Directory directory = new Directory(
             new HashMap<String, DirectoryEntry>(),
             new HashMap<String, Room>());
-        HashMap<String, Image> mapImages = new HashMap<String, Image>();
-        Map expected = new Map(directory, graph, mapImages);
+        Map expected = new Map(directory, graph);
 
         db.write(expected);
         Map actual = db.load();
@@ -211,8 +207,7 @@ public class DatabaseTest extends TestCase{
         GraphNetwork graph = new GraphNetwork(
             new LinkedList<GraphNode>(Arrays.asList(nodeA, nodeB)));
         Directory directory = new Directory(entries, rooms);
-        HashMap<String, Image> mapImages = new HashMap<String, Image>();
-        Map expected = new Map(directory, graph, mapImages);
+        Map expected = new Map(directory, graph);
 
         db.write(expected);
         Map actual = db.load();
@@ -243,8 +238,7 @@ public class DatabaseTest extends TestCase{
         Directory directory = new Directory(
             new HashMap<String, DirectoryEntry>(),
             new HashMap<String, Room>());
-        HashMap<String, Image> mapImages = new HashMap<String, Image>();
-        Map expected = new Map(directory, graph, mapImages);
+        Map expected = new Map(directory, graph);
 
         db.write(expected);
         Map actual = db.load();
@@ -259,8 +253,7 @@ public class DatabaseTest extends TestCase{
         Directory directory = new Directory(
             new HashMap<String, DirectoryEntry>(),
             new HashMap<String, Room>());
-        HashMap<String, Image> mapImages = new HashMap<String, Image>();
-        Map expected = new Map(directory, graph, mapImages);
+        Map expected = new Map(directory, graph);
 
         db.write(expected);
         Map actual = db.load();

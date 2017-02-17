@@ -33,9 +33,11 @@ import java.util.stream.Collectors;
  */
 public class PatientController extends DisplayController implements Initializable {
 
+    //what type/state of display the Patient Display is currently displaying
     private enum state{
         PATIENT_DEFAULT,
-        PATIENT_SEARCH
+        PATIENT_SEARCH,
+        DISPLAYING_TEXT_DIRECTION
     }
 
     state displayState;
@@ -62,8 +64,10 @@ public class PatientController extends DisplayController implements Initializabl
     @FXML private AnchorPane adminPane;
     @FXML private Button patientDisplayButton;
     @FXML private Button login;
+    @FXML private Button TextDirection;
 
     private List<SubPath> currentPath;
+    private int currentSubPath;
 
     /**
      *
@@ -81,50 +85,49 @@ public class PatientController extends DisplayController implements Initializabl
     }
 
     /**
-     * display the image
+     * display the image on the main patient screen
      */
     public void displayImage() {
-        Image floor = super.applicationController.getImage(currentMap);
+        Image floor = applicationController.getImage(currentMap);
         if (displayState == state.PATIENT_DEFAULT){
             imageView.setImage(floor);
         }
-        if (displayState == state.PATIENT_SEARCH){
+//        if (displayState == state.PATIENT_SEARCH){
 //            patientImageView.setImage(floor);
-        }
+//        }
     }
 
     /**
-     *
+     * shows the patient search interface (the dark one)
      */
     public void startSearch(){
-        if (this.displayState == state.PATIENT_DEFAULT){
-//            patientImageView.setVisible(true);
+        if (this.displayState == state.PATIENT_DEFAULT){//switch state
             searchAnchorPane.setVisible(true);
-//            exitButton.setVisible(true);
             this.displayState = state.PATIENT_SEARCH;
             displayImage();
         }
     }
 
+    /**
+     * hides the patient search interface and returns to the default patient interface
+     */
     public void exitSearch(){
         System.out.println("Exit button works");
-        if (this.displayState == state.PATIENT_SEARCH){
-//            patientImageView.setVisible(false);
+        if (this.displayState == state.PATIENT_SEARCH || this.displayState == state.DISPLAYING_TEXT_DIRECTION ){//switch state
             searchAnchorPane.setVisible(false);
-//            exitButton.setVisible(false);
             this.displayState = state.PATIENT_DEFAULT;
             clearSearchDisplay();
-            displayImage();
+            displayImage();//display the original image
         }
     }
 
     /**
-     * perform search
+     * perform search; get text from the textfield
      */
     public void search () {
         clearSearchDisplay();
         String search = searchBar.getText();
-        if (search.length() > 0) {
+        if (!search.isEmpty()) {
             options.setVisible(true);
         }
         else {
@@ -205,8 +208,7 @@ public class PatientController extends DisplayController implements Initializabl
             List<Room> locs = entry.getLocation();
 
             // if no location, should (probably) throw error
-            if(locs.size() == 0) {
-                System.out.println("No location");
+            if(locs.isEmpty()) {
                 return null;
             }
             // take first option if only one
@@ -241,10 +243,12 @@ public class PatientController extends DisplayController implements Initializabl
         return null;
     }
 
+    /**
+     * remove search result
+     */
     public void clearSearchDisplay(){
-        hideMultiMapAnimation();
-//        patientImageView.setImage(null);
-        multiMapDisplayMenu.getChildren().clear();
+        hideMultiMapAnimation();//hide the hBox thingy
+        multiMapDisplayMenu.getChildren().clear();//clear the hBox menu thingy
         clearDisplay();
     }
 
@@ -285,6 +289,86 @@ public class PatientController extends DisplayController implements Initializabl
         return new FloorPoint(newX, newY, node.location.floor);
     }
 
+
+
+    /**
+     * get paths across multiple floor and display different resulted floors on the search interface (the large ImageView and the hBox)
+     * @param start the starting location
+     * @param end the ending location
+     */
+    public void getPath (GraphNode start, GraphNode end) {
+        try {
+            currentPath = map.getPathByFloor(start, end);
+            displaySubPath(patientImageView, currentPath.get(currentPath.size() - 1));
+            currentSubPath = currentPath.size() - 1;
+            for (int x = currentPath.size() - 1; x >= 0 ; x--){
+                SubPath p = currentPath.get(x);
+                ImageView i = new ImageView();
+                i.setPreserveRatio(true);
+                i.setFitHeight(95);
+                i.setFitWidth(165);
+                i.setOnMousePressed(e -> mapChoice(e));
+                i.setImage(applicationController.getImage(p.floor));
+                i.setId(x + "floor in list");
+//                i.getStyleClass().add("tinyMapMenu");
+//                i.applyCss();
+                System.out.println(i.getId());
+               multiMapDisplayMenu.getChildren().add(i);
+            }
+            showMultiMapAnimation();
+        } catch (PathNotFoundException e) {
+            System.out.println("No path can be drawn");
+        }
+    }
+
+    /**
+     * toggle between resulted maps when clicking on the corresponding imageView in the HBox
+     * @param e
+     */
+    public void mapChoice(MouseEvent e){
+        try {
+            ImageView iv = (ImageView) e.getSource();
+            System.out.println(iv.getId() + "*******");
+            currentSubPath = (int) iv.getId().charAt(0) - 48;
+            SubPath path = currentPath.get(currentSubPath);//ascii conversion
+            displaySubPath(patientImageView, path);
+            if (displayState == state.DISPLAYING_TEXT_DIRECTION){
+                displayTextDirections(currentPath.get(currentSubPath).path);
+            }
+        }catch(ClassCastException cc){
+            System.err.println("you are implementing this method in a wrong place");
+        }
+    }
+
+    /**
+     * show the HBox from the bottom
+     */
+    public void showMultiMapAnimation(){
+        final Timeline timeline = new Timeline();
+        timeline.setCycleCount(1);
+        timeline.setAutoReverse(true);
+        final KeyValue kv = new KeyValue(multiMapDisplayMenu.layoutYProperty(), 475);
+        final KeyFrame kf = new KeyFrame(Duration.millis(300), kv);
+        timeline.getKeyFrames().add(kf);
+        timeline.play();
+        System.out.println("hello2");
+    }
+
+    /**
+     * hide the HBox
+     */
+    public void hideMultiMapAnimation(){
+        final Timeline timeline = new Timeline();
+        timeline.setCycleCount(1);
+        timeline.setAutoReverse(true);
+        final KeyValue kv = new KeyValue(multiMapDisplayMenu.layoutYProperty(), 600);
+        final KeyFrame kf = new KeyFrame(Duration.millis(100), kv);
+        timeline.getKeyFrames().add(kf);
+        timeline.play();
+        System.out.println("hello3");
+    }
+
+
     /**
      * Display the given sub path over the given image view
      * Addds all the drawn objects to a list of drawn objects
@@ -316,42 +400,6 @@ public class PatientController extends DisplayController implements Initializabl
     }
 
     /**
-     *
-     * @param start
-     * @param end
-     */
-    public void getPath (GraphNode start, GraphNode end) {
-        try {
-            currentPath = map.getPathByFloor(start, end);
-            displaySubPath(patientImageView, currentPath.get(0));
-            for (int x = 0; x < currentPath.size(); x++){
-                SubPath p = currentPath.get(x);
-                ImageView i = new ImageView();
-                i.setPreserveRatio(true);
-                i.setFitHeight(95);
-                i.setFitWidth(165);
-                i.setOnMousePressed(e -> mapChoice(e));
-                i.setImage(applicationController.getImage(p.floor));
-                i.setId(x + "floor in list");
-//                i.getStyleClass().add("tinyMapMenu");
-//                i.applyCss();
-                System.out.println(i.getId());
-               multiMapDisplayMenu.getChildren().add(i);
-            }
-            showMultiMapAnimation();
-        } catch (PathNotFoundException e) {
-            System.out.println("No path can be drawn");
-        }
-    }
-
-    public void mapChoice(MouseEvent e){
-        ImageView iv = (ImageView) e.getSource();
-        System.out.println(iv.getId() + "*******");
-        SubPath path = currentPath.get((int)iv.getId().charAt(0) - 48);//ascii conversion
-        displaySubPath(patientImageView, path);
-    }
-
-    /**
      * draw path on screen
      * @param path
      */
@@ -370,6 +418,20 @@ public class PatientController extends DisplayController implements Initializabl
         }
         drawnObjects = listToDraw;
     }
+
+    public void textDirection(){
+        if (textDirectionsTextBox.isVisible()){
+            displayState = state.PATIENT_SEARCH;
+            textDirectionsTextBox.setVisible(false);
+            TextDirection.setText("Show Text Direction");
+        }
+        else {
+            displayState = state.DISPLAYING_TEXT_DIRECTION;
+            TextDirection.setText("Hide Text Direction");
+            displayTextDirections(currentPath.get(currentSubPath).path);
+        }
+    }
+
 
     /**
      * Function to get textual directions and print it on screen
@@ -468,25 +530,22 @@ public class PatientController extends DisplayController implements Initializabl
             "\n\nTo close this menu, click on this");
     }
 
-    public void showMultiMapAnimation(){
-        final Timeline timeline = new Timeline();
-        timeline.setCycleCount(1);
-        timeline.setAutoReverse(true);
-        final KeyValue kv = new KeyValue(multiMapDisplayMenu.layoutYProperty(), 475);
-        final KeyFrame kf = new KeyFrame(Duration.millis(300), kv);
-        timeline.getKeyFrames().add(kf);
-        timeline.play();
-        System.out.println("hello2");
+    /**
+     * Resizes Window's Width
+     * @param oldSceneWidth
+     * @param newSceneWidth
+     */
+    public void scaleWidth(Number oldSceneWidth, Number newSceneWidth){
+        anchorPane.setScaleX(anchorPane.getScaleX()*newSceneWidth.doubleValue()/oldSceneWidth.doubleValue());
+        //imageView.setScaleX(imageView.getScaleX()*newSceneWidth.doubleValue()/oldSceneWidth.doubleValue());
     }
-
-    public void hideMultiMapAnimation(){
-        final Timeline timeline = new Timeline();
-        timeline.setCycleCount(1);
-        timeline.setAutoReverse(true);
-        final KeyValue kv = new KeyValue(multiMapDisplayMenu.layoutYProperty(), 600);
-        final KeyFrame kf = new KeyFrame(Duration.millis(100), kv);
-        timeline.getKeyFrames().add(kf);
-        timeline.play();
-        System.out.println("hello3");
+    /**
+     * Resizes Window's Height
+     * @param oldSceneHeight
+     * @param newSceneHeight
+     */
+    public void scaleHeight(Number oldSceneHeight, Number newSceneHeight){
+        anchorPane.setScaleY(anchorPane.getScaleY()*newSceneHeight.doubleValue()/oldSceneHeight.doubleValue());
+        //imageView.setScaleX(imageView.getScaleY()*newSceneHeight.doubleValue()/oldSceneHeight.doubleValue());
     }
 }

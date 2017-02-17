@@ -1,14 +1,20 @@
 import javafx.application.Application;
 import javafx.event.EventHandler;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ApplicationController extends Application {
 
@@ -45,24 +51,24 @@ public class ApplicationController extends Application {
         map = databaseManager.load();
 
         //TODO Testing only
-        GraphNode kiosk = new GraphNode(5, 6, "floor1");
-        //Dummy Nodes/Rooms for tests
-        GraphNode
-            b = new GraphNode(100, 20, "floor1"),
-            c = new GraphNode(70, 150, "floor2"),
-            d = new GraphNode(5, 6, "floor2"),
-            e = new GraphNode(200, 100, "floor2");
-        map.addNode(b);
-        map.addNode(c);
-        map.addNode(d);
-        map.addNode(e);
-        map.addRoom(new Room(kiosk, "Kiosk"));
-        map.addRoom(new Room(b, "1A"));
-        map.addRoom(new Room(e, "2B"));
-        System.out.println(map.addConnection(kiosk, b));
-        map.addConnection(b, c);
-        map.addConnection(c, d);
-        map.addConnection(d, e);
+//        GraphNode kiosk = new GraphNode(5, 6, "floor1");
+//        //Dummy Nodes/Rooms for tests
+//        GraphNode
+//            b = new GraphNode(100, 20, "floor1"),
+//            c = new GraphNode(70, 150, "floor2"),
+//            d = new GraphNode(5, 6, "floor2"),
+//            e = new GraphNode(200, 100, "floor2");
+//        map.addNode(b);
+//        map.addNode(c);
+//        map.addNode(d);
+//        map.addNode(e);
+//        map.addRoom(new Room(kiosk, "Kiosk"));
+//        map.addRoom(new Room(b, "1A"));
+//        map.addRoom(new Room(e, "2B"));
+//        System.out.println(map.addConnection(kiosk, b));
+//        map.addConnection(b, c);
+//        map.addConnection(c, d);
+//        map.addConnection(d, e);
         //End Testing *****************************************************
 
         images = new HashMap<>();
@@ -85,12 +91,23 @@ public class ApplicationController extends Application {
         return map;
     }
 
+    /**
+     * Get list of all floors in the application
+     * TODO move this to map
+     * @return
+     */
+    public List<String> getAllFloors () {
+        return images.keySet().stream().collect(Collectors.toList());
+    }
 
 
     /**
      * load the patient display into the frame
      */
     public void createPatientDisplay(){
+
+        Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("PatientDisplay.fxml"));
             PatientController controller = new PatientController(map,this, "floor3");
@@ -100,6 +117,19 @@ public class ApplicationController extends Application {
             currentScene =  new Scene(root, 1000, 600);
             //pStage.setFullScreen(true);
             pStage.setScene(currentScene);
+            currentScene.widthProperty().addListener(new ChangeListener<Number>() {
+                @Override public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneWidth, Number newSceneWidth) {
+                    System.out.println("Width: " + newSceneWidth);
+                    controller.scaleWidth(oldSceneWidth, newSceneWidth);
+                }
+            });
+            currentScene.heightProperty().addListener(new ChangeListener<Number>() {
+                @Override public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneHeight, Number newSceneHeight) {
+                    controller.scaleHeight(oldSceneHeight, newSceneHeight);
+                    System.out.println("Height: " + newSceneHeight);
+                }
+            });
+            pStage.setFullScreen(true);
         }
         catch (Exception e){
             e.printStackTrace();
