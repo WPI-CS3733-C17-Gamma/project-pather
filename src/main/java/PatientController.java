@@ -289,8 +289,6 @@ public class PatientController extends DisplayController implements Initializabl
         return new FloorPoint(newX, newY, node.location.floor);
     }
 
-
-
     /**
      * get paths across multiple floor and display different resulted floors on the search interface (the large ImageView and the hBox)
      * @param start the starting location
@@ -336,7 +334,11 @@ public class PatientController extends DisplayController implements Initializabl
             SubPath path = currentPath.get(currentSubPath);//ascii conversion
             displaySubPath(patientImageView, path);
             if (displayState == state.DISPLAYING_TEXT_DIRECTION){
-                displayTextDirections(currentPath.get(currentSubPath).path);
+                String nextFloor = null;
+                if(currentPath.size() > currentSubPath+1) {
+                    nextFloor = currentPath.get(currentSubPath + 1).floor;
+                }
+                displayTextDirections(path.path, nextFloor);
             }
         }catch(ClassCastException cc){
             System.err.println("you are implementing this method in a wrong place");
@@ -431,7 +433,11 @@ public class PatientController extends DisplayController implements Initializabl
         else {
             displayState = state.DISPLAYING_TEXT_DIRECTION;
             TextDirection.setText("Hide Text Direction");
-            displayTextDirections(currentPath.get(currentSubPath).path);
+            String nextFloor = null;
+            if(currentPath.size() > currentSubPath +1) {
+                nextFloor = currentPath.get(currentSubPath + 1).floor;
+            }
+            displayTextDirections(currentPath.get(currentSubPath).path, nextFloor);
         }
     }
 
@@ -439,13 +445,17 @@ public class PatientController extends DisplayController implements Initializabl
     /**
      * Function to get textual directions and print it on screen
      * @param path the path to be converted to text
+     * @param floor
      */
-    public void displayTextDirections(List<GraphNode> path) {
+    public void displayTextDirections(List<GraphNode> path, String floor) {
         textDirectionsTextBox.setVisible(true);
         List<String> directions = map.getTextualDirections(path);
         String dir = "";
         for(String line : directions) {
             dir += (line + "\n");
+        }
+        if(floor != null) {
+            dir += ("Take elevator to " + floor);
         }
         textDirectionsTextBox.setText(dir);
         return;
