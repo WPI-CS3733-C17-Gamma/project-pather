@@ -96,12 +96,7 @@ public class GraphNetwork {
             }*/
             // Get a direction from the angle
             double angle = node.getAngle(path.get(nodeNum - 1), path.get(nodeNum + 1));
-            if ( ! node.getLocation().getFloor().equals(
-                     path.get(nodeNum  +1).getLocation().getFloor())) {
-                directions.add("Take the elevator to "
-                               + path.get(nodeNum  +1).getLocation().getFloor());
-            }
-            else if (angle < 80) {
+            if (angle < 80) {
                 // Sharp Right
                 directions.add("Take a sharp left");
             }

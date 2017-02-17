@@ -190,7 +190,6 @@ public class Map {
         if(fullPath.isEmpty()) {
             return new ArrayList<>();
         }
-        Collections.reverse(fullPath);
         List<SubPath> subPaths = new ArrayList<>();
         SubPath currentPath = new SubPath(fullPath.get(0).location.floor);
         for (GraphNode node : fullPath) {
