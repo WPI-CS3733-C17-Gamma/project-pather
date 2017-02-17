@@ -103,6 +103,7 @@ public class PatientController extends DisplayController implements Initializabl
     public void startSearch(){
         if (this.displayState == state.PATIENT_DEFAULT){//switch state
             searchAnchorPane.setVisible(true);
+            patientImageView.setImage(imageView.getImage());
             this.displayState = state.PATIENT_SEARCH;
             displayImage();
         }
@@ -126,6 +127,7 @@ public class PatientController extends DisplayController implements Initializabl
      */
     public void search () {
         clearSearchDisplay();
+        patientImageView.setImage(imageView.getImage());
         String search = searchBar.getText();
         if (!search.isEmpty()) {
             options.setVisible(true);
