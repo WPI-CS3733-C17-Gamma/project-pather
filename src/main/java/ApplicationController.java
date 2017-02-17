@@ -1,4 +1,5 @@
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
@@ -8,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -22,9 +24,11 @@ public class ApplicationController extends Application {
     Map map ;
     Stage pStage;
 
-    Stage loginStage;
+    Stage adminStage;
     Login login;
     Scene currentScene;
+
+    boolean isSignedIn = false;
 
     // NOTE with proxy pattern this will change to a prox image
     HashMap<String, Image> images;
@@ -34,7 +38,7 @@ public class ApplicationController extends Application {
         initialize();
 
         this.pStage = primaryStage;
-        loginStage = new Stage();
+        adminStage = new Stage();
         createPatientDisplay();
         primaryStage.show();
     }
@@ -110,7 +114,8 @@ public class ApplicationController extends Application {
             loader.setController(controller);
             Parent root = loader.load();
             pStage.setTitle("PatientDisplay");
-            currentScene = new Scene (root, 1000, 600);
+            currentScene =  new Scene(root, 1000, 600);
+            //pStage.setFullScreen(true);
             pStage.setScene(currentScene);
             currentScene.widthProperty().addListener(new ChangeListener<Number>() {
                 @Override public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneWidth, Number newSceneWidth) {
@@ -145,15 +150,25 @@ public class ApplicationController extends Application {
      * create map admin display
      */
     public void createMapAdminDisplay(Login login){
+        isSignedIn = true;
+        adminStage.close();
+        adminStage = new Stage();
+        adminStage.setResizable(false);
+        adminStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                isSignedIn = false;
+            }
+        });
         try {
                 this.login = login;
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("AdminDisplay.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("MapAdminDisplay.fxml"));
                 MapAdminController controller = new MapAdminController(map, this, "floor3.png");
                 loader.setController(controller);
                 Parent root = loader.load();
-                pStage.setTitle("MapAdmin");
-                pStage.setScene(new Scene(root, 1000, 600));
-                pStage.show();
+                adminStage.setTitle("MapAdmin");
+                adminStage.setScene(new Scene(root, 600, 600));
+                adminStage.show();
 
         }
         catch (Exception e){
@@ -162,19 +177,33 @@ public class ApplicationController extends Application {
         }
     }
 
+
     /**
      * Create map directory admin app
      */
     public void createDirectoryAdminDisplay(Login login){
+        isSignedIn = true;
+        adminStage.close();
+        adminStage = new Stage();
+        adminStage.setResizable(false);
+        adminStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                isSignedIn = false;
+            }
+        });
+        //adminStage.initOwner(pStage);
         try {
                 this.login = login;
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("DirectoryAdminDisplay.fxml"));
                 DirectoryAdminController controller = new DirectoryAdminController(map, this, "floor3.png");
                 loader.setController(controller);
                 Parent root = loader.load();
-                pStage.setTitle("DirectoryAdmin");
-                pStage.setScene(new Scene(root, 1000, 600));
-                pStage.show();
+                adminStage.setTitle("DirectoryAdmin");
+                adminStage.setScene(new Scene(root, 600, 600));
+                adminStage.centerOnScreen();
+                adminStage.show();
+
         }
         catch (Exception e){
             e.printStackTrace();
@@ -187,15 +216,22 @@ public class ApplicationController extends Application {
      *
      */
     public void createLoginAdmin(){     //not signing in... also add "wrong username or password"
+        if(isSignedIn) {
+            adminStage.toFront();
+            return;
+        }
+
+        adminStage = new Stage();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("LoginDisplay.fxml"));
-        LoginController loginController = new LoginController(this, loginStage);
+        LoginController loginController = new LoginController(this, adminStage);
         Scene newScene;
         try{
             loader.setController(loginController);
             Parent root = loader.load();
-            loginStage.setTitle("Login");
-            loginStage.setScene(new Scene(root, 350, 150));
-            loginStage.show();
+            adminStage.setTitle("Login");
+            adminStage.initOwner(pStage);
+            adminStage.setScene(new Scene(root, 350, 150));
+            adminStage.show();
         } catch (IOException e){
             e.printStackTrace();
             System.out.println(e.toString());
@@ -209,9 +245,10 @@ public class ApplicationController extends Application {
 
 
     /**
-     * Change back to the patient display
+     * Closes Admin Display
      */
     public void logout(){
+        isSignedIn = false;
         try{
             login.signOut();
         } catch(NullPointerException n){
@@ -219,7 +256,8 @@ public class ApplicationController extends Application {
         }
 
         save();
-        createPatientDisplay();
+        adminStage.close();
+        //createPatientDisplay();
     }
 
     /**

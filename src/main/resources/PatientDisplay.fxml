@@ -14,6 +14,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
+<?scenebuilder-stylesheet design.css?>
 
 <StackPane fx:id="stackPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" styleClass="background" stylesheets="@design.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
     <children>
@@ -60,13 +61,6 @@
               </ListView>
               <HBox fx:id="multiMapDisplayMenu" alignment="CENTER_LEFT" layoutX="20.0" layoutY="600.0" maxHeight="95.0" maxWidth="814.0" minHeight="95.0" minWidth="814.0" prefHeight="95.0" prefWidth="814.0" spacing="20.0" styleClass="resultMenu" stylesheets="@design.css" />
            </children>
-        </AnchorPane>
-        <AnchorPane fx:id="adminPane" prefHeight="200.0" prefWidth="200.0" styleClass="background" stylesheets="@design.css" visible="false">
-            <children>
-                <Button fx:id="directoryAdminButton" layoutX="300.0" layoutY="150.0" mnemonicParsing="false" onAction="#switchToDirectoryAdmin" prefHeight="80.0" prefWidth="400.0" styleClass="directoryAdminButton" stylesheets="@design.css" text="Manage List of Entries" />
-                <Button fx:id="mapAdminButton" layoutX="300.0" layoutY="300.0" mnemonicParsing="false" onAction="#switchToMapAdmin" prefHeight="80.0" prefWidth="400.0" styleClass="mapAdminButton" stylesheets="@design.css" text="Modify Maps" />
-                <Button fx:id="patientDisplayButton" layoutX="915.0" layoutY="14.0" mnemonicParsing="false" onAction="#toggleAdminWindow" prefHeight="50.0" prefWidth="50.0" styleClass="adminMenuButton" stylesheets="@design.css" />
-            </children>
         </AnchorPane>
     </children>
 </StackPane>
