@@ -17,7 +17,7 @@ public class Login {
     Login(){
         System.out.println("login made");
         passwordAuthentication = new PasswordAuthentication(uname, charPassword);
-        requiredSignin = false;     //change to true after development and when testing
+        requiredSignin = true;     //change to true after development and when testing
         isSignedIn = false;
     }
 
