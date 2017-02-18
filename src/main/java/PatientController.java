@@ -8,10 +8,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -104,6 +106,7 @@ public class PatientController extends DisplayController implements Initializabl
     public void startSearch(){
         if (this.displayState == state.PATIENT_DEFAULT){//switch state
             searchAnchorPane.setVisible(true);
+            patientImageView.setImage(imageView.getImage());
             this.displayState = state.PATIENT_SEARCH;
             displayImage();
         }
@@ -127,6 +130,7 @@ public class PatientController extends DisplayController implements Initializabl
      */
     public void search () {
         clearSearchDisplay();
+        patientImageView.setImage(imageView.getImage());
         String search = searchBar.getText();
         if (!search.isEmpty()) {
             options.setVisible(true);
@@ -322,6 +326,10 @@ public class PatientController extends DisplayController implements Initializabl
             for (int x = 0; x <currentPath.size(); x++){
                 SubPath p = currentPath.get(x);
                 ImageView i = new ImageView();
+                if(x == 0){
+                    i.setEffect(new DropShadow());
+                }
+
                 i.setPreserveRatio(true);
                 i.setFitHeight(95);
                 i.setFitWidth(165);
@@ -349,6 +357,10 @@ public class PatientController extends DisplayController implements Initializabl
     public void mapChoice(MouseEvent e){
         try {
             ImageView iv = (ImageView) e.getSource();
+            for(Node child :iv.getParent().getChildrenUnmodifiable()){
+                child.setEffect(null);
+            }
+            iv.setEffect(new DropShadow());
             System.out.println(iv.getId() + "*******");
             currentSubPath = (int) iv.getId().charAt(0) - 48;
             SubPath path = currentPath.get(currentSubPath);//ascii conversion
