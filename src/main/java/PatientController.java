@@ -7,13 +7,14 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
-import javafx.scene.Parent;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.Glow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -420,13 +421,26 @@ public class PatientController extends DisplayController implements Initializabl
         GraphNode prev = null;
         mapImage.setImage(applicationController.getImage(subPath.floor));
         List<Shape> listToDraw = new ArrayList<>();
+        Shape startPoint = new Shape() {
+            @Override
+            public com.sun.javafx.geom.Shape impl_configShape() {
+                return null;
+            }
+        };
+        Shape endPoint = new Shape() {
+            @Override
+            public com.sun.javafx.geom.Shape impl_configShape() {
+                return null;
+            }
+        };
 
         Iterator<GraphNode> iterator = subPath.path.iterator();
         if (iterator.hasNext()){
             prev = iterator.next();
             FloorPoint localPoint = graphPointToImage(prev, mapImage);
             System.out.println(localPoint);
-            listToDraw.add(drawStartPoint(localPoint,nodeRadius));
+            startPoint = drawStartPoint(localPoint,nodeRadius);
+            listToDraw.add(startPoint);
         }
         // draw path, and all connections from previous
         while(iterator.hasNext()){
@@ -434,10 +448,13 @@ public class PatientController extends DisplayController implements Initializabl
             FloorPoint localPoint = graphPointToImage(node, mapImage);
             System.out.println(localPoint);
             if (!iterator.hasNext()){
-                listToDraw.add(drawEndPoint(localPoint,nodeRadius));
+                endPoint = drawEndPoint(localPoint,nodeRadius);
+                listToDraw.add(endPoint);
             }
             // draw connection
             listToDraw.add(drawConnection(prev, node, mapImage));
+            startPoint.toFront();
+            endPoint.toFront();
             prev = node;
         }
         if(drawnObjects == null) {
@@ -647,6 +664,9 @@ public class PatientController extends DisplayController implements Initializabl
         }
     }
 
+    /**
+     * Displays paths on minimaps
+     */
     public void displayMinipaths(){
         for(Minimap minimap: minimaps){
             displaySubPath(minimap.map, minimap.path, false,3);
