@@ -487,18 +487,28 @@ public class PatientController extends DisplayController implements Initializabl
             drawnObjects = new ArrayList<>();
         }
         drawnObjects.addAll(listToDraw);
+        drawFloorLabel(mapImage, subPath, lableFontSize);
+        if(drawLabels) {
+            roomLabels = getRoomLabels(subPath);
+            displayRoomLabels(roomLabels);
+        }
+    }
+
+    /**
+     * given an image view and a subpath, draw a floor label
+     * @param mapImage
+     * @param subPath
+     * @param labelFontSize
+     */
+    public void drawFloorLabel(ImageView mapImage, SubPath subPath, int labelFontSize){
         Label label = new Label(subPath.floor);
-        label.setFont(Font.font ("Georgia", lableFontSize));
+        label.setFont(Font.font ("Georgia", labelFontSize));
         FloorPoint temp = graphPointToImage(new GraphNode(50, 30, "one"), mapImage);
         label.setLayoutX(temp.getX());
         label.setLayoutY(temp.getY());
         label.setTextFill(Color.rgb(27, 68, 156));
         anchorPane.getChildren().add(label);
         this.drawnObjects.add(label);
-        if(drawLabels) {
-            roomLabels = getRoomLabels(subPath);
-            displayRoomLabels(roomLabels);
-        }
     }
     /**
      * given local point, draw the starting point of a sub path
