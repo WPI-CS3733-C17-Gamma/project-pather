@@ -22,6 +22,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Shape;
+import javafx.scene.text.Font;
 import javafx.util.Duration;
 
 import java.net.URL;
@@ -125,6 +126,7 @@ public class PatientController extends DisplayController implements Initializabl
             this.displayState = state.PATIENT_DEFAULT;
             clearSearchDisplay();
             miniMenuButton.setVisible(false);
+            hideMultiMapAnimation();
             displayImage();//display the original image
         }
     }
@@ -324,7 +326,7 @@ public class PatientController extends DisplayController implements Initializabl
             currentPath = map.getPathByFloor(start, end);
             TextDirection.setVisible(true);
             clearDisplay();
-            displaySubPath(patientImageView, currentPath.get(0), true,10);
+            displaySubPath(patientImageView, currentPath.get(0), true,10, 20);
             currentSubPath = 0;
             for (int x = 0; x <currentPath.size(); x++){
                 SubPath p = currentPath.get(x);
@@ -360,7 +362,7 @@ public class PatientController extends DisplayController implements Initializabl
             currentSubPath = (int) iv.getId().charAt(0) - 48;
             SubPath path = currentPath.get(currentSubPath);//ascii conversion
             clearDisplay();
-            displaySubPath(patientImageView, path, true,10);
+            displaySubPath(patientImageView, path, true,10, 10);
             displayMinipaths();
             iv.setEffect(new DropShadow());
             if (displayState == state.DISPLAYING_TEXT_DIRECTION){
@@ -438,7 +440,7 @@ public class PatientController extends DisplayController implements Initializabl
      * @param mapImage
      * @param subPath subpath to be drawn
      */
-    public void displaySubPath (ImageView mapImage, SubPath subPath, boolean drawLabels,int nodeRadius) {
+    public void displaySubPath (ImageView mapImage, SubPath subPath, boolean drawLabels,int nodeRadius, int lableFontSize) {
 
         System.out.println("SubPath");
         GraphNode prev = null;
@@ -476,10 +478,15 @@ public class PatientController extends DisplayController implements Initializabl
             }
             // draw connection
             listToDraw.add(drawConnection(prev, node, mapImage));
-            startPoint.toFront();
-            endPoint.toFront();
             prev = node;
         }
+//        startPoint.toFront();
+//        endPoint.toFront();
+//        Label label = new Label(subPath.floor);
+//        label.setFont(Font.font ("Verdana", lableFontSize));
+//        label.setLayoutX(imageView.getFitWidth() - 50);
+//        label.setLayoutY(10);
+//        searchAnchorPane.getChildren().add(label);
         if(drawnObjects == null) {
             drawnObjects = new ArrayList<>();
         }
@@ -510,6 +517,8 @@ public class PatientController extends DisplayController implements Initializabl
         anchorPane.getChildren().add(c);
         return c;
     }
+
+//    private Shape drawFloorLabel
 
     /**
      * draw the line between two nodes
@@ -692,7 +701,7 @@ public class PatientController extends DisplayController implements Initializabl
      */
     public void displayMinipaths(){
         for(Minimap minimap: minimaps){
-            displaySubPath(minimap.map, minimap.path, false,3);
+            displaySubPath(minimap.map, minimap.path, false,3, 10);
         }
     }
 
@@ -702,7 +711,7 @@ public class PatientController extends DisplayController implements Initializabl
     public void hideMinipaths() {
         if (currentPath != null) {
             clearDisplay();
-            displaySubPath(patientImageView, currentPath.get(currentSubPath), true, 10);
+            displaySubPath(patientImageView, currentPath.get(currentSubPath), true, 10, 20);
         }
     }
 }
