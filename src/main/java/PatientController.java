@@ -37,7 +37,9 @@ public class PatientController extends DisplayController implements Initializabl
     private enum state{
         PATIENT_DEFAULT,
         PATIENT_SEARCH,
-        DISPLAYING_TEXT_DIRECTION
+        DISPLAYING_TEXT_DIRECTION,
+        SHOWING_MENU,
+        HIDING_MENU
     }
 
     state displayState;
@@ -129,7 +131,7 @@ public class PatientController extends DisplayController implements Initializabl
      */
     public void search () {
         clearSearchDisplay();
-        patientImageView.setImage(imageView.getImage());
+        currentPath = null;
         String search = searchBar.getText();
         if (!search.isEmpty()) {
             options.setVisible(true);
@@ -254,6 +256,7 @@ public class PatientController extends DisplayController implements Initializabl
         TextDirection.setVisible(false);
         hideMultiMapAnimation();//hide the hBox thingy
         multiMapDisplayMenu.getChildren().clear();//clear the hBox menu thingy
+        textDirectionsTextBox.setVisible(false);
         clearDisplay();
     }
 
@@ -261,7 +264,7 @@ public class PatientController extends DisplayController implements Initializabl
      * Remove all the points and labels that have been drawn on the map
      */
     public void clearDisplay () {
-        patientImageView.setImage(null);
+        patientImageView.setImage(imageView.getImage());
         if(drawnObjects == null) {
             return;
         }
@@ -271,7 +274,6 @@ public class PatientController extends DisplayController implements Initializabl
         for (Label label :roomLabels){
             anchorPane.getChildren().remove(label);
         }
-        textDirectionsTextBox.setVisible(false);
     }
 
     /**
@@ -374,27 +376,36 @@ public class PatientController extends DisplayController implements Initializabl
      * show the HBox from the bottom
      */
     public void showMultiMapAnimation(){
-        final Timeline timeline = new Timeline();
-        timeline.setCycleCount(1);
-        timeline.setAutoReverse(true);
-        timeline.setOnFinished(e-> initializeMinimaps());
-        final KeyValue kv = new KeyValue(multiMapDisplayMenu.layoutYProperty(), 475);
-        final KeyFrame kf = new KeyFrame(Duration.millis(300), kv);
-        timeline.getKeyFrames().add(kf);
-        timeline.play();
+        if(displayState == state.PATIENT_SEARCH){
+            displayState = state.SHOWING_MENU;
+            final Timeline timeline = new Timeline();
+            timeline.setCycleCount(1);
+            timeline.setAutoReverse(true);
+            timeline.setOnFinished(e -> initializeMinimaps());
+            final KeyValue kv = new KeyValue(multiMapDisplayMenu.layoutYProperty(), 475);
+            final KeyFrame kf = new KeyFrame(Duration.millis(300), kv);
+            timeline.getKeyFrames().add(kf);
+            timeline.play();
+            displayState  = state.PATIENT_SEARCH;
+        }
     }
 
     /**
      * hide the HBox
      */
     public void hideMultiMapAnimation(){
-        final Timeline timeline = new Timeline();
-        timeline.setCycleCount(1);
-        timeline.setAutoReverse(true);
-        final KeyValue kv = new KeyValue(multiMapDisplayMenu.layoutYProperty(), 600);
-        final KeyFrame kf = new KeyFrame(Duration.millis(100), kv);
-        timeline.getKeyFrames().add(kf);
-        timeline.play();
+        if (displayState == state.PATIENT_SEARCH) {
+            displayState  = state.HIDING_MENU;
+            hideMinipaths();
+            final Timeline timeline = new Timeline();
+            timeline.setCycleCount(1);
+            timeline.setAutoReverse(true);
+            final KeyValue kv = new KeyValue(multiMapDisplayMenu.layoutYProperty(), 600);
+            final KeyFrame kf = new KeyFrame(Duration.millis(100), kv);
+            timeline.getKeyFrames().add(kf);
+            timeline.play();
+            displayState = state.PATIENT_SEARCH;
+        }
     }
 
     /**
@@ -666,6 +677,16 @@ public class PatientController extends DisplayController implements Initializabl
     public void displayMinipaths(){
         for(Minimap minimap: minimaps){
             displaySubPath(minimap.map, minimap.path, false,3);
+        }
+    }
+
+    /**
+     * Displays paths on minimaps
+     */
+    public void hideMinipaths() {
+        if (currentPath != null) {
+            clearDisplay();
+            displaySubPath(patientImageView, currentPath.get(currentSubPath), true, 10);
         }
     }
 }
