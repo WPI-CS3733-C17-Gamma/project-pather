@@ -70,7 +70,7 @@ public class PatientController extends DisplayController implements Initializabl
     private int currentSubPath;
     private LinkedList<Label> roomLabels = new LinkedList<>();
     private LinkedList<ImageView> minimaps = new LinkedList<>();
-    LinkedList<SubPath> minipaths = new LinkedList<>();
+//    LinkedList<SubPath> currentPath = new LinkedList<>();
 
     /**
      *
@@ -313,7 +313,7 @@ public class PatientController extends DisplayController implements Initializabl
      */
     public void getPath (GraphNode start, GraphNode end) {
         minimaps = new LinkedList<>();
-        minipaths = new LinkedList<>();
+        currentPath = new LinkedList<>();
         if (start == null || end == null) {
             System.out.println("Start or end is null!");
         }
@@ -336,13 +336,10 @@ public class PatientController extends DisplayController implements Initializabl
                 i.setOnMousePressed(e -> mapChoice(e));
                 i.setImage(applicationController.getImage(p.floor));
                 i.setId(x + "floor in list");
-//                i.getStyleClass().add("tinyMapMenu");
-//                i.applyCss();
                 System.out.println(i.getId());
                multiMapDisplayMenu.getChildren().add(i);
                minimaps.add(i);
-               minipaths.add(p);
-
+//               currentPath.add(p);
             }
             showMultiMapAnimation();
         } catch (PathNotFoundException e) {
@@ -650,7 +647,7 @@ public class PatientController extends DisplayController implements Initializabl
     public void displayMinipaths(){
         for(ImageView map: minimaps){
             int i = minimaps.indexOf(map);
-            displaySubPath(map,minipaths.get(i), false);
+            displaySubPath(map, currentPath.get(i), false);
         }
     }
 }
