@@ -38,7 +38,7 @@
     <center>
         <AnchorPane fx:id="anchorpaneMap" minWidth="-Infinity" prefHeight="433.0" prefWidth="600.0" BorderPane.alignment="CENTER">
             <children>
-                <ImageView fx:id="imageviewMap" fitHeight="413.0" fitWidth="600.0" onMouseDragged="#handleDragEvent" onMousePressed="#isPressed" onMouseReleased="#isReleased" pickOnBounds="true" preserveRatio="true" />
+                <ImageView fx:id="imageviewMap" fitHeight="413.0" fitWidth="600.0" onContextMenuRequested="#openContextMenu" onMouseDragged="#handleDragEvent" onMousePressed="#isPressed" onMouseReleased="#isReleased" pickOnBounds="true" preserveRatio="true" />
                 <ListView fx:id="changeFloorOptions" layoutX="258.0" layoutY="-41.0" prefHeight="324.0" prefWidth="142.0" visible="false" />
                 <ListView fx:id="elevatorFloorOptions" layoutX="447.0" prefHeight="242.0" prefWidth="168.0" visible="false" />
             </children>
