@@ -67,6 +67,7 @@ public class PatientController extends DisplayController implements Initializabl
     @FXML private Button patientDisplayButton;
     @FXML private Button login;
     @FXML private Button TextDirection;
+    @FXML private Button miniMenuButton;
 
     private List<SubPath> currentPath;
     private int currentSubPath;
@@ -109,6 +110,7 @@ public class PatientController extends DisplayController implements Initializabl
             searchAnchorPane.setVisible(true);
             patientImageView.setImage(imageView.getImage());
             this.displayState = state.PATIENT_SEARCH;
+            miniMenuButton.setVisible(true);
             displayImage();
         }
     }
@@ -122,6 +124,7 @@ public class PatientController extends DisplayController implements Initializabl
             searchAnchorPane.setVisible(false);
             this.displayState = state.PATIENT_DEFAULT;
             clearSearchDisplay();
+            miniMenuButton.setVisible(false);
             displayImage();//display the original image
         }
     }
@@ -372,21 +375,32 @@ public class PatientController extends DisplayController implements Initializabl
         }
     }
 
+    public void menuControl(){
+        if (miniMenuButton.getText() == "^"){
+            showMultiMapAnimation();
+        } else if (miniMenuButton.getText() == "X") {
+            hideMultiMapAnimation();
+        }
+    }
+
     /**
      * show the HBox from the bottom
      */
     public void showMultiMapAnimation(){
-        if(displayState == state.PATIENT_SEARCH){
+        if(displayState == state.PATIENT_SEARCH || displayState == state.DISPLAYING_TEXT_DIRECTION){
+            state s = displayState;
             displayState = state.SHOWING_MENU;
             final Timeline timeline = new Timeline();
             timeline.setCycleCount(1);
             timeline.setAutoReverse(true);
             timeline.setOnFinished(e -> initializeMinimaps());
-            final KeyValue kv = new KeyValue(multiMapDisplayMenu.layoutYProperty(), 475);
+            final KeyValue kv = new KeyValue(multiMapDisplayMenu.layoutYProperty(), 490);
             final KeyFrame kf = new KeyFrame(Duration.millis(300), kv);
             timeline.getKeyFrames().add(kf);
             timeline.play();
-            displayState  = state.PATIENT_SEARCH;
+            miniMenuButton.setLayoutY(491);
+            miniMenuButton.setText("X");
+            displayState  = s;
         }
     }
 
@@ -394,8 +408,8 @@ public class PatientController extends DisplayController implements Initializabl
      * hide the HBox
      */
     public void hideMultiMapAnimation(){
-        if (displayState == state.PATIENT_SEARCH) {
-            displayState  = state.HIDING_MENU;
+        if(displayState == state.PATIENT_SEARCH || displayState == state.DISPLAYING_TEXT_DIRECTION){
+            state s = displayState;
             hideMinipaths();
             final Timeline timeline = new Timeline();
             timeline.setCycleCount(1);
@@ -404,7 +418,9 @@ public class PatientController extends DisplayController implements Initializabl
             final KeyFrame kf = new KeyFrame(Duration.millis(100), kv);
             timeline.getKeyFrames().add(kf);
             timeline.play();
-            displayState = state.PATIENT_SEARCH;
+            miniMenuButton.setLayoutY(568);
+            miniMenuButton.setText("^");
+            displayState = s;
         }
     }
 
@@ -507,7 +523,7 @@ public class PatientController extends DisplayController implements Initializabl
 
         Line line = new Line(pointA.x, pointA.y, pointB.x, pointB.y);
         line.setStrokeWidth(4);
-        line.setStroke(Color.LIGHTBLUE);
+        line.setStroke(Color.rgb(88, 169, 196));
  //       line.set(Color.BLUE);
 //        line.setStrokeWidth(1);
 
