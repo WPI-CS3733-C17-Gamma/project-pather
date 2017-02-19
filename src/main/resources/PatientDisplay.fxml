@@ -37,10 +37,8 @@
                  <children>
                     <ImageView fx:id="patientImageView" fitHeight="454.0" fitWidth="800.0" layoutX="100.0" layoutY="103.0" pickOnBounds="true" preserveRatio="true" />
                     <Button fx:id="exitButton" layoutX="940.0" mnemonicParsing="false" onAction="#exitSearch" prefHeight="33.0" prefWidth="47.0" styleClass="exitButton" stylesheets="@design.css" text="X" />
-                     <Label fx:id="textDirectionsTextBox" alignment="TOP_LEFT" layoutX="738.0" layoutY="65.0" prefHeight="390.0" prefWidth="248.0" styleClass="textDirection" stylesheets="@design.css" text="Test Directions Please Ignore" visible="false" wrapText="true" />
-                    <Button layoutX="870.0" layoutY="544.0" mnemonicParsing="false" onAction="#hideMultiMapAnimation" text="Hide Menu" />
-                    <Button fx:id="testtest" layoutX="868.0" layoutY="496.0" mnemonicParsing="false" onAction="#showMultiMapAnimation" text="Show Menu" />
-                  <Button fx:id="TextDirection" layoutX="808.0" layoutY="437.0" mnemonicParsing="false" onMousePressed="#textDirection" text="Show Text Direction" visible="false" />
+                     <Label fx:id="textDirectionsTextBox" alignment="TOP_LEFT" layoutX="729.0" layoutY="100.0" prefHeight="390.0" prefWidth="257.0" styleClass="textDirection" stylesheets="@design.css" text="Test Directions Please Ignore" visible="false" wrapText="true" />
+                  <Button fx:id="TextDirection" layoutX="823.0" layoutY="61.0" mnemonicParsing="false" onMousePressed="#textDirection" text="Show Text Direction" visible="false" />
                   <ImageView fitHeight="57.0" fitWidth="374.0" layoutX="343.0" layoutY="22.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@BWFH_logo_rgb%20(1).png" />
@@ -48,12 +46,12 @@
                   </ImageView>
                  </children>
               </AnchorPane>
-              <TextField fx:id="searchBar" layoutX="24.0" layoutY="26.0" onKeyReleased="#search" onMousePressed="#startSearch" prefHeight="47.0" prefWidth="248.0" promptText="Search!" style="-fx-border-radius: 20; -fx-background-radius: 20;" styleClass="search" stylesheets="@design.css">
+              <TextField fx:id="searchBar" layoutX="24.0" layoutY="26.0" onKeyReleased="#search" onMousePressed="#startSearch" prefHeight="47.0" prefWidth="248.0" promptText="Search!" styleClass="search" stylesheets="@design.css">
                  <font>
                     <Font size="28.0" />
                  </font>
                <effect>
-                  <InnerShadow />
+                  <InnerShadow color="#00000052" />
                </effect>
               </TextField>
               <ListView fx:id="options" layoutX="40.0" layoutY="73.0" prefHeight="200.0" prefWidth="212.0" visible="false">
@@ -61,7 +59,8 @@
                     <Cursor fx:constant="HAND" />
                  </cursor>
               </ListView>
-              <HBox fx:id="multiMapDisplayMenu" alignment="CENTER_LEFT" layoutX="20.0" layoutY="600.0" maxHeight="95.0" maxWidth="814.0" minHeight="95.0" minWidth="814.0" prefHeight="95.0" prefWidth="814.0" spacing="20.0" styleClass="resultMenu" stylesheets="@design.css" />
+              <HBox fx:id="multiMapDisplayMenu" alignment="CENTER_LEFT" layoutX="11.0" layoutY="600.0" maxHeight="95.0" maxWidth="983.0" minHeight="95.0" minWidth="814.0" prefHeight="95.0" prefWidth="975.0" spacing="20.0" styleClass="resultMenu" stylesheets="@design.css" />
+            <Button fx:id="miniMenuButton" layoutX="926.0" layoutY="568.0" mnemonicParsing="false" onMousePressed="#menuControl" opacity="0.8" prefHeight="37.0" prefWidth="60.0" style="-fx-background-color: #B7C1C4;" text="^" visible="false" />
            </children>
         </AnchorPane>
     </children>

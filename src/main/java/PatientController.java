@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -21,6 +22,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Shape;
+import javafx.scene.text.Font;
 import javafx.util.Duration;
 
 import java.net.URL;
@@ -36,14 +38,16 @@ public class PatientController extends DisplayController implements Initializabl
     private enum state{
         PATIENT_DEFAULT,
         PATIENT_SEARCH,
-        DISPLAYING_TEXT_DIRECTION
+        DISPLAYING_TEXT_DIRECTION,
+        SHOWING_MENU,
+        HIDING_MENU
     }
 
     state displayState;
     // kiosk location
     GraphNode startNode;
     // list of shapes that have been drawn on the screen
-    List<Shape> drawnObjects;
+    List<Node> drawnObjects;
     // FXML Things
     @FXML private TextField searchBar;
     @FXML private ListView<String> options;
@@ -64,10 +68,12 @@ public class PatientController extends DisplayController implements Initializabl
     @FXML private Button patientDisplayButton;
     @FXML private Button login;
     @FXML private Button TextDirection;
+    @FXML private Button miniMenuButton;
 
     private List<SubPath> currentPath;
     private int currentSubPath;
     private LinkedList<Label> roomLabels = new LinkedList<>();
+    private LinkedList<Minimap> minimaps = new LinkedList<>();
 
     /**
      *
@@ -92,7 +98,7 @@ public class PatientController extends DisplayController implements Initializabl
         if (displayState == state.PATIENT_DEFAULT){
             imageView.setImage(floor);
         }
-//        if (displayState == state.PATIENT_SEARCH){
+//        if (displayState == state.PATIENT_SEARCH){d
 //            patientImageView.setImage(floor);
 //        }
     }
@@ -105,6 +111,7 @@ public class PatientController extends DisplayController implements Initializabl
             searchAnchorPane.setVisible(true);
             patientImageView.setImage(imageView.getImage());
             this.displayState = state.PATIENT_SEARCH;
+            miniMenuButton.setVisible(true);
             displayImage();
         }
     }
@@ -118,6 +125,8 @@ public class PatientController extends DisplayController implements Initializabl
             searchAnchorPane.setVisible(false);
             this.displayState = state.PATIENT_DEFAULT;
             clearSearchDisplay();
+            miniMenuButton.setVisible(false);
+            hideMultiMapAnimation();
             displayImage();//display the original image
         }
     }
@@ -127,7 +136,7 @@ public class PatientController extends DisplayController implements Initializabl
      */
     public void search () {
         clearSearchDisplay();
-        patientImageView.setImage(imageView.getImage());
+        currentPath = null;
         String search = searchBar.getText();
         if (!search.isEmpty()) {
             options.setVisible(true);
@@ -252,6 +261,7 @@ public class PatientController extends DisplayController implements Initializabl
         TextDirection.setVisible(false);
         hideMultiMapAnimation();//hide the hBox thingy
         multiMapDisplayMenu.getChildren().clear();//clear the hBox menu thingy
+        textDirectionsTextBox.setVisible(false);
         clearDisplay();
     }
 
@@ -259,17 +269,16 @@ public class PatientController extends DisplayController implements Initializabl
      * Remove all the points and labels that have been drawn on the map
      */
     public void clearDisplay () {
-        patientImageView.setImage(null);
+        patientImageView.setImage(imageView.getImage());
         if(drawnObjects == null) {
             return;
         }
-        for (Shape shape : drawnObjects) {
+        for (Node shape : drawnObjects) {
             anchorPane.getChildren().remove(shape);
         }
         for (Label label :roomLabels){
             anchorPane.getChildren().remove(label);
         }
-        textDirectionsTextBox.setVisible(false);
     }
 
     /**
@@ -281,10 +290,18 @@ public class PatientController extends DisplayController implements Initializabl
      * @return
      */
     FloorPoint graphPointToImage (GraphNode node, ImageView imageToBeDrawnOver) {
+        Parent currentParent = imageToBeDrawnOver.getParent();
+
         double imageWidth = imageToBeDrawnOver.getBoundsInLocal().getWidth();
         double imageHeight = imageToBeDrawnOver.getBoundsInLocal().getHeight();
         double offsetX = imageToBeDrawnOver.getLayoutX();
         double offsetY = imageToBeDrawnOver.getLayoutY();
+
+        while(!(currentParent instanceof AnchorPane)){
+            offsetX += currentParent.getLayoutX();
+            offsetY += currentParent.getLayoutY();
+            currentParent = currentParent.getParent();
+        }
 
         System.out.println("off x " + offsetX + "  off y "  + offsetY);
 
@@ -301,20 +318,19 @@ public class PatientController extends DisplayController implements Initializabl
      * @param end the ending location
      */
     public void getPath (GraphNode start, GraphNode end) {
+        minimaps = new LinkedList<>();
         if (start == null || end == null) {
             System.out.println("Start or end is null!");
         }
         try {
             currentPath = map.getPathByFloor(start, end);
             TextDirection.setVisible(true);
-            displaySubPath(patientImageView, currentPath.get(0));
+            clearDisplay();
+            displaySubPath(patientImageView, currentPath.get(0), true,10, 20);
             currentSubPath = 0;
             for (int x = 0; x <currentPath.size(); x++){
                 SubPath p = currentPath.get(x);
                 ImageView i = new ImageView();
-                if(x == 0){
-                    i.setEffect(new DropShadow());
-                }
 
                 i.setPreserveRatio(true);
                 i.setFitHeight(95);
@@ -322,10 +338,9 @@ public class PatientController extends DisplayController implements Initializabl
                 i.setOnMousePressed(e -> mapChoice(e));
                 i.setImage(applicationController.getImage(p.floor));
                 i.setId(x + "floor in list");
-//                i.getStyleClass().add("tinyMapMenu");
-//                i.applyCss();
                 System.out.println(i.getId());
                multiMapDisplayMenu.getChildren().add(i);
+               minimaps.add(new Minimap(i,p));
             }
             showMultiMapAnimation();
         } catch (PathNotFoundException e) {
@@ -343,11 +358,13 @@ public class PatientController extends DisplayController implements Initializabl
             for(Node child :iv.getParent().getChildrenUnmodifiable()){
                 child.setEffect(null);
             }
-            iv.setEffect(new DropShadow());
             System.out.println(iv.getId() + "*******");
             currentSubPath = (int) iv.getId().charAt(0) - 48;
             SubPath path = currentPath.get(currentSubPath);//ascii conversion
-            displaySubPath(patientImageView, path);
+            clearDisplay();
+            displaySubPath(patientImageView, path, true,10, 20);
+            displayMinipaths();
+            iv.setEffect(new DropShadow());
             if (displayState == state.DISPLAYING_TEXT_DIRECTION){
                 String nextFloor = null;
                 if(currentPath.size() > currentSubPath+1) {
@@ -360,33 +377,62 @@ public class PatientController extends DisplayController implements Initializabl
         }
     }
 
+    public void menuControl(){
+        if (miniMenuButton.getText() == "^"){
+            showMultiMapAnimation();
+        } else if (miniMenuButton.getText() == "X") {
+            hideMultiMapAnimation();
+        }
+    }
+
     /**
      * show the HBox from the bottom
      */
     public void showMultiMapAnimation(){
-        final Timeline timeline = new Timeline();
-        timeline.setCycleCount(1);
-        timeline.setAutoReverse(true);
-        final KeyValue kv = new KeyValue(multiMapDisplayMenu.layoutYProperty(), 475);
-        final KeyFrame kf = new KeyFrame(Duration.millis(300), kv);
-        timeline.getKeyFrames().add(kf);
-        timeline.play();
+        if(displayState == state.PATIENT_SEARCH || displayState == state.DISPLAYING_TEXT_DIRECTION){
+            state s = displayState;
+            displayState = state.SHOWING_MENU;
+            final Timeline timeline = new Timeline();
+            timeline.setCycleCount(1);
+            timeline.setAutoReverse(true);
+            timeline.setOnFinished(e -> initializeMinimaps());
+            final KeyValue kv = new KeyValue(multiMapDisplayMenu.layoutYProperty(), 490);
+            final KeyFrame kf = new KeyFrame(Duration.millis(300), kv);
+            timeline.getKeyFrames().add(kf);
+            timeline.play();
+            miniMenuButton.setLayoutY(491);
+            miniMenuButton.setText("X");
+            displayState  = s;
+        }
     }
 
     /**
      * hide the HBox
      */
     public void hideMultiMapAnimation(){
-        final Timeline timeline = new Timeline();
-        timeline.setCycleCount(1);
-        timeline.setAutoReverse(true);
-        final KeyValue kv = new KeyValue(multiMapDisplayMenu.layoutYProperty(), 600);
-        final KeyFrame kf = new KeyFrame(Duration.millis(100), kv);
-        timeline.getKeyFrames().add(kf);
-        timeline.play();
+        if(displayState == state.PATIENT_SEARCH || displayState == state.DISPLAYING_TEXT_DIRECTION){
+            state s = displayState;
+            hideMinipaths();
+            final Timeline timeline = new Timeline();
+            timeline.setCycleCount(1);
+            timeline.setAutoReverse(true);
+            final KeyValue kv = new KeyValue(multiMapDisplayMenu.layoutYProperty(), 600);
+            final KeyFrame kf = new KeyFrame(Duration.millis(100), kv);
+            timeline.getKeyFrames().add(kf);
+            timeline.play();
+            miniMenuButton.setLayoutY(568);
+            miniMenuButton.setText("^");
+            displayState = s;
+        }
     }
 
-
+    /**
+     * Initialises the minimaps after animation
+     */
+    public void initializeMinimaps(){
+        displayMinipaths();
+        minimaps.getFirst().map.setEffect(new DropShadow());
+    }
     /**
      * Display the given sub path over the given image view
      * Addds all the drawn objects to a list of drawn objects
@@ -394,20 +440,32 @@ public class PatientController extends DisplayController implements Initializabl
      * @param mapImage
      * @param subPath subpath to be drawn
      */
-    public void displaySubPath (ImageView mapImage, SubPath subPath) {
+    public void displaySubPath (ImageView mapImage, SubPath subPath, boolean drawLabels,int nodeRadius, int lableFontSize) {
 
-        clearDisplay();
         System.out.println("SubPath");
         GraphNode prev = null;
         mapImage.setImage(applicationController.getImage(subPath.floor));
         List<Shape> listToDraw = new ArrayList<>();
+        Shape startPoint = new Shape() {
+            @Override
+            public com.sun.javafx.geom.Shape impl_configShape() {
+                return null;
+            }
+        };
+        Shape endPoint = new Shape() {
+            @Override
+            public com.sun.javafx.geom.Shape impl_configShape() {
+                return null;
+            }
+        };
 
         Iterator<GraphNode> iterator = subPath.path.iterator();
         if (iterator.hasNext()){
             prev = iterator.next();
             FloorPoint localPoint = graphPointToImage(prev, mapImage);
             System.out.println(localPoint);
-            listToDraw.add(drawStartPoint(localPoint));
+            startPoint = drawStartPoint(localPoint,nodeRadius);
+            listToDraw.add(startPoint);
         }
         // draw path, and all connections from previous
         while(iterator.hasNext()){
@@ -415,25 +473,51 @@ public class PatientController extends DisplayController implements Initializabl
             FloorPoint localPoint = graphPointToImage(node, mapImage);
             System.out.println(localPoint);
             if (!iterator.hasNext()){
-                listToDraw.add(drawEndPoint(localPoint));
+                endPoint = drawEndPoint(localPoint,nodeRadius);
+                listToDraw.add(endPoint);
             }
             // draw connection
             listToDraw.add(drawConnection(prev, node, mapImage));
+            startPoint.toFront();
+            endPoint.toFront();
             prev = node;
         }
+
+        startPoint.toFront();
+        endPoint.toFront();
         if(drawnObjects == null) {
             drawnObjects = new ArrayList<>();
         }
         drawnObjects.addAll(listToDraw);
-        roomLabels = getRoomLabels(subPath);
-        displayRoomLabels(roomLabels);
+        drawFloorLabel(mapImage, subPath, lableFontSize);
+        if(drawLabels) {
+            roomLabels = getRoomLabels(subPath);
+            displayRoomLabels(roomLabels);
+        }
+    }
+
+    /**
+     * given an image view and a subpath, draw a floor label
+     * @param mapImage
+     * @param subPath
+     * @param labelFontSize
+     */
+    public void drawFloorLabel(ImageView mapImage, SubPath subPath, int labelFontSize){
+        Label label = new Label(subPath.floor);
+        label.setFont(Font.font ("Georgia", labelFontSize));
+        FloorPoint temp = graphPointToImage(new GraphNode(50, 30, "one"), mapImage);
+        label.setLayoutX(temp.getX());
+        label.setLayoutY(temp.getY());
+        label.setTextFill(Color.rgb(27, 68, 156));
+        anchorPane.getChildren().add(label);
+        this.drawnObjects.add(label);
     }
     /**
      * given local point, draw the starting point of a sub path
      * @param localPoint
      */
-    public Shape drawStartPoint (FloorPoint localPoint) {
-        Circle c = new Circle(localPoint.x, localPoint.y, 10);
+    public Shape drawStartPoint (FloorPoint localPoint, int radius) {
+        Circle c = new Circle(localPoint.x, localPoint.y, radius);
         c.setFill(Color.GREEN);
         anchorPane.getChildren().add(c);
         return c;
@@ -443,11 +527,19 @@ public class PatientController extends DisplayController implements Initializabl
      * given local point, draw the ending point of a sub path
      * @param localPoint
      */
-    public Shape drawEndPoint (FloorPoint localPoint) {
-        Circle c = new Circle(localPoint.x, localPoint.y, 10);
+    public Shape drawEndPoint (FloorPoint localPoint, int radius) {
+        Circle c = new Circle(localPoint.x, localPoint.y, radius);
         c.setFill(Color.RED);
         anchorPane.getChildren().add(c);
         return c;
+    }
+
+    private Label drawFloorLabel(SubPath subPath, int lableFontSize){
+        Label label = new Label(subPath.floor);
+        label.setFont(Font.font ("Verdana", lableFontSize));
+        label.setLayoutX(imageView.getFitWidth() - 50);
+        label.setLayoutY(10);
+        return label;
     }
 
     /**
@@ -462,7 +554,7 @@ public class PatientController extends DisplayController implements Initializabl
 
         Line line = new Line(pointA.x, pointA.y, pointB.x, pointB.y);
         line.setStrokeWidth(4);
-        line.setStroke(Color.LIGHTBLUE);
+        line.setStroke(Color.rgb(88, 169, 196));
  //       line.set(Color.BLUE);
 //        line.setStrokeWidth(1);
 
@@ -624,5 +716,37 @@ public class PatientController extends DisplayController implements Initializabl
         for(Label label: labels){
             anchorPane.getChildren().add(label);
         }
+    }
+
+    /**
+     * Displays paths on minimaps
+     */
+    public void displayMinipaths(){
+        for(Minimap minimap: minimaps){
+            displaySubPath(minimap.map, minimap.path, false,3, 10);
+        }
+    }
+
+    /**
+     * Displays paths on minimaps
+     */
+    public void hideMinipaths() {
+        if (currentPath != null) {
+            clearDisplay();
+            displaySubPath(patientImageView, currentPath.get(currentSubPath), true, 10, 20);
+        }
+    }
+}
+
+/**
+ * Minimaps contain a map and a path
+ */
+class Minimap{
+    ImageView map;
+    SubPath path;
+
+    Minimap(ImageView map, SubPath path){
+        this.path = path;
+        this. map = map;
     }
 }
