@@ -155,7 +155,7 @@ public class ApplicationController extends Application {
         try {
                 this.login = login;
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("MapAdminDisplay.fxml"));
-                MapAdminController controller = new MapAdminController(map, this, "floor3.png");
+                MapAdminController controller = new MapAdminController(map, this, "floor3.png", adminStage);
                 loader.setController(controller);
                 Parent root = loader.load();
                 adminStage.setTitle("MapAdmin");

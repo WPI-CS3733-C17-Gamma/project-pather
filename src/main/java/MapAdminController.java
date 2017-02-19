@@ -1,5 +1,6 @@
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -7,6 +8,7 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -15,12 +17,11 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
+import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class MapAdminController extends DisplayController implements Initializable {
@@ -47,6 +48,7 @@ public class MapAdminController extends DisplayController implements Initializab
     // keep track of the objects that have been drawn on the screen
     HashMap<Long, Shape> drawnNodes = new HashMap<>();
     List<Shape> drawnLines = new ArrayList<>();
+    Stage stage;
 
     //For the context menu (right click menu)
     //ContextMenu contextMenu;
@@ -74,8 +76,9 @@ public class MapAdminController extends DisplayController implements Initializab
      * @param applicationController main controller
      * @param currentMap
      */
-    public MapAdminController(Map map, ApplicationController applicationController, String currentMap) {
+    public MapAdminController(Map map, ApplicationController applicationController, String currentMap, Stage stage) {
         super(map, applicationController, currentMap);
+        this.stage = stage;
     }
 
     /**
@@ -779,7 +782,7 @@ public class MapAdminController extends DisplayController implements Initializab
                 break;
         }
         displayRoom(selectedNode);
-        drawMap();
+        //drawMap();
     }
 
     /**
@@ -831,4 +834,48 @@ public class MapAdminController extends DisplayController implements Initializab
     public void switchToDirectoryAdmin(){
         applicationController.createDirectoryAdminDisplay(new Login());//TODO fix this pl0x
     }
+
+    /**
+     * Opens ContextMenu
+     */
+    public void showContextMenu(ContextMenuEvent event){
+
+        ContextMenu contextMenu = new ContextMenu();
+
+        contextMenu.setOnShowing(new EventHandler<WindowEvent>() {
+            public void handle(WindowEvent e) {
+                System.out.println("showing");
+            }
+        });
+        contextMenu.setOnShown(new EventHandler<WindowEvent>() {
+            public void handle(WindowEvent e) {
+                System.out.println("shown");
+            }
+        });
+
+        MenuItem item1 = new MenuItem("About");
+        item1.setStyle("MapAdminContextMenu");
+        item1.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent e) {
+                System.out.println("About");
+            }
+        });
+        MenuItem item2 = new MenuItem("Preferences");
+        item2.setStyle("fx-background-image: red");
+        item2.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent e) {
+                System.out.println("Preferences");
+            }
+        });
+        contextMenu.getItems().addAll(item1, item2);
+        Shape circle = new Circle(event.getX(), event.getY(), 10);
+        anchorpaneMap.getChildren().add(circle);
+        contextMenu.setId("MapAdminContextMenu");
+        contextMenu.show(circle, event.getScreenX(), event.getScreenY());
+        contextMenu.setStyle("-fx-shape:Circle ");
+        contextMenu.setStyle("fx-background-image: red");
+
+    }
+
 }
+

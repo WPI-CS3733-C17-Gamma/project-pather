@@ -15,13 +15,12 @@
 }
 
 .search{
-	-fx-border-radius: 20px;
-	-fx-background-radius: 20px;
+	/*-fx-border-radius: 20px;*/
+	/*-fx-background-radius: 20px;*/
 	-fx-border-color: #1b449c;
 	-fx-font-size: 20px;
 	-fx-font-family: system;
-	-fx-box-shadow: 10px 10px 5px #888888;
-
+	/*-fx-box-shadow: 10px 10px 5px #444;*/
 }
 
 .tab{
@@ -78,12 +77,12 @@
 .resultMenu{
 	-fx-background-color: #B7C1C4;
 	-fx-opacity: 75%;
-	-fx-background-radius: 20px;
+	-fx-background-radius: 3px;
 }
 
 .textDirection{
-	-fx-padding: 30px;
-	-fx-background-radius: 20px;
+	-fx-padding: 3px;
+	-fx-background-radius: 5px;
 	-fx-background-color: #BBC4C7;
 	-fx-opacity: 75%;
 	-fx-text-fill: grey;
