@@ -693,7 +693,6 @@ public class MapAdminController extends DisplayController implements Initializab
      * Deselects all buttons when textbox is selected
      */
     public void isFocused(){
-        System.out.println("Fuck me");
         togglebuttonChainAdd.setSelected(false);
         togglebuttonAddConnections.setSelected(false);
         togglebuttonAddNode.setSelected(false);
