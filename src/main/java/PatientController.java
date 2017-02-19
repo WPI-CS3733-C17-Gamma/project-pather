@@ -24,6 +24,7 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
+import texting.TextSender;
 
 import java.net.URL;
 import java.util.*;
@@ -69,6 +70,8 @@ public class PatientController extends DisplayController implements Initializabl
     @FXML private Button login;
     @FXML private Button TextDirection;
     @FXML private Button miniMenuButton;
+    @FXML private BorderPane textPane;
+    @FXML private TextField numberField;
 
     private List<SubPath> currentPath;
     private int currentSubPath;
@@ -167,16 +170,20 @@ public class PatientController extends DisplayController implements Initializabl
 
     /**
      * get rooms / entries related to entry
-     * @param room
+     * @param searchTerm
      * @return
      */
-    public List<String> search(String room) {
-        if (((int)room.charAt(0)) < 58 && ((int)room.charAt(0)) > 47){
-            return map.searchRoom(room);
+    public List<String> search(String searchTerm) {
+        if (((int)searchTerm.charAt(0)) < 58 && ((int)searchTerm.charAt(0)) > 47){
+            return map.searchRoom(searchTerm);
         }
+	// if the first letter is not a number, search for entries first, then add all the rooms
+	// to the bottom of the list
         else{
-            String room2 = room.toLowerCase();
-            return map.searchEntry(room2);
+            String lowerCaseSearch = searchTerm.toLowerCase();
+	    List<String> results = map.searchEntry(lowerCaseSearch) ;
+	    results.addAll(map.searchRoom(searchTerm));
+	    return results;
         }
         //(update) the display the list of room
     }
@@ -259,6 +266,7 @@ public class PatientController extends DisplayController implements Initializabl
      */
     public void clearSearchDisplay(){
         TextDirection.setVisible(false);
+        textPane.setVisible(false );
         hideMultiMapAnimation();//hide the hBox thingy
         multiMapDisplayMenu.getChildren().clear();//clear the hBox menu thingy
         textDirectionsTextBox.setVisible(false);
@@ -568,6 +576,7 @@ public class PatientController extends DisplayController implements Initializabl
         if (textDirectionsTextBox.isVisible()){
             displayState = state.PATIENT_SEARCH;
             textDirectionsTextBox.setVisible(false);
+            textPane.setVisible(false);
             TextDirection.setText("Show Text Direction");
         }
         else {
@@ -589,6 +598,7 @@ public class PatientController extends DisplayController implements Initializabl
      */
     public void displayTextDirections(List<GraphNode> path, String floor) {
         textDirectionsTextBox.setVisible(true);
+        textPane.setVisible(true);
         List<String> directions = map.getTextualDirections(path);
         String dir = "";
         for(String line : directions) {
@@ -746,6 +756,30 @@ public class PatientController extends DisplayController implements Initializabl
             displaySubPath(patientImageView, currentPath.get(currentSubPath), true, 10, 20);
         }
     }
+
+    public void sendText () {
+        String number = numberField.getText();
+        TextSender sender = TextSender.getInstance();
+
+        for (int i = 0; i < minimaps.size(); i++) {
+            String currentPath = "\n";
+            Minimap currentMiniMap = minimaps.get(i);
+            currentPath += map.getTextualDirections(currentMiniMap.path.path)
+            .stream().reduce("" , (running , element) -> running + "\n" + element);
+            if(i < minimaps.size() -1) {
+               String nextFloor = minimaps.get(i+1).path.floor;
+               currentPath += "Take Elevator to " + nextFloor;
+            }
+            sender.sendMessage(number, currentPath);
+        }
+
+        System.out.println("message to send to : " + number);
+
+        sender.sendMessage(number , "Thanks for using project pather");
+
+    }
+
+
 }
 
 /**
