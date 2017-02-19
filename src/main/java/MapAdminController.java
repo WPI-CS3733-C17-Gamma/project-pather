@@ -308,7 +308,7 @@ public class MapAdminController extends DisplayController implements Initializab
         FloorPoint graphPoint = mouseToGraph(n);
 
         tempNode = map.getGraphNode(graphPoint);
-        if (tempNode != null && tempNode.location.distance(graphPoint) > 50 ){
+        if (tempNode != null && tempNode.location.distance(graphPoint) > 20 ){
             tempNode = null;
         }
         return tempNode;
@@ -708,7 +708,7 @@ public class MapAdminController extends DisplayController implements Initializab
      * @param key
      */
     @FXML
-    public void handleKey(KeyEvent key){ //TODO fix this
+    public void handleKey(KeyEvent key){
         if (!roomName.isFocused()) {
             switch (key.getCode()) {
                 case DELETE:
@@ -736,8 +736,12 @@ public class MapAdminController extends DisplayController implements Initializab
      * @param e
      */
     public void handleMouseEventAddNode (MouseEvent e) {
-        FloorPoint graphPoint = mouseToGraph(e);
-        addNode(graphPoint);
+        if (nearbyNode(e) == null) {
+            FloorPoint graphPoint = mouseToGraph(e);
+            addNode(graphPoint);
+        } else {
+            selectedNode = nearbyNode(e);
+        }
     }
 
     /**
