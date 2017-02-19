@@ -45,7 +45,7 @@ public class CircularContextMenu {
      */
     public void addOption(Paint image, EventHandler handler){
         int size = menuElements.size();
-        double angle = 360 / (size+1);
+        double angle = 360.0 / (size+1);
         double currentAngle = 0;
 
         menuElements.add(new ContextMenuElement(image, handler));
@@ -67,8 +67,8 @@ public class CircularContextMenu {
      */
     public void addOption(Paint image){//redraw elements when a new one is added
         int size = menuElements.size();
-        double angle = 360 / (size+1);
-        double currentAngle = 0;
+        double angle = (double)360 / (double)(size+1);
+        double currentAngle = 0.0;
 
         menuElements.add(new ContextMenuElement(image));
 
@@ -81,7 +81,7 @@ public class CircularContextMenu {
 
             currentAngle = currentAngle + angle;
         }
-
+        System.out.println(currentAngle);
     }
 
     /**
@@ -136,9 +136,7 @@ public class CircularContextMenu {
             circ.setLayoutY(layoutY);
             drawnItems.add(circ);
         }
-        int i = 0;
         for (ContextMenuElement element: menuElements) {
-            System.out.println(i++);
             element.path.setLayoutX(layoutX);
             element.path.setLayoutY(layoutY);
             pane.getChildren().add(element.path);
