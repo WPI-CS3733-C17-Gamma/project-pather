@@ -13,7 +13,7 @@
         <AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="100.0" prefWidth="600.0" BorderPane.alignment="CENTER">
             <children>
                 <ToggleButton fx:id="togglebuttonChainAdd" layoutX="259.0" mnemonicParsing="false" onAction="#toggleChainAdd" prefHeight="26.0" prefWidth="128.0" text="Chain Add" />
-                <TextField fx:id="roomName" layoutX="400.0" layoutY="30.0" onAction="#isFocused" prefHeight="26.0" prefWidth="158.0" promptText="Add or Remove Room" />
+                <TextField fx:id="roomName" layoutX="400.0" layoutY="30.0" onAction="#isFocused" onKeyPressed="#isFocused" onMouseClicked="#isFocused" prefHeight="26.0" prefWidth="158.0" promptText="Add or Remove Room" />
                 <ToggleButton fx:id="togglebuttonAddNode" mnemonicParsing="false" onAction="#toggleAddNode" prefHeight="26.0" prefWidth="99.0" text="Add Node" />
                 <ToggleButton fx:id="togglebuttonAddConnections" layoutX="110.0" mnemonicParsing="false" onAction="#toggleAddConnection" prefHeight="26.0" prefWidth="140.0" text="Add Connections" />
                 <Button layoutY="30.0" mnemonicParsing="false" onAction="#deleteSelected" prefHeight="26.0" prefWidth="99.0" text="Delete Node" />

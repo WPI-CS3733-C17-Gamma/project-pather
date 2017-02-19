@@ -593,6 +593,9 @@ public class MapAdminController extends DisplayController implements Initializab
      * @param m
      */
     public void isPressed(MouseEvent m) {
+        if (roomName.isFocused()){
+            anchorpaneMap.requestFocus(); //deselects textbox if click outside
+        }
         switch (currentState){
             case NONE:
                 // Possible state changing logic goes here
@@ -693,12 +696,7 @@ public class MapAdminController extends DisplayController implements Initializab
      * Deselects all buttons when textbox is selected
      */
     public void isFocused(){
-        System.out.println("Fuck me");
-        togglebuttonChainAdd.setSelected(false);
-        togglebuttonAddConnections.setSelected(false);
-        togglebuttonAddNode.setSelected(false);
-        togglebuttonAddElevator.setSelected(false);
-        elevatorFloorOptions.setVisible(false);
+        changeState(State.NONE);
     }
 
     /**
