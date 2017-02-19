@@ -478,6 +478,8 @@ public class PatientController extends DisplayController implements Initializabl
             }
             // draw connection
             listToDraw.add(drawConnection(prev, node, mapImage));
+            startPoint.toFront();
+            endPoint.toFront();
             prev = node;
         }
 //        startPoint.toFront();
