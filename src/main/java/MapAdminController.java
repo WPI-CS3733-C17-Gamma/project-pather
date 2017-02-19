@@ -321,19 +321,30 @@ public class MapAdminController extends DisplayController implements Initializab
     public void addRoom () {
         String newName = roomName.getText();
         Room existingRoom = map.getRoomFromName(newName);
+        // Entered name is empty, so delete room
+        // TODO: maybe make this more explicit, like a separate button,
+        // and ignore this case
         if (newName.isEmpty()) {
             if (activeRoom != null) {
                 map.deleteRoom(activeRoom);
             }
         }
-        // check if room is already there
-        else if (existingRoom == null) {
-            map.addRoom(new Room(selectedNode, newName));
-        }
-        // Setting room location and name
-        else {
-            map.changeRoomName(existingRoom, newName);
+        // Already a room of that name, so change room location
+        else if (existingRoom != null) {
+            // if there is also an active room, remove this node from it
+            if (activeRoom != null) {
+                activeRoom.setLocation(null);
+            }
             existingRoom.setLocation(selectedNode);
+        }
+        // Node already has a room, so rename room
+        else if (activeRoom != null) {
+            map.changeRoomName(activeRoom, newName);
+        }
+        // No room either existed at this node or had the new name, so
+        // add a new room
+        else {
+            map.addRoom(new Room(selectedNode, newName));
         }
     }
 
