@@ -45,7 +45,7 @@ public class CircularContextMenu {
      */
     public void addOption(Paint image, EventHandler handler){
         int size = menuElements.size();
-        double angle = 360.0 / (size+1);
+        double angle = (double)360 / (double)(size+1);
         double currentAngle = 0;
 
         menuElements.add(new ContextMenuElement(image, handler));
