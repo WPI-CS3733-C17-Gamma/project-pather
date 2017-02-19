@@ -1,5 +1,6 @@
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -7,6 +8,7 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -15,12 +17,11 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
+import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class MapAdminController extends DisplayController implements Initializable {
@@ -47,6 +48,7 @@ public class MapAdminController extends DisplayController implements Initializab
     // keep track of the objects that have been drawn on the screen
     HashMap<Long, Shape> drawnNodes = new HashMap<>();
     List<Shape> drawnLines = new ArrayList<>();
+    Stage stage;
 
     //For the context menu (right click menu)
     //ContextMenu contextMenu;
@@ -74,8 +76,9 @@ public class MapAdminController extends DisplayController implements Initializab
      * @param applicationController main controller
      * @param currentMap
      */
-    public MapAdminController(Map map, ApplicationController applicationController, String currentMap) {
+    public MapAdminController(Map map, ApplicationController applicationController, String currentMap, Stage stage) {
         super(map, applicationController, currentMap);
+        this.stage = stage;
     }
 
     /**
@@ -305,7 +308,7 @@ public class MapAdminController extends DisplayController implements Initializab
         FloorPoint graphPoint = mouseToGraph(n);
 
         tempNode = map.getGraphNode(graphPoint);
-        if (tempNode != null && tempNode.location.distance(graphPoint) > 50 ){
+        if (tempNode != null && tempNode.location.distance(graphPoint) > 20 ){
             tempNode = null;
         }
         return tempNode;
@@ -593,6 +596,9 @@ public class MapAdminController extends DisplayController implements Initializab
      * @param m
      */
     public void isPressed(MouseEvent m) {
+        if (roomName.isFocused()){
+            anchorpaneMap.requestFocus(); //deselects textbox if click outside
+        }
         switch (currentState){
             case NONE:
                 // Possible state changing logic goes here
@@ -688,28 +694,40 @@ public class MapAdminController extends DisplayController implements Initializab
             addConnection(secondaryNode, selectedNode);
         }
     }
-    @FXML
-    public void handleKey(KeyEvent key){ //TODO fix this
-//        System.out.println("Key Pressed: " + key.getCode());
-//        switch(key.getCode()){
-//            case DELETE:
-//                deleteSelected();
-//                System.out.println("deleted");
-//                break;
-//            case N:
-//                changeState(State.ADD_NODES);
-//                break;
-//            case C:
-//                changeState(State.ADD_CONNECTION);
-//                break;
-//            case E:
-//                changeState(State.ADD_ELEVATOR);
-//                break;
-//            case A:
-//                changeState(State.CHAIN_ADD);
-//                break;
-//        }
 
+    /**
+     * Deselects all buttons when textbox is selected
+     */
+    public void isFocused(){
+        changeState(State.NONE);
+    }
+
+    /**
+     * Implements Key handling
+     * To add key, add new case statement
+     * @param key
+     */
+    @FXML
+    public void handleKey(KeyEvent key){
+        if (!roomName.isFocused()) {
+            switch (key.getCode()) {
+                case DELETE:
+                    deleteSelected();
+                    break;
+                case N:
+                    changeState(State.ADD_NODES);
+                    break;
+                case C:
+                    changeState(State.ADD_CONNECTION);
+                    break;
+                case E:
+                    changeState(State.ADD_ELEVATOR);
+                    break;
+                case A:
+                    changeState(State.CHAIN_ADD);
+                    break;
+            }
+        }
     }
 
 
@@ -718,8 +736,12 @@ public class MapAdminController extends DisplayController implements Initializab
      * @param e
      */
     public void handleMouseEventAddNode (MouseEvent e) {
-        FloorPoint graphPoint = mouseToGraph(e);
-        addNode(graphPoint);
+        if (nearbyNode(e) == null) {
+            FloorPoint graphPoint = mouseToGraph(e);
+            addNode(graphPoint);
+        } else {
+            selectedNode = nearbyNode(e);
+        }
     }
 
     /**
@@ -760,7 +782,7 @@ public class MapAdminController extends DisplayController implements Initializab
                 break;
         }
         displayRoom(selectedNode);
-        drawMap();
+        //drawMap();
     }
 
     /**
@@ -812,4 +834,48 @@ public class MapAdminController extends DisplayController implements Initializab
     public void switchToDirectoryAdmin(){
         applicationController.createDirectoryAdminDisplay(new Login());//TODO fix this pl0x
     }
+
+    /**
+     * Opens ContextMenu
+     */
+    public void showContextMenu(ContextMenuEvent event){
+
+        ContextMenu contextMenu = new ContextMenu();
+
+        contextMenu.setOnShowing(new EventHandler<WindowEvent>() {
+            public void handle(WindowEvent e) {
+                System.out.println("showing");
+            }
+        });
+        contextMenu.setOnShown(new EventHandler<WindowEvent>() {
+            public void handle(WindowEvent e) {
+                System.out.println("shown");
+            }
+        });
+
+        MenuItem item1 = new MenuItem("About");
+        item1.setStyle("MapAdminContextMenu");
+        item1.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent e) {
+                System.out.println("About");
+            }
+        });
+        MenuItem item2 = new MenuItem("Preferences");
+        item2.setStyle("fx-background-image: red");
+        item2.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent e) {
+                System.out.println("Preferences");
+            }
+        });
+        contextMenu.getItems().addAll(item1, item2);
+        Shape circle = new Circle(event.getX(), event.getY(), 10);
+        anchorpaneMap.getChildren().add(circle);
+        contextMenu.setId("MapAdminContextMenu");
+        contextMenu.show(circle, event.getScreenX(), event.getScreenY());
+        contextMenu.setStyle("-fx-shape:Circle ");
+        contextMenu.setStyle("fx-background-image: red");
+
+    }
+
 }
+

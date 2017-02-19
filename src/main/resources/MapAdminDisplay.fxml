@@ -8,12 +8,12 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 
-<BorderPane maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyReleased="#handleKey" prefHeight="600.0" prefWidth="600.0" style="-fx-background-color: #d4e3ed;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#handleKey" prefHeight="600.0" prefWidth="600.0" style="-fx-background-color: #d4e3ed;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
     <top>
         <AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="100.0" prefWidth="600.0" BorderPane.alignment="CENTER">
             <children>
                 <ToggleButton fx:id="togglebuttonChainAdd" layoutX="259.0" mnemonicParsing="false" onAction="#toggleChainAdd" prefHeight="26.0" prefWidth="128.0" text="Chain Add" />
-                <TextField fx:id="roomName" layoutX="400.0" layoutY="30.0" prefHeight="26.0" prefWidth="158.0" promptText="Add or Remove Room" />
+                <TextField fx:id="roomName" layoutX="400.0" layoutY="30.0" onAction="#isFocused" onKeyPressed="#isFocused" onMouseClicked="#isFocused" prefHeight="26.0" prefWidth="158.0" promptText="Add or Remove Room" />
                 <ToggleButton fx:id="togglebuttonAddNode" mnemonicParsing="false" onAction="#toggleAddNode" prefHeight="26.0" prefWidth="99.0" text="Add Node" />
                 <ToggleButton fx:id="togglebuttonAddConnections" layoutX="110.0" mnemonicParsing="false" onAction="#toggleAddConnection" prefHeight="26.0" prefWidth="140.0" text="Add Connections" />
                 <Button layoutY="30.0" mnemonicParsing="false" onAction="#deleteSelected" prefHeight="26.0" prefWidth="99.0" text="Delete Node" />
@@ -36,9 +36,9 @@
             </children></AnchorPane>
     </bottom>
     <center>
-        <AnchorPane fx:id="anchorpaneMap" minWidth="-Infinity" prefHeight="433.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+        <AnchorPane fx:id="anchorpaneMap" minWidth="-Infinity" onKeyReleased="#handleKey" prefHeight="433.0" prefWidth="600.0" BorderPane.alignment="CENTER">
             <children>
-                <ImageView fx:id="imageviewMap" fitHeight="413.0" fitWidth="600.0" onContextMenuRequested="#openContextMenu" onMouseDragged="#handleDragEvent" onMousePressed="#isPressed" onMouseReleased="#isReleased" pickOnBounds="true" preserveRatio="true" />
+                <ImageView fx:id="imageviewMap" fitHeight="413.0" fitWidth="600.0" onContextMenuRequested="#showContextMenu" onMouseDragged="#handleDragEvent" onMousePressed="#isPressed" onMouseReleased="#isReleased" pickOnBounds="true" preserveRatio="true" />
                 <ListView fx:id="changeFloorOptions" layoutX="258.0" layoutY="-41.0" prefHeight="324.0" prefWidth="142.0" visible="false" />
                 <ListView fx:id="elevatorFloorOptions" layoutX="447.0" prefHeight="242.0" prefWidth="168.0" visible="false" />
             </children>
