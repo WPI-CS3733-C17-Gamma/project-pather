@@ -24,6 +24,7 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
+import texting.TextSender;
 
 import java.net.URL;
 import java.util.*;
@@ -70,6 +71,7 @@ public class PatientController extends DisplayController implements Initializabl
     @FXML private Button TextDirection;
     @FXML private Button miniMenuButton;
     @FXML private BorderPane textPane;
+    @FXML private TextField numberField;
 
     private List<SubPath> currentPath;
     private int currentSubPath;
@@ -754,6 +756,30 @@ public class PatientController extends DisplayController implements Initializabl
             displaySubPath(patientImageView, currentPath.get(currentSubPath), true, 10, 20);
         }
     }
+
+    public void sendText () {
+        String number = numberField.getText();
+        TextSender sender = TextSender.getInstance();
+
+        for (int i = 0; i < minimaps.size(); i++) {
+            String currentPath = "\n";
+            Minimap currentMiniMap = minimaps.get(i);
+            currentPath += map.getTextualDirections(currentMiniMap.path.path)
+            .stream().reduce("" , (running , element) -> running + "\n" + element);
+            if(i < minimaps.size() -1) {
+               String nextFloor = minimaps.get(i+1).path.floor;
+               currentPath += "Take Elevator to " + nextFloor;
+            }
+            sender.sendMessage(number, currentPath);
+        }
+
+        System.out.println("message to send to : " + number);
+
+        sender.sendMessage(number , "Thanks for using project pather");
+
+    }
+
+
 }
 
 /**

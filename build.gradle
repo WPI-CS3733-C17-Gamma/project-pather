@@ -16,15 +16,15 @@ dependencies {
 
     // https://mvnrepository.com/artifact/org.apache.derby/derby
     compile group: 'org.apache.derby', name: 'derby', version: '10.13.1.1'
-}
-
-repositories {
-    jcenter()
+    compile 'com.twilio.sdk:twilio:7.5.0'
 }
 
 jfx {
     mainClass = 'ApplicationController';
     vendor = 'TeamGamma';
+}
+repositories {
+jcenter()
 }
 
 sourceSets.main.resources.srcDirs = ["src/main/resources"]
