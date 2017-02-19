@@ -2,15 +2,25 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.HashMap;
 
 public class Map {
     Directory directory;
     GraphNetwork graph;
+    HashMap<String, String> settings;
 
-    public Map(Directory directory,
-               GraphNetwork graph) {
+    public Map(Directory directory, GraphNetwork graph) {
         this.directory = directory;
         this.graph = graph;
+        this.settings = new HashMap<String, String>();
+    }
+
+    public Map(Directory directory,
+               GraphNetwork graph,
+               HashMap<String, String> settings) {
+        this.directory = directory;
+        this.graph = graph;
+        this.settings = settings;
     }
 
     /** See method {@link Directory#searchRooms(String)} */
@@ -242,6 +252,24 @@ public class Map {
      */
     public boolean deleteConnection(GraphNode nodeA, GraphNode nodeB) {
         return this.graph.deleteConnection(nodeA, nodeB);
+    }
+
+    /**
+     * Gets a setting by name
+     * @param name the setting to get
+     * @return the value of the setting
+     */
+    public String getSetting(String name) {
+        return settings.get(name);
+    }
+
+    /**
+     * Sets a setting by name
+     * @param name the setting to get
+     * @return the value of the setting
+     */
+    public String setSetting(String name, String value) {
+        return settings.put(name, value);
     }
 
     @Override

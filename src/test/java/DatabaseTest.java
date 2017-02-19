@@ -247,6 +247,24 @@ public class DatabaseTest extends TestCase{
     }
 
     @Test
+    public void testSettingsWrite() {
+        GraphNetwork graph = new GraphNetwork(
+            new LinkedList<GraphNode>());
+        Directory directory = new Directory(
+            new HashMap<String, DirectoryEntry>(),
+            new HashMap<String, Room>());
+        HashMap<String, String> settings = new HashMap<String, String>();
+        settings.put("testK", "testV");
+
+        Map expected = new Map(directory, graph, settings);
+
+        db.write(expected);
+        Map actual = db.load();
+
+        assertEquals(settings, actual.settings);
+    }
+
+    @Test
     public void testEmptyWrite() {
         GraphNetwork graph = new GraphNetwork(
             new LinkedList<GraphNode>());

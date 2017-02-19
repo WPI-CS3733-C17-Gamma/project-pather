@@ -19,7 +19,8 @@ public class DatabaseManager {
         "create table RoomEntryAssoc (eID integer, rID integer," +
             "constraint pk_rea primary key (eID, rID),"+
             "constraint eID_fk foreign key (eID) references Entries(eID),"+
-            "constraint rID_fk foreign key (rID) references Rooms(rID))"};
+            "constraint rID_fk foreign key (rID) references Rooms(rID))",
+        "create table Settings (Name varchar(20) Primary Key, Value varchar(50))"};
 
     public static final String[] dropStatements = {
         "drop table RoomEntryAssoc",
@@ -56,6 +57,7 @@ public class DatabaseManager {
         HashMap<String, Room> rooms = new HashMap<String, Room>();
         HashMap<String, DirectoryEntry> entries =
             new HashMap<String, DirectoryEntry>();
+        HashMap<String, String> settings = new HashMap<String, String>();
 
         try {
             // Prepared Statement for room association query, gets room
@@ -116,6 +118,12 @@ public class DatabaseManager {
                 entriesID.put(result.getInt(1), entry);
                 entries.put(result.getString(3), entry);
             }
+
+            // Get all Settings
+            result = s.executeQuery("select * from Settings order by Name");
+            while(result.next()) {
+                settings.put(result.getString(1), result.getString(2));
+            }
         }
         catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -125,7 +133,7 @@ public class DatabaseManager {
         GraphNetwork graph = new GraphNetwork(
             new LinkedList<GraphNode>(nodes.values()));
 
-        return new Map(directory, graph);
+        return new Map(directory, graph, settings);
     }
 
     /** Write a map to the database
@@ -150,6 +158,8 @@ public class DatabaseManager {
                 "insert into Entries (eID, name, title) values (?, ?, ?)");
             PreparedStatement insertRoomEntryAssoc = connection.prepareStatement(
                 "insert into RoomEntryAssoc (eID, rID) values (?, ?)");
+            PreparedStatement insertSetting = connection.prepareStatement(
+                "insert into Settings (Name, Value) values (?, ?)");
 
             // Insert each node
             for (GraphNode node : data.graph.graphNodes) {
@@ -196,6 +206,13 @@ public class DatabaseManager {
                     insertRoomEntryAssoc.setLong(2, room.id);
                     insertRoomEntryAssoc.executeUpdate();
                 }
+            }
+
+            // Insert each Setting
+            for (java.util.Map.Entry<String, String> entry : data.settings.entrySet()) {
+                insertSetting.setString(1, entry.getKey());
+                insertSetting.setString(2, entry.getValue());
+                insertSetting.executeUpdate();
             }
         }
         catch (SQLException e) {
