@@ -688,28 +688,45 @@ public class MapAdminController extends DisplayController implements Initializab
             addConnection(secondaryNode, selectedNode);
         }
     }
+
+    /**
+     * Deselects all buttons when textbox is selected
+     */
+    public void isFocused(){
+        System.out.println("Fuck me");
+        togglebuttonChainAdd.setSelected(false);
+        togglebuttonAddConnections.setSelected(false);
+        togglebuttonAddNode.setSelected(false);
+        togglebuttonAddElevator.setSelected(false);
+        elevatorFloorOptions.setVisible(false);
+    }
+
+    /**
+     * Implements Key handling
+     * To add key, add new case statement
+     * @param key
+     */
     @FXML
     public void handleKey(KeyEvent key){ //TODO fix this
-//        System.out.println("Key Pressed: " + key.getCode());
-//        switch(key.getCode()){
-//            case DELETE:
-//                deleteSelected();
-//                System.out.println("deleted");
-//                break;
-//            case N:
-//                changeState(State.ADD_NODES);
-//                break;
-//            case C:
-//                changeState(State.ADD_CONNECTION);
-//                break;
-//            case E:
-//                changeState(State.ADD_ELEVATOR);
-//                break;
-//            case A:
-//                changeState(State.CHAIN_ADD);
-//                break;
-//        }
-
+        if (!roomName.isFocused()) {
+            switch (key.getCode()) {
+                case DELETE:
+                    deleteSelected();
+                    break;
+                case N:
+                    changeState(State.ADD_NODES);
+                    break;
+                case C:
+                    changeState(State.ADD_CONNECTION);
+                    break;
+                case E:
+                    changeState(State.ADD_ELEVATOR);
+                    break;
+                case A:
+                    changeState(State.CHAIN_ADD);
+                    break;
+            }
+        }
     }
 
 
