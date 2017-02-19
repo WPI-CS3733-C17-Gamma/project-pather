@@ -602,9 +602,19 @@ public class PatientController extends DisplayController implements Initializabl
         return;
     }
 
-
+    boolean selected = false;
+    CircularContextMenu menu = new CircularContextMenu();
     public void logIn () {
-        applicationController.createLoginAdmin();
+        menu.addOption(Color.RED);
+        menu.addOption(Color.BLACK);
+        //applicationController.createLoginAdmin();
+        if(selected)
+            try {
+                menu.show(anchorPane, 300, 300, 10);
+            }catch(InvalidPaneException e){
+
+            }
+            selected = !selected;
     }
 
     public void help () {
