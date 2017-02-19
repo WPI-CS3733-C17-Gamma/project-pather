@@ -511,7 +511,38 @@ public class PatientController extends DisplayController implements Initializabl
 
 
     public void logIn () {
-        applicationController.createLoginAdmin();
+        //applicationController.createLoginAdmin();
+
+//        SVGPath path = new SVGPath();
+//        int outerRadius = 150;
+//        int innerRadius = 50;
+//        int difference = outerRadius - innerRadius;
+//        double angle = 40;
+//        angle = angle*Math.PI/180;
+//        path.setContent("M275,175 m 0, -"+ innerRadius +", v-"+difference+" a"+outerRadius+","+outerRadius+" 0 0,0" +
+//            -outerRadius*(Math.sin(angle) )+","+ outerRadius*(1- Math.cos(angle) ) +" l" + difference*Math.sin(angle)+"," +
+//                difference*Math.cos(angle)+ "z");
+//        path.setRotate(Math.PI);
+//        Image image = new Image("http://www.clipartbest.com/cliparts/9iz/6d5/9iz6d5q5T.png");
+//        path.setFill(new ImagePattern(image, 20, 20, 40, 40, false));
+//        path.setRotate(360);
+//        anchorPane.getChildren().add(path);
+        EventHandler<MouseEvent> handle = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                System.out.println("Hi");
+            }
+        };
+
+        CircularContextMenu menu = new CircularContextMenu();
+//        ContextMenuElement element = new ContextMenuElement("http://www.clipartbest.com/cliparts/9iz/6d5/9iz6d5q5T.png", 50, 150);
+//        ContextMenuElement element1 = new ContextMenuElement("http://i133.photobucket.com/albums/q72/bubblebrunnetteblm/Cute.png", 50, 150);
+//        ContextMenuElement element2 = new ContextMenuElement("http://www.clipartbest.com/cliparts/jcx/oBG/jcxoBG5Ki.png", 50, 150);
+        menu.addOption(new Image("http://www.clipartbest.com/cliparts/9iz/6d5/9iz6d5q5T.png"));
+        menu.addOption(new Image("http://i133.photobucket.com/albums/q72/bubblebrunnetteblm/Cute.png"));
+        menu.addOption(new Image("http://www.clipartbest.com/cliparts/jcx/oBG/jcxoBG5Ki.png"));
+        menu.toString();
+        menu.show(anchorPane);
     }
 
     public void help () {
