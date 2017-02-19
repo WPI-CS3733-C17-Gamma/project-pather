@@ -40,8 +40,6 @@ public class PatientController extends DisplayController implements Initializabl
     }
 
     state displayState;
-    // kiosk location
-    GraphNode startNode;
     // list of shapes that have been drawn on the screen
     List<Shape> drawnObjects;
     // FXML Things
@@ -217,7 +215,7 @@ public class PatientController extends DisplayController implements Initializabl
             else if (locs.size() == 1) {
                 System.out.println(locs.get(0).location);
                 displayResults(new LinkedList<>());
-                getPath(startNode, locs.get(0).location);
+                getPath(map.getKioskLocation(), locs.get(0).location);
                 return locs.get(0).location;
             }
             // too many options, redisplay options
@@ -234,7 +232,7 @@ public class PatientController extends DisplayController implements Initializabl
             if (room != null) {
                 System.out.println("FOUND ROOM! : " + room);
                 displayResults(new LinkedList<>());
-                getPath(startNode, room.location);
+                getPath(map.getKioskLocation(), room.location);
                 return room.location;
             }
             else {
@@ -532,16 +530,6 @@ public class PatientController extends DisplayController implements Initializabl
     public void initialize(URL location, ResourceBundle resources) {
         System.out.println("INIT");
         displayImage();
-
-        // TODO will need to be changed to kiosk
-        this.startNode = new GraphNode(100, 100, "");
-        try {
-            this.startNode = map.getRoomFromName("Kiosk").location;
-        }
-        catch (Exception e) {
-            System.out.println("No Kiosk");
-        }
-
 
         options.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
