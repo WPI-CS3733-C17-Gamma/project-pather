@@ -54,6 +54,11 @@ public class Map {
         return directory.getRoom(node);
     }
 
+    /** See method {@link Directory#getKioskLocation()} */
+    public GraphNode getKioskLocation(){
+        return directory.getKioskLocation();
+    }
+
     /** See method {@link Directory#addRoom(Room)} */
     public boolean addRoom(Room room){
         return directory.addRoom(room);

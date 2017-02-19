@@ -163,6 +163,19 @@ public class Directory {
         }
     }
 
+    /**
+     * Gets the GraphNode for the Room named Kiosk in the directory
+     * @return the GraphNode, or GraphNode(0, 0, "") if it does not exist
+     */
+    public GraphNode getKioskLocation() {
+        try {
+            return getRoom("Kiosk").location;
+        }
+        catch (Exception e) {
+            System.out.println("No Kiosk");
+            return new GraphNode(0, 0, "");
+        }
+    }
 
     /**
      * remove room from rooms
