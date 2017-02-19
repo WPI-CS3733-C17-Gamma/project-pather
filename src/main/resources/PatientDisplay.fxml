@@ -5,10 +5,12 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.effect.InnerShadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
@@ -37,7 +39,6 @@
                  <children>
                     <ImageView fx:id="patientImageView" fitHeight="454.0" fitWidth="800.0" layoutX="100.0" layoutY="103.0" pickOnBounds="true" preserveRatio="true" />
                     <Button fx:id="exitButton" layoutX="940.0" mnemonicParsing="false" onAction="#exitSearch" prefHeight="33.0" prefWidth="47.0" styleClass="exitButton" stylesheets="@design.css" text="X" />
-                     <Label fx:id="textDirectionsTextBox" alignment="TOP_LEFT" layoutX="729.0" layoutY="100.0" prefHeight="390.0" prefWidth="257.0" styleClass="textDirection" stylesheets="@design.css" text="Test Directions Please Ignore" visible="false" wrapText="true" />
                   <Button fx:id="TextDirection" layoutX="823.0" layoutY="61.0" mnemonicParsing="false" onMousePressed="#textDirection" text="Show Text Direction" visible="false" />
                   <ImageView fitHeight="57.0" fitWidth="374.0" layoutX="343.0" layoutY="22.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -61,6 +62,19 @@
               </ListView>
               <HBox fx:id="multiMapDisplayMenu" alignment="CENTER_LEFT" layoutX="11.0" layoutY="600.0" maxHeight="95.0" maxWidth="983.0" minHeight="95.0" minWidth="814.0" prefHeight="95.0" prefWidth="975.0" spacing="20.0" styleClass="resultMenu" stylesheets="@design.css" />
             <Button fx:id="miniMenuButton" layoutX="926.0" layoutY="568.0" mnemonicParsing="false" onMousePressed="#menuControl" opacity="0.8" prefHeight="37.0" prefWidth="60.0" style="-fx-background-color: #B7C1C4;" text="^" visible="false" />
+            <BorderPane fx:id="textPane" layoutX="774.0" layoutY="97.0" prefHeight="394.0" prefWidth="226.0">
+               <center>
+                     <Label fx:id="textDirectionsTextBox" alignment="TOP_LEFT" prefHeight="390.0" prefWidth="257.0" styleClass="textDirection" stylesheets="@design.css" text="Test Directions Please Ignore" visible="false" wrapText="true" BorderPane.alignment="CENTER" />
+               </center>
+               <bottom>
+                  <ToolBar prefHeight="51.0" prefWidth="46.0" BorderPane.alignment="CENTER">
+                    <items>
+                        <TextField prefHeight="31.0" prefWidth="141.0" promptText="Enter number..." />
+                        <Button mnemonicParsing="false" text="Send" />
+                    </items>
+                  </ToolBar>
+               </bottom>
+            </BorderPane>
            </children>
         </AnchorPane>
     </children>

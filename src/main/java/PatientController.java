@@ -69,6 +69,7 @@ public class PatientController extends DisplayController implements Initializabl
     @FXML private Button login;
     @FXML private Button TextDirection;
     @FXML private Button miniMenuButton;
+    @FXML private BorderPane textPane;
 
     private List<SubPath> currentPath;
     private int currentSubPath;
@@ -167,7 +168,7 @@ public class PatientController extends DisplayController implements Initializabl
 
     /**
      * get rooms / entries related to entry
-     * @param searchTerm 
+     * @param searchTerm
      * @return
      */
     public List<String> search(String searchTerm) {
@@ -180,7 +181,7 @@ public class PatientController extends DisplayController implements Initializabl
             String lowerCaseSearch = searchTerm.toLowerCase();
 	    List<String> results = map.searchEntry(lowerCaseSearch) ;
 	    results.addAll(map.searchRoom(searchTerm));
-	    return results; 
+	    return results;
         }
         //(update) the display the list of room
     }
@@ -263,6 +264,7 @@ public class PatientController extends DisplayController implements Initializabl
      */
     public void clearSearchDisplay(){
         TextDirection.setVisible(false);
+        textPane.setVisible(false );
         hideMultiMapAnimation();//hide the hBox thingy
         multiMapDisplayMenu.getChildren().clear();//clear the hBox menu thingy
         textDirectionsTextBox.setVisible(false);
@@ -572,6 +574,7 @@ public class PatientController extends DisplayController implements Initializabl
         if (textDirectionsTextBox.isVisible()){
             displayState = state.PATIENT_SEARCH;
             textDirectionsTextBox.setVisible(false);
+            textPane.setVisible(false);
             TextDirection.setText("Show Text Direction");
         }
         else {
@@ -593,6 +596,7 @@ public class PatientController extends DisplayController implements Initializabl
      */
     public void displayTextDirections(List<GraphNode> path, String floor) {
         textDirectionsTextBox.setVisible(true);
+        textPane.setVisible(true);
         List<String> directions = map.getTextualDirections(path);
         String dir = "";
         for(String line : directions) {
