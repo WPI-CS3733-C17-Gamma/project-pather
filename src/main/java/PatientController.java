@@ -47,7 +47,7 @@ public class PatientController extends DisplayController implements Initializabl
     // kiosk location
     GraphNode startNode;
     // list of shapes that have been drawn on the screen
-    List<Shape> drawnObjects;
+    List<Node> drawnObjects;
     // FXML Things
     @FXML private TextField searchBar;
     @FXML private ListView<String> options;
@@ -273,7 +273,7 @@ public class PatientController extends DisplayController implements Initializabl
         if(drawnObjects == null) {
             return;
         }
-        for (Shape shape : drawnObjects) {
+        for (Node shape : drawnObjects) {
             anchorPane.getChildren().remove(shape);
         }
         for (Label label :roomLabels){
@@ -362,7 +362,7 @@ public class PatientController extends DisplayController implements Initializabl
             currentSubPath = (int) iv.getId().charAt(0) - 48;
             SubPath path = currentPath.get(currentSubPath);//ascii conversion
             clearDisplay();
-            displaySubPath(patientImageView, path, true,10, 10);
+            displaySubPath(patientImageView, path, true,10, 20);
             displayMinipaths();
             iv.setEffect(new DropShadow());
             if (displayState == state.DISPLAYING_TEXT_DIRECTION){
@@ -482,21 +482,35 @@ public class PatientController extends DisplayController implements Initializabl
             endPoint.toFront();
             prev = node;
         }
-//        startPoint.toFront();
-//        endPoint.toFront();
-//        Label label = new Label(subPath.floor);
-//        label.setFont(Font.font ("Verdana", lableFontSize));
-//        label.setLayoutX(imageView.getFitWidth() - 50);
-//        label.setLayoutY(10);
-//        searchAnchorPane.getChildren().add(label);
+
+        startPoint.toFront();
+        endPoint.toFront();
         if(drawnObjects == null) {
             drawnObjects = new ArrayList<>();
         }
         drawnObjects.addAll(listToDraw);
+        drawFloorLabel(mapImage, subPath, lableFontSize);
         if(drawLabels) {
             roomLabels = getRoomLabels(subPath);
             displayRoomLabels(roomLabels);
         }
+    }
+
+    /**
+     * given an image view and a subpath, draw a floor label
+     * @param mapImage
+     * @param subPath
+     * @param labelFontSize
+     */
+    public void drawFloorLabel(ImageView mapImage, SubPath subPath, int labelFontSize){
+        Label label = new Label(subPath.floor);
+        label.setFont(Font.font ("Georgia", labelFontSize));
+        FloorPoint temp = graphPointToImage(new GraphNode(50, 30, "one"), mapImage);
+        label.setLayoutX(temp.getX());
+        label.setLayoutY(temp.getY());
+        label.setTextFill(Color.rgb(27, 68, 156));
+        anchorPane.getChildren().add(label);
+        this.drawnObjects.add(label);
     }
     /**
      * given local point, draw the starting point of a sub path
@@ -520,7 +534,13 @@ public class PatientController extends DisplayController implements Initializabl
         return c;
     }
 
-//    private Shape drawFloorLabel
+    private Label drawFloorLabel(SubPath subPath, int lableFontSize){
+        Label label = new Label(subPath.floor);
+        label.setFont(Font.font ("Verdana", lableFontSize));
+        label.setLayoutX(imageView.getFitWidth() - 50);
+        label.setLayoutY(10);
+        return label;
+    }
 
     /**
      * draw the line between two nodes
