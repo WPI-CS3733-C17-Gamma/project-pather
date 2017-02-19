@@ -167,16 +167,20 @@ public class PatientController extends DisplayController implements Initializabl
 
     /**
      * get rooms / entries related to entry
-     * @param room
+     * @param searchTerm 
      * @return
      */
-    public List<String> search(String room) {
-        if (((int)room.charAt(0)) < 58 && ((int)room.charAt(0)) > 47){
-            return map.searchRoom(room);
+    public List<String> search(String searchTerm) {
+        if (((int)searchTerm.charAt(0)) < 58 && ((int)searchTerm.charAt(0)) > 47){
+            return map.searchRoom(searchTerm);
         }
+	// if the first letter is not a number, search for entries first, then add all the rooms
+	// to the bottom of the list
         else{
-            String room2 = room.toLowerCase();
-            return map.searchEntry(room2);
+            String lowerCaseSearch = searchTerm.toLowerCase();
+	    List<String> results = map.searchEntry(lowerCaseSearch) ;
+	    results.addAll(map.searchRoom(searchTerm));
+	    return results; 
         }
         //(update) the display the list of room
     }
