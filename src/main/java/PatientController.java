@@ -325,17 +325,17 @@ public class PatientController extends DisplayController implements Initializabl
             currentSubPath = 0;
             for (int x = 0; x <currentPath.size(); x++){
                 SubPath p = currentPath.get(x);
-                ImageView i = new ImageView();
+                ImageView currentImageView = new ImageView();
 
-                i.setPreserveRatio(true);
-                i.setFitHeight(95);
-                i.setFitWidth(165);
-                i.setOnMousePressed(e -> mapChoice(e));
-                i.setImage(applicationController.getImage(p.floor));
-                i.setId(x + "floor in list");
-                System.out.println(i.getId());
-               multiMapDisplayMenu.getChildren().add(i);
-               minimaps.add(new Minimap(i,p));
+                currentImageView.setPreserveRatio(true);
+                currentImageView.setFitHeight(95);
+                currentImageView.setFitWidth(165);
+                currentImageView.setOnMousePressed(e -> mapChoice(e));
+                currentImageView.setImage(applicationController.getImage(p.floor));
+                currentImageView.setId(x + "floor in list");
+                System.out.println(currentImageView.getId());
+               multiMapDisplayMenu.getChildren().add(currentImageView);
+               minimaps.add(new Minimap(currentImageView,p));
             }
             showMultiMapAnimation();
         } catch (PathNotFoundException e) {
@@ -480,6 +480,7 @@ public class PatientController extends DisplayController implements Initializabl
     public Shape drawStartPoint (FloorPoint localPoint, int radius) {
         Circle c = new Circle(localPoint.x, localPoint.y, radius);
         c.setFill(Color.GREEN);
+        c.setMouseTransparent(true);
         anchorPane.getChildren().add(c);
         return c;
     }
@@ -491,6 +492,7 @@ public class PatientController extends DisplayController implements Initializabl
     public Shape drawEndPoint (FloorPoint localPoint, int radius) {
         Circle c = new Circle(localPoint.x, localPoint.y, radius);
         c.setFill(Color.RED);
+        c.setMouseTransparent(true);
         anchorPane.getChildren().add(c);
         return c;
     }
@@ -508,6 +510,7 @@ public class PatientController extends DisplayController implements Initializabl
         Line line = new Line(pointA.x, pointA.y, pointB.x, pointB.y);
         line.setStrokeWidth(4);
         line.setStroke(Color.LIGHTBLUE);
+        line.setMouseTransparent(true);
  //       line.set(Color.BLUE);
 //        line.setStrokeWidth(1);
 
@@ -652,6 +655,7 @@ public class PatientController extends DisplayController implements Initializabl
                 current.setBorder(new Border(new BorderStroke(Color.BLACK,BorderStrokeStyle.SOLID,new CornerRadii(4),BorderWidths.DEFAULT)));
                 current.setBackground(new Background(new BackgroundFill(Color.rgb(124,231,247), new CornerRadii(4),
                     new Insets(0.0,0.0,0.0,0.0))));
+                current.setMouseTransparent(true);
                 labels.add(current);
             }
 
