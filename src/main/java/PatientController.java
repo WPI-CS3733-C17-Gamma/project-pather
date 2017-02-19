@@ -604,9 +604,9 @@ public class PatientController extends DisplayController implements Initializabl
     boolean selected = false;
     CircularContextMenu menu = new CircularContextMenu();
     public void logIn () {
-        menu.addOption(Color.RED);
-        menu.addOption(Color.BLACK);
-        //applicationController.createLoginAdmin();
+        // menu.addOption(Color.RED);
+        // menu.addOption(Color.BLACK);
+        applicationController.createLoginAdmin();
         if(selected)
             try {
                 menu.show(anchorPane, 300, 300, 10);
