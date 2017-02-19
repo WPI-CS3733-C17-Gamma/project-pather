@@ -64,6 +64,7 @@ public class ContextMenuElement{
         this.angle = angle*Math.PI/180;
         this. initialAngle = initialAngle*Math.PI/180;
 
+    //Calculate x and y coordinates of points used for drawing SVG path
         double point1x = innerRadius*Math.cos(this.initialAngle);
         double point1y = innerRadius*Math.sin(this.initialAngle);
 
@@ -77,8 +78,8 @@ public class ContextMenuElement{
         double point4y = -difference*Math.sin(this.angle + this.initialAngle);
 
 
-        if((this.angle - this.initialAngle) <= 180) {
-            path.setContent("M0,0 m" + point1x + "," + point1y +
+        if((this.angle) <= 180) {//If the angle swept out is less than or equal to 180, choose the small arc. Doc on paths
+            path.setContent("M0,0 m" + point1x + "," + point1y +//https://www.w3.org/TR/SVG/paths.html
                 " l " + point2x + "," + point2y + "a" + outerRadius + "," +
                 outerRadius + " 0 0,1 " + point3x + "," + point3y + "l " + point4x + "," + point4y + " z");
         }
@@ -87,7 +88,6 @@ public class ContextMenuElement{
                 " l " + point2x + "," + point2y + "a" + outerRadius + "," +
                 outerRadius + " 0 1,1 " + point3x + "," + point3y + " l " + point4x + "," + point4y + " z");
         }
-
 
         path.setFill(icon);
     }

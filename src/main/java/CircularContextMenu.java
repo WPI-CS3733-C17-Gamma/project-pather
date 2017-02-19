@@ -29,6 +29,11 @@ public class CircularContextMenu {
         menuElements = new LinkedList<>();
     }
 
+    /**
+     * Adds an option to the context menu
+     * @param image Fill for menu
+     * @param handler Actioned to be performe by optiion
+     */
     public void addOption(Paint image, EventHandler handler){
         int size = menuElements.size();
         double angle = 360 / (size+1);
@@ -46,6 +51,11 @@ public class CircularContextMenu {
         }
 
     }
+
+    /**
+     * Adds an option that does not do anything
+     * @param image
+     */
     public void addOption(Paint image){//redraw elements when a new one is added
         int size = menuElements.size();
         double angle = 360 / (size+1);
