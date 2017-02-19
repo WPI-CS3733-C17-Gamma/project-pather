@@ -62,7 +62,7 @@ public class ContextMenuElement{
         }
 
         this.angle = angle*Math.PI/180;
-        this. initialAngle = initialAngle*Math.PI/180;
+        this.initialAngle = initialAngle*Math.PI/180;
 
     //Calculate x and y coordinates of points used for drawing SVG path
         double point1x = innerRadius*Math.cos(this.initialAngle);
@@ -89,6 +89,7 @@ public class ContextMenuElement{
                 outerRadius + " 0 1,1 " + point3x + "," + point3y + " l " + point4x + "," + point4y + " z");
         }
 
+        if (icon =
         path.setFill(icon);
     }
 

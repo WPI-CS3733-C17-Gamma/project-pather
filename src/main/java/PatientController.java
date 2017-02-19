@@ -509,7 +509,8 @@ public class PatientController extends DisplayController implements Initializabl
         return;
     }
 
-
+    boolean selected = false;
+    CircularContextMenu menu = new CircularContextMenu();
     public void logIn () {
         applicationController.createLoginAdmin();
     }

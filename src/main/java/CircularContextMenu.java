@@ -16,21 +16,30 @@ public class CircularContextMenu {
     int outerRadius;
     private List<ContextMenuElement> menuElements = new LinkedList<>();
     List<Node> drawnItems = new LinkedList<>();
+    AnchorPane pane;
 
+    /**
+     * Default Constructor
+     */
     CircularContextMenu(){
         this.innerRadius = 50;
         this.outerRadius = 100;
         menuElements = new LinkedList<>();
     }
 
-    CircularContextMenu(int innerRadius, int outerRadius){
+    /**
+     * Having innerRadius > outerRadius gives interesting shapes. Try it out!
+     * @param innerRadius Inner radius of Context Menu
+     * @param outerRadius Outer Radius of Context Menu
+     */
+    CircularContextMenu( int innerRadius, int outerRadius){
         this.innerRadius = innerRadius;
         this.outerRadius = outerRadius;
         menuElements = new LinkedList<>();
     }
 
     /**
-     * Adds an option to the context menu
+     * Adds an option to the context menu. The option does not work for places where the paint is transparent. Use solid paints for now
      * @param image Fill for menu
      * @param handler Actioned to be performe by optiion
      */
@@ -106,7 +115,20 @@ public class CircularContextMenu {
     public int getNumOptions(){
         return menuElements.size();
     }
-    public void show(AnchorPane pane, int layoutX, int layoutY, int radius){
+
+    /**
+     * Shows the context menu in a given location on the anchor Pane. Can only show one one anchor pane at a time
+     * @param pane
+     * @param layoutX
+     * @param layoutY
+     * @param radius
+     */
+    public void show(AnchorPane pane, int layoutX, int layoutY, int radius) throws InvalidPaneException{
+        if(this.pane != null) {
+            throw new InvalidPaneException();
+        }
+        this.pane = pane;
+
         if( radius > 0){
             Circle circ = new Circle(radius);
             pane.getChildren().add(circ);
@@ -125,6 +147,20 @@ public class CircularContextMenu {
     }
 
     /**
+     * Removes context menu from pane
+     * @throws InvalidPaneException
+     */
+    public void hide() throws InvalidPaneException{
+        if (pane == null)
+            throw new InvalidPaneException();
+
+        List<Node> anchorPaneElements = pane.getChildren();
+        for (Node element : drawnItems) {
+            anchorPaneElements.remove(element);
+        }
+        this.pane = null;//Set pane to null since the menu is now hidden
+    }
+    /**
      * Getter for Menu Elements
      * @return
      */
@@ -137,3 +173,11 @@ public class CircularContextMenu {
     }
 }
 
+/**
+ * Thrown if there is not a valid pane
+ */
+class InvalidPaneException extends Exception{
+    InvalidPaneException(){
+        System.err.println("InvalidPaneException: No pane to work on");
+    }
+}
