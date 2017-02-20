@@ -16,7 +16,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 
 import java.net.URL;
 import java.util.LinkedList;
@@ -33,17 +33,10 @@ public class DirectoryAdminController extends DisplayController implements Initi
     // FXML stuff
     @FXML TextField searchBar;
     @FXML ListView<String> listEntries;
-    @FXML AnchorPane roomEditor;
-    @FXML AnchorPane entryEditor;
-    @FXML TextField roomName;
-    @FXML TextField serviceSearch;
-    @FXML Button addServiceButton;
-    @FXML ListView<String> serviceOptions;
-    @FXML ListView<String> currentServices;
+    @FXML VBox entryEditor;
     @FXML TextField entryName;
     @FXML TextField entryTitle;
     @FXML TextField entryRoomSearch;
-    @FXML Button entryAddRoomButton;
     @FXML ListView<String> entryRoomOptions;
     @FXML Button entryDeleteRoom;
     @FXML ListView<String> entryCurrentLocations;
@@ -95,7 +88,6 @@ public class DirectoryAdminController extends DisplayController implements Initi
             deleteEntry(activeDirectoryEntry);
             activeDirectoryEntry = null ;
             entryEditor.setVisible(false);
-            serviceSearch.setText("");
             filterAllEntries();
         }
         else {
@@ -208,7 +200,6 @@ public class DirectoryAdminController extends DisplayController implements Initi
             System.out.println(state.toString());
         }
 
-        serviceSearch.setText("");
         filterAllEntries();
         activeDirectoryEntry = null;
         entryEditor.setVisible(false);
@@ -245,7 +236,6 @@ public class DirectoryAdminController extends DisplayController implements Initi
         activeDirectoryEntry = null;
         map.addEntry(newEntry);
         return;
-
     }
 
     /**
@@ -259,7 +249,6 @@ public class DirectoryAdminController extends DisplayController implements Initi
         else {
             helpLabel.setVisible(true);
         }
-
     }
 
     /**
@@ -278,10 +267,6 @@ public class DirectoryAdminController extends DisplayController implements Initi
         // FXCollections takes a normal list of strings and makes it viewable
         ObservableList<String> roomNames = FXCollections.observableList(locsAsString);
         entryCurrentLocations.setItems(roomNames);
-
-
-
-
     }
 
     /**
