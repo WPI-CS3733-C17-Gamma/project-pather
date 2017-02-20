@@ -232,7 +232,7 @@ public class ApplicationController extends Application {
         try{
             loader.setController(loginController);
             Parent root = loader.load();
-            adminStage.setTitle("app.applicationControl.Login");
+            adminStage.setTitle("Login");
             adminStage.initOwner(pStage);
             adminStage.setScene(new Scene(root, 350, 150));
             adminStage.show();
