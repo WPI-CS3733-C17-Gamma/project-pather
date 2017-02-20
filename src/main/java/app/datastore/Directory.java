@@ -173,9 +173,9 @@ public class Directory {
      * Gets the app.dataPrimitives.GraphNode for the app.dataPrimitives.Room named Kiosk in the directory
      * @return the app.dataPrimitives.GraphNode, or app.dataPrimitives.GraphNode(0, 0, "") if it does not exist
      */
-    public GraphNode getKioskLocation() {
+    public GraphNode getKioskLocation(String kioskName) {
         try {
-            return getRoom("Kiosk").getLocation();
+            return getRoom(kioskName).getLocation();
         }
         catch (Exception e) {
             System.out.println("No Kiosk");
