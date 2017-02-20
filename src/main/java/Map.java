@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.HashMap;
@@ -8,6 +7,7 @@ public class Map {
     Directory directory;
     GraphNetwork graph;
     HashMap<String, String> settings;
+    IPathFindingAlgorithm pathFindingAlgorithm;
 
     public Map(Directory directory, GraphNetwork graph) {
         this.directory = directory;

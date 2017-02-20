@@ -13,7 +13,7 @@ public class GraphNetwork {
         //this.graphConnections = graphConnections;
     }
 
-    public static LinkedList<GraphNode> getPath(GraphNode startNode, GraphNode goalNode) throws PathNotFoundException {
+    public LinkedList<GraphNode> getPath(GraphNode startNode, GraphNode goalNode) throws PathNotFoundException {
         AStarNode start = new AStarNode(startNode);
         AStarNode goal = new AStarNode(goalNode);
         LinkedList<AStarNode> openSet = new LinkedList<>();

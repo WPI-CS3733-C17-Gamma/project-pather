@@ -165,7 +165,7 @@ public class PatientController extends DisplayController implements Initializabl
 
     /**
      * get rooms / entries related to entry
-     * @param searchTerm 
+     * @param searchTerm
      * @return
      */
     public List<String> search(String searchTerm) {
@@ -178,7 +178,7 @@ public class PatientController extends DisplayController implements Initializabl
             String lowerCaseSearch = searchTerm.toLowerCase();
 	    List<String> results = map.searchEntry(lowerCaseSearch) ;
 	    results.addAll(map.searchRoom(searchTerm));
-	    return results; 
+	    return results;
         }
         //(update) the display the list of room
     }
