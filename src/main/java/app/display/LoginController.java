@@ -21,6 +21,7 @@ public class LoginController extends DisplayController {
     @FXML private Label labelWrongCreds;
     @FXML private AnchorPane loginPage;
     @FXML private Button loginButton;
+    @FXML private Button buttonAdminTools;
 
     private String inputPassword = "";
 
@@ -28,8 +29,8 @@ public class LoginController extends DisplayController {
 
     private Stage stage;
 
-    public LoginController(Map map, ApplicationController a, String currentmap, Stage s){
-        super(map, a, currentmap);
+    public LoginController(Map map, ApplicationController a, Stage s){
+        super(map, a);
         applicationController = a;
         stage = s;
     }
@@ -46,6 +47,14 @@ public class LoginController extends DisplayController {
 
     public void isSelected(){       //for auto-disapearing
         labelWrongCreds.setVisible(false);
+    }
+
+    public void showAdminTools(){
+        if (getCredentials()){
+            loginPage.setVisible(false);
+            hideStage(stage);
+            createAdminTools();
+        }
     }
 
     /**

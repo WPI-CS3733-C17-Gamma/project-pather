@@ -76,7 +76,7 @@ public class MapAdminController extends DisplayController implements Initializab
     @FXML private ToggleButton togglebuttonChangeFloor;
 
     private GraphNode tempNode ;
-
+    private String currentMap;
 
     /**
      *  Construct map admin controller
@@ -85,8 +85,9 @@ public class MapAdminController extends DisplayController implements Initializab
      * @param currentMap
      */
     public MapAdminController(app.datastore.Map map, ApplicationController applicationController, String currentMap, Stage stage) {
-        super(map, applicationController, currentMap);
+        super(map, applicationController);
         this.stage = stage;
+        this.currentMap = currentMap;
     }
 
     /**

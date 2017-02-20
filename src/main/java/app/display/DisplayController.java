@@ -10,15 +10,14 @@ public class DisplayController {
     Map map;
     //Kiosk kiosk;
     ApplicationController applicationController;
-    String currentMap;
+
 
     public DisplayController(Map map,
                              /*Kiosk kiosk, */
-                             ApplicationController applicationController,
-                             String currentMap){
+                             ApplicationController applicationController){
         this.map = map;
         this.applicationController = applicationController;
-        this.currentMap = currentMap;
+
     }
 
     void update(){
@@ -32,7 +31,11 @@ public class DisplayController {
     }
 
     void createDirectoryAdminDisplay(){
-        applicationController.createMapAdminDisplay();
+        applicationController.createDirectoryAdminDisplay();
+    }
+
+    void createAdminTools(){
+        applicationController.createAdminTools();
     }
 
     void createMapAdminDisplay(){

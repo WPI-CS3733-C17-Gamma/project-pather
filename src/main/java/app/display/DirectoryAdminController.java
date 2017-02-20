@@ -43,11 +43,9 @@ public class DirectoryAdminController extends DisplayController implements Initi
     @FXML Label helpLabel;
 
     public DirectoryAdminController(Map map,
-                                    ApplicationController applicationController,
-                                    String currentMap) {
+                                    ApplicationController applicationController) {
         super(map,
-              applicationController,
-              currentMap);
+              applicationController);
     }
 
     /** See the method {@link Map#searchEntry(String)} */

@@ -12,18 +12,18 @@
     <children>
 <AnchorPane fx:id="loginPage" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" prefWidth="350.0" style="-fx-background-color: GREY;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Label layoutX="14.0" layoutY="60.0" prefHeight="17.0" prefWidth="72.0" text="Password:" textFill="WHITE" />
+      <TextField fx:id="textboxUsername" layoutX="86.0" layoutY="23.0" onMouseClicked="#isSelected" prefHeight="25.0" prefWidth="232.0" />
       <PasswordField fx:id="passwordBox" layoutX="86.0" layoutY="56.0" onMouseClicked="#isSelected" prefHeight="25.0" prefWidth="232.0" />
-      <Button fx:id="loginButton" layoutX="170.0" layoutY="97.0" mnemonicParsing="false" onMouseClicked="#showAdminMenu" prefHeight="25.0" prefWidth="149.0" style="-fx-background-color: WHITE;" text="Login" />
+      <Label layoutX="14.0" layoutY="60.0" prefHeight="17.0" prefWidth="72.0" text="Password:" textFill="WHITE" />
+      <Button fx:id="loginButton" focusTraversable="false" layoutX="170.0" layoutY="97.0" mnemonicParsing="false" onMouseClicked="#showAdminMenu" prefHeight="25.0" prefWidth="149.0" style="-fx-background-color: WHITE;" text="Login" />
       <!--<Button fx:id="buttonSubmitDirectory" layoutX="14.0" layoutY="97.0" mnemonicParsing="false" onMouseClicked="#signInDirectory" prefHeight="25.0" prefWidth="149.0" style="-fx-background-color: WHITE;" text="app.datastore.Directory Admin Signin" />-->
       <Label layoutX="14.0" layoutY="27.0" prefHeight="17.0" prefWidth="72.0" text="Username:" textFill="WHITE" />
-      <TextField fx:id="textboxUsername" layoutX="86.0" layoutY="23.0" onMouseClicked="#isSelected" prefHeight="25.0" prefWidth="232.0" />
       <Label fx:id="labelWrongCreds" layoutX="17.0" layoutY="122.0" prefHeight="17.0" prefWidth="293.0" text="The username or password is incorrect" textFill="#df1111" visible="false">
          <font>
             <Font name="System Bold" size="16.0" />
          </font>
       </Label>
-            <Button fx:id="loginButton1" layoutX="12.0" layoutY="97.0" mnemonicParsing="false" onMouseClicked="#showAdminMenu" prefHeight="25.0" prefWidth="149.0" style="-fx-background-color: WHITE;" text="Admin Tools" />
+            <Button fx:id="buttonAdminTools" focusTraversable="false" layoutX="12.0" layoutY="97.0" mnemonicParsing="false" onMouseClicked="#showAdminTools" prefHeight="25.0" prefWidth="149.0" style="-fx-background-color: WHITE;" text="Admin Tools" />
    </children>
 </AnchorPane>
     </children>
