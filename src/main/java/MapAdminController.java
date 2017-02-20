@@ -59,6 +59,7 @@ public class MapAdminController extends DisplayController implements Initializab
     @FXML private ToggleButton togglebuttonAddConnections;
     @FXML private ToggleButton togglebuttonChainAdd;
     @FXML private ToggleButton togglebuttonAddElevator;
+    @FXML private ToggleGroup toggleTools;
     @FXML private ImageView imageviewMap;
     @FXML private AnchorPane anchorpaneMap;
     @FXML private TextField roomName;
@@ -90,6 +91,11 @@ public class MapAdminController extends DisplayController implements Initializab
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        // Add states to toggles
+        togglebuttonAddNode.setUserData(State.ADD_NODES);
+        togglebuttonAddConnections.setUserData(State.ADD_CONNECTION);
+        togglebuttonChainAdd.setUserData(State.CHAIN_ADD);
+        togglebuttonAddElevator.setUserData(State.ADD_ELEVATOR);
 
         /**
          * Add click listener to the list of floor options
@@ -199,64 +205,15 @@ public class MapAdminController extends DisplayController implements Initializab
     }
 
     /**
-     * Changes the state to add elevator,
-     * or toggles off the add elevator state
+     * Handles the change of the tool toggles (add node,
+     * add connection, etc)
      */
-    public void toggleAddElevator () {
-        switch (currentState){
-            case ADD_ELEVATOR:
-                changeState(State.NONE);
-                break;
-            default:
-                changeState(State.ADD_ELEVATOR);
-                break;
+    public void handleToggleTools() {
+        if(toggleTools.getSelectedToggle() == null) {
+            changeState(State.NONE);
         }
-
-    }
-
-    /**
-     * toggle chain add function
-     * Does nothing if the user is in a different state alerady
-     */
-    public void toggleChainAdd () {
-        switch (currentState){
-            case CHAIN_ADD:
-                changeState(State.NONE);
-                break;
-            default:
-                changeState(State.CHAIN_ADD);
-                break;
-        }
-    }
-
-    /**
-     * toggle add node function
-     * Does nothing if the user is in a different state already
-     */
-    public void toggleAddNode() {
-        switch (currentState){
-            case ADD_NODES:
-                changeState(State.NONE);
-                break;
-            default:
-                changeState(State.ADD_NODES);
-                break ;
-        }
-    }
-
-    /**
-     * Called when the user clicks the toggleAddConnectionButton
-     * Does nothing if the user is in a different state already
-     */
-    public void toggleAddConnection() {
-        switch (currentState){
-            case ADD_CONNECTION:
-                changeState(State.NONE);
-                break;
-            default:
-                changeState(State.ADD_CONNECTION);
-                break;
-
+        else {
+            changeState((State) toggleTools.getSelectedToggle().getUserData());
         }
     }
 
@@ -535,42 +492,26 @@ public class MapAdminController extends DisplayController implements Initializab
         secondaryNode = null;
         this.currentState = state;
 
+        togglebuttonChainAdd.setSelected(false);
+        togglebuttonAddConnections.setSelected(false);
+        togglebuttonAddNode.setSelected(false);
+        togglebuttonAddElevator.setSelected(false);
+        elevatorFloorOptions.setVisible(false);
+
         switch (state) {
             case ADD_CONNECTION:
-                togglebuttonChainAdd.setSelected(false);
                 togglebuttonAddConnections.setSelected(true);
-                togglebuttonAddNode.setSelected(false);
-                togglebuttonAddElevator.setSelected(false);
-                elevatorFloorOptions.setVisible(false);
                 break;
             case ADD_NODES:
-                togglebuttonChainAdd.setSelected(false);
-                togglebuttonAddConnections.setSelected(false);
                 togglebuttonAddNode.setSelected(true);
-                togglebuttonAddElevator.setSelected(false);
-                elevatorFloorOptions.setVisible(false);
                 break;
             case CHAIN_ADD:
                 togglebuttonChainAdd.setSelected(true);
-                togglebuttonAddConnections.setSelected(false);
-                togglebuttonAddNode.setSelected(false);
-                togglebuttonAddElevator.setSelected(false);
-                elevatorFloorOptions.setVisible(false);
                 break;
             case ADD_ELEVATOR:
-                togglebuttonChainAdd.setSelected(false);
-                togglebuttonAddConnections.setSelected(false);
-                togglebuttonAddNode.setSelected(false);
                 togglebuttonAddElevator.setSelected(true);
                 elevatorFloorOptions.setVisible(true);
                 displayElevatorOptions();
-                break;
-            case NONE:
-                togglebuttonChainAdd.setSelected(false);
-                togglebuttonAddConnections.setSelected(false);
-                togglebuttonAddNode.setSelected(false);
-                togglebuttonAddElevator.setSelected(false);
-                elevatorFloorOptions.setVisible(false);
                 break;
         }
         toggleSwitchMap(false);
