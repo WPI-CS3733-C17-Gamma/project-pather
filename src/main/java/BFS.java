@@ -1,79 +1,69 @@
+import com.sun.corba.se.impl.orbutil.graph.Graph;
+
 import javax.xml.soap.Node;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
 /**
  * Created by zht on 2/19/2017.
  */
 public class BFS implements IPathFindingAlgorithm{
 
-    Queue<GraphNode> todo;
-    List<GraphNode> checked;
+    Queue<BFSNode> todo;
+    List<BFSNode> checked;
     List<GraphNode> shortestPath;
-    List<Integer> layers;
-
-    public BFS(){
-        todo = new LinkedList<>();
-        checked = new ArrayList<>();
-        shortestPath = new ArrayList<>();
-        layers  = new ArrayList<>();
-    }
-
 
     @Override
     public List<GraphNode> findPath(GraphNode start, GraphNode end) throws PathNotFoundException {
-        if (start.equals(end)){
+        if (start.equals(end)) {
             shortestPath.add(start);
-            shortestPath.add(end);
             return shortestPath;
         }
+        todo = new LinkedList<>();
+        checked = new ArrayList<>();
+        shortestPath = new ArrayList<>();
 
-        todo.add(start);
-        GraphNode head = start;
-        GraphNode current;
-        int layerIndex = 0;
+        todo.add(new BFSNode(null, start));
+        BFSNode current = new BFSNode(null, start);
         while(!todo.isEmpty()){
             current = todo.poll();
             checked.add(current);
-            if (current.equals(end)){
-                if (current.equals(head)){
-                    layers.add(layerIndex);
-                }
-                shortestPath.add(current);
+            if (current.current.getAdjacent().contains(end)){
+                shortestPath.add(end);
                 break;
             }
-            for (GraphNode neighbor : current.getAdjacent()){
-                if (!checked.contains(neighbor) && !todo.contains(neighbor)){
-                    if (current.equals(head)){
-                        layers.add(layerIndex);
-                        head = neighbor;
-                    }
-                    todo.add(neighbor);
+            for (GraphNode neighbor : current.current.getAdjacent()){
+                if (!BFScontains(checked, neighbor) && !BFScontains(todo, neighbor)){
+                    todo.add(new BFSNode(current, neighbor));
                 }
             }
-            layerIndex++;
         }
-
-        if (shortestPath.isEmpty()) {
+        if (shortestPath.isEmpty()){
             throw new PathNotFoundException(start, end);
         }
-
-        GraphNode temp;
-        current = end;
-        for (int x = layers.size() - 1; x > 0; x--){
-            for (int y = layers.get(x) - 1; y >= layers.get(x - 1); y--){
-                temp  =checked.get(y);
-                if (temp.getAdjacent().contains(current)){
-                    shortestPath.add(0, temp);
-                    current = temp;
-                    break;
-                }
-            }
+        while(current != null){
+            shortestPath.add(0, current.current);
+            current = current.comeFrom;
         }
-
         return shortestPath;
     }
 
+    private boolean BFScontains(Collection<BFSNode> list, GraphNode node){
+        for (BFSNode n : list){
+            if (n.current == node){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private class BFSNode{
+        BFSNode comeFrom;
+        GraphNode current;
+
+        BFSNode(BFSNode from, GraphNode current){
+            comeFrom = from;
+            this.current = current;
+        }
+
+    }
 }

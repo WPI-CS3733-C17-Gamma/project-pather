@@ -1,6 +1,8 @@
 import javafx.fxml.FXML;
+import junit.framework.TestCase;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -10,7 +12,7 @@ import static junit.framework.TestCase.assertTrue;
 /**
  * Created by zht on 2/19/2017.
  */
-public class BFSTest {
+public class BFSTest extends TestCase{
         GraphNode node1 = new GraphNode(0, 0, "");
         GraphNode node2 = new GraphNode(10, 0, "");
         GraphNode node3 = new GraphNode(20, 10, "");
@@ -147,28 +149,28 @@ public class BFSTest {
 
         }
 
-
-
         @Test
         public void testGetPath4a() throws PathNotFoundException {
-            List<GraphNode> path1 = new LinkedList(Arrays.asList(node14, node22, node23, node33));
-            List<GraphNode> path2 = new LinkedList<>();
-            path2 = bfs.findPath(node14, node33);
+            List<GraphNode> path1 = new ArrayList<>(Arrays.asList(node14, node22, node23, node33));
+            List<GraphNode> path3 = new ArrayList<>(Arrays.asList(node14, node15, node34, node33));
+            System.err.println(path1);
+            List<GraphNode> path2 = bfs.findPath(node14, node33);
             for (GraphNode neighbour : path2) {
                 System.err.println("testGetPath4a ");
                 System.err.println(neighbour.toString());
             }
-            assertTrue(path1.equals(path2));
+            assertTrue(path1.equals(path2) || path2.equals(path3));
         }
 
         @Test(expected = PathNotFoundException.class)
-        public void testPathNotFoundException(){
-            Throwable e = null;
-            try{
+        public void testPathNotFoundException()throws PathNotFoundException {
                 bfs.findPath(node1, node11);
-            }catch (Throwable ex){
-                e = ex;
-            }
-            assertTrue(e instanceof PathNotFoundException);
+        }
+
+        @Test
+        public void testStartOnSameNode()throws PathNotFoundException{
+            List<GraphNode> expected = new LinkedList<>(Arrays.asList(node1));
+            List<GraphNode> result = bfs.findPath(node1, node1);
+            assertTrue(expected.equals(result));
         }
     }
