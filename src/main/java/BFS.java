@@ -1,6 +1,3 @@
-import com.sun.corba.se.impl.orbutil.graph.Graph;
-
-import javax.xml.soap.Node;
 import java.util.*;
 
 /**
@@ -10,17 +7,17 @@ public class BFS implements IPathFindingAlgorithm{
 
     Queue<BFSNode> todo;
     List<BFSNode> checked;
-    List<GraphNode> shortestPath;
+    List<GraphNode> path;
 
     @Override
     public List<GraphNode> findPath(GraphNode start, GraphNode end) throws PathNotFoundException {
-        if (start.equals(end)) {
-            shortestPath.add(start);
-            return shortestPath;
-        }
         todo = new LinkedList<>();
         checked = new ArrayList<>();
-        shortestPath = new ArrayList<>();
+        path = new ArrayList<>();
+        if (start.equals(end)) {
+            path.add(start);
+            return path;
+        }
 
         todo.add(new BFSNode(null, start));
         BFSNode current = new BFSNode(null, start);
@@ -28,7 +25,7 @@ public class BFS implements IPathFindingAlgorithm{
             current = todo.poll();
             checked.add(current);
             if (current.current.getAdjacent().contains(end)){
-                shortestPath.add(end);
+                path.add(end);
                 break;
             }
             for (GraphNode neighbor : current.current.getAdjacent()){
@@ -37,14 +34,14 @@ public class BFS implements IPathFindingAlgorithm{
                 }
             }
         }
-        if (shortestPath.isEmpty()){
+        if (path.isEmpty()){
             throw new PathNotFoundException(start, end);
         }
         while(current != null){
-            shortestPath.add(0, current.current);
+            path.add(0, current.current);
             current = current.comeFrom;
         }
-        return shortestPath;
+        return path;
     }
 
     private boolean BFScontains(Collection<BFSNode> list, GraphNode node){

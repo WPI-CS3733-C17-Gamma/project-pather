@@ -1,4 +1,3 @@
-import javafx.fxml.FXML;
 import junit.framework.TestCase;
 import org.junit.Test;
 
@@ -7,11 +6,6 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import static junit.framework.TestCase.assertTrue;
-
-/**
- * Created by zht on 2/19/2017.
- */
 public class BFSTest extends TestCase{
         GraphNode node1 = new GraphNode(0, 0, "");
         GraphNode node2 = new GraphNode(10, 0, "");
@@ -162,10 +156,16 @@ public class BFSTest extends TestCase{
             assertTrue(path1.equals(path2) || path2.equals(path3));
         }
 
-        @Test(expected = PathNotFoundException.class)
-        public void testPathNotFoundException()throws PathNotFoundException {
-                bfs.findPath(node1, node11);
+    @Test(expected = PathNotFoundException.class)
+    public void testPathNotFoundException() {
+        Throwable e = null;
+        try {
+            bfs.findPath(node1, node11);
+        } catch (Throwable ex) {
+            e = ex;
         }
+        assertTrue(e instanceof PathNotFoundException);
+    }
 
         @Test
         public void testStartOnSameNode()throws PathNotFoundException{
