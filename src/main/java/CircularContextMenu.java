@@ -1,5 +1,6 @@
 import javafx.event.EventHandler;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.paint.Paint;
 import javafx.stage.Popup;
@@ -60,8 +61,8 @@ public class CircularContextMenu extends Popup {
                 getContent().add(element.path);
                 getContent().add(element.background);
             }catch(IllegalArgumentException e){
-                System.out.println("Angle parameters must be positive with angle > initialAngle.");
-
+                System.out.println("Angle parameters must be positive");
+                e.printStackTrace();
             }
             currentAngle = currentAngle + angle;
         }
@@ -148,6 +149,15 @@ public class CircularContextMenu extends Popup {
         return menuElements = new LinkedList<>();
     }
 
+    /**
+     * Shows contxtmenu
+     * @param nodeOwner
+     * @param anchorX
+     * @param anchorY
+     */
+    public void show(Node nodeOwner, double anchorX, double anchorY ){
+        super.show(nodeOwner, anchorX - outerRadius, anchorY - outerRadius);
+    }
     public String toString(){
         return("This menu has: " + menuElements.size() + " options.");
     }

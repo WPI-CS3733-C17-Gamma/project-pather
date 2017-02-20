@@ -892,9 +892,7 @@ public class MapAdminController extends DisplayController implements Initializab
         menu.addOption(Color.BLACK);
         menu.addOption(Color.RED);
         menu.addOption(Color.BLUE);
-//        menu.innerRadius = inner;
-//        menu.outerRadius = outer;
-        menu.show(circle,event.getX(), event.getY() );
+        menu.show(circle,event.getScreenX(), event.getScreenY());
 
     }
 
