@@ -4,6 +4,7 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
@@ -12,14 +13,17 @@
     <top>
         <AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="100.0" prefWidth="600.0" BorderPane.alignment="CENTER">
             <children>
-                <ToggleButton fx:id="togglebuttonChainAdd" layoutX="259.0" mnemonicParsing="false" onAction="#toggleChainAdd" prefHeight="26.0" prefWidth="128.0" text="Chain Add" />
+                <ToggleButton fx:id="togglebuttonChainAdd" layoutX="259.0" mnemonicParsing="false" onAction="#handleToggleTools" prefHeight="26.0" prefWidth="128.0" text="Chain Add">
+               <toggleGroup>
+                  <ToggleGroup fx:id="toggleTools" />
+               </toggleGroup></ToggleButton>
                 <TextField fx:id="roomName" layoutX="400.0" layoutY="30.0" onAction="#isFocused" onKeyPressed="#isFocused" onMouseClicked="#isFocused" prefHeight="26.0" prefWidth="158.0" promptText="Add or Remove Room" />
-                <ToggleButton fx:id="togglebuttonAddNode" mnemonicParsing="false" onAction="#toggleAddNode" prefHeight="26.0" prefWidth="99.0" text="Add Node" />
-                <ToggleButton fx:id="togglebuttonAddConnections" layoutX="110.0" mnemonicParsing="false" onAction="#toggleAddConnection" prefHeight="26.0" prefWidth="140.0" text="Add Connections" />
+                <ToggleButton fx:id="togglebuttonAddNode" mnemonicParsing="false" onAction="#handleToggleTools" prefHeight="26.0" prefWidth="99.0" text="Add Node" toggleGroup="$toggleTools" />
+                <ToggleButton fx:id="togglebuttonAddConnections" layoutX="110.0" mnemonicParsing="false" onAction="#handleToggleTools" prefHeight="26.0" prefWidth="140.0" text="Add Connections" toggleGroup="$toggleTools" />
                 <Button layoutY="30.0" mnemonicParsing="false" onAction="#deleteSelected" prefHeight="26.0" prefWidth="99.0" text="Delete Node" />
                 <Button layoutX="110.0" layoutY="30.0" mnemonicParsing="false" onAction="#deleteConnection" prefHeight="26.0" prefWidth="140.0" text="Delete Connection" />
                 <Button layoutX="400.0" mnemonicParsing="false" onAction="#addRoom" prefHeight="26.0" prefWidth="159.0" text="Add or Change Room" />
-                <ToggleButton fx:id="togglebuttonAddElevator" layoutX="460.0" layoutY="70.0" mnemonicParsing="false" onAction="#toggleAddElevator" prefHeight="26.0" prefWidth="136.0" text="Add Elevator" />
+                <ToggleButton fx:id="togglebuttonAddElevator" layoutX="460.0" layoutY="70.0" mnemonicParsing="false" onAction="#handleToggleTools" prefHeight="26.0" prefWidth="136.0" text="Add Elevator" toggleGroup="$toggleTools" />
                 <Button layoutX="330.0" layoutY="70.0" mnemonicParsing="false" onAction="#deleteElevator" text="Delete Elevator" />
                 <ToggleButton fx:id="togglebuttonChangeFloor" layoutX="258.0" layoutY="30.0" mnemonicParsing="false" onAction="#toggleSwitchMap" prefHeight="26.0" prefWidth="129.0" text="Change Floor" />
             </children>
