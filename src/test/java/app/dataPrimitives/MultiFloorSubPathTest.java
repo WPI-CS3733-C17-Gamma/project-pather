@@ -1,8 +1,6 @@
 package app.dataPrimitives;
 
-import app.PathNotFoundException;
-import app.dataPrimitives.GraphNode;
-import app.dataPrimitives.SubPath;
+import app.pathfinding.PathNotFoundException;
 import app.datastore.GraphNetwork;
 import app.datastore.Map;
 import junit.framework.TestCase;

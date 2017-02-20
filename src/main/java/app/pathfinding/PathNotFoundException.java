@@ -1,4 +1,4 @@
-package app;
+package app.pathfinding;
 
 import app.dataPrimitives.GraphNode;
 

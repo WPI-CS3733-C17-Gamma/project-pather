@@ -1,21 +1,16 @@
-package app;
-
 import app.dataPrimitives.GraphNode;
 import app.datastore.GraphNetwork;
+import app.pathfinding.DFS;
 import app.pathfinding.PathNotFoundException;
 import junit.framework.TestCase;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.List;
 
-
-/**
- * Created by dominic on 2/5/17.
- */
-
-public class GetPathTest extends TestCase{
-
+public class DFSTest extends TestCase{
     GraphNode node1 = new GraphNode(0, 0, "");
     GraphNode node2 = new GraphNode(10, 0, "");
     GraphNode node3 = new GraphNode(20, 10, "");
@@ -38,15 +33,8 @@ public class GetPathTest extends TestCase{
     GraphNode node23 = new GraphNode(20, 30, "");
     GraphNode node22 = new GraphNode(20, 20, "");
 
-    LinkedList<GraphNode> nodes =
-        new LinkedList<>(Arrays.asList(node1, node2, node3, node4, node5));
-    GraphNetwork graph = new GraphNetwork(nodes);
+    DFS dfs =  new DFS();
 
-    LinkedList<GraphNode> betterNodes =
-        new LinkedList<>(Arrays.asList(node11, node14, node15, node34, node35,
-                                       node45, node55, node53, node51, node41,
-                                       node43, node33, node31, node23, node22));
-    GraphNetwork betterGraph = new GraphNetwork(betterNodes);
 
     public void setUp() {
         node1.addAdjacent(node2);
@@ -111,21 +99,20 @@ public class GetPathTest extends TestCase{
         node22.addAdjacent(node14);
     }
 
+    @Test
     public void testGetPath() throws PathNotFoundException {
-        LinkedList<GraphNode> path1 = new LinkedList(Arrays.asList(node1, node3, node4, node5));
-        for(GraphNode neighbour: nodes){
-            System.err.println(neighbour.toString());
-        }
-        LinkedList<GraphNode> path2 = new LinkedList<>();
-        path2 = graph.getPath(node1, node5);
-        assertTrue(path1.equals(path2));
+        List<GraphNode> path1 = new LinkedList(Arrays.asList(node1, node3, node4, node5));
+        List<GraphNode> path3 = new LinkedList(Arrays.asList(node1, node2, node3, node4, node5));
+        List<GraphNode> path2 = new LinkedList<>();
+        path2 = dfs.findPath(node1, node5);
+        assertTrue(path1.equals(path2) || path2.equals(path3));
     }
 
 
-    public void testGetPath2() throws PathNotFoundException {
+    @Test
+    public void testGetPath2() throws PathNotFoundException{
         LinkedList<GraphNode> path1 = new LinkedList<GraphNode>(Arrays.asList(node51, node53, node45, node35));
-        LinkedList<GraphNode> path2 = new LinkedList<>();
-        path2 = betterGraph.getPath(node51, node35);
+        List<GraphNode> path2 = dfs.findPath(node51, node35);
         for(GraphNode neighbour: path2) {
             System.err.println(neighbour.toString());
         }
@@ -133,42 +120,62 @@ public class GetPathTest extends TestCase{
     }
 
 
+    @Test
     public void testGetPath3() throws PathNotFoundException {
-        LinkedList<GraphNode> path1 = new LinkedList<GraphNode>(Arrays.asList(node11, node31, node33, node34,
-                                                                   node35, node45, node55));
-//        for(app.dataPrimitives.GraphNode neighbour: betterNodes) {
-//            System.err.println(neighbour.toString());
-//        }
-        LinkedList<GraphNode> path2 = new LinkedList<>();
-        path2 = betterGraph.getPath(node11, node55);
+        List<GraphNode> path1 = new LinkedList<GraphNode>(Arrays.asList(node11, node31, node33, node34,
+            node35, node45, node55));
+        List<GraphNode> path2 = dfs.findPath(node11, node55);
         for(GraphNode neighbour: path2) {
+            System.err.println("00");
             System.err.println(neighbour.toString());
         }
-        assertTrue(path1.equals(path2));
+        assertTrue(!path2.isEmpty());
 
     }
 
-
-
+    @Test
     public void testGetPath4a() throws PathNotFoundException {
-        LinkedList<GraphNode> path1 = new LinkedList(Arrays.asList(node14, node22, node23, node33));
-        LinkedList<GraphNode> path2 = new LinkedList<>();
-        path2 = betterGraph.getPath(node14, node33);
+        List<GraphNode> path1 = new ArrayList<>(Arrays.asList(node14, node22, node23, node33));
+        List<GraphNode> path3 = new ArrayList<>(Arrays.asList(node14, node15, node34, node33));
+        System.err.println(path1);
+        List<GraphNode> path2 = dfs.findPath(node14, node33);
         for (GraphNode neighbour : path2) {
             System.err.println("testGetPath4a ");
             System.err.println(neighbour.toString());
         }
-        assertTrue(path1.equals(path2));
+        assertTrue(path1.equals(path2) || path2.equals(path3));
+    }
+
+    @Test
+    public void testLoop() throws PathNotFoundException {
+        List<GraphNode> path1 = new ArrayList<>(Arrays.asList(node14, node22));
+        List<GraphNode> path2 = new ArrayList<>(Arrays.asList(node14, node15));
+        List<GraphNode> path3 = new ArrayList<>(Arrays.asList(node14, node11));
+//        List<GraphNode> path3 = new ArrayList<>(Arrays.asList(node14, node15, node34, node33));
+//        System.err.println(path1);
+        List<GraphNode> result1 = dfs.findPath(node14, node22);
+        List<GraphNode> result2 = dfs.findPath(node14, node15);
+        List<GraphNode> result3 = dfs.findPath(node14, node11);
+        assertTrue(path1.equals(result1));
+        assertTrue(path2.equals(result2));
+        assertTrue(path3.equals(result3));
     }
 
     @Test(expected = PathNotFoundException.class)
     public void testPathNotFoundException(){
         Throwable e = null;
         try{
-            graph.getPath(node1, node11);
+            dfs.findPath(node1, node11);
         }catch (Throwable ex){
             e = ex;
         }
         assertTrue(e instanceof PathNotFoundException);
+    }
+
+    @Test
+    public void testStartOnSameNode()throws PathNotFoundException {
+        List<GraphNode> expected = new LinkedList<>(Arrays.asList(node1));
+        List<GraphNode> result = dfs.findPath(node1, node1);
+        assertTrue(expected.equals(result));
     }
 }

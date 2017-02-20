@@ -1,7 +1,8 @@
 package app.datastore;
 
-import app.*;
 import app.dataPrimitives.*;
+import app.pathfinding.IPathFindingAlgorithm;
+import app.pathfinding.PathNotFoundException;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
