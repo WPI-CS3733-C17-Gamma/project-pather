@@ -202,6 +202,8 @@ public class ApplicationController extends Application {
         }
     }
 
+
+
     /**
      * login to admin
      *
@@ -230,8 +232,6 @@ public class ApplicationController extends Application {
             e.printStackTrace();
             System.out.println(e.toString());
         }
-
-
     }
 
     public boolean login(String uname, String passwd){
