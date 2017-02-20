@@ -1,7 +1,8 @@
-package app;
+package app.display;
 
 import app.applicationControl.ApplicationController;
 import app.applicationControl.Login;
+import app.datastore.Map;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -13,7 +14,7 @@ import javafx.stage.Stage;
 /**
  * Created by alext on 2/13/2017.
  */
-public class LoginController {
+public class LoginController extends DisplayController {
 
     @FXML private PasswordField passwordBox;
     @FXML private TextField textboxUsername;
@@ -24,18 +25,23 @@ public class LoginController {
     private String inputPassword = "";
 
     private ApplicationController applicationController;
-    private Login login;
 
     private Stage stage;
 
-    public LoginController(ApplicationController a, Stage s){
+    public LoginController(Map map, ApplicationController a, String currentmap, Stage s){
+        super(map, a, currentmap);
         applicationController = a;
         stage = s;
-        login = new Login();
     }
 
+    /**
+     * Checks credentials
+     * @return
+     * true if credentials are correct
+     * false if credentials are incorrect
+     */
     private boolean getCredentials(){
-        return login.signIn(textboxUsername.getText(), passwordBox.getText());
+        return login(textboxUsername.getText(), passwordBox.getText());
     }
 
     public void isSelected(){       //for auto-disapearing
@@ -48,8 +54,8 @@ public class LoginController {
     public void showAdminMenu(){
         if (getCredentials()) {
             loginPage.setVisible(false);
-            stage.hide();
-            applicationController.createDirectoryAdminDisplay(login);
+            hideStage(stage);
+            createDirectoryAdminDisplay();
         } else {
             passwordBox.clear();
             labelWrongCreds.setVisible(true);
