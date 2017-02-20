@@ -1,15 +1,17 @@
 buildscript {
     dependencies {
         classpath group: 'de.dynamicfiles.projects.gradle.plugins', name: 'javafx-gradle-plugin', version: '8.7.0'
-
+        classpath group: 'com.layer', name: 'gradle-git-repo-plugin', version: '2.0.2'
     }
     repositories {
         jcenter()
+        mavenCentral()
     }
 
 }
 apply plugin: 'java'
 apply plugin: 'javafx-gradle-plugin'
+apply plugin: 'git-repo'
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.+'
@@ -20,10 +22,12 @@ dependencies {
 
 repositories {
     jcenter()
+    mavenCentral()
+    git("https://github.com/dejv78/jfx.radialmenu.git", "radialmenu", "master", "releases")
 }
 
 jfx {
-    mainClass = 'ApplicationController';
+    mainClass = 'app.applicationControl.ApplicationController';
     vendor = 'TeamGamma';
 }
 
