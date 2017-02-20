@@ -61,6 +61,7 @@ public class CircularContextMenu extends Popup {
                 getContent().add(element.background);
             }catch(IllegalArgumentException e){
                 System.out.println("Angle parameters must be positive with angle > initialAngle.");
+
             }
             currentAngle = currentAngle + angle;
         }
@@ -77,7 +78,7 @@ public class CircularContextMenu extends Popup {
         double currentAngle = 0.0;
 
         menuElements.add(new ContextMenuElement(image));
-        getContent().removeAll();
+        getContent().clear();
 
         for(ContextMenuElement element:menuElements) {
             try{
@@ -86,6 +87,7 @@ public class CircularContextMenu extends Popup {
                 getContent().add(element.background);
             }catch(IllegalArgumentException e){
                 System.out.println("Angle parameters must be positive");
+                e.printStackTrace();
             }
 
             currentAngle = currentAngle + angle;

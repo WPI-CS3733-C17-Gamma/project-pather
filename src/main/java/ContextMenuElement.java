@@ -74,7 +74,7 @@ public class ContextMenuElement{
         this.outerRadius = outerRadius;
         double difference = outerRadius - innerRadius;
 
-        if((angle  < 0) || initialAngle < 0 ){
+        if((angle  < 0.0) || initialAngle < 0.0 ){
             throw new IllegalArgumentException();
         }
 
