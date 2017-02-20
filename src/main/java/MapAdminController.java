@@ -488,32 +488,21 @@ public class MapAdminController extends DisplayController implements Initializab
      * @param state
      */
     public void changeState (State state) {
-        selectedNode = null;
-        secondaryNode = null;
         this.currentState = state;
 
-        togglebuttonChainAdd.setSelected(false);
-        togglebuttonAddConnections.setSelected(false);
-        togglebuttonAddNode.setSelected(false);
-        togglebuttonAddElevator.setSelected(false);
-        elevatorFloorOptions.setVisible(false);
-
-        switch (state) {
-            case ADD_CONNECTION:
-                togglebuttonAddConnections.setSelected(true);
-                break;
-            case ADD_NODES:
-                togglebuttonAddNode.setSelected(true);
-                break;
-            case CHAIN_ADD:
-                togglebuttonChainAdd.setSelected(true);
-                break;
-            case ADD_ELEVATOR:
-                togglebuttonAddElevator.setSelected(true);
-                elevatorFloorOptions.setVisible(true);
-                displayElevatorOptions();
-                break;
+        if (currentState != State.NONE) {
+            selectedNode = null;
+            secondaryNode = null;
         }
+
+        if (currentState == State.ADD_ELEVATOR) {
+            elevatorFloorOptions.setVisible(true);
+            displayElevatorOptions();
+        }
+        else {
+            elevatorFloorOptions.setVisible(false);
+        }
+
         toggleSwitchMap(false);
 
         drawMap();
