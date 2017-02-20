@@ -200,7 +200,7 @@ public class ApplicationController extends Application {
         try {
                 this.login = login;
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/DirectoryAdminDisplay.fxml"));
-                DirectoryAdminController controller = new DirectoryAdminController(map, this, "floor3.png");
+                DirectoryAdminController controller = new DirectoryAdminController(map, this, "floor3.png", adminStage);
                 loader.setController(controller);
                 Parent root = loader.load();
                 adminStage.setTitle("DirectoryAdmin");
