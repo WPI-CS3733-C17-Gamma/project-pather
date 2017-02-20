@@ -1,8 +1,8 @@
 import javafx.event.EventHandler;
-import javafx.scene.Node;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.paint.Paint;
-import javafx.scene.shape.Circle;
+import javafx.stage.Popup;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -11,20 +11,20 @@ import java.util.List;
 /**
  * Created by dominic on 2/18/17.
  */
-public class CircularContextMenu {
-    int innerRadius;
-    int outerRadius;
+public class CircularContextMenu extends Popup {
+    double innerRadius;
+    double outerRadius;
     private List<ContextMenuElement> menuElements = new LinkedList<>();
-    List<Node> drawnItems = new LinkedList<>();
-    AnchorPane pane;
-
+    Group root;
+    Scene scene;
     /**
      * Default Constructor
      */
     CircularContextMenu(){
         this.innerRadius = 50;
         this.outerRadius = 100;
-        menuElements = new LinkedList<>();
+        root = new Group();
+        scene = new Scene(root,outerRadius,outerRadius);
     }
 
     /**
@@ -32,10 +32,11 @@ public class CircularContextMenu {
      * @param innerRadius Inner radius of Context Menu
      * @param outerRadius Outer Radius of Context Menu
      */
-    CircularContextMenu( int innerRadius, int outerRadius){
+    CircularContextMenu( double innerRadius, double outerRadius){
         this.innerRadius = innerRadius;
         this.outerRadius = outerRadius;
-        menuElements = new LinkedList<>();
+        root = new Group();
+        scene = new Scene(root,outerRadius,outerRadius);
     }
 
     /**
@@ -48,12 +49,16 @@ public class CircularContextMenu {
         int size = menuElements.size();
         double angle = (double)360 / (double)(size+1);
         double currentAngle = 0;
+        setAutoHide(true);
 
         menuElements.add(new ContextMenuElement(image, clickHandler, dragHandler));
+        getContent().removeAll();
 
         for(ContextMenuElement element:menuElements) {//redraw elements when a new one is added
             try{
                 element.draw(currentAngle, angle, this.innerRadius, this.outerRadius);
+                getContent().add(element.path);
+                getContent().add(element.background);
             }catch(IllegalArgumentException e){
                 System.out.println("Angle parameters must be positive with angle > initialAngle.");
             }
@@ -72,10 +77,13 @@ public class CircularContextMenu {
         double currentAngle = 0.0;
 
         menuElements.add(new ContextMenuElement(image));
+        getContent().removeAll();
 
         for(ContextMenuElement element:menuElements) {
             try{
                 element.draw(currentAngle, angle, this.innerRadius, this.outerRadius);
+                getContent().add(element.path);
+                getContent().add(element.background);
             }catch(IllegalArgumentException e){
                 System.out.println("Angle parameters must be positive");
             }
@@ -117,44 +125,19 @@ public class CircularContextMenu {
         return menuElements.size();
     }
 
-    /**
-     * Shows the context menu in a given location on the anchor Pane. Can only show one one anchor pane at a time
-     * @param pane
-     * @param layoutX
-     * @param layoutY
-     * @param radius
-     */
-    public void show(AnchorPane pane, int layoutX, int layoutY, int radius) {
-
-        this.pane = pane;
-
-        if( radius > 0){
-            Circle circ = new Circle(radius);
-            pane.getChildren().add(circ);
-            circ.setLayoutX(layoutX);
-            circ.setLayoutY(layoutY);
-            drawnItems.add(circ);
-        }
-        for (ContextMenuElement element: menuElements) {
-            element.path.setLayoutX(layoutX);
-            element.path.setLayoutY(layoutY);
-            pane.getChildren().add(element.path);
-            drawnItems.add(element.path);
-        }
-    }
 
     /**
      * Removes context menu from pane
      *
      */
-    public void hide() {
-
-        List<Node> anchorPaneElements = pane.getChildren();
-        for (Node element : drawnItems) {
-            anchorPaneElements.remove(element);
-        }
-        this.pane = null;//Set pane to null since the menu is now hidden
-    }
+//    public void hide() {
+//
+//        List<Node> anchorPaneElements = pane.getChildren();
+//        for (Node element : drawnItems) {
+//            anchorPaneElements.remove(element);
+//        }
+//        this.pane = null;//Set pane to null since the menu is now hidden
+//    }
     /**
      * Getter for Menu Elements
      * @return

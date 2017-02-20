@@ -11,8 +11,8 @@ public class ContextMenuElement{
     Paint icon;
     SVGPath path = new SVGPath();
     SVGPath background = new SVGPath();
-    int outerRadius = 150;
-    int innerRadius = 100;
+    double outerRadius = 150;
+    double innerRadius = 100;
     double angle = 10;
     double initialAngle = 10;
     CircularContextMenu parentMenu = new CircularContextMenu();
@@ -69,10 +69,10 @@ public class ContextMenuElement{
      * @param innerRadius inner radius size
      * @param outerRadius Size of element
      */
-    public void draw(double initialAngle, double angle, int innerRadius, int outerRadius) throws IllegalArgumentException{
+    public void draw(double initialAngle, double angle, double innerRadius, double outerRadius) throws IllegalArgumentException{
         this.innerRadius = innerRadius;
         this.outerRadius = outerRadius;
-        int difference = outerRadius - innerRadius;
+        double difference = outerRadius - innerRadius;
 
         if((angle  < 0) || initialAngle < 0 ){
             throw new IllegalArgumentException();
@@ -86,7 +86,7 @@ public class ContextMenuElement{
         double point1y = innerRadius*Math.sin(this.initialAngle);
 
         double point2x = difference*Math.cos(this.initialAngle);
-        double point2y = difference*Math.sin(this.initialAngle);
+        double point2y  = difference*Math.sin(this.initialAngle);
 
         double point3x = outerRadius*Math.cos(this.angle + this.initialAngle) - point2x - point1x;
         double point3y = outerRadius*Math.sin(this.angle + this.initialAngle) - point2y - point1y;
@@ -94,22 +94,32 @@ public class ContextMenuElement{
         double point4x = -difference*Math.cos(this.angle + this.initialAngle);
         double point4y = -difference*Math.sin(this.angle + this.initialAngle);
 
+        double point5x = -point4x - point3x - point2x;
+        double point5y = -point4y - point3y - point2y;
+
+        double originX = -outerRadius;
+        double originY = -outerRadius;
+
 
         if((this.angle) <= 180.0) {//If the angle swept out is less than or equal to 180, choose the small arc. Doc on paths
-            path.setContent("M0,0 m" + point1x + "," + point1y +//https://www.w3.org/TR/SVG/implnote.html#ArcImplementationNotes
+            path.setContent("M" + originX + "," + originY + " m" + point1x + "," + point1y +//https://www.w3.org/TR/SVG/implnote.html#ArcImplementationNotes
                 " l " + point2x + "," + point2y + "a" + outerRadius + "," +
-                outerRadius + " 0 0,1 " + point3x + "," + point3y + "l " + point4x + "," + point4y + " z");
-            background.setContent("M0,0 m" + point1x + "," + point1y +//https://www.w3.org/TR/SVG/implnote.html#ArcImplementationNotes
+                outerRadius + " 0 0,1 " + point3x + "," + point3y + "l " + point4x + "," + point4y +  "a" + innerRadius + "," +
+                innerRadius + " 0 0,0 " + point5x + "," + point5y  +" z");
+            background.setContent("M" + originX + "," + originY + " m" + point1x + "," + point1y +//https://www.w3.org/TR/SVG/implnote.html#ArcImplementationNotes
                 " l " + point2x + "," + point2y + "a" + outerRadius + "," +
-                outerRadius + " 0 0,1 " + point3x + "," + point3y + "l " + point4x + "," + point4y + " z");
+                outerRadius + " 0 0,1 " + point3x + "," + point3y + "l " + point4x + "," + point4y + "a" + innerRadius + "," +
+                innerRadius + " 0 0,0 " + point5x + "," + point5y +" z");
         }
         else {
-            path.setContent("M0,0 m" + point1x + "," + point1y +
+            path.setContent("M" + originX + "," + originY + " m" + point1x + "," + point1y +
                 " l " + point2x + "," + point2y + "a" + outerRadius + "," +
-                outerRadius + " 0 1,1 " + point3x + "," + point3y + " l " + point4x + "," + point4y + " z");
-            background.setContent("M0,0 m" + point1x + "," + point1y +
+                outerRadius + " 0 1,1 " + point3x + "," + point3y + " l " + point4x + "," + point4y + "a" + innerRadius + "," +
+                innerRadius + " 0 1,1 " + point5x + "," + point5y + " z");
+            background.setContent("M" + originX + "," + originY + " m" + point1x + "," + point1y +
                 " l " + point2x + "," + point2y + "a" + outerRadius + "," +
-                outerRadius + " 0 1,1 " + point3x + "," + point3y + " l " + point4x + "," + point4y + " z");
+                outerRadius + " 0 1,1 " + point3x + "," + point3y + " l " + point4x + "," + point4y + "a" + innerRadius + "," +
+                innerRadius + " 0 1,1 " + point5x + "," + point5y + " z");
         }
 
 

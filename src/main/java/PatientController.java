@@ -19,7 +19,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Shape;
@@ -604,7 +603,6 @@ public class PatientController extends DisplayController implements Initializabl
         return;
     }
 
-    boolean selected = false;
     CircularContextMenu menu = new CircularContextMenu();
     public void logIn () {
         applicationController.createLoginAdmin();
