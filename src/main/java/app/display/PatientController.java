@@ -201,7 +201,7 @@ public class PatientController extends DisplayController implements Initializabl
      * swtich to map admin
      */
     public void switchToMapAdmin() {
-        applicationController.createMapAdminDisplay(new Login());//*********************************
+        applicationController.createMapAdminDisplay();
     }
 
 
@@ -210,7 +210,7 @@ public class PatientController extends DisplayController implements Initializabl
      */
     public void switchToDirectoryAdmin () {
         System.out.println("SWITCHING TO DIR ADMIN");
-        applicationController.createDirectoryAdminDisplay(new Login());//************************
+        applicationController.createDirectoryAdminDisplay();
     }
 
     /**

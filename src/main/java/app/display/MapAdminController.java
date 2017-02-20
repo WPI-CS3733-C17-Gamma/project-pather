@@ -780,7 +780,7 @@ public class MapAdminController extends DisplayController implements Initializab
      * Switches to app.datastore.Directory Admin
      */
     public void switchToDirectoryAdmin(){
-        applicationController.createDirectoryAdminDisplay(new Login());//TODO fix this pl0x
+        createDirectoryAdminDisplay();
     }
 
     /**

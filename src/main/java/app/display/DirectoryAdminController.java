@@ -145,9 +145,6 @@ public class DirectoryAdminController extends DisplayController implements Initi
         activeDirectoryEntry.addLocation(map.getRoomFromName(room));
     }
 
-    /* TODO Figure out if this needs to be deleted */
-    public void changeTitle(String title) {}
-
     /* Functions for Rooms */
     public List<String> searchRoom(String search) {
         return null;
@@ -376,7 +373,7 @@ public class DirectoryAdminController extends DisplayController implements Initi
      * go back to patient display
      */
     public void logout () {
-        applicationController.logout();
+        logout();
     }
 
     /**
@@ -424,10 +421,10 @@ public class DirectoryAdminController extends DisplayController implements Initi
     }
 
     /**
-     * Switches to Mao Admin
+     * Switches to Map Admin
      */
     public void switchToMapAdmin(){
-        applicationController.createMapAdminDisplay(new Login());//TODO fix this pl0x
+        createMapAdminDisplay();
     }
 }
 

@@ -1,14 +1,7 @@
 package app.applicationControl;
 
-import app.*;
-import app.applicationControl.DatabaseManager;
-import app.applicationControl.Login;
-import app.applicationControl.ProxyImage;
 import app.datastore.Map;
-import app.display.DirectoryAdminController;
-import app.display.DisplayController;
-import app.display.MapAdminController;
-import app.display.PatientController;
+import app.display.*;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.beans.value.ChangeListener;
@@ -39,8 +32,6 @@ public class ApplicationController extends Application {
     Login login;
     Scene currentScene;
 
-    boolean isSignedIn = false;
-
     // NOTE with proxy pattern this will change to a prox image
     HashMap<String, ProxyImage> images;
 
@@ -52,6 +43,7 @@ public class ApplicationController extends Application {
         adminStage = new Stage();
         createPatientDisplay();
         primaryStage.show();
+        login = new Login();
     }
 
     /**
@@ -152,19 +144,17 @@ public class ApplicationController extends Application {
     /**
      * create map admin display
      */
-    public void createMapAdminDisplay(Login login){
-        isSignedIn = true;
+    public void createMapAdminDisplay(){
+
         adminStage.close();
         adminStage = new Stage();
         adminStage.setResizable(false);
         adminStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent event) {
-                isSignedIn = false;
             }
         });
         try {
-                this.login = login;
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/MapAdminDisplay.fxml"));
                 MapAdminController controller = new MapAdminController(map, this, "floor3.png", adminStage);
                 loader.setController(controller);
@@ -185,20 +175,17 @@ public class ApplicationController extends Application {
     /**
      * Create map directory admin app
      */
-    public void createDirectoryAdminDisplay(Login login){
-        isSignedIn = true;
+    public void createDirectoryAdminDisplay(){
         adminStage.close();
         adminStage = new Stage();
         adminStage.setResizable(false);
         adminStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent event) {
-                isSignedIn = false;
             }
         });
         //adminStage.initOwner(pStage);
         try {
-                this.login = login;
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/DirectoryAdminDisplay.fxml"));
                 DirectoryAdminController controller = new DirectoryAdminController(map, this, "floor3.png");
                 loader.setController(controller);
@@ -219,15 +206,15 @@ public class ApplicationController extends Application {
      * login to admin
      *
      */
-    public void createLoginAdmin(){     //not signing in... also add "wrong username or password"
-        if(isSignedIn) {
+    public void createLoginAdmin(){
+        if(isLoggedIn()) {
             adminStage.toFront();
             return;
         }
 
         adminStage = new Stage();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/LoginDisplay.fxml"));
-        LoginController loginController = new LoginController(this, adminStage);
+        LoginController loginController = new LoginController(map, this, "floor3.png", adminStage);
         Scene newScene;
         try{
             loader.setController(loginController);
@@ -247,12 +234,19 @@ public class ApplicationController extends Application {
 
     }
 
+    public boolean login(String uname, String passwd){
+        return login.signIn(uname, passwd);
+    }
+
+    public boolean isLoggedIn(){
+        return login.isSignedIn();
+    }
+
 
     /**
      * Closes Admin Display
      */
     public void logout(){
-        isSignedIn = false;
         try{
             login.signOut();
         } catch(NullPointerException n){
