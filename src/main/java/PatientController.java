@@ -19,6 +19,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Shape;
@@ -165,7 +166,7 @@ public class PatientController extends DisplayController implements Initializabl
 
     /**
      * get rooms / entries related to entry
-     * @param searchTerm 
+     * @param searchTerm
      * @return
      */
     public List<String> search(String searchTerm) {
@@ -178,7 +179,7 @@ public class PatientController extends DisplayController implements Initializabl
             String lowerCaseSearch = searchTerm.toLowerCase();
 	    List<String> results = map.searchEntry(lowerCaseSearch) ;
 	    results.addAll(map.searchRoom(searchTerm));
-	    return results; 
+	    return results;
         }
         //(update) the display the list of room
     }
@@ -608,7 +609,6 @@ public class PatientController extends DisplayController implements Initializabl
     public void logIn () {
         applicationController.createLoginAdmin();
     }
-
     public void help () {
         System.out.println("Here is how to use this...");
         if (helpLabel.isVisible()) {

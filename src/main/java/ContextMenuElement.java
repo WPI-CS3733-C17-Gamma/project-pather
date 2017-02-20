@@ -1,5 +1,6 @@
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.SVGPath;
 
@@ -9,6 +10,7 @@ import javafx.scene.shape.SVGPath;
 public class ContextMenuElement{
     Paint icon;
     SVGPath path = new SVGPath();
+    SVGPath background = new SVGPath();
     int outerRadius = 150;
     int innerRadius = 100;
     double angle = 10;
@@ -17,12 +19,18 @@ public class ContextMenuElement{
 
 
 
-    EventHandler<MouseEvent> onClickHandler = new EventHandler<MouseEvent>() { //Default Event Handler
+    EventHandler<MouseEvent> onClickHandler = new EventHandler<MouseEvent>() { //Default click handler
         @Override
         public void handle(MouseEvent event) {
             System.out.println("This button has no Event");
         }
     };
+    EventHandler<MouseEvent>  onDragHandler = new EventHandler<MouseEvent>() { //Default drag event handler
+        @Override
+        public void handle(MouseEvent event) {
+            System.out.println("This button has no Event"); }
+    };
+
 
     /**
      * Constructor for a button that does not do anything
@@ -30,6 +38,9 @@ public class ContextMenuElement{
      */
     ContextMenuElement( Paint icon){
         this.path.addEventHandler(MouseEvent.MOUSE_CLICKED, onClickHandler);
+        this.background.addEventHandler(MouseEvent.MOUSE_CLICKED, onClickHandler);
+        this.path.addEventHandler(MouseEvent.MOUSE_RELEASED, onDragHandler);
+        this.background.addEventHandler(MouseEvent.MOUSE_RELEASED, onDragHandler);
         this.icon = icon;
 
     }
@@ -39,10 +50,16 @@ public class ContextMenuElement{
      * @param icon
      * @param onClickHandler
      */
-    ContextMenuElement( Paint icon, EventHandler onClickHandler){
+    ContextMenuElement (Paint icon, EventHandler onClickHandler, EventHandler onDragHandler){
         this.onClickHandler = onClickHandler;
-        this.path.addEventHandler(MouseEvent.MOUSE_CLICKED, onClickHandler);
+        if (onClickHandler != null) {
+            this.path.addEventHandler(MouseEvent.MOUSE_CLICKED, onClickHandler);
+            this.background.addEventHandler(MouseEvent.MOUSE_CLICKED, onClickHandler);}
+        if (onDragHandler != null) {
+            this.path.addEventHandler(MouseEvent.MOUSE_RELEASED, onDragHandler);
+            this.background.addEventHandler(MouseEvent.MOUSE_RELEASED, onDragHandler);}
         this.icon = icon;
+
     }
 
     /**
@@ -82,15 +99,22 @@ public class ContextMenuElement{
             path.setContent("M0,0 m" + point1x + "," + point1y +//https://www.w3.org/TR/SVG/implnote.html#ArcImplementationNotes
                 " l " + point2x + "," + point2y + "a" + outerRadius + "," +
                 outerRadius + " 0 0,1 " + point3x + "," + point3y + "l " + point4x + "," + point4y + " z");
+            background.setContent("M0,0 m" + point1x + "," + point1y +//https://www.w3.org/TR/SVG/implnote.html#ArcImplementationNotes
+                " l " + point2x + "," + point2y + "a" + outerRadius + "," +
+                outerRadius + " 0 0,1 " + point3x + "," + point3y + "l " + point4x + "," + point4y + " z");
         }
         else {
             path.setContent("M0,0 m" + point1x + "," + point1y +
+                " l " + point2x + "," + point2y + "a" + outerRadius + "," +
+                outerRadius + " 0 1,1 " + point3x + "," + point3y + " l " + point4x + "," + point4y + " z");
+            background.setContent("M0,0 m" + point1x + "," + point1y +
                 " l " + point2x + "," + point2y + "a" + outerRadius + "," +
                 outerRadius + " 0 1,1 " + point3x + "," + point3y + " l " + point4x + "," + point4y + " z");
         }
 
 
         path.setFill(icon);
+        background.setFill(Color.rgb(255, 255, 255, 0));
     }
 
 

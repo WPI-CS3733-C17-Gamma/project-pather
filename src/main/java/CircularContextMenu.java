@@ -41,14 +41,15 @@ public class CircularContextMenu {
     /**
      * Adds an option to the context menu. The option does not work for places where the paint is transparent. Use solid paints for now
      * @param image Fill for menu
-     * @param handler Actioned to be performe by optiion
+     * @param clickHandler Actioned to be performe by optiion
+     * @param dragHandler Actioned to be performe by optiion
      */
-    public void addOption(Paint image, EventHandler handler){
+    public void addOption(Paint image, EventHandler clickHandler, EventHandler dragHandler){
         int size = menuElements.size();
         double angle = (double)360 / (double)(size+1);
         double currentAngle = 0;
 
-        menuElements.add(new ContextMenuElement(image, handler));
+        menuElements.add(new ContextMenuElement(image, clickHandler, dragHandler));
 
         for(ContextMenuElement element:menuElements) {//redraw elements when a new one is added
             try{
@@ -123,10 +124,8 @@ public class CircularContextMenu {
      * @param layoutY
      * @param radius
      */
-    public void show(AnchorPane pane, int layoutX, int layoutY, int radius) throws InvalidPaneException{
-        if(this.pane != null) {
-            throw new InvalidPaneException();
-        }
+    public void show(AnchorPane pane, int layoutX, int layoutY, int radius) {
+
         this.pane = pane;
 
         if( radius > 0){
@@ -146,11 +145,9 @@ public class CircularContextMenu {
 
     /**
      * Removes context menu from pane
-     * @throws InvalidPaneException
+     *
      */
-    public void hide() throws InvalidPaneException{
-        if (pane == null)
-            throw new InvalidPaneException();
+    public void hide() {
 
         List<Node> anchorPaneElements = pane.getChildren();
         for (Node element : drawnItems) {
@@ -171,11 +168,3 @@ public class CircularContextMenu {
     }
 }
 
-/**
- * Thrown if there is not a valid pane
- */
-class InvalidPaneException extends Exception{
-    InvalidPaneException(){
-        System.err.println("InvalidPaneException: No pane to work on");
-    }
-}
