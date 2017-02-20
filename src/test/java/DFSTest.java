@@ -1,3 +1,7 @@
+import app.dataPrimitives.GraphNode;
+import app.datastore.GraphNetwork;
+import app.pathfinding.DFS;
+import app.pathfinding.PathNotFoundException;
 import junit.framework.TestCase;
 import org.junit.Test;
 
@@ -29,16 +33,8 @@ public class DFSTest extends TestCase{
     GraphNode node23 = new GraphNode(20, 30, "");
     GraphNode node22 = new GraphNode(20, 20, "");
 
-    List<GraphNode> nodes =
-        new LinkedList<>(Arrays.asList(node1, node2, node3, node4, node5));
-    GraphNetwork graph = new GraphNetwork((LinkedList)nodes);
     DFS dfs =  new DFS();
 
-    List<GraphNode> betterNodes =
-        new LinkedList<>(Arrays.asList(node11, node14, node15, node34, node35,
-            node45, node55, node53, node51, node41,
-            node43, node33, node31, node23, node22));
-    GraphNetwork betterGraph = new GraphNetwork((LinkedList)betterNodes);
 
     public void setUp() {
         node1.addAdjacent(node2);
@@ -107,9 +103,6 @@ public class DFSTest extends TestCase{
     public void testGetPath() throws PathNotFoundException {
         List<GraphNode> path1 = new LinkedList(Arrays.asList(node1, node3, node4, node5));
         List<GraphNode> path3 = new LinkedList(Arrays.asList(node1, node2, node3, node4, node5));
-        for(GraphNode neighbour: nodes){
-            System.err.println(neighbour.toString());
-        }
         List<GraphNode> path2 = new LinkedList<>();
         path2 = dfs.findPath(node1, node5);
         assertTrue(path1.equals(path2) || path2.equals(path3));
@@ -153,6 +146,21 @@ public class DFSTest extends TestCase{
         assertTrue(path1.equals(path2) || path2.equals(path3));
     }
 
+    @Test
+    public void testLoop() throws PathNotFoundException {
+        List<GraphNode> path1 = new ArrayList<>(Arrays.asList(node14, node22));
+        List<GraphNode> path2 = new ArrayList<>(Arrays.asList(node14, node15));
+        List<GraphNode> path3 = new ArrayList<>(Arrays.asList(node14, node11));
+//        List<GraphNode> path3 = new ArrayList<>(Arrays.asList(node14, node15, node34, node33));
+//        System.err.println(path1);
+        List<GraphNode> result1 = dfs.findPath(node14, node22);
+        List<GraphNode> result2 = dfs.findPath(node14, node15);
+        List<GraphNode> result3 = dfs.findPath(node14, node11);
+        assertTrue(path1.equals(result1));
+        assertTrue(path2.equals(result2));
+        assertTrue(path3.equals(result3));
+    }
+
     @Test(expected = PathNotFoundException.class)
     public void testPathNotFoundException(){
         Throwable e = null;
@@ -165,7 +173,7 @@ public class DFSTest extends TestCase{
     }
 
     @Test
-    public void testStartOnSameNode()throws PathNotFoundException{
+    public void testStartOnSameNode()throws PathNotFoundException {
         List<GraphNode> expected = new LinkedList<>(Arrays.asList(node1));
         List<GraphNode> result = dfs.findPath(node1, node1);
         assertTrue(expected.equals(result));

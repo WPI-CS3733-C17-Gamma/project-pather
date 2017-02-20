@@ -1,84 +1,53 @@
 package app.datastore;
 
-import app.pathfinding.AStarNode;
+import app.pathfinding.*;
 import app.dataPrimitives.FloorPoint;
 import app.dataPrimitives.GraphNode;
-import app.PathNotFoundException;
 
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class GraphNetwork {
     LinkedList<GraphNode> graphNodes = new LinkedList<>();
+    IPathFindingAlgorithm currentPathingAlgorithm = new AStar();
 
-    public GraphNetwork() {}
+    public GraphNetwork(){
+
+    }
 
     public GraphNetwork(LinkedList<GraphNode> graphNodes) {
         this.graphNodes = graphNodes;
-        //this.graphConnections = graphConnections;
     }
 
-    public LinkedList<GraphNode> getPath(GraphNode startNode, GraphNode goalNode) throws PathNotFoundException {
-        AStarNode start = new AStarNode(startNode);
-        AStarNode goal = new AStarNode(goalNode);
-        LinkedList<AStarNode> openSet = new LinkedList<>();
-        LinkedList<AStarNode> closedSet = new LinkedList<>();
-
-        AStarNode current;
-
-        openSet.add(start);
-
-        start.gScore = 0;
-
-        start.fScore = start.getDistance(goal);
-
-        while(!openSet.isEmpty()){
-            //Sort List of nodes
-            Collections.sort(openSet);
-
-            current = openSet.getFirst();
-            if(current.equals(goal))
-                return reconstruct_path(current);
-
-            openSet.remove(current);
-            closedSet.add(current);
-            current.getNode().getAdjacent().sort(
-                (GraphNode a, GraphNode b) -> ((int)a.distance(goalNode) - (int)b.distance(goalNode)));
-            for (GraphNode gNeighbour: current.getNode().getAdjacent()) {
-                AStarNode neighbour = new AStarNode(gNeighbour);
-                if (closedSet.contains(neighbour))
-                    continue;
-                double tentative_gscore = current.gScore + neighbour.getDistance(current);
-                if(!openSet.contains(neighbour)) {
-                    openSet.add(neighbour);
-                    Collections.sort(openSet);
-                }
-                else if (tentative_gscore >= neighbour.gScore)
-                    continue;
-                neighbour.setCameFrom(current);
-                neighbour.gScore = tentative_gscore;
-                neighbour.fScore = tentative_gscore + neighbour.getDistance(goal);
-            }
-        }
-        throw new PathNotFoundException(startNode, goalNode);
-    }
-
-    /***
-     *
-     * @param current
-     * @return final Node in A* and reconstructs path
+    /**
+     * given the name of the algorithm in String ("AStar", "DFS", "BFS"), set the search method
+     * to the corresponding algorithm
+     * @param algo
      */
-    private static LinkedList<GraphNode> reconstruct_path(AStarNode current){
-        LinkedList<GraphNode> total_path = new LinkedList<>();
-        total_path.add(current.getNode());
-
-        while(current.getCameFrom() != null){
-            current = current.getCameFrom();
-            total_path.add(0, current.getNode());
+    public void changeAlgorithm(String algo){
+        System.out.println(algo);
+        switch(algo){
+            case "DFS": currentPathingAlgorithm = new DFS();
+                            break;
+            case "BFS": currentPathingAlgorithm = new BFS();
+                            break;
+            case "AStar":
+            default:
+                currentPathingAlgorithm = new AStar();
+                break;
         }
-        return total_path;
+    }
+
+    /**
+     * returns a path from the startNode to the goalNode
+     * @param startNode
+     * @param goalNode
+     * @return
+     * @throws PathNotFoundException
+     */
+    public LinkedList<GraphNode> getPath(GraphNode startNode, GraphNode goalNode) throws PathNotFoundException {
+        return currentPathingAlgorithm.findPath(startNode, goalNode);
     }
 
     /**

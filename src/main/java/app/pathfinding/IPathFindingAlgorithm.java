@@ -1,4 +1,6 @@
-import java.util.List;
+package app.pathfinding;
+import app.dataPrimitives.GraphNode;
+import java.util.LinkedList;
 
 public interface IPathFindingAlgorithm {
 
@@ -9,5 +11,5 @@ public interface IPathFindingAlgorithm {
      * @return the path
      * @throws PathNotFoundException
      */
-    public List<GraphNode> findPath(GraphNode start, GraphNode end) throws PathNotFoundException;
+    public LinkedList<GraphNode> findPath(GraphNode start, GraphNode end) throws PathNotFoundException;
 }

@@ -1,10 +1,20 @@
+package app.pathfinding;
+
+import app.dataPrimitives.GraphNode;
+
 import java.util.Collections;
 import java.util.LinkedList;
 
-/**
- * Created by zht on 2/19/2017.
- */
-public class AStar implements IPathFindingAlgorithm { public LinkedList<GraphNode> findPath(GraphNode startNode, GraphNode goalNode) throws PathNotFoundException {
+public class AStar implements IPathFindingAlgorithm {
+
+    /**
+     * Finds the shortest path using the A* path finding algorithm
+     * @param startNode
+     * @param goalNode
+     * @return
+     * @throws PathNotFoundException
+     */
+    public LinkedList<GraphNode> findPath(GraphNode startNode, GraphNode goalNode) throws PathNotFoundException {
     AStarNode start = new AStarNode(startNode);
     AStarNode goal = new AStarNode(goalNode);
     LinkedList<AStarNode> openSet = new LinkedList<>();
@@ -64,6 +74,4 @@ public class AStar implements IPathFindingAlgorithm { public LinkedList<GraphNod
         }
         return total_path;
     }
-
-
 }

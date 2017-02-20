@@ -1,7 +1,8 @@
 package app.datastore;
 
-import app.*;
 import app.dataPrimitives.*;
+import app.pathfinding.IPathFindingAlgorithm;
+import app.pathfinding.PathNotFoundException;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -12,7 +13,6 @@ public class Map {
     Directory directory;
     GraphNetwork graph;
     HashMap<String, String> settings;
-    IPathFindingAlgorithm pathFindingAlgorithm;
 
     public Map(Directory directory, GraphNetwork graph) {
         this.directory = directory;

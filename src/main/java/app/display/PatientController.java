@@ -4,6 +4,7 @@ import app.*;
 import app.applicationControl.ApplicationController;
 import app.applicationControl.Login;
 import app.dataPrimitives.*;
+import app.pathfinding.PathNotFoundException;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;

@@ -2,6 +2,7 @@ package app;
 
 import app.dataPrimitives.GraphNode;
 import app.datastore.GraphNetwork;
+import app.pathfinding.PathNotFoundException;
 import junit.framework.TestCase;
 import org.junit.Test;
 
