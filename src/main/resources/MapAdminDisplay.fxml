@@ -26,6 +26,7 @@
                 <ToggleButton fx:id="togglebuttonAddElevator" layoutX="460.0" layoutY="70.0" mnemonicParsing="false" onAction="#handleToggleTools" prefHeight="26.0" prefWidth="136.0" text="Add Elevator" toggleGroup="$toggleTools" />
                 <Button layoutX="330.0" layoutY="70.0" mnemonicParsing="false" onAction="#deleteElevator" text="Delete Elevator" />
                 <ToggleButton fx:id="togglebuttonChangeFloor" layoutX="258.0" layoutY="30.0" mnemonicParsing="false" onAction="#toggleSwitchMap" prefHeight="26.0" prefWidth="129.0" text="Change Floor" />
+            <Button fx:id="defaultKioskButton" layoutX="560.0" layoutY="31.0" mnemonicParsing="false" onAction="#setDefaultKiosk" prefHeight="25.0" prefWidth="35.0" text="+" />
             </children>
         </AnchorPane>
     </top>
