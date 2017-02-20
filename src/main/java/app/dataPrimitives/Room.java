@@ -57,8 +57,13 @@ public class Room extends Ided implements Comparable {
         }
 
         Room rhs = (Room) obj;
-        return this.location.equals(rhs.location) &&
-            this.name.equals(rhs.name);
+        if (this.location == null) {
+            return this.name.equals(rhs.name);
+        }
+        else {
+            return this.location.equals(rhs.location) &&
+                this.name.equals(rhs.name);
+        }
     }
 
     public String getName() {

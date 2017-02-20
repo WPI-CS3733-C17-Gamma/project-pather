@@ -4,6 +4,9 @@ import app.dataPrimitives.*;
 import app.pathfinding.IPathFindingAlgorithm;
 import app.pathfinding.PathNotFoundException;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -338,6 +341,11 @@ public class Map {
     /** See method {@Link app.datastore.Directory#getEntries()} */
     public HashMap<String, DirectoryEntry> getDirectoryEntries() {
         return directory.getEntries();
+    }
+
+    /** See method {@Link app.datastore.Directory#importTSV(file)} */
+    public void importTSV(File file) throws IOException {
+        directory.importTSV(file);
     }
 
     public HashMap<String, String> getSettings() {
