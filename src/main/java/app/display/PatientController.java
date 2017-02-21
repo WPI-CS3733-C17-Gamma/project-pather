@@ -171,7 +171,6 @@ public class PatientController extends DisplayController implements Initializabl
         else {
             options.setVisible(false);
         }
-
     }
 
     /**
