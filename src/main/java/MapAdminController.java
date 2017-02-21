@@ -49,6 +49,8 @@ public class MapAdminController extends DisplayController implements Initializab
     // keep track of the objects that have been drawn on the screen
     HashMap<Long, Shape> drawnNodes = new HashMap<>();
     List<Shape> drawnLines = new ArrayList<>();
+    CircularContextMenu nodeMenu = new CircularContextMenu();
+    CircularContextMenu screenMenu = new CircularContextMenu();
     Stage stage;
 
     //For the context menu (right click menu)
@@ -80,6 +82,8 @@ public class MapAdminController extends DisplayController implements Initializab
     public MapAdminController(Map map, ApplicationController applicationController, String currentMap, Stage stage) {
         super(map, applicationController, currentMap);
         this.stage = stage;
+        screenMenu.setAutoHide(true);
+        nodeMenu.setAutoHide(true);
     }
 
     /**
@@ -889,23 +893,22 @@ public class MapAdminController extends DisplayController implements Initializab
 //        contextMenu.setStyle("fx-background-image: red");
 
     public void showContextMenu(ContextMenuEvent event){
-        CircularContextMenu menu = new CircularContextMenu();
         if(selectedNode == null){
-            menu.hide();
+            nodeMenu.hide();
             Shape circle = new Circle(event.getX(), event.getY(), 10);
             anchorpaneMap.getChildren().add(circle);
-            menu.addOption(Color.BLACK);
-            menu.addOption(Color.RED);
-            menu.addOption(Color.BLUE);
-            menu.show(circle,event.getScreenX(), event.getScreenY());
+            nodeMenu.addOption(Color.BLACK);
+            nodeMenu.addOption(Color.RED);
+            nodeMenu.addOption(Color.BLUE);
+            nodeMenu.show(circle,event.getScreenX(), event.getScreenY());
         }else{
-            menu.hide();
+            screenMenu.hide();
             Shape circle = new Circle(event.getX(), event.getY(), 10);
             anchorpaneMap.getChildren().add(circle);
-            menu.addOption(Color.WHITE);
-            menu.addOption(Color.RED);
-            menu.addOption(Color.BLUE);
-            menu.show(circle,event.getScreenX(), event.getScreenY());
+            screenMenu.addOption(Color.WHITE);
+            screenMenu.addOption(Color.RED);
+            screenMenu.addOption(Color.BLUE);
+            screenMenu.show(circle,event.getScreenX(), event.getScreenY());
         }
 
 
@@ -921,7 +924,7 @@ public class MapAdminController extends DisplayController implements Initializab
 //                Event.fireEvent(menu.getOwnerWindow(), new MouseEvent(MouseEvent.MOUSE_RELEASED,
 //                    event.getX(), event.getY(), event.getX(), event.getY(), MouseButton.PRIMARY, 1,
 //                    true, true, true, true, true, true, true, true, true, true, null));
-                menu.fireEvent2(event.copyFor(menu,menu.getOwnerNode()));
+                nodeMenu.fireEvent2(event.copyFor(nodeMenu,nodeMenu.getOwnerNode()));
             }
         });
 
