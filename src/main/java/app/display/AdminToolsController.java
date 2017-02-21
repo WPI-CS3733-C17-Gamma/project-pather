@@ -22,11 +22,19 @@ public class AdminToolsController extends DisplayController{
     @FXML Label labelErrors;
     ApplicationController applicationController;
 
+    /**
+     *
+     * @param map
+     * @param applicationController
+     */
     public AdminToolsController(Map map, ApplicationController applicationController){
         super(map, applicationController);
         this.applicationController = applicationController;
     }
 
+    /**
+     * runs when Change Password button is pressed
+     */
     public void togglebuttonPressedChange() {
         if(togglebuttonChangePassword.isSelected()){
             clearInputs();
@@ -41,6 +49,9 @@ public class AdminToolsController extends DisplayController{
         }
     }
 
+    /**
+     * runs when Add Admin button is pressed
+     */
     public void togglebuttonPressedAdd(){
         if (togglebuttonAddUser.isSelected()){
             clearInputs();
@@ -55,6 +66,9 @@ public class AdminToolsController extends DisplayController{
         }
     }
 
+    /**
+     * clears inputs
+     */
     private void clearInputs(){
         textfieldUsername.clear();
         passwordfieldCurrent.clear();
@@ -62,6 +76,9 @@ public class AdminToolsController extends DisplayController{
         passwordfieldNewAgain.clear();
     }
 
+    /**
+     * disables inputs
+     */
     private void disableInputs(){
         textfieldUsername.setDisable(true);
         passwordfieldCurrent.setDisable(true);
@@ -69,6 +86,9 @@ public class AdminToolsController extends DisplayController{
         passwordfieldNewAgain.setDisable(true);
     }
 
+    /**
+     * Enables the submit button if all necessary fields are not full
+     */
     public void checkifFull(){
         if (togglebuttonAddUser.isSelected()){
             if( !textfieldUsername.getText().equals("")&&
@@ -86,6 +106,9 @@ public class AdminToolsController extends DisplayController{
         }
     }
 
+    /**
+     * Submits changes
+     */
     public void submit(){
         if (togglebuttonAddUser.isSelected()){
             addUser();
@@ -97,6 +120,9 @@ public class AdminToolsController extends DisplayController{
         }
     }
 
+    /**
+     * Adds user
+     */
     public void addUser(){
         String uname = textfieldUsername.getText();
         String passwd;
@@ -114,6 +140,9 @@ public class AdminToolsController extends DisplayController{
         }
     }
 
+    /**
+     * changes passwords given a username
+     */
     public void changePassword(){
         String uname = textfieldUsername.getText();
         String passwd = passwordfieldCurrent.getText();
@@ -140,10 +169,16 @@ public class AdminToolsController extends DisplayController{
         }
     }
 
+    /**
+     * takes back to the Admin Screen
+     */
     public void back(){
         applicationController.createDirectoryAdminDisplay();
     }
 
+    /**
+     * hides the label and disables the save button
+     */
     public void hideLabel(){
         labelErrors.setText("");
         labelErrors.setTextFill(Color.RED);
