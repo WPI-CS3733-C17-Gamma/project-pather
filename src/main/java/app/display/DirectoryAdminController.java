@@ -100,7 +100,7 @@ public class DirectoryAdminController extends DisplayController implements Initi
         }
     }
 
-     /**
+    /**
      * Create a new directory entry in the app.datastore.Directory object in the app.datastore.Map
      * @param name Name of entry to add
      * @param title Title of entry to add
@@ -312,9 +312,7 @@ public class DirectoryAdminController extends DisplayController implements Initi
             System.out.println("no room selected");
             entryDeleteRoom.setVisible(false);
         }
-
     }
-
 
     /** TODO Figure out what this does
      * remove room from list
@@ -348,7 +346,6 @@ public class DirectoryAdminController extends DisplayController implements Initi
         else {
             System.out.println("no such room");
         }
-
     }
 
     /**
