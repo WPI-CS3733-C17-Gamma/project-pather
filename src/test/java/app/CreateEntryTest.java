@@ -33,7 +33,7 @@ public class CreateEntryTest extends TestCase {
         h.put(f.getName(), f);
         d = new Directory(h, new HashMap<>());
         m = new Map(d, null);
-        c = new DirectoryAdminController(m, null, null);
+        c = new DirectoryAdminController(m, null);
     }
 
     @Test ( expected = IllegalArgumentException.class)

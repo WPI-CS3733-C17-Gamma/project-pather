@@ -371,7 +371,7 @@ public class DirectoryAdminController extends DisplayController implements Initi
      * go back to patient display
      */
     public void logout () {
-        logout();
+        applicationController.logout();
     }
 
     /**

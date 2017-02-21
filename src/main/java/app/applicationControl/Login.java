@@ -38,11 +38,14 @@ public class Login {
         return isSignedIn;
     }
 
-    void addUser(String uname, String passwd){
-        passwordStorage.put(uname, passwd);
+    boolean addUser(String uname, String passwd){
+        if (passwordStorage.put(uname, passwd).equals(passwd)) {
+            return true;
+        }
+        return false;
     }
 
-    void changePassword(String uname, String oldPasswd, String newPasswd){
-        passwordStorage.replace(uname, oldPasswd, newPasswd);
+    boolean changePassword(String uname, String oldPasswd, String newPasswd){
+        return passwordStorage.replace(uname, oldPasswd, newPasswd);
     }
 }

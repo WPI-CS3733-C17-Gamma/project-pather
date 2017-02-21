@@ -266,6 +266,14 @@ public class ApplicationController extends Application {
         return login.isSignedIn();
     }
 
+    public boolean addUser(String uname, String passwd) {
+        return login.addUser(uname, passwd);
+    }
+
+    public boolean changePassword(String uname, String oldPasswd, String newPasswd){
+        return login.changePassword(uname, oldPasswd, newPasswd);
+    }
+
 
     /**
      * Closes Admin Display
