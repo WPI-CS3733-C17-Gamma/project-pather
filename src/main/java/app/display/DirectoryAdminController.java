@@ -45,6 +45,15 @@ public class DirectoryAdminController extends DisplayController{
     @FXML Button entryDeleteRoom;
     @FXML ListView<String> entryCurrentLocations;
 
+    /** Cruddy Constructor for tests */
+    public DirectoryAdminController (Map map,
+                     ApplicationController applicationController,
+                     Stage stage) {
+        super.init(map, applicationController, stage);
+    }
+
+    public DirectoryAdminController () {}
+
     public void init(Map map,
                      ApplicationController applicationController,
                      Stage stage) {
