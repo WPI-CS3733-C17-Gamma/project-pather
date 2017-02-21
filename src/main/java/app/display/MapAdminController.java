@@ -1,7 +1,6 @@
 package app.display;
 
 import app.applicationControl.ApplicationController;
-import app.applicationControl.Login;
 import app.dataPrimitives.FloorPoint;
 import app.dataPrimitives.GraphNode;
 import app.dataPrimitives.Room;
@@ -21,12 +20,12 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -57,7 +56,7 @@ public class MapAdminController extends DisplayController implements Initializab
 
     // keep track of the objects that have been drawn on the screen
     HashMap<Long, Shape> drawnNodes = new HashMap<>();
-    List<Shape> drawnLines = new ArrayList<>();
+    List<Node> miscDrawnObjects = new ArrayList<>();
     Stage stage;
 
     //For the context menu (right click menu)
@@ -168,8 +167,8 @@ public class MapAdminController extends DisplayController implements Initializab
     public void drawMap(){
         anchorpaneMap.getChildren().removeAll(drawnNodes.values());
         drawnNodes.clear();
-        anchorpaneMap.getChildren().removeAll(drawnLines);
-        drawnLines.clear();
+        anchorpaneMap.getChildren().removeAll(miscDrawnObjects);
+        miscDrawnObjects.clear();
         anchorpaneMap.getChildren().removeAll(
             anchorpaneMap.getChildren().stream().filter(node -> node instanceof Shape).collect(Collectors.toList())
         );
@@ -177,6 +176,40 @@ public class MapAdminController extends DisplayController implements Initializab
             .stream()
             .forEach(node -> drawNode(node, imageviewMap));
         highlightSelected();
+        addFloorLabel(this.currentMap);
+
+
+    }
+
+    /**
+     * Add an on the map label for each room
+     * @param room
+     */
+    public void addRoomLabel (Room room) {
+        Label label = new Label(room.getName());
+        label.setFont(Font.font ("Georgia", 10));
+        FloorPoint temp = graphToImage(room.getLocation().getLocation(),  imageviewMap);
+        label.setLayoutX(temp.getX() + 5);
+        label.setLayoutY(temp.getY() + 5);
+        label.setTextFill(Color.rgb(27, 68, 156));
+        label.setStyle("-fx-background-color: #E1F0F5; -fx-border-color: darkblue;-fx-padding: 2;");
+        anchorpaneMap.getChildren().add(label);
+        this.miscDrawnObjects.add(label);
+    }
+
+    /**
+     * Add floor label to the current map
+     * @param floor
+     */
+    public void addFloorLabel (String floor) {
+        Label label = new Label(floor);
+        label.setFont(Font.font ("Georgia", 20));
+        FloorPoint temp = graphToImage(new FloorPoint(50,30, floor), imageviewMap);
+        label.setLayoutX(temp.getX());
+        label.setLayoutY(temp.getY());
+        label.setTextFill(Color.rgb(27, 68, 156));
+        anchorpaneMap.getChildren().add(label);
+        this.miscDrawnObjects.add(label);
     }
 
 
@@ -193,6 +226,13 @@ public class MapAdminController extends DisplayController implements Initializab
         }
         else {
             drawPoint(node.getLocation(), imageToDrawOver);
+
+            Room nodeRoom = map.getRoomFromNode(node);
+            if (nodeRoom != null) {
+                System.out.println("drawing room " +  nodeRoom);
+                addRoomLabel(nodeRoom);
+            }
+
         }
         for (GraphNode adj : node.getAdjacent()) {
             if(adj.getLocation().getFloor().equals(currentMap)){
@@ -410,7 +450,7 @@ public class MapAdminController extends DisplayController implements Initializab
         line.setFill(Color.BLACK);
         line.setMouseTransparent(true);
         anchorpaneMap.getChildren().add(line);
-        drawnLines.add(line);
+        miscDrawnObjects.add(line);
     }
 
 
@@ -488,7 +528,7 @@ public class MapAdminController extends DisplayController implements Initializab
      * Highlight the primary node in red and secondary node in purple
      */
     public void highlightSelected () {
-//        drawnLines.forEach(shape -> shape.setFill(Color.BLUE));
+//        miscDrawnObjects.forEach(shape -> shape.setFill(Color.BLUE));
         drawnNodes.values().forEach(shape -> shape.setFill(Color.BLUE));
         if(selectedNode != null) {
             Shape selected1 = drawnNodes.get(selectedNode.id);
