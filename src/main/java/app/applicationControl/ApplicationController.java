@@ -54,13 +54,13 @@ public class ApplicationController extends Application {
 
 
         images = new HashMap<>();
-        images.put("floor1", new ProxyImage("Maps/floor1.png"));
-        images.put("floor2", new ProxyImage("Maps/floor2.png"));
-        images.put("floor3", new ProxyImage("Maps/floor3.png"));
-        images.put("floor4", new ProxyImage("Maps/floor4.png"));
-        images.put("floor5", new ProxyImage("Maps/floor5.png"));
-        images.put("floor6", new ProxyImage("Maps/floor6.png"));
-        images.put("floor7", new ProxyImage("Maps/floor7.png"));
+        images.put("floor1", new ProxyImage("Main_Belkin_Clean/main_1clean"));
+        images.put("floor2", new ProxyImage("Main_Belkin_Clean/main_2clean"));
+        images.put("floor3", new ProxyImage("Main_Belkin_Clean/main_3clean"));
+        images.put("floor4", new ProxyImage("Main_Belkin_Clean/main_4clean"));
+        images.put("floor5", new ProxyImage("Main_Belkin_Clean/main_5clean"));
+        images.put("floor6", new ProxyImage("Main_Belkin_Clean/main_6clean"));
+        images.put("floor7", new ProxyImage("Main_Belkin_Clean/main_7clean"));
 
     }
 
