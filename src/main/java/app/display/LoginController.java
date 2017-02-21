@@ -4,6 +4,7 @@ import app.applicationControl.ApplicationController;
 import app.applicationControl.Login;
 import app.datastore.Map;
 import javafx.fxml.FXML;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -54,6 +55,9 @@ public class LoginController extends DisplayController {
             loginPage.setVisible(false);
             hideStage(stage);
             createAdminTools();
+        } else {
+            passwordBox.clear();
+            labelWrongCreds.setVisible(true);
         }
     }
 

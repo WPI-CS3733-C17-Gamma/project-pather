@@ -38,7 +38,6 @@ public class ApplicationController extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         initialize();
-
         this.pStage = primaryStage;
         adminStage = new Stage();
         createPatientDisplay();

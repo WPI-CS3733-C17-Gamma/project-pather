@@ -10,23 +10,27 @@ public class Login {
     private boolean requiredSignin;
     private boolean isSignedIn;
 
-    private HashMap<String, String> passwordStorage;    //Stores all passwords and username combinations
+    private HashMap<String, String> passwordStorage = new HashMap<>();    //Stores all passwords and username combinations
 
-    Login(){
-        passwordStorage = new HashMap<>();
+    Login() {
         passwordStorage.put("admin", "admin");
         requiredSignin = true;     //change to true after development and when testing
         isSignedIn = false;
     }
 
-    boolean signIn(String uname, String password){
+    boolean signIn(String uname, String password) {
 
-        if (!requiredSignin){
-            return true;
-        } else if (passwordStorage.get(uname).equals(password)){
+        if (!requiredSignin) {
             return true;
         }
-        return false;
+        try {
+            if (passwordStorage.get(uname).equals(password)) {
+                return true;
+            }
+            return false;
+        } catch (NullPointerException e) {
+            return false;
+        }
     }
 
     boolean signOut(){
@@ -39,10 +43,8 @@ public class Login {
     }
 
     boolean addUser(String uname, String passwd){
-        if (passwordStorage.put(uname, passwd).equals(passwd)) {
+        passwordStorage.put(uname, passwd);
             return true;
-        }
-        return false;
     }
 
     boolean changePassword(String uname, String oldPasswd, String newPasswd){

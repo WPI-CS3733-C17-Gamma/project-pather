@@ -27,49 +27,62 @@ public class AdminToolsController extends DisplayController{
         this.applicationController = applicationController;
     }
 
-    public void checkifFull(){
-        if (togglebuttonAddUser.isSelected() &&
-            !textfieldUsername.getText().equals("") &&
-             passwordfieldCurrent.getText().equals("") &&
-            !passwordfieldNew.getText().equals("") &&
-            !passwordfieldNewAgain.getText().equals("")){
-                buttonSave.setDisable(false);
-        } else if(togglebuttonChangePassword.isSelected() &&
-            !textfieldUsername.getText().equals("") &&
-            !passwordfieldCurrent.getText().equals("") &&
-            !passwordfieldNew.getText().equals("") &&
-            !passwordfieldNewAgain.getText().equals("")){
-                buttonSave.setDisable(false);
-        }
-    }
-
     public void togglebuttonPressedChange() {
         if(togglebuttonChangePassword.isSelected()){
+            clearInputs();
             textfieldUsername.setDisable(false);
             passwordfieldCurrent.setDisable(false);
             passwordfieldNew.setDisable(false);
             passwordfieldNewAgain.setDisable(false);
             togglebuttonAddUser.setSelected(false);
+
         } else {
-            textfieldUsername.setDisable(true);
-            passwordfieldCurrent.setDisable(true);
-            passwordfieldNew.setDisable(true);
-            passwordfieldNewAgain.setDisable(true);
+            disableInputs();
         }
     }
 
     public void togglebuttonPressedAdd(){
         if (togglebuttonAddUser.isSelected()){
+            clearInputs();
             textfieldUsername.setDisable(false);
             passwordfieldCurrent.setDisable(true);
             passwordfieldNew.setDisable(false);
             passwordfieldNewAgain.setDisable(false);
-            togglebuttonAddUser.setSelected(false);
+            togglebuttonChangePassword.setSelected(false);
+
         } else {
-            textfieldUsername.setDisable(true);
-            passwordfieldCurrent.setDisable(true);
-            passwordfieldNew.setDisable(true);
-            passwordfieldNewAgain.setDisable(true);
+            disableInputs();
+        }
+    }
+
+    private void clearInputs(){
+        textfieldUsername.clear();
+        passwordfieldCurrent.clear();
+        passwordfieldNew.clear();
+        passwordfieldNewAgain.clear();
+    }
+
+    private void disableInputs(){
+        textfieldUsername.setDisable(true);
+        passwordfieldCurrent.setDisable(true);
+        passwordfieldNew.setDisable(true);
+        passwordfieldNewAgain.setDisable(true);
+    }
+
+    public void checkifFull(){
+        if (togglebuttonAddUser.isSelected()){
+            if( !textfieldUsername.getText().equals("")&&
+                !passwordfieldNew.getText().equals("")&&
+                !passwordfieldNewAgain.getText().equals("")){
+                buttonSave.setDisable(false);
+            }
+        } else if (togglebuttonChangePassword.isSelected()){
+            if (!textfieldUsername.getText().equals("")&&
+                !passwordfieldCurrent.getText().equals("")&&
+                !passwordfieldNew.getText().equals("")&&
+                !passwordfieldNewAgain.getText().equals("")){
+                buttonSave.setDisable(false);
+            }
         }
     }
 
@@ -80,20 +93,20 @@ public class AdminToolsController extends DisplayController{
             changePassword();
         } else {
             buttonSave.setDisable(true);
+            clearInputs();
         }
     }
 
     public void addUser(){
         String uname = textfieldUsername.getText();
         String passwd;
-        if (passwordfieldNew.getText().equals(passwordfieldNewAgain)) {
+        if (passwordfieldNew.getText().equals(passwordfieldNewAgain.getText())) {
             passwd = passwordfieldNew.getText();
-            if( applicationController.addUser(uname, passwd)){
+            if(applicationController.addUser(uname, passwd)){
                 labelErrors.setText("User added Successfully");
-                labelErrors.setTextFill(Color.RED);
+                labelErrors.setTextFill(Color.GREEN);
                 labelErrors.setVisible(true);
             }
-
         } else {
             labelErrors.setText("Passwords not matching");
             labelErrors.setTextFill(Color.RED);
