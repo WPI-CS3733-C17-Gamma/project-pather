@@ -30,10 +30,8 @@ public class DirectoryAdminControllerTest {
 
         Directory dir = new Directory(entries, null);
         Map map = new Map(dir, null);
-        DirectoryAdminController dirCon = new DirectoryAdminController(map,
-                                                                       null,
-                                                                       null,
-                                                                       null);
+        DirectoryAdminController dirCon = new DirectoryAdminController(map, null);
+
         testDirCon = dirCon;
     }
 

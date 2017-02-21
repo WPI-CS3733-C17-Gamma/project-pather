@@ -48,11 +48,11 @@ public class DirectoryAdminController extends DisplayController implements Initi
     @FXML Label helpLabel;
 
     public DirectoryAdminController(Map map,
-                                    ApplicationController applicationController,
-                                    String currentMap,
-                                    Stage stage) {
-        super(map, applicationController, currentMap);
-        this.stage = stage;
+
+                                    ApplicationController applicationController) {
+        super(map,
+              applicationController);
+
     }
 
     /** See the method {@link Map#searchEntry(String)} */
@@ -149,9 +149,6 @@ public class DirectoryAdminController extends DisplayController implements Initi
     public void addLocationToEntry(String room) {
         activeDirectoryEntry.addLocation(map.getRoomFromName(room));
     }
-
-    /* TODO Figure out if this needs to be deleted */
-    public void changeTitle(String title) {}
 
     /* Functions for Rooms */
     public List<String> searchRoom(String search) {
@@ -447,10 +444,10 @@ public class DirectoryAdminController extends DisplayController implements Initi
     }
 
     /**
-     * Switches to Mao Admin
+     * Switches to Map Admin
      */
     public void switchToMapAdmin(){
-        applicationController.createMapAdminDisplay(new Login());//TODO fix this pl0x
+        createMapAdminDisplay();
     }
 }
 

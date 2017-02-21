@@ -81,7 +81,7 @@ public class MapAdminController extends DisplayController implements Initializab
     @FXML private Button defaultKioskButton;
 
     private GraphNode tempNode ;
-
+    private String currentMap;
 
     /**
      *  Construct map admin controller
@@ -90,8 +90,9 @@ public class MapAdminController extends DisplayController implements Initializab
      * @param currentMap
      */
     public MapAdminController(app.datastore.Map map, ApplicationController applicationController, String currentMap, Stage stage) {
-        super(map, applicationController, currentMap);
+        super(map, applicationController);
         this.stage = stage;
+        this.currentMap = currentMap;
     }
 
     /**
@@ -797,7 +798,7 @@ public class MapAdminController extends DisplayController implements Initializab
      * Switches to app.datastore.Directory Admin
      */
     public void switchToDirectoryAdmin(){
-        applicationController.createDirectoryAdminDisplay(new Login());//TODO fix this pl0x
+        createDirectoryAdminDisplay();
     }
 
     /**

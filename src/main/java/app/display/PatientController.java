@@ -80,6 +80,8 @@ public class PatientController extends DisplayController implements Initializabl
     private LinkedList<Label> roomLabels = new LinkedList<>();
     private LinkedList<Minimap> minimaps = new LinkedList<>();
 
+    private String currentMap;
+
     /**
      *
      * @param map
@@ -90,7 +92,8 @@ public class PatientController extends DisplayController implements Initializabl
                              /*Kiosk kiosk, */
                              ApplicationController applicationController,
                              String currentMap){
-        super(map,applicationController, currentMap);
+        super(map,applicationController);
+        this.currentMap = currentMap;
 
         displayState = state.PATIENT_DEFAULT;
     }
@@ -201,7 +204,7 @@ public class PatientController extends DisplayController implements Initializabl
      * swtich to map admin
      */
     public void switchToMapAdmin() {
-        applicationController.createMapAdminDisplay(new Login());//*********************************
+        applicationController.createMapAdminDisplay();
     }
 
 
@@ -210,7 +213,7 @@ public class PatientController extends DisplayController implements Initializabl
      */
     public void switchToDirectoryAdmin () {
         System.out.println("SWITCHING TO DIR ADMIN");
-        applicationController.createDirectoryAdminDisplay(new Login());//************************
+        applicationController.createDirectoryAdminDisplay();
     }
 
     /**
