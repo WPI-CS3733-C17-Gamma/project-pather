@@ -45,10 +45,8 @@ public class DirectoryAdminController extends DisplayController implements Initi
     @FXML ListView<String> entryRoomOptions;
     @FXML Button entryDeleteRoom;
     @FXML ListView<String> entryCurrentLocations;
-    @FXML Label helpLabel;
 
     public DirectoryAdminController(Map map,
-
                                     ApplicationController applicationController) {
         super(map,
               applicationController);
@@ -123,22 +121,13 @@ public class DirectoryAdminController extends DisplayController implements Initi
      *  Reset the state of all the objects
      */
     public void undo () {
-        map = applicationController.reload();
+        super.undo();
         entryEditor.setVisible(false);
         searchBar.setText("");
         activeDirectoryEntry = null;
         activeRoom = null;
         activeEntryRoomSelected = null;
         filterAllEntries();
-    }
-
-    /**
-     * Preview changes without writing to the database
-     * Creates patient display without changing the database
-     */
-    public void preview () {
-        System.out.println("Preview");
-        applicationController.createPatientDisplay();
     }
 
     /**
@@ -238,19 +227,6 @@ public class DirectoryAdminController extends DisplayController implements Initi
         activeDirectoryEntry = null;
         map.addEntry(newEntry);
         return;
-    }
-
-    /**
-     * toggle help message
-     */
-    public void help () {
-        System.out.println("Here is how to use this...");
-        if (helpLabel.isVisible()) {
-            helpLabel.setVisible(false);
-        }
-        else {
-            helpLabel.setVisible(true);
-        }
     }
 
     /**

@@ -59,7 +59,6 @@ public class PatientController extends DisplayController implements Initializabl
     @FXML private ImageView imageView;
     @FXML private Label textDirectionsTextBox;
     @FXML private AnchorPane anchorPane;
-    @FXML private Label helpLabel;
 
     @FXML private AnchorPane searchAnchorPane;
     @FXML private Button help;
@@ -92,7 +91,6 @@ public class PatientController extends DisplayController implements Initializabl
      * @param currentMap
      */
     public PatientController(app.datastore.Map map,
-                             /*Kiosk kiosk, */
                              ApplicationController applicationController,
                              String currentMap){
         super(map,applicationController);
@@ -194,28 +192,6 @@ public class PatientController extends DisplayController implements Initializabl
 	    return results;
         }
         //(update) the display the list of room
-    }
-
-    /**
-     * Toggles admin display
-     */
-    public void toggleAdminWindow(){
-        adminPane.setVisible(!adminPane.isVisible());
-    }
-
-    /**
-     * swtich to map admin
-     */
-    public void switchToMapAdmin() {
-        applicationController.createMapAdminDisplay();
-    }
-
-    /**
-     * swtich to directory admin
-     */
-    public void switchToDirectoryAdmin () {
-        System.out.println("SWITCHING TO DIR ADMIN");
-        applicationController.createDirectoryAdminDisplay();
     }
 
     /**
@@ -618,16 +594,6 @@ public class PatientController extends DisplayController implements Initializabl
 
     public void logIn () {
         applicationController.createLoginAdmin();
-    }
-
-    public void help () {
-        System.out.println("Here is how to use this...");
-        if (helpLabel.isVisible()) {
-            helpLabel.setVisible(false);
-        }
-        else {
-           helpLabel.setVisible(true);
-        }
     }
 
     /**

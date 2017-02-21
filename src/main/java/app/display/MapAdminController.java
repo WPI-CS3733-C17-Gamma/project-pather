@@ -89,7 +89,10 @@ public class MapAdminController extends DisplayController implements Initializab
      * @param applicationController main controller
      * @param currentMap
      */
-    public MapAdminController(app.datastore.Map map, ApplicationController applicationController, String currentMap, Stage stage) {
+    public MapAdminController(app.datastore.Map map,
+                              ApplicationController applicationController,
+                              String currentMap,
+                              Stage stage) {
         super(map, applicationController);
         this.stage = stage;
         this.currentMap = currentMap;
@@ -148,15 +151,6 @@ public class MapAdminController extends DisplayController implements Initializab
                                     addElevator, deleteElevator);
 
         imageviewMap.setContextMenu(contextMenu);*/     //Saving for next iteration, spent a lot of time on it
-    }
-
-    /**
-     * TODO
-     * handle login with a string password
-     * @param credentials
-     */
-    public void login(String credentials){
-        //no need to worry about this for this iteration
     }
 
     /**
@@ -746,17 +740,10 @@ public class MapAdminController extends DisplayController implements Initializab
     }
 
     /**
-     * create patient display without saving to the database
-     */
-    public void preview () {
-        applicationController.createPatientDisplay();
-    }
-
-    /**
      * reload the database and reset the state of the gui
      */
     public void undo () {
-        map = applicationController.reload();
+        super.undo();
         activeRoom = null;
         selectedNode = null;
         secondaryNode = null;
