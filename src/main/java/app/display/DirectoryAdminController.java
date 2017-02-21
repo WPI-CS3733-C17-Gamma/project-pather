@@ -44,13 +44,12 @@ public class DirectoryAdminController extends DisplayController{
     @FXML ListView<String> entryRoomOptions;
     @FXML Button entryDeleteRoom;
     @FXML ListView<String> entryCurrentLocations;
-    @FXML Label helpLabel;
 
     public void init(Map map,
                      ApplicationController applicationController,
                      Stage stage) {
         super.init(map, applicationController, stage);
-                System.out.println("INIT");
+        System.out.println("INIT");
         helpLabel.setText("Welcome to the directory entry editor.\n You're an admin, you don't need help" );
 
         // get both entries
@@ -132,7 +131,7 @@ public class DirectoryAdminController extends DisplayController{
         }
     }
 
-     /**
+    /**
      * Create a new directory entry in the app.datastore.Directory object in the app.datastore.Map
      * @param name Name of entry to add
      * @param title Title of entry to add
@@ -155,22 +154,13 @@ public class DirectoryAdminController extends DisplayController{
      *  Reset the state of all the objects
      */
     public void undo () {
-        map = applicationController.reload();
+        super.undo();
         entryEditor.setVisible(false);
         searchBar.setText("");
         activeDirectoryEntry = null;
         activeRoom = null;
         activeEntryRoomSelected = null;
         filterAllEntries();
-    }
-
-    /**
-     * Preview changes without writing to the database
-     * Creates patient display without changing the database
-     */
-    public void preview () {
-        System.out.println("Preview");
-        applicationController.createPatientDisplay();
     }
 
     /**
@@ -273,19 +263,6 @@ public class DirectoryAdminController extends DisplayController{
     }
 
     /**
-     * toggle help message
-     */
-    public void help () {
-        System.out.println("Here is how to use this...");
-        if (helpLabel.isVisible()) {
-            helpLabel.setVisible(false);
-        }
-        else {
-            helpLabel.setVisible(true);
-        }
-    }
-
-    /**
      * Take the active entry and display it in the entry editor
      * @param activeEntry
      */
@@ -344,9 +321,7 @@ public class DirectoryAdminController extends DisplayController{
             System.out.println("no room selected");
             entryDeleteRoom.setVisible(false);
         }
-
     }
-
 
     /** TODO Figure out what this does
      * remove room from list
@@ -380,7 +355,6 @@ public class DirectoryAdminController extends DisplayController{
         else {
             System.out.println("no such room");
         }
-
     }
 
     /**

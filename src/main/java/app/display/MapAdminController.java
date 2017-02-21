@@ -119,29 +119,6 @@ public class MapAdminController extends DisplayController {
 
         setMap("floor3");
         drawMap();
-
-        /*contextMenu = new ContextMenu();
-        System.out.println("initialized");
-        MenuItem addNode = new MenuItem("Add Node");
-        MenuItem deleteNode = new MenuItem("Delete node");
-        MenuItem addConnection = new MenuItem("Add Connection");
-        MenuItem deleteConnection = new MenuItem("Delete Connection");
-        MenuItem addElevator = new MenuItem("Add Elevator");
-        MenuItem deleteElevator = new MenuItem("Delete Elevator");
-        contextMenu.getItems().addAll(addNode, deleteNode, new SeparatorMenuItem(),
-                                    addConnection, deleteConnection, new SeparatorMenuItem(),
-                                    addElevator, deleteElevator);
-
-        imageviewMap.setContextMenu(contextMenu);*/     //Saving for next iteration, spent a lot of time on it
-    }
-
-    /**
-     * TODO
-     * handle login with a string password
-     * @param credentials
-     */
-    public void login(String credentials){
-        //no need to worry about this for this iteration
     }
 
     /**
@@ -195,7 +172,6 @@ public class MapAdminController extends DisplayController {
         anchorpaneMap.getChildren().add(label);
         this.miscDrawnObjects.add(label);
     }
-
 
     /**
      * Draw the node at the given location.
@@ -260,6 +236,7 @@ public class MapAdminController extends DisplayController {
     public void toggleSwitchMap () {
         toggleSwitchMap(togglebuttonChangeFloor.isSelected());
     }
+
     public void toggleSwitchMap (boolean selected) {
         togglebuttonChangeFloor.setSelected(selected);
         changeFloorOptions.setVisible(selected);
@@ -268,7 +245,6 @@ public class MapAdminController extends DisplayController {
         changeFloorOptions.setItems(observOptions);
         changeFloorOptions.toFront();
     }
-
 
     /**
      * Create node from given location. Make new app.dataPrimitives.GraphNode
@@ -281,7 +257,6 @@ public class MapAdminController extends DisplayController {
         selectedNode = newNode;
         drawMap();
     }
-
 
     /**
      * Create an elevator on the given floors
@@ -359,7 +334,6 @@ public class MapAdminController extends DisplayController {
         anchorpaneMap.getChildren().add(circ);
         GraphNode graphNodeAttatched = map.getGraphNode(loc);
         drawnNodes.put(graphNodeAttatched.id, circ);
-
     }
 
     /**
@@ -419,7 +393,6 @@ public class MapAdminController extends DisplayController {
         }
     }
 
-
     /**
      *
      * @param x1
@@ -436,7 +409,6 @@ public class MapAdminController extends DisplayController {
         anchorpaneMap.getChildren().add(line);
         miscDrawnObjects.add(line);
     }
-
 
     /**
      * convert to map coords
@@ -496,7 +468,6 @@ public class MapAdminController extends DisplayController {
             activeRoom = null;
             defaultKioskButton.setStyle("-fx-background-color: gray;");
         }
-
     }
 
     /**
@@ -568,7 +539,6 @@ public class MapAdminController extends DisplayController {
         for (String floor : elevatorFloors) {
             elevatorFloorOptions.getSelectionModel().select(floor);
         }
-
     }
 
     public void selectFloor (String floor) {
@@ -672,7 +642,6 @@ public class MapAdminController extends DisplayController {
         changeState(State.NONE);
     }
 
-
     /**
      * Handle mouse event for chain add nodes
      * @param e
@@ -720,7 +689,6 @@ public class MapAdminController extends DisplayController {
         }
     }
 
-
     /**
      * Handle the mouse event for chain add node
      * @param e
@@ -747,9 +715,7 @@ public class MapAdminController extends DisplayController {
                 addConnection(secondaryNode, selectedNode);
             }
         }
-
     }
-
 
     /**
      * Handle the release event
@@ -779,29 +745,19 @@ public class MapAdminController extends DisplayController {
      * save and exit the application
      */
     public void done(){
-
         applicationController.logout();
-    }
-
-
-    /**
-     * create patient display without saving to the database
-     */
-    public void preview () {
-        applicationController.createPatientDisplay();
     }
 
     /**
      * reload the database and reset the state of the gui
      */
     public void undo () {
-        map = applicationController.reload();
+        super.undo();
         activeRoom = null;
         selectedNode = null;
         secondaryNode = null;
         drawMap();
     }
-
 
     /**
      * Change the main display map.
@@ -857,8 +813,6 @@ public class MapAdminController extends DisplayController {
         contextMenu.show(circle, event.getScreenX(), event.getScreenY());
         contextMenu.setStyle("-fx-shape:Circle ");
         contextMenu.setStyle("fx-background-image: red");
-
     }
-
 }
 
