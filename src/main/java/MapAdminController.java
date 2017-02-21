@@ -889,11 +889,25 @@ public class MapAdminController extends DisplayController implements Initializab
 //        contextMenu.setStyle("-fx-shape:Circle ");
 //        contextMenu.setStyle("fx-background-image: red");
 
+        stage.getScene().setOnDragDetected(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                stage.getScene().startFullDrag();
+            }
+        });
+        stage.getScene().setOnMouseReleased(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+//                Event.fireEvent(menu.getOwnerWindow(), new MouseEvent(MouseEvent.MOUSE_RELEASED,
+//                    event.getX(), event.getY(), event.getX(), event.getY(), MouseButton.PRIMARY, 1,
+//                    true, true, true, true, true, true, true, true, true, true, null));
+                menu.fireEvent(event.copyFor(menu,menu.getOwnerNode()));
+            }
+        });
         menu.addOption(Color.BLACK);
         menu.addOption(Color.RED);
         menu.addOption(Color.BLUE);
         menu.show(circle,event.getScreenX(), event.getScreenY());
-
     }
 
 }

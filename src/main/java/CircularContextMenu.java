@@ -2,6 +2,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.stage.Popup;
@@ -24,6 +25,14 @@ public class CircularContextMenu extends Popup {
      * Default Constructor
      */
     CircularContextMenu(){
+
+        //this.buildEventDispatchChain(chain);
+        this.addEventHandler(MouseEvent.MOUSE_RELEASED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                System.out.println("Saw release");
+            }
+        });
         this.innerRadius = 50;
         this.outerRadius = 100;
         root = new Group();
@@ -161,10 +170,18 @@ public class CircularContextMenu extends Popup {
      */
     public void show(Node nodeOwner, double anchorX, double anchorY ){
         super.show(nodeOwner, anchorX - outerRadius, anchorY - outerRadius);
+        super.requestFocus();
+    }
 
+    public void fireEvent(double screenX, double screenY){
+        for (ContextMenuElement element: menuElements) {
+            element.fireEvent(screenX, screenY);
+        }
     }
     public String toString(){
         return("This menu has: " + menuElements.size() + " options.");
     }
+
+
 }
 

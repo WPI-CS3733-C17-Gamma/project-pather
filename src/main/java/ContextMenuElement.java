@@ -17,7 +17,6 @@ public class ContextMenuElement{
     double initialAngle = 10;
     CircularContextMenu parentMenu = new CircularContextMenu();
 
-
     EventHandler<MouseEvent> onClickHandler = new EventHandler<MouseEvent>() { //Default click handler
         @Override
         public void handle(MouseEvent event) {
@@ -33,6 +32,7 @@ public class ContextMenuElement{
     };
 
 
+
     /**
      * Constructor for a button that does not do anything
      * @param icon
@@ -41,8 +41,42 @@ public class ContextMenuElement{
         this.parentMenu = parentMenu;
         this.path.addEventHandler(MouseEvent.MOUSE_CLICKED, onClickHandler);
         this.background.addEventHandler(MouseEvent.MOUSE_CLICKED, onClickHandler);
-        this.path.addEventHandler(MouseEvent.MOUSE_ENTERED, onDragHandler);
-        this.background.addEventHandler(MouseEvent.MOUSE_ENTERED, onDragHandler);
+//        this.path.setOnDragDropped(onDragHandler);
+//        this.background.setOnDragDropped(onDragHandler);
+//        this.path.setOnDragOver(onDragHandler);
+//        this.background.setOnDragOver(onDragHandler);
+//        this.path.setOnMouseDragReleased(onDragHandler);
+//        this.background.setOnMouseDragReleased(onDragHandler);
+//        this.path.setOnDragExited(onDragHandler);
+//        this.background.setOnDragExited(onDragHandler);
+//        this.path.setOnDragOver(new EventHandler<DragEvent>() {
+//            public void handle(DragEvent event) {
+//        /* data is dragged over the target */
+//        /* accept it only if it is not dragged from the same node
+//         * and if it has a string data */
+//                if (event.getGestureSource() != path ) {
+//            /* allow for both copying and moving, whatever user chooses */
+//                    event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+//                }
+//                System.out.println("lol");
+//                event.consume();
+//            }
+//        });
+//        this.background.setOnDragOver(new EventHandler<DragEvent>() {
+//            public void handle(DragEvent event) {
+//        /* data is dragged over the target */
+//        /* accept it only if it is not dragged from the same node
+//         * and if it has a string data */
+//                if (event.getGestureSource() != background ) {
+//            /* allow for both copying and moving, whatever user chooses */
+//                    event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+//                }
+//                System.out.println("lol");
+//                event.consume();
+//            }
+//        });
+        this.path.addEventHandler(MouseEvent.MOUSE_RELEASED, onDragHandler);
+        this.background.addEventHandler(MouseEvent.MOUSE_RELEASED, onDragHandler);
         this.icon = icon;
 
     }
@@ -62,6 +96,7 @@ public class ContextMenuElement{
             this.path.addEventHandler(MouseEvent.MOUSE_RELEASED, onDragHandler);
             this.background.addEventHandler(MouseEvent.MOUSE_RELEASED, onDragHandler);}
         this.icon = icon;
+
 
     }
 
@@ -130,5 +165,13 @@ public class ContextMenuElement{
         background.setFill(Color.rgb(255, 255, 255, 0));
     }
 
-
+    public void fireEvent(double screenX, double screenY){
+//        double x = screenX - path.getScene().getWindow().getX();
+//        double y = screenY - path.getScene().getWindow().getY();
+//        System.out.println("Screenx: " +screenX + " ScreenY: " + screenY);
+//        System.out.println("x: " + x + " y: " + y);
+//        System.out.println(path.getLayoutX());
+//        if (path.contains(x, y))
+//            System.out.println("yep" + num);
+    }
 }
