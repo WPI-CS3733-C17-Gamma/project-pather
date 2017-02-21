@@ -33,7 +33,7 @@ import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class MapAdminController extends DisplayController implements Initializable {
+public class MapAdminController extends DisplayController {
 
     /**
      * Keep track of the state of the system
@@ -86,23 +86,10 @@ public class MapAdminController extends DisplayController implements Initializab
      *  Construct map admin controller
      * @param map all the data for the program
      * @param applicationController main controller
-     * @param currentMap
      */
-    public MapAdminController(app.datastore.Map map, ApplicationController applicationController, String currentMap, Stage stage) {
-        super(map, applicationController);
-        this.stage = stage;
-        this.currentMap = currentMap;
-    }
+    public void init(app.datastore.Map map, ApplicationController applicationController, Stage stage) {
+        super.init(map, applicationController, stage);
 
-    /**
-     * Called when the javaFX pane finishes loading
-     * put startup stuff in here, not in the constructor
-     * (The FXML elements are null in the constructor until this method loads)
-     * @param location
-     * @param resources
-     */
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
         // Add states to toggles
         togglebuttonAddNode.setUserData(State.ADD_NODES);
         togglebuttonAddConnections.setUserData(State.ADD_CONNECTION);
@@ -146,9 +133,6 @@ public class MapAdminController extends DisplayController implements Initializab
                                     addElevator, deleteElevator);
 
         imageviewMap.setContextMenu(contextMenu);*/     //Saving for next iteration, spent a lot of time on it
-
-
-
     }
 
     /**
@@ -832,14 +816,6 @@ public class MapAdminController extends DisplayController implements Initializab
             elevatorFloors.add(loc);
         }
         drawMap();
-        changeFloorOptions.toFront();
-    }
-
-    /**
-     * Switches to app.datastore.Directory Admin
-     */
-    public void switchToDirectoryAdmin(){
-        createDirectoryAdminDisplay();
     }
 
     /**

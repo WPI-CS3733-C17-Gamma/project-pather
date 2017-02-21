@@ -8,16 +8,15 @@ import javafx.stage.Stage;
 public class DisplayController {
 
     Map map;
-    //Kiosk kiosk;
     ApplicationController applicationController;
+    Stage stage;
 
-
-    public DisplayController(Map map,
-                             /*Kiosk kiosk, */
-                             ApplicationController applicationController){
+    public void init(Map map,
+                     ApplicationController applicationController,
+                     Stage stage){
         this.map = map;
         this.applicationController = applicationController;
-
+        this.stage = stage;
     }
 
     void update(){
@@ -30,16 +29,8 @@ public class DisplayController {
         return applicationController.login(uname, passwd);
     }
 
-    void createDirectoryAdminDisplay(){
-        applicationController.createDirectoryAdminDisplay();
-    }
-
-    void createAdminTools(){
-        applicationController.createAdminTools();
-    }
-
-    void createMapAdminDisplay(){
-        applicationController.createMapAdminDisplay();
+    void createAdminDisplay(){
+        applicationController.createAdminDisplay();
     }
 
     void logout(){

@@ -30,6 +30,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Font;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.net.URL;
@@ -88,11 +89,11 @@ public class PatientController extends DisplayController implements Initializabl
      * @param applicationController
      * @param currentMap
      */
-    public PatientController(app.datastore.Map map,
-                             /*Kiosk kiosk, */
-                             ApplicationController applicationController,
-                             String currentMap){
-        super(map,applicationController);
+    public void init(app.datastore.Map map,
+                ApplicationController applicationController,
+                Stage stage,
+                String currentMap){
+        super.init(map,applicationController, stage);
         this.currentMap = currentMap;
 
         displayState = state.PATIENT_DEFAULT;
@@ -198,22 +199,6 @@ public class PatientController extends DisplayController implements Initializabl
      */
     public void toggleAdminWindow(){
         adminPane.setVisible(!adminPane.isVisible());
-    }
-
-    /**
-     * swtich to map admin
-     */
-    public void switchToMapAdmin() {
-        applicationController.createMapAdminDisplay();
-    }
-
-
-    /**
-     * swtich to directory admin
-     */
-    public void switchToDirectoryAdmin () {
-        System.out.println("SWITCHING TO DIR ADMIN");
-        applicationController.createDirectoryAdminDisplay();
     }
 
     /**

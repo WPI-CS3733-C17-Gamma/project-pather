@@ -28,12 +28,11 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
-public class DirectoryAdminController extends DisplayController implements Initializable{
+public class DirectoryAdminController extends DisplayController{
 /*    DirectoryAdminDisplay display;*/
     DirectoryEntry activeDirectoryEntry;
     Room activeRoom;
     String activeEntryRoomSelected;
-    Stage stage;
 
     // FXML stuff
     @FXML TextField searchBar;
@@ -47,12 +46,45 @@ public class DirectoryAdminController extends DisplayController implements Initi
     @FXML ListView<String> entryCurrentLocations;
     @FXML Label helpLabel;
 
-    public DirectoryAdminController(Map map,
+    public void init(Map map,
+                     ApplicationController applicationController,
+                     Stage stage) {
+        super.init(map, applicationController, stage);
+                System.out.println("INIT");
+        helpLabel.setText("Welcome to the directory entry editor.\n You're an admin, you don't need help" );
 
-                                    ApplicationController applicationController) {
-        super(map,
-              applicationController);
+        // get both entries
+        List<String> entryList = map.getAllEntries();
+        entryList.sort(String::compareTo);
+        ObservableList<String> allEntries = FXCollections.observableList(entryList);
+        listEntries.setItems(allEntries);
+        listEntries.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                String selectedString = listEntries.getSelectionModel().getSelectedItem();
+                selectEntry(selectedString);
+            }
+        });
 
+        // add click handler for the dropdown list of poossible locations
+        entryRoomOptions.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                String selectedString = entryRoomOptions.getSelectionModel().getSelectedItem();
+                entryAddRoom(selectedString);
+            }
+        });
+        // add click handlers to the list of currentRooms
+        entryCurrentLocations.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                System.out.println("remove entry");
+                String selectedString = entryCurrentLocations.getSelectionModel().getSelectedItem();
+                activeEntryRoomSelected = selectedString;
+                entryDeleteRoom.setVisible(true);
+                // entryRemoveRoom(selectedString);
+            }
+        });
     }
 
     /** See the method {@link Map#searchEntry(String)} */
@@ -398,56 +430,4 @@ public class DirectoryAdminController extends DisplayController implements Initi
     public void logout () {
         applicationController.logout();
     }
-
-    /**
-     * TODO Figure out what this does
-     * @param location
-     * @param resources
-     */
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        System.out.println("INIT");
-        helpLabel.setText("Welcome to the directory entry editor.\n You're an admin, you don't need help" );
-
-        // get both entries
-        List<String> entryList = map.getAllEntries();
-        entryList.sort(String::compareTo);
-        ObservableList<String> allEntries = FXCollections.observableList(entryList);
-        listEntries.setItems(allEntries);
-        listEntries.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                String selectedString = listEntries.getSelectionModel().getSelectedItem();
-                selectEntry(selectedString);
-            }
-        });
-
-        // add click handler for the dropdown list of poossible locations
-        entryRoomOptions.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                String selectedString = entryRoomOptions.getSelectionModel().getSelectedItem();
-                entryAddRoom(selectedString);
-            }
-        });
-        // add click handlers to the list of currentRooms
-        entryCurrentLocations.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                System.out.println("remove entry");
-                String selectedString = entryCurrentLocations.getSelectionModel().getSelectedItem();
-                activeEntryRoomSelected = selectedString;
-                entryDeleteRoom.setVisible(true);
-                // entryRemoveRoom(selectedString);
-            }
-        });
-    }
-
-    /**
-     * Switches to Map Admin
-     */
-    public void switchToMapAdmin(){
-        createMapAdminDisplay();
-    }
 }
-
