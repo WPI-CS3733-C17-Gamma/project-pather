@@ -3,6 +3,7 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.paint.Paint;
+import javafx.scene.shape.Circle;
 import javafx.stage.Popup;
 
 import java.util.LinkedList;
@@ -18,6 +19,7 @@ public class CircularContextMenu extends Popup {
     private List<ContextMenuElement> menuElements = new LinkedList<>();
     Group root;
     Scene scene;
+    Circle circ;
     /**
      * Default Constructor
      */
@@ -26,6 +28,7 @@ public class CircularContextMenu extends Popup {
         this.outerRadius = 100;
         root = new Group();
         scene = new Scene(root,outerRadius,outerRadius);
+        setAutoHide(true);
     }
 
     /**
@@ -38,6 +41,7 @@ public class CircularContextMenu extends Popup {
         this.outerRadius = outerRadius;
         root = new Group();
         scene = new Scene(root,outerRadius,outerRadius);
+        setAutoHide(true);
     }
 
     /**
@@ -52,7 +56,7 @@ public class CircularContextMenu extends Popup {
         double currentAngle = 0;
         setAutoHide(true);
 
-        menuElements.add(new ContextMenuElement(image, clickHandler, dragHandler));
+        menuElements.add(new ContextMenuElement(image, clickHandler, dragHandler, this));
         getContent().removeAll();
 
         for(ContextMenuElement element:menuElements) {//redraw elements when a new one is added
@@ -78,7 +82,7 @@ public class CircularContextMenu extends Popup {
         double angle = (double)360 / (double)(size+1);
         double currentAngle = 0.0;
 
-        menuElements.add(new ContextMenuElement(image));
+        menuElements.add(new ContextMenuElement(image, this));
         getContent().clear();
 
         for(ContextMenuElement element:menuElements) {
@@ -157,6 +161,7 @@ public class CircularContextMenu extends Popup {
      */
     public void show(Node nodeOwner, double anchorX, double anchorY ){
         super.show(nodeOwner, anchorX - outerRadius, anchorY - outerRadius);
+
     }
     public String toString(){
         return("This menu has: " + menuElements.size() + " options.");

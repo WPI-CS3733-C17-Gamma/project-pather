@@ -50,6 +50,7 @@ public class MapAdminController extends DisplayController implements Initializab
     HashMap<Long, Shape> drawnNodes = new HashMap<>();
     List<Shape> drawnLines = new ArrayList<>();
     Stage stage;
+    CircularContextMenu menu = new CircularContextMenu();
 
     //For the context menu (right click menu)
     //ContextMenu contextMenu;
@@ -608,6 +609,7 @@ public class MapAdminController extends DisplayController implements Initializab
      * @param m
      */
     public void isPressed(MouseEvent m) {
+        menu.hide();
         if (roomName.isFocused()){
             anchorpaneMap.requestFocus(); //deselects textbox if click outside
         }
@@ -847,8 +849,6 @@ public class MapAdminController extends DisplayController implements Initializab
         applicationController.createDirectoryAdminDisplay(new Login());//TODO fix this pl0x
     }
 
-
-    CircularContextMenu menu = new CircularContextMenu();
     /**
      * Opens ContextMenu
      */

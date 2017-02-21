@@ -18,17 +18,18 @@ public class ContextMenuElement{
     CircularContextMenu parentMenu = new CircularContextMenu();
 
 
-
     EventHandler<MouseEvent> onClickHandler = new EventHandler<MouseEvent>() { //Default click handler
         @Override
         public void handle(MouseEvent event) {
-            System.out.println("This button has no Event");
+            System.out.println("This button has no click event");
         }
     };
-    EventHandler<MouseEvent>  onDragHandler = new EventHandler<MouseEvent>() { //Default drag event handler
+    EventHandler onDragHandler = new EventHandler<MouseEvent>() { //Default drag event handler
         @Override
         public void handle(MouseEvent event) {
-            System.out.println("This button has no Event"); }
+            System.out.println("This button has no release event");
+        parentMenu.hide();
+        }
     };
 
 
@@ -36,11 +37,12 @@ public class ContextMenuElement{
      * Constructor for a button that does not do anything
      * @param icon
      */
-    ContextMenuElement( Paint icon){
+    ContextMenuElement( Paint icon, CircularContextMenu parentMenu){
+        this.parentMenu = parentMenu;
         this.path.addEventHandler(MouseEvent.MOUSE_CLICKED, onClickHandler);
         this.background.addEventHandler(MouseEvent.MOUSE_CLICKED, onClickHandler);
-        this.path.addEventHandler(MouseEvent.MOUSE_RELEASED, onDragHandler);
-        this.background.addEventHandler(MouseEvent.MOUSE_RELEASED, onDragHandler);
+        this.path.addEventHandler(MouseEvent.MOUSE_ENTERED, onDragHandler);
+        this.background.addEventHandler(MouseEvent.MOUSE_ENTERED, onDragHandler);
         this.icon = icon;
 
     }
@@ -50,7 +52,8 @@ public class ContextMenuElement{
      * @param icon
      * @param onClickHandler
      */
-    ContextMenuElement (Paint icon, EventHandler onClickHandler, EventHandler onDragHandler){
+    ContextMenuElement (Paint icon, EventHandler onClickHandler, EventHandler onDragHandler, CircularContextMenu parentMenu){
+        this.parentMenu = parentMenu;
         this.onClickHandler = onClickHandler;
         if (onClickHandler != null) {
             this.path.addEventHandler(MouseEvent.MOUSE_CLICKED, onClickHandler);
