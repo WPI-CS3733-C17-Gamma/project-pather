@@ -49,6 +49,8 @@ public class MapAdminController extends DisplayController implements Initializab
     // keep track of the objects that have been drawn on the screen
     HashMap<Long, Shape> drawnNodes = new HashMap<>();
     List<Shape> drawnLines = new ArrayList<>();
+    CircularContextMenu nodeMenu = new CircularContextMenu();
+    CircularContextMenu screenMenu = new CircularContextMenu();
     Stage stage;
 
     //For the context menu (right click menu)
@@ -81,6 +83,8 @@ public class MapAdminController extends DisplayController implements Initializab
     public MapAdminController(Map map, ApplicationController applicationController, String currentMap, Stage stage) {
         super(map, applicationController, currentMap);
         this.stage = stage;
+        screenMenu.setAutoHide(true);
+        nodeMenu.setAutoHide(true);
     }
 
     /**
@@ -514,6 +518,14 @@ public class MapAdminController extends DisplayController implements Initializab
                 elevatorFloorOptions.setVisible(true);
                 displayElevatorOptions();
                 break;
+            case NONE:
+                togglebuttonChainAdd.setSelected(false);
+                togglebuttonAddConnections.setSelected(false);
+                togglebuttonAddNode.setSelected(false);
+                togglebuttonAddElevator.setSelected(false);
+                elevatorFloorOptions.setVisible(false);
+                break;
+
         }
         toggleSwitchMap(false);
 
@@ -590,6 +602,7 @@ public class MapAdminController extends DisplayController implements Initializab
      * @param e Mouse event generated the container
      */
     public void handleMouseEventDefault (MouseEvent e) {
+        System.out.println("hi");
         GraphNode nearby = nearbyNode(e);
         if (nearby != null) {
             secondaryNode = selectedNode;
@@ -604,26 +617,27 @@ public class MapAdminController extends DisplayController implements Initializab
     public void handleDragEvent (MouseEvent e) {
         switch (currentState) {
             case NONE:
-                if(selectedNode != null) {
+                if((selectedNode != null) && e.isPrimaryButtonDown()) {
                     currentState = State.DRAG_NODE;
                 }
                 break;
+            case DRAG_NODE:
+                // convert from image --> graph --> anchor pane and draw circle there
+                FloorPoint mousePoint = mouseToGraph(e);
+                FloorPoint imagePoint = graphToImage(mousePoint, imageviewMap);
+
+                // Do not  points that would fall outside of the map
+                if(mousePoint.x > 999 || mousePoint.x < 1 ||
+                    mousePoint.y > 999 || mousePoint.y < 1) {
+                    return ;
+                }
+
+                if(selectedNode != null) {
+                    selectedNode.location = mouseToGraph(e);
+                }
+                // just move the point every drag event
         }
 
-        // convert from image --> gapph --> anchor pane and draw circle there
-        FloorPoint mousePoint = mouseToGraph(e);
-        FloorPoint imagePoint = graphToImage(mousePoint, imageviewMap);
-
-        // Do not  points that would fall outside of the map
-        if(mousePoint.x > 999 || mousePoint.x < 1 ||
-            mousePoint.y > 999 || mousePoint.y < 1) {
-            return ;
-        }
-
-        if(selectedNode != null) {
-            selectedNode.location = mouseToGraph(e);
-        }
-        // just move the point every drag event
         drawMap();
     }
 
@@ -788,12 +802,10 @@ public class MapAdminController extends DisplayController implements Initializab
         applicationController.createDirectoryAdminDisplay(new Login());//TODO fix this pl0x
     }
 
-
-    CircularContextMenu menu = new CircularContextMenu();
     /**
      * Opens ContextMenu
      */
-    public void showContextMenu(ContextMenuEvent event){
+//    public void showContextMenu(ContextMenuEvent event){
 
 //        ContextMenu contextMenu = new ContextMenu();
 //
@@ -823,17 +835,46 @@ public class MapAdminController extends DisplayController implements Initializab
 //            }
 //        });
 //        contextMenu.getItems().addAll(item1, item2);
-        Shape circle = new Circle(event.getX(), event.getY(), 10);
-        anchorpaneMap.getChildren().add(circle);
 //        contextMenu.setId("MapAdminContextMenu");
 //        contextMenu.show(circle, event.getScreenX(), event.getScreenY());
 //        contextMenu.setStyle("-fx-shape:Circle ");
 //        contextMenu.setStyle("fx-background-image: red");
 
-        menu.addOption(Color.BLACK);
-        menu.addOption(Color.RED);
-        menu.addOption(Color.BLUE);
-        menu.show(circle,event.getScreenX(), event.getScreenY());
+    public void showContextMenu(ContextMenuEvent event){
+        if(selectedNode == null){
+            nodeMenu.hide();
+            Shape circle = new Circle(event.getX(), event.getY(), 10);
+            anchorpaneMap.getChildren().add(circle);
+            nodeMenu.addOption(Color.BLACK);
+            nodeMenu.addOption(Color.RED);
+            nodeMenu.addOption(Color.BLUE);
+            nodeMenu.show(circle,event.getScreenX(), event.getScreenY());
+        }else{
+            screenMenu.hide();
+            Shape circle = new Circle(event.getX(), event.getY(), 10);
+            anchorpaneMap.getChildren().add(circle);
+            screenMenu.addOption(Color.WHITE);
+            screenMenu.addOption(Color.RED);
+            screenMenu.addOption(Color.BLUE);
+            screenMenu.show(circle,event.getScreenX(), event.getScreenY());
+        }
+
+
+        stage.getScene().setOnDragDetected(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                stage.getScene().startFullDrag();
+            }
+        });
+        stage.getScene().setOnMouseReleased(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+//                Event.fireEvent(menu.getOwnerWindow(), new MouseEvent(MouseEvent.MOUSE_RELEASED,
+//                    event.getX(), event.getY(), event.getX(), event.getY(), MouseButton.PRIMARY, 1,
+//                    true, true, true, true, true, true, true, true, true, true, null));
+                nodeMenu.fireEvent2(event.copyFor(nodeMenu,nodeMenu.getOwnerNode()));
+            }
+        });
 
     }
 

@@ -1,3 +1,4 @@
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
@@ -17,28 +18,64 @@ public class ContextMenuElement{
     double initialAngle = 10;
     CircularContextMenu parentMenu = new CircularContextMenu();
 
-
-
     EventHandler<MouseEvent> onClickHandler = new EventHandler<MouseEvent>() { //Default click handler
         @Override
         public void handle(MouseEvent event) {
-            System.out.println("This button has no Event");
+            System.out.println("This button has no click event");
         }
     };
-    EventHandler<MouseEvent>  onDragHandler = new EventHandler<MouseEvent>() { //Default drag event handler
+    EventHandler onDragHandler = new EventHandler<MouseEvent>() { //Default drag event handler
         @Override
         public void handle(MouseEvent event) {
-            System.out.println("This button has no Event"); }
+            System.out.println("This button has no release event");
+        parentMenu.hide();
+        }
     };
+
 
 
     /**
      * Constructor for a button that does not do anything
      * @param icon
      */
-    ContextMenuElement( Paint icon){
+    ContextMenuElement( Paint icon, CircularContextMenu parentMenu){
+        this.parentMenu = parentMenu;
         this.path.addEventHandler(MouseEvent.MOUSE_CLICKED, onClickHandler);
         this.background.addEventHandler(MouseEvent.MOUSE_CLICKED, onClickHandler);
+//        this.path.setOnDragDropped(onDragHandler);
+//        this.background.setOnDragDropped(onDragHandler);
+//        this.path.setOnDragOver(onDragHandler);
+//        this.background.setOnDragOver(onDragHandler);
+//        this.path.setOnMouseDragReleased(onDragHandler);
+//        this.background.setOnMouseDragReleased(onDragHandler);
+//        this.path.setOnDragExited(onDragHandler);
+//        this.background.setOnDragExited(onDragHandler);
+//        this.path.setOnDragOver(new EventHandler<DragEvent>() {
+//            public void handle(DragEvent event) {
+//        /* data is dragged over the target */
+//        /* accept it only if it is not dragged from the same node
+//         * and if it has a string data */
+//                if (event.getGestureSource() != path ) {
+//            /* allow for both copying and moving, whatever user chooses */
+//                    event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+//                }
+//                System.out.println("lol");
+//                event.consume();
+//            }
+//        });
+//        this.background.setOnDragOver(new EventHandler<DragEvent>() {
+//            public void handle(DragEvent event) {
+//        /* data is dragged over the target */
+//        /* accept it only if it is not dragged from the same node
+//         * and if it has a string data */
+//                if (event.getGestureSource() != background ) {
+//            /* allow for both copying and moving, whatever user chooses */
+//                    event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+//                }
+//                System.out.println("lol");
+//                event.consume();
+//            }
+//        });
         this.path.addEventHandler(MouseEvent.MOUSE_RELEASED, onDragHandler);
         this.background.addEventHandler(MouseEvent.MOUSE_RELEASED, onDragHandler);
         this.icon = icon;
@@ -50,7 +87,8 @@ public class ContextMenuElement{
      * @param icon
      * @param onClickHandler
      */
-    ContextMenuElement (Paint icon, EventHandler onClickHandler, EventHandler onDragHandler){
+    ContextMenuElement (Paint icon, EventHandler onClickHandler, EventHandler onDragHandler, CircularContextMenu parentMenu){
+        this.parentMenu = parentMenu;
         this.onClickHandler = onClickHandler;
         if (onClickHandler != null) {
             this.path.addEventHandler(MouseEvent.MOUSE_CLICKED, onClickHandler);
@@ -59,6 +97,7 @@ public class ContextMenuElement{
             this.path.addEventHandler(MouseEvent.MOUSE_RELEASED, onDragHandler);
             this.background.addEventHandler(MouseEvent.MOUSE_RELEASED, onDragHandler);}
         this.icon = icon;
+
 
     }
 
@@ -127,5 +166,16 @@ public class ContextMenuElement{
         background.setFill(Color.rgb(255, 255, 255, 0));
     }
 
-
+    public void fireEvent(Event event){
+//        MouseEvent mouseEvent = (MouseEvent) event;
+//        double x = mouseEvent.getScreenX();
+//        double y = mouseEvent.getScreenY();
+//        x = x - this.parentMenu.getX();
+//        y = y - this.parentMenu.getY();
+//        System.out.println("x: " + x + "y: " + y);
+//        System.out.println(path.getLayoutX() + " : " + path.getLayoutY());
+//        if(path.contains(x,y))
+            path.fireEvent(event);
+//        System.out.println("works");
+    }
 }

@@ -1,8 +1,11 @@
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Paint;
+import javafx.scene.shape.Circle;
 import javafx.stage.Popup;
 
 import java.util.LinkedList;
@@ -18,14 +21,24 @@ public class CircularContextMenu extends Popup {
     private List<ContextMenuElement> menuElements = new LinkedList<>();
     Group root;
     Scene scene;
+    Circle circ;
     /**
      * Default Constructor
      */
     CircularContextMenu(){
+
+        //this.buildEventDispatchChain(chain);
+        this.addEventHandler(MouseEvent.MOUSE_RELEASED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                System.out.println("Saw release");
+            }
+        });
         this.innerRadius = 50;
         this.outerRadius = 100;
         root = new Group();
         scene = new Scene(root,outerRadius,outerRadius);
+        setAutoHide(true);
     }
 
     /**
@@ -38,6 +51,7 @@ public class CircularContextMenu extends Popup {
         this.outerRadius = outerRadius;
         root = new Group();
         scene = new Scene(root,outerRadius,outerRadius);
+        setAutoHide(true);
     }
 
     /**
@@ -52,7 +66,7 @@ public class CircularContextMenu extends Popup {
         double currentAngle = 0;
         setAutoHide(true);
 
-        menuElements.add(new ContextMenuElement(image, clickHandler, dragHandler));
+        menuElements.add(new ContextMenuElement(image, clickHandler, dragHandler, this));
         getContent().removeAll();
 
         for(ContextMenuElement element:menuElements) {//redraw elements when a new one is added
@@ -78,7 +92,7 @@ public class CircularContextMenu extends Popup {
         double angle = (double)360 / (double)(size+1);
         double currentAngle = 0.0;
 
-        menuElements.add(new ContextMenuElement(image));
+        menuElements.add(new ContextMenuElement(image, this));
         getContent().clear();
 
         for(ContextMenuElement element:menuElements) {
@@ -157,9 +171,25 @@ public class CircularContextMenu extends Popup {
      */
     public void show(Node nodeOwner, double anchorX, double anchorY ){
         super.show(nodeOwner, anchorX - outerRadius, anchorY - outerRadius);
+        super.requestFocus();
+    }
+
+    public void fireEvent2(Event event){
+                MouseEvent mouseEvent = (MouseEvent) event;
+        double x = mouseEvent.getScreenX();
+        double y = mouseEvent.getScreenY();
+        x = x - this.getX();
+        y = y - this.getY();
+        System.out.println("x: " + x + "y: " + y);
+        for(ContextMenuElement element:menuElements){
+            System.out.println(element.path.getLayoutX() + " : " + element.path.getLayoutY());
+            element.path.fireEvent(event.copyFor(this,element.path));
+        }
     }
     public String toString(){
         return("This menu has: " + menuElements.size() + " options.");
     }
+
+
 }
 
