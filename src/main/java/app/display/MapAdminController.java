@@ -134,6 +134,7 @@ public class MapAdminController extends DisplayController implements Initializab
         setMap("floor3");
         drawMap();
 
+        //TODO: Determine if this should be deleted
         /*contextMenu = new ContextMenu();
         System.out.println("initialized");
         MenuItem addNode = new MenuItem("Add Node");
@@ -147,9 +148,6 @@ public class MapAdminController extends DisplayController implements Initializab
                                     addElevator, deleteElevator);
 
         imageviewMap.setContextMenu(contextMenu);*/     //Saving for next iteration, spent a lot of time on it
-
-
-
     }
 
     /**
@@ -178,7 +176,6 @@ public class MapAdminController extends DisplayController implements Initializab
             .forEach(node -> drawNode(node, imageviewMap));
         highlightSelected();
     }
-
 
     /**
      * Draw the node at the given location.
@@ -236,6 +233,7 @@ public class MapAdminController extends DisplayController implements Initializab
     public void toggleSwitchMap () {
         toggleSwitchMap(togglebuttonChangeFloor.isSelected());
     }
+
     public void toggleSwitchMap (boolean selected) {
         togglebuttonChangeFloor.setSelected(selected);
         changeFloorOptions.setVisible(selected);
@@ -244,7 +242,6 @@ public class MapAdminController extends DisplayController implements Initializab
         changeFloorOptions.setItems(observOptions);
         changeFloorOptions.toFront();
     }
-
 
     /**
      * Create node from given location. Make new app.dataPrimitives.GraphNode
@@ -257,7 +254,6 @@ public class MapAdminController extends DisplayController implements Initializab
         selectedNode = newNode;
         drawMap();
     }
-
 
     /**
      * Create an elevator on the given floors
@@ -335,7 +331,6 @@ public class MapAdminController extends DisplayController implements Initializab
         anchorpaneMap.getChildren().add(circ);
         GraphNode graphNodeAttatched = map.getGraphNode(loc);
         drawnNodes.put(graphNodeAttatched.id, circ);
-
     }
 
     /**
@@ -395,7 +390,6 @@ public class MapAdminController extends DisplayController implements Initializab
         }
     }
 
-
     /**
      *
      * @param x1
@@ -412,7 +406,6 @@ public class MapAdminController extends DisplayController implements Initializab
         anchorpaneMap.getChildren().add(line);
         drawnLines.add(line);
     }
-
 
     /**
      * convert to map coords
@@ -472,7 +465,6 @@ public class MapAdminController extends DisplayController implements Initializab
             activeRoom = null;
             defaultKioskButton.setStyle("-fx-background-color: gray;");
         }
-
     }
 
     /**
@@ -544,7 +536,6 @@ public class MapAdminController extends DisplayController implements Initializab
         for (String floor : elevatorFloors) {
             elevatorFloorOptions.getSelectionModel().select(floor);
         }
-
     }
 
     public void selectFloor (String floor) {
@@ -648,7 +639,6 @@ public class MapAdminController extends DisplayController implements Initializab
         changeState(State.NONE);
     }
 
-
     /**
      * Handle mouse event for chain add nodes
      * @param e
@@ -696,7 +686,6 @@ public class MapAdminController extends DisplayController implements Initializab
         }
     }
 
-
     /**
      * Handle the mouse event for chain add node
      * @param e
@@ -723,9 +712,7 @@ public class MapAdminController extends DisplayController implements Initializab
                 addConnection(secondaryNode, selectedNode);
             }
         }
-
     }
-
 
     /**
      * Handle the release event
@@ -755,10 +742,8 @@ public class MapAdminController extends DisplayController implements Initializab
      * save and exit the application
      */
     public void done(){
-
         applicationController.logout();
     }
-
 
     /**
      * create patient display without saving to the database
@@ -777,7 +762,6 @@ public class MapAdminController extends DisplayController implements Initializab
         secondaryNode = null;
         drawMap();
     }
-
 
     /**
      * Change the main display map.
@@ -841,8 +825,6 @@ public class MapAdminController extends DisplayController implements Initializab
         contextMenu.show(circle, event.getScreenX(), event.getScreenY());
         contextMenu.setStyle("-fx-shape:Circle ");
         contextMenu.setStyle("fx-background-image: red");
-
     }
-
 }
 
