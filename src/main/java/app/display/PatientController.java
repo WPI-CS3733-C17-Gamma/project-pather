@@ -82,6 +82,9 @@ public class PatientController extends DisplayController implements Initializabl
 
     private String currentMap;
 
+    boolean selected = false;
+    CircularContextMenu menu = new CircularContextMenu();
+
     /**
      *
      * @param map
@@ -206,7 +209,6 @@ public class PatientController extends DisplayController implements Initializabl
     public void switchToMapAdmin() {
         applicationController.createMapAdminDisplay();
     }
-
 
     /**
      * swtich to directory admin
@@ -445,6 +447,7 @@ public class PatientController extends DisplayController implements Initializabl
         displayMinipaths();
         minimaps.getFirst().map.setEffect(new DropShadow());
     }
+
     /**
      * Display the given sub path over the given image view
      * Addds all the drawn objects to a list of drawn objects
@@ -524,6 +527,7 @@ public class PatientController extends DisplayController implements Initializabl
         anchorPane.getChildren().add(label);
         this.drawnObjects.add(label);
     }
+
     /**
      * given local point, draw the starting point of a sub path
      * @param localPoint
@@ -576,7 +580,6 @@ public class PatientController extends DisplayController implements Initializabl
         return line;
     }
 
-
     public void textDirection(){
         if (textDirectionsTextBox.isVisible()){
             displayState = state.PATIENT_SEARCH;
@@ -593,7 +596,6 @@ public class PatientController extends DisplayController implements Initializabl
             displayTextDirections(currentPath.get(currentSubPath).getPath(), nextFloor);
         }
     }
-
 
     /**
      * Function to get textual directions and print it on screen
@@ -614,8 +616,6 @@ public class PatientController extends DisplayController implements Initializabl
         return;
     }
 
-    boolean selected = false;
-    CircularContextMenu menu = new CircularContextMenu();
     public void logIn () {
         applicationController.createLoginAdmin();
     }
@@ -629,6 +629,7 @@ public class PatientController extends DisplayController implements Initializabl
            helpLabel.setVisible(true);
         }
     }
+
     /**
      * initialize the fxml components etc
      * @param location
@@ -665,6 +666,7 @@ public class PatientController extends DisplayController implements Initializabl
         anchorPane.setScaleX(anchorPane.getScaleX()*newSceneWidth.doubleValue()/oldSceneWidth.doubleValue());
         //imageView.setScaleX(imageView.getScaleX()*newSceneWidth.doubleValue()/oldSceneWidth.doubleValue());
     }
+
     /**
      * Resizes Window's Height
      * @param oldSceneHeight
@@ -706,10 +708,7 @@ public class PatientController extends DisplayController implements Initializabl
                 current.setMouseTransparent(true);
                 labels.add(current);
             }
-
-
         }
-
         return labels;
     }
 
