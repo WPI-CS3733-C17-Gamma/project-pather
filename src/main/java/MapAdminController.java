@@ -50,7 +50,6 @@ public class MapAdminController extends DisplayController implements Initializab
     HashMap<Long, Shape> drawnNodes = new HashMap<>();
     List<Shape> drawnLines = new ArrayList<>();
     Stage stage;
-    CircularContextMenu menu = new CircularContextMenu();
 
     //For the context menu (right click menu)
     //ContextMenu contextMenu;
@@ -574,6 +573,7 @@ public class MapAdminController extends DisplayController implements Initializab
                 togglebuttonAddElevator.setSelected(false);
                 elevatorFloorOptions.setVisible(false);
                 break;
+
         }
         toggleSwitchMap(false);
 
@@ -609,7 +609,6 @@ public class MapAdminController extends DisplayController implements Initializab
      * @param m
      */
     public void isPressed(MouseEvent m) {
-        menu.hide();
         if (roomName.isFocused()){
             anchorpaneMap.requestFocus(); //deselects textbox if click outside
         }
@@ -651,6 +650,7 @@ public class MapAdminController extends DisplayController implements Initializab
      * @param e Mouse event generated the container
      */
     public void handleMouseEventDefault (MouseEvent e) {
+        System.out.println("hi");
         GraphNode nearby = nearbyNode(e);
         if (nearby != null) {
             secondaryNode = selectedNode;
@@ -665,26 +665,27 @@ public class MapAdminController extends DisplayController implements Initializab
     public void handleDragEvent (MouseEvent e) {
         switch (currentState) {
             case NONE:
-                if(selectedNode != null) {
+                if((selectedNode != null) && e.isPrimaryButtonDown()) {
                     currentState = State.DRAG_NODE;
                 }
                 break;
+            case DRAG_NODE:
+                // convert from image --> graph --> anchor pane and draw circle there
+                FloorPoint mousePoint = mouseToGraph(e);
+                FloorPoint imagePoint = graphToImage(mousePoint, imageviewMap);
+
+                // Do not  points that would fall outside of the map
+                if(mousePoint.x > 999 || mousePoint.x < 1 ||
+                    mousePoint.y > 999 || mousePoint.y < 1) {
+                    return ;
+                }
+
+                if(selectedNode != null) {
+                    selectedNode.location = mouseToGraph(e);
+                }
+                // just move the point every drag event
         }
 
-        // convert from image --> gapph --> anchor pane and draw circle there
-        FloorPoint mousePoint = mouseToGraph(e);
-        FloorPoint imagePoint = graphToImage(mousePoint, imageviewMap);
-
-        // Do not  points that would fall outside of the map
-        if(mousePoint.x > 999 || mousePoint.x < 1 ||
-            mousePoint.y > 999 || mousePoint.y < 1) {
-            return ;
-        }
-
-        if(selectedNode != null) {
-            selectedNode.location = mouseToGraph(e);
-        }
-        // just move the point every drag event
         drawMap();
     }
 
@@ -852,7 +853,7 @@ public class MapAdminController extends DisplayController implements Initializab
     /**
      * Opens ContextMenu
      */
-    public void showContextMenu(ContextMenuEvent event){
+//    public void showContextMenu(ContextMenuEvent event){
 
 //        ContextMenu contextMenu = new ContextMenu();
 //
@@ -882,12 +883,31 @@ public class MapAdminController extends DisplayController implements Initializab
 //            }
 //        });
 //        contextMenu.getItems().addAll(item1, item2);
-        Shape circle = new Circle(event.getX(), event.getY(), 10);
-        anchorpaneMap.getChildren().add(circle);
 //        contextMenu.setId("MapAdminContextMenu");
 //        contextMenu.show(circle, event.getScreenX(), event.getScreenY());
 //        contextMenu.setStyle("-fx-shape:Circle ");
 //        contextMenu.setStyle("fx-background-image: red");
+
+    public void showContextMenu(ContextMenuEvent event){
+        CircularContextMenu menu = new CircularContextMenu();
+        if(selectedNode == null){
+            menu.hide();
+            Shape circle = new Circle(event.getX(), event.getY(), 10);
+            anchorpaneMap.getChildren().add(circle);
+            menu.addOption(Color.BLACK);
+            menu.addOption(Color.RED);
+            menu.addOption(Color.BLUE);
+            menu.show(circle,event.getScreenX(), event.getScreenY());
+        }else{
+            menu.hide();
+            Shape circle = new Circle(event.getX(), event.getY(), 10);
+            anchorpaneMap.getChildren().add(circle);
+            menu.addOption(Color.WHITE);
+            menu.addOption(Color.RED);
+            menu.addOption(Color.BLUE);
+            menu.show(circle,event.getScreenX(), event.getScreenY());
+        }
+
 
         stage.getScene().setOnDragDetected(new EventHandler<MouseEvent>() {
             @Override
@@ -901,13 +921,10 @@ public class MapAdminController extends DisplayController implements Initializab
 //                Event.fireEvent(menu.getOwnerWindow(), new MouseEvent(MouseEvent.MOUSE_RELEASED,
 //                    event.getX(), event.getY(), event.getX(), event.getY(), MouseButton.PRIMARY, 1,
 //                    true, true, true, true, true, true, true, true, true, true, null));
-                menu.fireEvent(event.copyFor(menu,menu.getOwnerNode()));
+                menu.fireEvent2(event.copyFor(menu,menu.getOwnerNode()));
             }
         });
-        menu.addOption(Color.BLACK);
-        menu.addOption(Color.RED);
-        menu.addOption(Color.BLUE);
-        menu.show(circle,event.getScreenX(), event.getScreenY());
+
     }
 
 }

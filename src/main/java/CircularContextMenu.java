@@ -1,3 +1,4 @@
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -173,9 +174,16 @@ public class CircularContextMenu extends Popup {
         super.requestFocus();
     }
 
-    public void fireEvent(double screenX, double screenY){
-        for (ContextMenuElement element: menuElements) {
-            element.fireEvent(screenX, screenY);
+    public void fireEvent2(Event event){
+                MouseEvent mouseEvent = (MouseEvent) event;
+        double x = mouseEvent.getScreenX();
+        double y = mouseEvent.getScreenY();
+        x = x - this.getX();
+        y = y - this.getY();
+        System.out.println("x: " + x + "y: " + y);
+        for(ContextMenuElement element:menuElements){
+            System.out.println(element.path.getLayoutX() + " : " + element.path.getLayoutY());
+            element.path.fireEvent(event.copyFor(this,element.path));
         }
     }
     public String toString(){

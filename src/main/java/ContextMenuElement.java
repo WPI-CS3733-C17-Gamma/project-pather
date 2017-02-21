@@ -1,3 +1,4 @@
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
@@ -165,13 +166,16 @@ public class ContextMenuElement{
         background.setFill(Color.rgb(255, 255, 255, 0));
     }
 
-    public void fireEvent(double screenX, double screenY){
-//        double x = screenX - path.getScene().getWindow().getX();
-//        double y = screenY - path.getScene().getWindow().getY();
-//        System.out.println("Screenx: " +screenX + " ScreenY: " + screenY);
-//        System.out.println("x: " + x + " y: " + y);
-//        System.out.println(path.getLayoutX());
-//        if (path.contains(x, y))
-//            System.out.println("yep" + num);
+    public void fireEvent(Event event){
+//        MouseEvent mouseEvent = (MouseEvent) event;
+//        double x = mouseEvent.getScreenX();
+//        double y = mouseEvent.getScreenY();
+//        x = x - this.parentMenu.getX();
+//        y = y - this.parentMenu.getY();
+//        System.out.println("x: " + x + "y: " + y);
+//        System.out.println(path.getLayoutX() + " : " + path.getLayoutY());
+//        if(path.contains(x,y))
+            path.fireEvent(event);
+//        System.out.println("works");
     }
 }
