@@ -1,6 +1,7 @@
 package app.pathfinding;
 
 import app.dataPrimitives.GraphNode;
+import app.datastore.GraphNetwork;
 
 import java.util.*;
 
@@ -9,6 +10,7 @@ public class DFS implements IPathFindingAlgorithm {
     LinkedList<GraphNode> path;
 
     GraphNode start, end;
+    public String name = "DFS";
 
     /**
      * finds a path from the start and the end node using depth first search algorithm
@@ -34,6 +36,11 @@ public class DFS implements IPathFindingAlgorithm {
         return DFSRecursion(start, end);
     }
 
+    @Override
+    public String getName() {
+        return this.name;
+    }
+
     /**
      * loop through to find a path
      * @param current
@@ -55,7 +62,9 @@ public class DFS implements IPathFindingAlgorithm {
             if (!checked.contains(neighbor)){
                 try{
                     LinkedList<GraphNode> result = DFSRecursion(neighbor, end);
-                    result.add(0, current);
+                    if (!locationEqual(current, result.get(0))){
+                        result.add(0, current);
+                    }
                     return result;
                 }catch(PathNotFoundException e){
                     System.err.println("Dead end");
@@ -63,5 +72,9 @@ public class DFS implements IPathFindingAlgorithm {
             }
         }
         throw new PathNotFoundException(start, end);
+    }
+
+    public boolean locationEqual(GraphNode a, GraphNode b){
+        return a.getLocation().getX() == b.getLocation().getX() && a.getLocation().getY() == b.getLocation().getY();
     }
 }

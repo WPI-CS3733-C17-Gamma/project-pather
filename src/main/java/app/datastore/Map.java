@@ -7,10 +7,7 @@ import app.pathfinding.PathNotFoundException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.HashMap;
+import java.util.*;
 
 public class Map {
     Directory directory;
@@ -72,6 +69,17 @@ public class Map {
         return directory.getRoom(node);
     }
 
+    public Set<String> getPathingAlgorithmList(){
+        return graph.getPathingAlgorithmList();
+    }
+
+    public String getPathingAlgorithm(){
+        return graph.getPathingAlgorithm();
+    }
+
+    public void changeAlgorithm(String algo){
+        graph.changeAlgorithm(algo);
+    }
     /**
      * set the kiosk name to this
      * @param name
