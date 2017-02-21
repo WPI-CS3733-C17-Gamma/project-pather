@@ -18,6 +18,8 @@ import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
@@ -180,6 +182,22 @@ public class MapAdminController extends DisplayController implements Initializab
     }
 
     /**
+     * Add an on the map label for each room
+     * @param room
+     */
+    public void addRoomLabel (Room room) {
+        Label label = new Label(room.getName());
+        label.setFont(Font.font ("Georgia", 10));
+        FloorPoint temp = graphToImage(room.getLocation().getLocation(),  imageviewMap);
+        label.setLayoutX(temp.getX() + 5);
+        label.setLayoutY(temp.getY() + 5);
+        label.setTextFill(Color.rgb(27, 68, 156));
+        label.setStyle("-fx-background-color: lightgray;");
+        anchorpaneMap.getChildren().add(label);
+        this.miscDrawnObjects.add(label);
+    }
+
+    /**
      * Add floor label to the current map
      * @param floor
      */
@@ -208,6 +226,13 @@ public class MapAdminController extends DisplayController implements Initializab
         }
         else {
             drawPoint(node.getLocation(), imageToDrawOver);
+
+            Room nodeRoom = map.getRoomFromNode(node);
+            if (nodeRoom != null) {
+                System.out.println("drawing room " +  nodeRoom);
+                addRoomLabel(nodeRoom);
+            }
+
         }
         for (GraphNode adj : node.getAdjacent()) {
             if(adj.getLocation().getFloor().equals(currentMap)){
