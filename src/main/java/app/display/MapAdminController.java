@@ -792,6 +792,7 @@ public class MapAdminController extends DisplayController implements Initializab
             elevatorFloors.add(loc);
         }
         drawMap();
+        changeFloorOptions.toFront();
     }
 
     /**
