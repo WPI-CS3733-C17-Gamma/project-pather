@@ -1,14 +1,7 @@
 package app.applicationControl;
 
-import app.*;
-import app.applicationControl.DatabaseManager;
-import app.applicationControl.Login;
-import app.applicationControl.ProxyImage;
 import app.datastore.Map;
-import app.display.DirectoryAdminController;
-import app.display.DisplayController;
-import app.display.MapAdminController;
-import app.display.PatientController;
+import app.display.*;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.beans.value.ChangeListener;
@@ -39,19 +32,17 @@ public class ApplicationController extends Application {
     Login login;
     Scene currentScene;
 
-    boolean isSignedIn = false;
-
     // NOTE with proxy pattern this will change to a prox image
     HashMap<String, ProxyImage> images;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
         initialize();
-
         this.pStage = primaryStage;
         adminStage = new Stage();
         createPatientDisplay();
         primaryStage.show();
+        login = new Login();
     }
 
     /**
@@ -152,24 +143,22 @@ public class ApplicationController extends Application {
     /**
      * create map admin display
      */
-    public void createMapAdminDisplay(Login login){
-        isSignedIn = true;
+    public void createMapAdminDisplay(){
+
         adminStage.close();
         adminStage = new Stage();
         adminStage.setResizable(false);
         adminStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent event) {
-                isSignedIn = false;
             }
         });
         try {
-                this.login = login;
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/MapAdminDisplay.fxml"));
                 MapAdminController controller = new MapAdminController(map, this, "floor3.png", adminStage);
                 loader.setController(controller);
                 Parent root = loader.load();
-                adminStage.setTitle("MapAdmin");
+                adminStage.setTitle("Map Admin");
                 adminStage.setScene(new Scene(root, 600, 600));
                 adminStage.centerOnScreen();
                 adminStage.show();
@@ -185,25 +174,24 @@ public class ApplicationController extends Application {
     /**
      * Create map directory admin app
      */
-    public void createDirectoryAdminDisplay(Login login){
-        isSignedIn = true;
+    public void createDirectoryAdminDisplay(){
         adminStage.close();
         adminStage = new Stage();
         adminStage.setResizable(false);
         adminStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent event) {
-                isSignedIn = false;
             }
         });
         //adminStage.initOwner(pStage);
         try {
-                this.login = login;
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/DirectoryAdminDisplay.fxml"));
-                DirectoryAdminController controller = new DirectoryAdminController(map, this, "floor3.png", adminStage);
+
+                DirectoryAdminController controller = new DirectoryAdminController(map, this);
+
                 loader.setController(controller);
                 Parent root = loader.load();
-                adminStage.setTitle("DirectoryAdmin");
+                adminStage.setTitle("Directory Admin");
                 adminStage.setScene(new Scene(root, 600, 600));
                 adminStage.centerOnScreen();
                 adminStage.show();
@@ -215,19 +203,45 @@ public class ApplicationController extends Application {
         }
     }
 
+    public void createAdminTools(){
+        adminStage.close();
+        adminStage = new Stage();
+        adminStage.setResizable(false);
+        adminStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+
+            }
+        });
+
+        try{
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AdminTools.fxml"));
+            AdminToolsController controller = new AdminToolsController(map, this);
+            loader.setController(controller);
+            Parent root = loader.load();
+            adminStage.setTitle("Admin Tools");
+            adminStage.setScene(new Scene(root));
+            adminStage.centerOnScreen();
+            adminStage.show();
+        } catch (Exception e){
+            e.printStackTrace();
+            System.out.println(e.toString());
+        }
+    }
+
     /**
      * login to admin
      *
      */
-    public void createLoginAdmin(){     //not signing in... also add "wrong username or password"
-        if(isSignedIn) {
+    public void createLoginAdmin(){
+        if(isLoggedIn()) {
             adminStage.toFront();
             return;
         }
 
         adminStage = new Stage();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/LoginDisplay.fxml"));
-        LoginController loginController = new LoginController(this, adminStage);
+        LoginController loginController = new LoginController(map, this, adminStage);
         Scene newScene;
         try{
             loader.setController(loginController);
@@ -243,8 +257,22 @@ public class ApplicationController extends Application {
             e.printStackTrace();
             System.out.println(e.toString());
         }
+    }
 
+    public boolean login(String uname, String passwd){
+        return login.signIn(uname, passwd);
+    }
 
+    public boolean isLoggedIn(){
+        return login.isSignedIn();
+    }
+
+    public boolean addUser(String uname, String passwd) {
+        return login.addUser(uname, passwd);
+    }
+
+    public boolean changePassword(String uname, String oldPasswd, String newPasswd){
+        return login.changePassword(uname, oldPasswd, newPasswd);
     }
 
 
@@ -252,7 +280,6 @@ public class ApplicationController extends Application {
      * Closes Admin Display
      */
     public void logout(){
-        isSignedIn = false;
         try{
             login.signOut();
         } catch(NullPointerException n){

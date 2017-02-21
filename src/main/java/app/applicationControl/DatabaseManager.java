@@ -36,7 +36,8 @@ public class DatabaseManager {
         "drop table Rooms",
         "drop table Entries",
         "drop table Edges",
-        "drop table GraphNodes"};
+        "drop table GraphNodes",
+        "drop table Settings"};
 
 
     public DatabaseManager(String dbName) {
