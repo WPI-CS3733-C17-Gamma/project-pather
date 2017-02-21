@@ -648,6 +648,9 @@ public class MapAdminController extends DisplayController implements Initializab
             secondaryNode = selectedNode;
             selectedNode = nearby;
         }
+        else {
+            selectedNode = null;
+        }
     }
 
     /**
