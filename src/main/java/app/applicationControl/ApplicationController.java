@@ -186,7 +186,9 @@ public class ApplicationController extends Application {
         //adminStage.initOwner(pStage);
         try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/DirectoryAdminDisplay.fxml"));
+
                 DirectoryAdminController controller = new DirectoryAdminController(map, this);
+
                 loader.setController(controller);
                 Parent root = loader.load();
                 adminStage.setTitle("Directory Admin");

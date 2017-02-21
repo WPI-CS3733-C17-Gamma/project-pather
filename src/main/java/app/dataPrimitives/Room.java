@@ -12,7 +12,7 @@ public class Room extends Ided implements Comparable {
         this.name = name;
     }
 
-    public GraphNode getLocation(GraphNode loc){
+    public GraphNode getLocation(){
         return this.location;
     }
 
@@ -57,12 +57,13 @@ public class Room extends Ided implements Comparable {
         }
 
         Room rhs = (Room) obj;
-        return this.location.equals(rhs.location) &&
-            this.name.equals(rhs.name);
-    }
-
-    public GraphNode getLocation() {
-        return location;
+        if (this.location == null) {
+            return this.name.equals(rhs.name);
+        }
+        else {
+            return this.location.equals(rhs.location) &&
+                this.name.equals(rhs.name);
+        }
     }
 
     public String getName() {

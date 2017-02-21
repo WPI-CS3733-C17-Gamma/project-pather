@@ -19,6 +19,9 @@ import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
@@ -74,6 +77,8 @@ public class MapAdminController extends DisplayController implements Initializab
     @FXML private ListView<String> elevatorFloorOptions;
     @FXML private ListView<String> changeFloorOptions;
     @FXML private ToggleButton togglebuttonChangeFloor;
+
+    @FXML private Button defaultKioskButton;
 
     private GraphNode tempNode ;
     private String currentMap;
@@ -460,10 +465,22 @@ public class MapAdminController extends DisplayController implements Initializab
         if (room != null) {
             roomName.setText(room.getName());
             activeRoom = room;
+            defaultKioskButton.setStyle("-fx-background-color: green;");
         }
         else {
             roomName.setText("");
             activeRoom = null;
+            defaultKioskButton.setStyle("-fx-background-color: gray;");
+        }
+
+    }
+
+    /**
+     * Change the default location of the kiosk
+     */
+    public void setDefaultKiosk () {
+        if (activeRoom != null) {
+            map.setKiosk(activeRoom.getName());
         }
     }
 

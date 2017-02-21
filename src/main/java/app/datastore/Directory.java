@@ -4,6 +4,11 @@ import app.dataPrimitives.DirectoryEntry;
 import app.dataPrimitives.GraphNode;
 import app.dataPrimitives.Room;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.Reader;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -15,6 +20,11 @@ public class Directory {
                      HashMap<String, Room> rooms) {
             this.entries = entries;
             this.rooms = rooms;
+    }
+
+    public Directory() {
+            this.entries = new HashMap<String, DirectoryEntry>();
+            this.rooms = new HashMap<String, Room>();
     }
 
     /**
@@ -173,9 +183,9 @@ public class Directory {
      * Gets the app.dataPrimitives.GraphNode for the app.dataPrimitives.Room named Kiosk in the directory
      * @return the app.dataPrimitives.GraphNode, or app.dataPrimitives.GraphNode(0, 0, "") if it does not exist
      */
-    public GraphNode getKioskLocation() {
+    public GraphNode getKioskLocation(String kioskName) {
         try {
-            return getRoom("Kiosk").getLocation();
+            return getRoom(kioskName).getLocation();
         }
         catch (Exception e) {
             System.out.println("No Kiosk");
@@ -240,5 +250,68 @@ public class Directory {
 
     public void setRooms(HashMap<String, Room> rooms) {
         this.rooms = rooms;
+    }
+
+    /**
+     * Populates the Directory from a well-formated TSV file
+     * @param file a File to parse from
+     */
+    public void importTSV(File file) throws IOException {
+        importTSV(new FileReader(file));
+    }
+
+    /**
+     * Populates the Directory from a well-formated TSV file
+     *
+     * Format: No header, each line should be of the one of the forms:
+     *     (Lastname), (Firstname)[, title]\t(Location1)[(sep)(Location2)]
+     *     (Service)\t(Location1)[(sep)(Location2)]
+     *
+     * Where [] denotes optional, () denotes a field to fill, \t is a
+     * tab character, and (sep) is one of: " and " "\t" ", " or "/"
+     *
+     * Examples:
+     *     Washington, George\tGeorge's Office, George's House
+     *     Starbucks\tstarbucks
+     *
+     * @param reader a Reader to parse from
+     */
+    public void importTSV(Reader reader) throws IOException {
+        try(BufferedReader br = new BufferedReader(reader)) {
+            String line = br.readLine();
+            while (line != null) {
+                LinkedList<String> parts =
+                    new LinkedList<String>(Arrays.asList(line.split("\t")));
+                String name = parts.removeFirst();
+                String title = "";
+                LinkedList<Room> entryRooms = new LinkedList<Room>();
+                LinkedList<String> roomNames = new LinkedList<String>();
+
+                // Extract a title if it exists
+                List<String> nameParts = Arrays.asList(name.split(", "));
+                if (nameParts.size() > 2) {
+                    name = String.join(", ", nameParts.subList(0, 2));
+                    title = String.join(", ", nameParts.subList(2, nameParts.size()));
+                }
+
+                // split rooms list by various separators
+                for (String part : parts) {
+                    roomNames.addAll(Arrays.asList(part.split(" and |/|, ")));
+                }
+
+                for (String roomName : roomNames) {
+                    Room room = getRoom(roomName);
+                    if (room == null) { // room did not exist, make a new one
+                        room = new Room(null, roomName);
+                        addRoom(room);
+                    }
+                    entryRooms.add(room);
+                }
+                // TODO: handle existing entries
+                addEntry(new DirectoryEntry(name, title, entryRooms));
+
+                line = br.readLine();
+            }
+        }
     }
 }

@@ -17,6 +17,10 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import javafx.stage.FileChooser;
+import java.io.File;
+import java.io.IOException;
 
 import java.net.URL;
 import java.util.LinkedList;
@@ -29,6 +33,7 @@ public class DirectoryAdminController extends DisplayController implements Initi
     DirectoryEntry activeDirectoryEntry;
     Room activeRoom;
     String activeEntryRoomSelected;
+    Stage stage;
 
     // FXML stuff
     @FXML TextField searchBar;
@@ -43,9 +48,11 @@ public class DirectoryAdminController extends DisplayController implements Initi
     @FXML Label helpLabel;
 
     public DirectoryAdminController(Map map,
+
                                     ApplicationController applicationController) {
         super(map,
               applicationController);
+
     }
 
     /** See the method {@link Map#searchEntry(String)} */
@@ -366,6 +373,24 @@ public class DirectoryAdminController extends DisplayController implements Initi
         }
     }
 
+    /**
+     * Allow selecting a file to import from
+     */
+    public void handleImportTSV() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Import TSV");
+        fileChooser.getExtensionFilters().addAll(
+            new FileChooser.ExtensionFilter("TSV or CSV", "*.tsv", "*.csv"));
+        File file = fileChooser.showOpenDialog(stage);
+        if (file != null) {
+            try {
+                map.importTSV(file);
+            }
+            catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+    }
 
     /**
      * go back to patient display
