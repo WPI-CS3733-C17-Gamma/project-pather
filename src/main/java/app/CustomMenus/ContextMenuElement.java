@@ -31,12 +31,14 @@ public class ContextMenuElement{
         @Override
         public void handle(MouseEvent event) {
             centralDisplay.centralDisplay.setFill(path.getFill());
+            centralDisplay.centralDisplay.setOpacity(1);
         }
     };
     EventHandler<MouseEvent> mouseExitHandler = new EventHandler<MouseEvent>() {
         @Override
         public void handle(MouseEvent event) {
-            centralDisplay.centralDisplay.setFill(Color.TRANSPARENT);
+            centralDisplay.centralDisplay.setOpacity(0.4);
+            centralDisplay.centralDisplay.setVisible(true);
         }
     };
     EventHandler onDragHandler = new EventHandler<MouseEvent>() { //Default drag event handler
@@ -58,7 +60,6 @@ public class ContextMenuElement{
         this.centralDisplay = centralDisplay;
         this.parentMenu = parentMenu;
         this.background.setOnMouseClicked(onClickHandler);
-        //this.background.setOnMouseMoved(onClickHandler);
         this.background.setOnMouseEntered(mouseEnterHandler);
         this.background.setOnMouseExited(mouseExitHandler);
         this.icon = icon;

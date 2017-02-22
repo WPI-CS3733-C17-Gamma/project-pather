@@ -1,5 +1,6 @@
 package app.CustomMenus;
 
+import javafx.scene.paint.Color;
 import javafx.scene.shape.SVGPath;
 
 /**
@@ -8,10 +9,11 @@ import javafx.scene.shape.SVGPath;
 public class CentralDisplay {
     SVGPath centralDisplay = new SVGPath();
 
-
     CentralDisplay(double innerRadius, double outerRadius){
         centralDisplay.setContent("M" + (-outerRadius) + " " + (-outerRadius - innerRadius) + " a " + innerRadius + " " + innerRadius +
             " 0 1 0 0.00001 0 z");
-
+        centralDisplay.setFill(Color.rgb(255,255,255,1));
+        centralDisplay.setVisible(true);
+        centralDisplay.setMouseTransparent(false);
     }
 }

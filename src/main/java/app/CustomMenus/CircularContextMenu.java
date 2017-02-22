@@ -17,7 +17,7 @@ import java.util.List;
  */
 public class CircularContextMenu extends Popup {
     double innerRadius = 80;
-    double outerRadius = 200;
+    double outerRadius = 100;
     private List<ContextMenuElement> menuElements = new LinkedList<>();
     Group root;
     Scene scene;
@@ -39,6 +39,7 @@ public class CircularContextMenu extends Popup {
             @Override
             public void handle(MouseEvent event) {
                 drawHighlight(event);
+                System.out.println("movingh");
             }
         });
         root = new Group();
@@ -226,14 +227,14 @@ public class CircularContextMenu extends Popup {
             highlight.draw(mouseAngle - angle / 2, angle, innerRadius, outerRadius);
             super.show(getOwnerNode(), getAnchorX(), getAnchorY());
         }
-        draw();
+        redraw();
 
     }
 
     /**
-     * Draws the context Menu. Icons are always on top
+     * reraws the context Menu. Icons are always on top
      */
-    public void draw(){
+    public void redraw(){
         for (ContextMenuElement element: menuElements){
             getContent().remove(element.path);
         }

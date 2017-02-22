@@ -25,7 +25,7 @@ public class Login {
      */
     boolean signIn(String uname, String password) {
 
-        if (requiredSignin) {
+        if (!requiredSignin) {
             return true;
         }
         try {

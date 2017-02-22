@@ -117,7 +117,22 @@ public class MapAdminController extends DisplayController {
         imageviewMap.toBack();
 
         setMap("floor3");
+        //---------------------------------------------------------------------------------------------------------------------
+        //Setup Contest Menu here
+        //nodeMenu.hide();
+        ImagePattern deleteRoom = new ImagePattern(new Image("/Radial Icons/Delete_Room.png"));
+        ImagePattern addRoom = new ImagePattern(new Image("/Radial Icons/Add_Room2.png"));
+        ImagePattern deleteNode = new ImagePattern(new Image("/Radial Icons/Delete_Node.png"));
+
+        nodeMenu.addOption(deleteRoom);
+        nodeMenu.addOption(addRoom);
+        nodeMenu.addOption(deleteNode);
+
+        screenMenu.addOption(Color.WHITE);
+        screenMenu.addOption(Color.RED);
+        screenMenu.addOption(Color.BLUE);
         drawMap();
+
     }
 
     /**
@@ -137,9 +152,6 @@ public class MapAdminController extends DisplayController {
             .forEach(node -> drawNode(node, imageviewMap));
         highlightSelected();
         addFloorLabel(this.currentMap);
-//---------------------------------------------------------------------------------------------------------------------
-        //Setup Contest Menu here
-
     }
 
     /**
@@ -832,28 +844,13 @@ public class MapAdminController extends DisplayController {
 //        contextMenu.setStyle("fx-background-image: red");
 
     public void showContextMenu(ContextMenuEvent event){
+        Shape circle = new Circle(event.getX(), event.getY(), 10);
+        anchorpaneMap.getChildren().add(circle);
         if(selectedNode == null){
-            //nodeMenu.hide();
-            Shape circle = new Circle(event.getX(), event.getY(), 10);
-            anchorpaneMap.getChildren().add(circle);
-            ImagePattern deleteRoom = new ImagePattern(new Image("/Radial Icons/Delete_Room.png"));
-            ImagePattern addRoom = new ImagePattern(new Image("/Radial Icons/Add_Room2.png"));
-            ImagePattern deleteNode = new ImagePattern(new Image("/Radial Icons/Delete_Node.png"));
-
-            nodeMenu.addOption(deleteRoom);
-            nodeMenu.addOption(addRoom);
-            nodeMenu.addOption(deleteNode);
             nodeMenu.show(circle,event.getScreenX(), event.getScreenY());
         }else{
-
-            Shape circle = new Circle(event.getX(), event.getY(), 10);
-            anchorpaneMap.getChildren().add(circle);
-            screenMenu.addOption(Color.WHITE);
-            screenMenu.addOption(Color.RED);
-            screenMenu.addOption(Color.BLUE);
-            screenMenu.show(circle,event.getScreenX(), event.getScreenY());
+            screenMenu.show(circle, event.getScreenX(), event.getScreenY());
         }
-
 
 //        stage.getScene().setOnDragDetected(new EventHandler<MouseEvent>() {
 //            @Override
