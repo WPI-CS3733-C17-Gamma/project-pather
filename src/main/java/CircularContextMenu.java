@@ -3,7 +3,9 @@ import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.effect.BlendMode;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.stage.Popup;
@@ -21,7 +23,8 @@ public class CircularContextMenu extends Popup {
     private List<ContextMenuElement> menuElements = new LinkedList<>();
     Group root;
     Scene scene;
-    Circle circ;
+    ContextMenuElement highlight = new ContextMenuElement(Color.BEIGE,this);
+    double angle;
     /**
      * Default Constructor
      */
@@ -32,6 +35,12 @@ public class CircularContextMenu extends Popup {
             @Override
             public void handle(MouseEvent event) {
                 System.out.println("Saw release");
+            }
+        });
+        this.addEventHandler(MouseEvent.MOUSE_MOVED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                drawHighlight(event);
             }
         });
         this.innerRadius = 50;
@@ -51,7 +60,7 @@ public class CircularContextMenu extends Popup {
         this.outerRadius = outerRadius;
         root = new Group();
         scene = new Scene(root,outerRadius,outerRadius);
-        setAutoHide(true);
+        //setAutoHide(true);
     }
 
     /**
@@ -62,7 +71,7 @@ public class CircularContextMenu extends Popup {
      */
     public void addOption(Paint image, EventHandler clickHandler, EventHandler dragHandler){
         int size = menuElements.size();
-        double angle = (double)360 / (double)(size+1);
+        angle = (double)360 / (double)(size+1);
         double currentAngle = 0;
         setAutoHide(true);
 
@@ -89,7 +98,7 @@ public class CircularContextMenu extends Popup {
      */
     public void addOption(Paint image){//redraw elements when a new one is added
         int size = menuElements.size();
-        double angle = (double)360 / (double)(size+1);
+        angle = (double)360 / (double)(size+1);
         double currentAngle = 0.0;
 
         menuElements.add(new ContextMenuElement(image, this));
@@ -190,6 +199,41 @@ public class CircularContextMenu extends Popup {
         return("This menu has: " + menuElements.size() + " options.");
     }
 
+    public void drawHighlight(MouseEvent event){
+        if(highlight != null) {
+            getContent().remove(highlight.path);
+        }
 
+        double x = event.getSceneX() - outerRadius;
+        double y = event.getSceneY() - outerRadius;
+        double dist = Math.sqrt(Math.pow(x,2)+Math.pow(y,2));
+        double mouseAngle = Math.atan(y/x);
+
+        mouseAngle = (mouseAngle + 2*Math.PI)* 180/Math.PI;
+        if(y < 0){
+            if(x < 0){
+                mouseAngle += 180;
+            }else{
+                mouseAngle += 360;
+            }
+        }else {
+            if(x < 0){
+                mouseAngle += 180;
+            }
+        }
+        while(mouseAngle < 0)
+            mouseAngle += 360;
+
+        mouseAngle %= 360;
+        System.out.println("x: " + x + "y: " + y);
+        System.out.println(mouseAngle);
+        if(innerRadius < dist && dist < outerRadius) {
+            highlight.draw(mouseAngle - angle / 2, angle, innerRadius, outerRadius);
+            super.show(getOwnerNode(), getAnchorX(), getAnchorY());
+        }
+        getContent().add(highlight.path);
+        highlight.path.setMouseTransparent(true);
+        highlight.path.setBlendMode(BlendMode.ADD);
+    }
 }
 

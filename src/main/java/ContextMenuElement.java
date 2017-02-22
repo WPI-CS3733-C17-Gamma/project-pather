@@ -16,7 +16,7 @@ public class ContextMenuElement{
     double innerRadius = 100;
     double angle = 10;
     double initialAngle = 10;
-    CircularContextMenu parentMenu = new CircularContextMenu();
+    CircularContextMenu parentMenu;
 
     EventHandler<MouseEvent> onClickHandler = new EventHandler<MouseEvent>() { //Default click handler
         @Override
@@ -40,8 +40,8 @@ public class ContextMenuElement{
      */
     ContextMenuElement( Paint icon, CircularContextMenu parentMenu){
         this.parentMenu = parentMenu;
-        this.path.addEventHandler(MouseEvent.MOUSE_CLICKED, onClickHandler);
-        this.background.addEventHandler(MouseEvent.MOUSE_CLICKED, onClickHandler);
+        this.path.addEventHandler(MouseEvent.MOUSE_MOVED, onClickHandler);
+        this.background.addEventHandler(MouseEvent.MOUSE_MOVED, onClickHandler);
 //        this.path.setOnDragDropped(onDragHandler);
 //        this.background.setOnDragDropped(onDragHandler);
 //        this.path.setOnDragOver(onDragHandler);
@@ -113,9 +113,9 @@ public class ContextMenuElement{
         this.outerRadius = outerRadius;
         double difference = outerRadius - innerRadius;
 
-        if((angle  < 0.0) || initialAngle < 0.0 ){
-            throw new IllegalArgumentException();
-        }
+//         if((angle  < 0.0) || initialAngle < 0.0 ){
+//            throw new IllegalArgumentException();
+//        }
 
         this.angle = angle*Math.PI/180.0;
         this.initialAngle = initialAngle*Math.PI/180.0;

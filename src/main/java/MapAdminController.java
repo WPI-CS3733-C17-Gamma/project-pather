@@ -561,6 +561,7 @@ public class MapAdminController extends DisplayController implements Initializab
      * @param m
      */
     public void isPressed(MouseEvent m) {
+        screenMenu.hide();
         if (roomName.isFocused()){
             anchorpaneMap.requestFocus(); //deselects textbox if click outside
         }
@@ -842,15 +843,15 @@ public class MapAdminController extends DisplayController implements Initializab
 
     public void showContextMenu(ContextMenuEvent event){
         if(selectedNode == null){
-            nodeMenu.hide();
+            //nodeMenu.hide();
             Shape circle = new Circle(event.getX(), event.getY(), 10);
             anchorpaneMap.getChildren().add(circle);
-            nodeMenu.addOption(Color.BLACK);
-            nodeMenu.addOption(Color.RED);
-            nodeMenu.addOption(Color.BLUE);
+            nodeMenu.addOption(Color.GREY);
+            nodeMenu.addOption(Color.GREY);
+            nodeMenu.addOption(Color.GREY);
             nodeMenu.show(circle,event.getScreenX(), event.getScreenY());
         }else{
-            screenMenu.hide();
+            //
             Shape circle = new Circle(event.getX(), event.getY(), 10);
             anchorpaneMap.getChildren().add(circle);
             screenMenu.addOption(Color.WHITE);
