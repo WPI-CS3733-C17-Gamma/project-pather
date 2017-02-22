@@ -1,5 +1,5 @@
 package app.display;
-import app.*;
+import app.CustomMenus.CircularContextMenu;
 import app.applicationControl.ApplicationController;
 import app.dataPrimitives.FloorPoint;
 import app.dataPrimitives.GraphNode;
@@ -8,7 +8,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -17,8 +16,6 @@ import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
@@ -28,11 +25,9 @@ import javafx.scene.shape.Shape;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 public class MapAdminController extends DisplayController {
@@ -602,7 +597,6 @@ public class MapAdminController extends DisplayController {
      * @param e Mouse event generated the container
      */
     public void handleMouseEventDefault (MouseEvent e) {
-        System.out.println("hi");
         GraphNode nearby = nearbyNode(e);
         if (nearby != null) {
             secondaryNode = selectedNode;
@@ -827,7 +821,7 @@ public class MapAdminController extends DisplayController {
             //nodeMenu.hide();
             Shape circle = new Circle(event.getX(), event.getY(), 10);
             anchorpaneMap.getChildren().add(circle);
-            ImagePattern elevator = new ImagePattern(new Image("/ElevatorT.png"));
+            ImagePattern elevator = new ImagePattern(new Image("/Radial Icons/Add_Node.png"));
             nodeMenu.addOption(elevator);
             nodeMenu.addOption(Color.rgb(211,211,211));
             nodeMenu.addOption(Color.rgb(211,211,211));

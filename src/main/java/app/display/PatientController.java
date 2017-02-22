@@ -1,8 +1,7 @@
 package app.display;
 
-import app.*;
+import app.CustomMenus.CircularContextMenu;
 import app.applicationControl.ApplicationController;
-import app.applicationControl.Login;
 import app.dataPrimitives.*;
 import app.pathfinding.PathNotFoundException;
 import javafx.animation.KeyFrame;

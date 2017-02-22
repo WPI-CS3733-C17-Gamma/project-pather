@@ -1,4 +1,5 @@
-package app;
+package app.CustomMenus;
+import app.CustomMenus.CircularContextMenu;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
@@ -13,8 +14,8 @@ public class ContextMenuElement{
     Paint icon;
     SVGPath path = new SVGPath();
     SVGPath background = new SVGPath();
-    double outerRadius = 150;
-    double innerRadius = 100;
+    double outerRadius;
+    double innerRadius;
     double angle = 10;
     double initialAngle = 10;
     CircularContextMenu parentMenu;
