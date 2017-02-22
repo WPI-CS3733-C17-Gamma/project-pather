@@ -3,21 +3,24 @@ package app.display;
 import app.applicationControl.ApplicationController;
 import app.applicationControl.Login;
 import app.datastore.Map;
+import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
 public class DisplayController {
 
+    @FXML Label helpLabel;
+
     Map map;
-    //Kiosk kiosk;
     ApplicationController applicationController;
+    Stage stage;
 
-
-    public DisplayController(Map map,
-                             /*Kiosk kiosk, */
-                             ApplicationController applicationController){
+    public void init(Map map,
+                     ApplicationController applicationController,
+                     Stage stage){
         this.map = map;
         this.applicationController = applicationController;
-
+        this.stage = stage;
     }
 
     void update(){
@@ -30,20 +33,39 @@ public class DisplayController {
         return applicationController.login(uname, passwd);
     }
 
-    void createDirectoryAdminDisplay(){
-        applicationController.createDirectoryAdminDisplay();
+    void createAdminDisplay(){
+        applicationController.createAdminDisplay();
     }
 
-    void createAdminTools(){
-        applicationController.createAdminTools();
+    /**
+     * Preview changes without writing to the database
+     * Creates patient display without changing the database
+     */
+    public void preview () {
+        System.out.println("Preview");
+        applicationController.createPatientDisplay();
     }
 
-    void createMapAdminDisplay(){
-        applicationController.createMapAdminDisplay();
+    /**
+     * toggle help message
+     */
+    public void help () {
+        System.out.println("Here is how to use this...");
+        if (helpLabel.isVisible()) {
+            helpLabel.setVisible(false);
+        }
+        else {
+            helpLabel.setVisible(true);
+        }
     }
 
-    void logout(){
-        applicationController.logout();
+    /**
+     *  called by undo button.
+     *  Revert to previous database state
+     *  Reset the state of all the objects
+     */
+    public void undo () {
+        map = applicationController.reload();
     }
 
     void hideStage(Stage stage){

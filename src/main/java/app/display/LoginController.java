@@ -26,16 +26,6 @@ public class LoginController extends DisplayController {
 
     private String inputPassword = "";
 
-    private ApplicationController applicationController;
-
-    private Stage stage;
-
-    public LoginController(Map map, ApplicationController a, Stage s){
-        super(map, a);
-        applicationController = a;
-        stage = s;
-    }
-
     /**
      * Checks credentials
      * @return
@@ -50,17 +40,6 @@ public class LoginController extends DisplayController {
         labelWrongCreds.setVisible(false);
     }
 
-    public void showAdminTools(){
-        if (getCredentials()){
-            loginPage.setVisible(false);
-            hideStage(stage);
-            createAdminTools();
-        } else {
-            passwordBox.clear();
-            labelWrongCreds.setVisible(true);
-        }
-    }
-
     /**
      * Displays options for map and directory admin
      */
@@ -68,7 +47,7 @@ public class LoginController extends DisplayController {
         if (getCredentials()) {
             loginPage.setVisible(false);
             hideStage(stage);
-            createDirectoryAdminDisplay();
+            createAdminDisplay();
         } else {
             passwordBox.clear();
             labelWrongCreds.setVisible(true);
