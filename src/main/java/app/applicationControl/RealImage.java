@@ -1,12 +1,15 @@
 package app.applicationControl;
 
 import javafx.scene.image.Image;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class holds the real image. It does not load the image
  * until the getValue function is called
  */
 public class RealImage implements IProxyImage {
+    final Logger logger = LoggerFactory.getLogger(DatabaseManager.class);
 
     private Image image = null;
     private String imageName;
@@ -21,7 +24,7 @@ public class RealImage implements IProxyImage {
         // if the image has not been loaded, load it
         if (image == null) {
             image = new Image(imageName);
-            System.out.println("Loaded image : " + imageName);
+            logger.info("Loaded image : " + imageName);
         }
         return image;
     }

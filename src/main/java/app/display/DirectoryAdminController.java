@@ -28,8 +28,12 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class DirectoryAdminController extends DisplayController{
-/*    DirectoryAdminDisplay display;*/
+    final Logger logger = LoggerFactory.getLogger(DirectoryAdminController.class);
+
     DirectoryEntry activeDirectoryEntry;
     Room activeRoom;
     String activeEntryRoomSelected;
@@ -58,7 +62,7 @@ public class DirectoryAdminController extends DisplayController{
                      ApplicationController applicationController,
                      Stage stage) {
         super.init(map, applicationController, stage);
-        System.out.println("INIT");
+        logger.info("INIT");
         helpLabel.setText("Welcome to the directory entry editor.\n You're an admin, you don't need help" );
 
         // get both entries
@@ -86,7 +90,7 @@ public class DirectoryAdminController extends DisplayController{
         entryCurrentLocations.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                System.out.println("remove entry");
+                logger.debug("remove entry");
                 String selectedString = entryCurrentLocations.getSelectionModel().getSelectedItem();
                 activeEntryRoomSelected = selectedString;
                 entryDeleteRoom.setVisible(true);
@@ -136,7 +140,7 @@ public class DirectoryAdminController extends DisplayController{
             filterAllEntries();
         }
         else {
-            System.out.println("No entry selected");
+            logger.error("No entry selected");
         }
     }
 
@@ -227,10 +231,10 @@ public class DirectoryAdminController extends DisplayController{
             saveEntry(name,title,rooms);
         }
         catch (IllegalArgumentException arg) {
-            System.out.println(arg.toString());
+            logger.error(arg.toString());
         }
         catch (IllegalStateException state) {
-            System.out.println(state.toString());
+            logger.error(state.toString());
         }
 
         filterAllEntries();
@@ -293,13 +297,13 @@ public class DirectoryAdminController extends DisplayController{
      * filter rooms for entries
      */
     public void filterRooms () {
-        System.out.println("FILTER app.dataPrimitives.Room");
+        logger.info("FILTER Room");
         String searchText = entryRoomSearch.getText();
         if (searchText.isEmpty()) {
-            System.out.println("nothing entered");
+            logger.debug("nothing entered");
         }
         else {
-            System.out.println("search text" + searchText);
+            logger.debug("search text {}", searchText);
             List<String> results = map.subStringSearchRoom(searchText);
             List<String> currentLocs= entryCurrentLocations.getItems().stream()
                 .map(String::toString)
@@ -327,7 +331,7 @@ public class DirectoryAdminController extends DisplayController{
             activeEntryRoomSelected = null;
         }
         else {
-            System.out.println("no room selected");
+            logger.debug("no room selected");
             entryDeleteRoom.setVisible(false);
         }
     }
@@ -362,7 +366,7 @@ public class DirectoryAdminController extends DisplayController{
             entryRoomSearch.setText("");
         }
         else {
-            System.out.println("no such room");
+            logger.debug("no such room");
         }
     }
 
@@ -370,7 +374,7 @@ public class DirectoryAdminController extends DisplayController{
      * filter entries by searching for new text
      */
     public void filterAllEntries () {
-        System.out.println("FILTER");
+        logger.info("FILTER");
         String searchText = searchBar.getText();
         if (searchText.isEmpty()) {
             List<String> entryList = map.getAllEntries();
@@ -380,7 +384,7 @@ public class DirectoryAdminController extends DisplayController{
             listEntries.setItems(allEntries);
         }
         else {
-            System.out.println("search text");
+            logger.debug("search text {}", searchBar.getText());
             List<String> results = map.searchEntry(searchText);
             results.stream().forEach(System.out::println);
             ObservableList<String> allEntries = FXCollections.observableList(results);
@@ -402,7 +406,7 @@ public class DirectoryAdminController extends DisplayController{
                 map.importTSV(file);
             }
             catch (IOException e) {
-                System.out.println(e.getMessage());
+                logger.error(e.getMessage());
             }
         }
     }

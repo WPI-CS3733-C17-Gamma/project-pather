@@ -6,8 +6,11 @@ import app.datastore.Map;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DisplayController {
+    final Logger logger = LoggerFactory.getLogger(DisplayController.class);
 
     @FXML Label helpLabel;
 
@@ -42,7 +45,7 @@ public class DisplayController {
      * Creates patient display without changing the database
      */
     public void preview () {
-        System.out.println("Preview");
+        logger.info("Preview");
         applicationController.createPatientDisplay();
     }
 
@@ -50,7 +53,7 @@ public class DisplayController {
      * toggle help message
      */
     public void help () {
-        System.out.println("Here is how to use this...");
+        logger.debug("Here is how to use this...");
         if (helpLabel.isVisible()) {
             helpLabel.setVisible(false);
         }

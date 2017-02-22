@@ -2,7 +2,11 @@ package app.dataPrimitives;
 
 import app.Ided;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class Room extends Ided implements Comparable {
+    final Logger logger = LoggerFactory.getLogger(Room.class);
 
     GraphNode location;
     String name;
@@ -46,7 +50,7 @@ public class Room extends Ided implements Comparable {
     public int compareTo(Object room){
         try {
             Room p = (Room) room;
-            System.out.println(p.name + "\t" + this.name);
+            logger.debug(p.name + "\t" + this.name);
             return(this.name.compareTo(p.name));
         }
         catch(ClassCastException e) {

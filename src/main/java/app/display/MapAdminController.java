@@ -31,7 +31,11 @@ import javafx.stage.WindowEvent;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class MapAdminController extends DisplayController {
+    final Logger logger = LoggerFactory.getLogger(MapAdminController.class);
 
     /**
      * Keep track of the state of the system
@@ -216,7 +220,7 @@ public class MapAdminController extends DisplayController {
 
             Room nodeRoom = map.getRoomFromNode(node);
             if (nodeRoom != null) {
-                System.out.println("drawing room " +  nodeRoom);
+                logger.info("drawing room " +  nodeRoom);
                 addRoomLabel(nodeRoom);
             }
 
@@ -827,12 +831,12 @@ public class MapAdminController extends DisplayController {
 
         contextMenu.setOnShowing(new EventHandler<WindowEvent>() {
             public void handle(WindowEvent e) {
-                System.out.println("showing");
+                logger.debug("showing");
             }
         });
         contextMenu.setOnShown(new EventHandler<WindowEvent>() {
             public void handle(WindowEvent e) {
-                System.out.println("shown");
+                logger.debug("shown");
             }
         });
 
@@ -840,14 +844,14 @@ public class MapAdminController extends DisplayController {
         item1.setStyle("MapAdminContextMenu");
         item1.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent e) {
-                System.out.println("About");
+                logger.debug("About");
             }
         });
         MenuItem item2 = new MenuItem("Preferences");
         item2.setStyle("fx-background-image: red");
         item2.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent e) {
-                System.out.println("Preferences");
+                logger.debug("Preferences");
             }
         });
         contextMenu.getItems().addAll(item1, item2);

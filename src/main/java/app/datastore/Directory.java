@@ -12,7 +12,12 @@ import java.io.Reader;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class Directory {
+    final Logger logger = LoggerFactory.getLogger(Directory.class);
+
     HashMap<String, DirectoryEntry> entries;
     HashMap<String, Room> rooms;
 
@@ -200,7 +205,7 @@ public class Directory {
             return getRoom(kioskName).getLocation();
         }
         catch (Exception e) {
-            System.out.println("No Kiosk");
+            logger.error("No Kiosk");
             return new GraphNode(0, 0, "");
         }
     }

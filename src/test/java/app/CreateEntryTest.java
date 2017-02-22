@@ -11,8 +11,11 @@ import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.LinkedList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CreateEntryTest extends TestCase {
+    final Logger logger = LoggerFactory.getLogger(DatabaseManager.class);
 
     DirectoryAdminController c;
     Map m;
@@ -50,7 +53,7 @@ public class CreateEntryTest extends TestCase {
         }
         assertEquals(3, d.getEntries().size());
         for (String s : d.getEntries().keySet()){
-            System.err.println(s);
+            logger.debug(s);
         }
     }
 

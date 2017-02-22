@@ -78,8 +78,7 @@ public class ApplicationController extends Application {
      * reload the state of the database
      */
     public Map reload () {
-        logger.info("reload");
-        System.out.println("reload");
+        logger.debug("reload");
         map = databaseManager.load();
         return map;
     }
@@ -113,21 +112,21 @@ public class ApplicationController extends Application {
             pStage.setScene(currentScene);
             currentScene.widthProperty().addListener(new ChangeListener<Number>() {
                 @Override public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneWidth, Number newSceneWidth) {
-                    System.out.println("Width: " + newSceneWidth);
+                    logger.debug("Width: {}", newSceneWidth);
                     controller.scaleWidth(oldSceneWidth, newSceneWidth);
                 }
             });
             currentScene.heightProperty().addListener(new ChangeListener<Number>() {
                 @Override public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneHeight, Number newSceneHeight) {
                     controller.scaleHeight(oldSceneHeight, newSceneHeight);
-                    System.out.println("Height: " + newSceneHeight);
+                    logger.debug("Height: {}", newSceneHeight);
                 }
             });
             pStage.setFullScreen(true);
         }
         catch (Exception e){
             e.printStackTrace();
-            System.out.println(e.toString());
+            logger.error(e.toString());
         }
     }
 
@@ -178,7 +177,7 @@ public class ApplicationController extends Application {
         }
         catch (Exception e){
             e.printStackTrace();
-            System.out.println(e.toString());
+            logger.error(e.toString());
         }
     }
 
@@ -205,10 +204,10 @@ public class ApplicationController extends Application {
             adminStage.show();
         } catch (IOException e){
             e.printStackTrace();
-            System.out.println(e.toString());
+            logger.error(e.toString());
         } catch (Exception e){
             e.printStackTrace();
-            System.out.println(e.toString());
+            logger.error(e.toString());
         }
     }
 
@@ -236,7 +235,7 @@ public class ApplicationController extends Application {
         try{
             login.signOut();
         } catch(NullPointerException n){
-            System.out.println("Logout Error - no login class detected");
+            logger.error("Logout Error - no login class detected");
         }
 
         save();
@@ -256,7 +255,7 @@ public class ApplicationController extends Application {
      * write current state to database
      */
     public void save () {
-        System.out.println("SAVE");
+        logger.debug("SAVE");
         databaseManager.write(map);
     }
     /**
@@ -265,7 +264,7 @@ public class ApplicationController extends Application {
     @Override
     public void stop () {
         databaseManager.write(map);
-        System.out.println("Application Closed");
+        logger.info("Application Closed");
     }
 
     public static void main (String[] args) {
