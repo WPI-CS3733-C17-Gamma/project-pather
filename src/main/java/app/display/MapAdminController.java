@@ -33,7 +33,7 @@ import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class MapAdminController extends DisplayController implements Initializable {
+public class MapAdminController extends DisplayController {
 
     /**
      * Keep track of the state of the system
@@ -86,23 +86,10 @@ public class MapAdminController extends DisplayController implements Initializab
      *  Construct map admin controller
      * @param map all the data for the program
      * @param applicationController main controller
-     * @param currentMap
      */
-    public MapAdminController(app.datastore.Map map, ApplicationController applicationController, String currentMap, Stage stage) {
-        super(map, applicationController);
-        this.stage = stage;
-        this.currentMap = currentMap;
-    }
+    public void init(app.datastore.Map map, ApplicationController applicationController, Stage stage) {
+        super.init(map, applicationController, stage);
 
-    /**
-     * Called when the javaFX pane finishes loading
-     * put startup stuff in here, not in the constructor
-     * (The FXML elements are null in the constructor until this method loads)
-     * @param location
-     * @param resources
-     */
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
         // Add states to toggles
         togglebuttonAddNode.setUserData(State.ADD_NODES);
         togglebuttonAddConnections.setUserData(State.ADD_CONNECTION);
@@ -132,32 +119,6 @@ public class MapAdminController extends DisplayController implements Initializab
 
         setMap("floor3");
         drawMap();
-
-        /*contextMenu = new ContextMenu();
-        System.out.println("initialized");
-        MenuItem addNode = new MenuItem("Add Node");
-        MenuItem deleteNode = new MenuItem("Delete node");
-        MenuItem addConnection = new MenuItem("Add Connection");
-        MenuItem deleteConnection = new MenuItem("Delete Connection");
-        MenuItem addElevator = new MenuItem("Add Elevator");
-        MenuItem deleteElevator = new MenuItem("Delete Elevator");
-        contextMenu.getItems().addAll(addNode, deleteNode, new SeparatorMenuItem(),
-                                    addConnection, deleteConnection, new SeparatorMenuItem(),
-                                    addElevator, deleteElevator);
-
-        imageviewMap.setContextMenu(contextMenu);*/     //Saving for next iteration, spent a lot of time on it
-
-
-
-    }
-
-    /**
-     * TODO
-     * handle login with a string password
-     * @param credentials
-     */
-    public void login(String credentials){
-        //no need to worry about this for this iteration
     }
 
     /**
@@ -211,7 +172,6 @@ public class MapAdminController extends DisplayController implements Initializab
         anchorpaneMap.getChildren().add(label);
         this.miscDrawnObjects.add(label);
     }
-
 
     /**
      * Draw the node at the given location.
@@ -276,6 +236,7 @@ public class MapAdminController extends DisplayController implements Initializab
     public void toggleSwitchMap () {
         toggleSwitchMap(togglebuttonChangeFloor.isSelected());
     }
+
     public void toggleSwitchMap (boolean selected) {
         togglebuttonChangeFloor.setSelected(selected);
         changeFloorOptions.setVisible(selected);
@@ -284,7 +245,6 @@ public class MapAdminController extends DisplayController implements Initializab
         changeFloorOptions.setItems(observOptions);
         changeFloorOptions.toFront();
     }
-
 
     /**
      * Create node from given location. Make new app.dataPrimitives.GraphNode
@@ -297,7 +257,6 @@ public class MapAdminController extends DisplayController implements Initializab
         selectedNode = newNode;
         drawMap();
     }
-
 
     /**
      * Create an elevator on the given floors
@@ -375,7 +334,6 @@ public class MapAdminController extends DisplayController implements Initializab
         anchorpaneMap.getChildren().add(circ);
         GraphNode graphNodeAttatched = map.getGraphNode(loc);
         drawnNodes.put(graphNodeAttatched.id, circ);
-
     }
 
     /**
@@ -435,7 +393,6 @@ public class MapAdminController extends DisplayController implements Initializab
         }
     }
 
-
     /**
      *
      * @param x1
@@ -452,7 +409,6 @@ public class MapAdminController extends DisplayController implements Initializab
         anchorpaneMap.getChildren().add(line);
         miscDrawnObjects.add(line);
     }
-
 
     /**
      * convert to map coords
@@ -512,7 +468,6 @@ public class MapAdminController extends DisplayController implements Initializab
             activeRoom = null;
             defaultKioskButton.setStyle("-fx-background-color: gray;");
         }
-
     }
 
     /**
@@ -584,7 +539,6 @@ public class MapAdminController extends DisplayController implements Initializab
         for (String floor : elevatorFloors) {
             elevatorFloorOptions.getSelectionModel().select(floor);
         }
-
     }
 
     public void selectFloor (String floor) {
@@ -691,7 +645,6 @@ public class MapAdminController extends DisplayController implements Initializab
         changeState(State.NONE);
     }
 
-
     /**
      * Handle mouse event for chain add nodes
      * @param e
@@ -753,7 +706,6 @@ public class MapAdminController extends DisplayController implements Initializab
         }
     }
 
-
     /**
      * Handle the mouse event for chain add node
      * @param e
@@ -780,9 +732,7 @@ public class MapAdminController extends DisplayController implements Initializab
                 addConnection(secondaryNode, selectedNode);
             }
         }
-
     }
-
 
     /**
      * Handle the release event
@@ -812,29 +762,19 @@ public class MapAdminController extends DisplayController implements Initializab
      * save and exit the application
      */
     public void done(){
-
         applicationController.logout();
-    }
-
-
-    /**
-     * create patient display without saving to the database
-     */
-    public void preview () {
-        applicationController.createPatientDisplay();
     }
 
     /**
      * reload the database and reset the state of the gui
      */
     public void undo () {
-        map = applicationController.reload();
+        super.undo();
         activeRoom = null;
         selectedNode = null;
         secondaryNode = null;
         drawMap();
     }
-
 
     /**
      * Change the main display map.
@@ -849,14 +789,6 @@ public class MapAdminController extends DisplayController implements Initializab
             elevatorFloors.add(loc);
         }
         drawMap();
-        changeFloorOptions.toFront();
-    }
-
-    /**
-     * Switches to app.datastore.Directory Admin
-     */
-    public void switchToDirectoryAdmin(){
-        createDirectoryAdminDisplay();
     }
 
     /**
@@ -898,8 +830,6 @@ public class MapAdminController extends DisplayController implements Initializab
         contextMenu.show(circle, event.getScreenX(), event.getScreenY());
         contextMenu.setStyle("-fx-shape:Circle ");
         contextMenu.setStyle("fx-background-image: red");
-
     }
-
 }
 
