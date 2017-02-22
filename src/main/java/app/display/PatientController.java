@@ -3,6 +3,7 @@ package app.display;
 import app.*;
 import app.applicationControl.ApplicationController;
 import app.applicationControl.Login;
+import app.applicationControl.RealImage;
 import app.dataPrimitives.*;
 import app.pathfinding.PathNotFoundException;
 import com.sun.javafx.geom.BaseBounds;
@@ -582,6 +583,58 @@ public class PatientController extends DisplayController implements Initializabl
         return line;
     }
 
+    /**
+     * gets app.dataPrimitives.Room description on screen
+     * @param subpath
+     */
+    public LinkedList<Label> getRoomLabels(SubPath subpath){
+        LinkedList<Label> labels = new LinkedList<>();
+        Room room;
+
+        List<GraphNode> path = subpath.getPath();
+
+        for (GraphNode node: path){
+            Label current = new Label();
+            room = map.getRoomFromNode(node);
+            FloorPoint point;
+            int roomx;
+            int roomy;
+
+//            if(node.isElevator()){
+//                current = new Label("Elevator", new ImageView(applicationController.getImage("elevator")));
+//                point = graphPointToImage(room.getLocation(), patientImageView);
+//                roomx = point.getX() - 5;
+//                roomy = point.getY();
+//                labels.add(current);
+//            }
+            if(room != null) {
+                point = graphPointToImage(room.getLocation(), patientImageView);
+                roomx = point.getX() + 5;
+                roomy = point.getY();
+
+                current.setText(room.getName());
+                current.setLayoutX(roomx);
+                current.setLayoutY(roomy);
+                current.setBorder(new Border(new BorderStroke(Color.BLACK,BorderStrokeStyle.SOLID,new CornerRadii(4),BorderWidths.DEFAULT)));
+                current.setBackground(new Background(new BackgroundFill(Color.rgb(124,231,247), new CornerRadii(4),
+                    new Insets(0.0,0.0,0.0,0.0))));
+                current.setMouseTransparent(true);
+                labels.add(current);
+            }
+        }
+        return labels;
+    }
+
+    /**
+     * Display labels on app.datastore.Map
+     * @param labels
+     */
+    public void displayRoomLabels(LinkedList<Label> labels){
+        for(Label label: labels){
+            anchorPane.getChildren().add(label);
+        }
+    }
+
     public void textDirection(){
         if (textDirectionsTextBox.isVisible()){
             displayState = state.PATIENT_SEARCH;
@@ -671,51 +724,6 @@ public class PatientController extends DisplayController implements Initializabl
     public void scaleHeight(Number oldSceneHeight, Number newSceneHeight){
         anchorPane.setScaleY(anchorPane.getScaleY()*newSceneHeight.doubleValue()/oldSceneHeight.doubleValue());
         //imageView.setScaleX(imageView.getScaleY()*newSceneHeight.doubleValue()/oldSceneHeight.doubleValue());
-    }
-
-    /**
-     * gets app.dataPrimitives.Room description on screen
-     * @param subpath
-     */
-    public LinkedList<Label> getRoomLabels(SubPath subpath){
-        LinkedList<Label> labels = new LinkedList<>();
-        Room room;
-
-        List<GraphNode> path = subpath.getPath();
-
-        for (GraphNode node: path){
-            Label current = new Label();
-            room = map.getRoomFromNode(node);
-            FloorPoint point;
-            int roomx;
-            int roomy;
-
-            if(room != null) {
-                point = graphPointToImage(room.getLocation(), patientImageView);
-                roomx = point.getX() + 5;
-                roomy = point.getY();
-
-                current.setText(room.getName());
-                current.setLayoutX(roomx);
-                current.setLayoutY(roomy);
-                current.setBorder(new Border(new BorderStroke(Color.BLACK,BorderStrokeStyle.SOLID,new CornerRadii(4),BorderWidths.DEFAULT)));
-                current.setBackground(new Background(new BackgroundFill(Color.rgb(124,231,247), new CornerRadii(4),
-                    new Insets(0.0,0.0,0.0,0.0))));
-                current.setMouseTransparent(true);
-                labels.add(current);
-            }
-        }
-        return labels;
-    }
-
-    /**
-     * Display labels on app.datastore.Map
-     * @param labels
-     */
-    public void displayRoomLabels(LinkedList<Label> labels){
-        for(Label label: labels){
-            anchorPane.getChildren().add(label);
-        }
     }
 
     /**
