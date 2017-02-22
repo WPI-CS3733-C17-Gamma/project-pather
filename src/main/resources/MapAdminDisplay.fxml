@@ -8,6 +8,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Pane?>
 
 <BorderPane onKeyPressed="#handleKey" style="-fx-background-color: #d4e3ed;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.display.MapAdminController">
     <top>
@@ -16,7 +17,8 @@
                 <ToggleButton fx:id="togglebuttonChainAdd" layoutX="259.0" mnemonicParsing="false" onAction="#handleToggleTools" prefHeight="26.0" prefWidth="128.0" text="Chain Add">
                <toggleGroup>
                   <ToggleGroup fx:id="toggleTools" />
-               </toggleGroup></ToggleButton>
+               </toggleGroup>
+            </ToggleButton>
                 <ToggleButton fx:id="togglebuttonAddNode" mnemonicParsing="false" onAction="#handleToggleTools" prefHeight="26.0" prefWidth="99.0" text="Add Node" toggleGroup="$toggleTools" />
                 <ToggleButton fx:id="togglebuttonAddConnections" layoutX="110.0" mnemonicParsing="false" onAction="#handleToggleTools" prefHeight="26.0" prefWidth="140.0" text="Add Connections" toggleGroup="$toggleTools" />
                 <Button layoutY="30.0" mnemonicParsing="false" onAction="#deleteSelected" prefHeight="26.0" prefWidth="99.0" text="Delete Node" />
@@ -37,15 +39,15 @@
                 <Button layoutX="350.0" layoutY="15.0" mnemonicParsing="false" onAction="#preview" text="Preview" />
                 <Button layoutX="57.0" layoutY="15.0" mnemonicParsing="false" text="Help" />
                 <Button fx:id="buttonDone" layoutX="450.0" layoutY="15.0" mnemonicParsing="false" onAction="#done" onMouseClicked="#done" text="Save and Exit" />
+                <ListView fx:id="changeFloorOptions" layoutX="145.0" layoutY="18.0" prefHeight="18.0" prefWidth="142.0" visible="false" />
+                <ListView fx:id="elevatorFloorOptions" layoutX="145.0" layoutY="11.0" prefHeight="14.0" prefWidth="168.0" visible="false" />
             </children></AnchorPane>
     </bottom>
     <center>
-        <AnchorPane fx:id="anchorpaneMap" minWidth="-Infinity" onKeyReleased="#handleKey" prefHeight="433.0" prefWidth="600.0" BorderPane.alignment="CENTER">
-            <children>
-                <ImageView fx:id="imageviewMap" fitHeight="413.0" fitWidth="600.0" onContextMenuRequested="#showContextMenu" onMouseDragged="#handleDragEvent" onMousePressed="#isPressed" onMouseReleased="#isReleased" pickOnBounds="true" preserveRatio="true" />
-                <ListView fx:id="changeFloorOptions" layoutX="258.0" layoutY="-41.0" prefHeight="324.0" prefWidth="142.0" visible="false" />
-                <ListView fx:id="elevatorFloorOptions" layoutX="447.0" prefHeight="242.0" prefWidth="168.0" visible="false" />
-            </children>
-        </AnchorPane>
+      <Pane fx:id="mapPane">
+         <children>
+                <ImageView fx:id="imageviewMap" onContextMenuRequested="#showContextMenu" onMouseDragged="#handleDragEvent" onMousePressed="#isPressed" onMouseReleased="#isReleased" pickOnBounds="true" preserveRatio="true" />
+         </children>
+      </Pane>
     </center>
 </BorderPane>
