@@ -707,14 +707,10 @@ public class MapAdminController extends DisplayController implements Initializab
     /**
      * Deselects all buttons when textbox is selected
      */
-    int x = 0;
     public void isFocused(){
-        map.addRoom(new Room(null, "room"+ x++));
         System.out.println("getting unlocated rooms");
         ObservableList<String> unlocatedRoomOptions = FXCollections.observableArrayList(map.getRoomsWithoutLocations());
-        List<String> unlocatedRoom =  map.getRoomsWithoutLocations();
-        unlocatedRoom.stream().forEach(System.out::println);
-
+        roomName.setItems(unlocatedRoomOptions);
         changeState(State.NONE);
     }
 
