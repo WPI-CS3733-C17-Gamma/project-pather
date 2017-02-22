@@ -89,6 +89,23 @@ public class Map {
     }
 
     /**
+     * Get a list all all rooms without names
+     * @return list of room names
+     */
+    public List<String> getRoomsWithoutLocations () {
+        return directory.getRoomsWithoutLocations();
+    }
+
+    /**
+     * set the location of the given room to the given location
+     * @param roomName name of room to be changed
+     * @param location location to set the room to
+     */
+    public void setRoomLocation (String roomName, GraphNode location) {
+        directory.setRoomLocation (roomName, location);
+    }
+
+    /**
      * Return all kiosks
      * @return
      */
