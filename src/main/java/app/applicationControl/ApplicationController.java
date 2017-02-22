@@ -54,18 +54,18 @@ public class ApplicationController extends Application {
 
 
         images = new HashMap<>();
-        images.put("floor1", new ProxyImage("Main_Belkin_Clean/main_1clean"));
-        images.put("floor2", new ProxyImage("Main_Belkin_Clean/main_2clean"));
-        images.put("floor3", new ProxyImage("Main_Belkin_Clean/main_3clean"));
-        images.put("floor4", new ProxyImage("Main_Belkin_Clean/main_4clean"));
-        images.put("floor5", new ProxyImage("Main_Belkin_Clean/main_5clean"));
-        images.put("floor6", new ProxyImage("Main_Belkin_Clean/main_6clean"));
-        images.put("floor7", new ProxyImage("Main_Belkin_Clean/main_7clean"));
-        images.put("belkin1", new ProxyImage("Main_Belkin_Clean/Belkin_1clean"));
-        images.put("belkin2", new ProxyImage("Main_Belkin_Clean/Belkin_2clean"));
-        images.put("belkin3", new ProxyImage("Main_Belkin_Clean/Belkin_3clean"));
-        images.put("belkin4", new ProxyImage("Main_Belkin_Clean/Belkin_4clean"));
-        images.put("campus", new ProxyImage("Main_Belkin_Clean/campusclean"));
+        images.put("floor1", new ProxyImage("Main_Belkin_Clean/main_1clean.png"));
+        images.put("floor2", new ProxyImage("Main_Belkin_Clean/main_2clean.png"));
+        images.put("floor3", new ProxyImage("Main_Belkin_Clean/main_3clean.png"));
+        images.put("floor4", new ProxyImage("Main_Belkin_Clean/main_4clean.png"));
+        images.put("floor5", new ProxyImage("Main_Belkin_Clean/main_5clean.png"));
+        images.put("floor6", new ProxyImage("Main_Belkin_Clean/main_6clean.png"));
+        images.put("floor7", new ProxyImage("Main_Belkin_Clean/main_7clean.png"));
+        images.put("belkin1", new ProxyImage("Main_Belkin_Clean/Belkin_1clean.png"));
+        images.put("belkin2", new ProxyImage("Main_Belkin_Clean/Belkin_2clean.png"));
+        images.put("belkin3", new ProxyImage("Main_Belkin_Clean/Belkin_3clean.png"));
+        images.put("belkin4", new ProxyImage("Main_Belkin_Clean/Belkin_4clean.png"));
+        images.put("campus", new ProxyImage("Main_Belkin_Clean/campusclean.png"));
 
     }
 
