@@ -122,7 +122,7 @@ public class PatientController extends DisplayController implements Initializabl
             searchAnchorPane.setVisible(true);
             patientImageView.setImage(imageView.getImage());
             this.displayState = state.PATIENT_SEARCH;
-            miniMenuButton.setVisible(true);
+//            miniMenuButton.setVisible(true);
             displayImage();
         }
     }
@@ -137,7 +137,7 @@ public class PatientController extends DisplayController implements Initializabl
             searchAnchorPane.setVisible(false);
             this.displayState = state.PATIENT_DEFAULT;
             clearSearchDisplay();
-            miniMenuButton.setVisible(false);
+//            miniMenuButton.setVisible(false);
             displayImage();//display the original image
         }
     }
@@ -331,8 +331,8 @@ public class PatientController extends DisplayController implements Initializabl
                 ImageView currentImageView = new ImageView();
 
                 currentImageView.setPreserveRatio(true);
-                currentImageView.setFitHeight(95);
-                currentImageView.setFitWidth(165);
+                currentImageView.setFitHeight(75);
+                currentImageView.setFitWidth(133);
                 currentImageView.setOnMousePressed(e -> mapChoice(e));
                 currentImageView.setImage(applicationController.getImage(p.getFloor()));
                 currentImageView.setId(x + "floor in list");
@@ -394,12 +394,12 @@ public class PatientController extends DisplayController implements Initializabl
             timeline.setCycleCount(1);
             timeline.setAutoReverse(true);
             timeline.setOnFinished(e -> initializeMinimaps());
-            final KeyValue kv = new KeyValue(multiMapDisplayMenu.layoutYProperty(), 490);
+            final KeyValue kv = new KeyValue(multiMapDisplayMenu.layoutYProperty(), 510);
             final KeyFrame kf = new KeyFrame(Duration.millis(300), kv);
             timeline.getKeyFrames().add(kf);
             timeline.play();
-            miniMenuButton.setLayoutY(491);
-            miniMenuButton.setText("X");
+//            miniMenuButton.setLayoutY(491);
+//            miniMenuButton.setText("X");
             displayState  = s;
         }
     }
@@ -418,8 +418,8 @@ public class PatientController extends DisplayController implements Initializabl
             final KeyFrame kf = new KeyFrame(Duration.millis(100), kv);
             timeline.getKeyFrames().add(kf);
             timeline.play();
-            miniMenuButton.setLayoutY(568);
-            miniMenuButton.setText("^");
+//            miniMenuButton.setLayoutY(568);
+//            miniMenuButton.setText("^");
             displayState = s;
         }
     }
@@ -429,7 +429,7 @@ public class PatientController extends DisplayController implements Initializabl
      */
     public void initializeMinimaps(){
         displayMinipaths();
-        minimaps.getFirst().map.setEffect(new DropShadow());
+        minimaps.get(currentSubPath).map.setEffect(new DropShadow());
     }
 
     /**

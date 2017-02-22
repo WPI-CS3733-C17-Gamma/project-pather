@@ -39,18 +39,20 @@
 
 .tab{
 	/*-fx-tab-min-width: 90px;*/	
-	-fx-text-fill: -fx-text-base-color;
-	-fx-background-color: #229e9e;
+	/*-fx-text-fill: red;*/
+	-fx-background-color: #1b449c;
 	-fx-font-size: 16px;
 	-fx-padding: 5px 10px;
 	-fx-shape: "M300,290 L310,168 L410,168 L400,290 L300,290 z";
+	-fx-color: red;
 }
 
  .tab:selected
  {
 	-fx-padding: 5px 10px;
-	-fx-background-color: #f4c3c2;
+	-fx-background-color: #3F8EA9;
 	-fx-border: none;
+	/*-fx-color: black;*/
 }
 
 .directoryAdminButton{
@@ -100,21 +102,25 @@
 }
 
 .resultMenu{
-	-fx-background-color: #B7C1C4;
-	-fx-opacity: 75%;
-	-fx-background-radius: 3px;
+	-fx-background-color: #FAFAFA;
+	-fx-opacity: 100%;
+	/*-fx-background-radius: 3px;*/
 }
 
 .textDirection{
 	-fx-padding: 3px;
 	-fx-background-radius: 5px;
-	-fx-background-color: #BBC4C7;
+	-fx-background-color: #FAFAFA;
 	-fx-opacity: 75%;
-	-fx-text-fill: grey;
+	-fx-text-fill: #1b449c;
 	-fx-font-size: 16px;
 	-fx-font-weight: bold;
 }
 
 .centerImage{
 	-fx-background-position: center; 
+}
+
+.line{
+	-fx-stroke: #1b449c;
 }
