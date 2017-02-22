@@ -1,6 +1,5 @@
 package app.applicationControl;
 
-import java.net.PasswordAuthentication;
 import java.util.HashMap;
 
 /**
@@ -26,7 +25,7 @@ public class Login {
      */
     boolean signIn(String uname, String password) {
 
-        if (!requiredSignin) {
+        if (requiredSignin) {
             return true;
         }
         try {

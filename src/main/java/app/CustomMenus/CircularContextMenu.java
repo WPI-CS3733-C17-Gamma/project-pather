@@ -1,14 +1,11 @@
 package app.CustomMenus;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.effect.BlendMode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-import javafx.scene.shape.SVGPath;
 import javafx.stage.Popup;
 
 import java.util.LinkedList;
@@ -24,15 +21,14 @@ public class CircularContextMenu extends Popup {
     private List<ContextMenuElement> menuElements = new LinkedList<>();
     Group root;
     Scene scene;
-    ContextMenuElement highlight = new ContextMenuElement(Color.rgb(41, 191,191),this);
+    ContextMenuElement highlight = new ContextMenuElement(Color.rgb(41, 191,191),this,null);
     double angle;
     CentralDisplay display = new CentralDisplay(innerRadius,outerRadius);
     /**
      * Default Constructor
      */
     public CircularContextMenu(){
-
-        //this.buildEventDispatchChain(chain);
+        highlight.background.setMouseTransparent(true);
         this.addEventHandler(MouseEvent.MOUSE_RELEASED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -57,6 +53,7 @@ public class CircularContextMenu extends Popup {
      * @param outerRadius Outer Radius of Context Menu
      */
     public CircularContextMenu( double innerRadius, double outerRadius){
+        highlight.background.setMouseTransparent(true);
         this.innerRadius = innerRadius;
         this.outerRadius = outerRadius;
         root = new Group();
@@ -77,7 +74,7 @@ public class CircularContextMenu extends Popup {
         double currentAngle = 0;
         setAutoHide(true);
 
-        menuElements.add(new ContextMenuElement(image, clickHandler, dragHandler, this));
+        menuElements.add(new ContextMenuElement(image, this, display, clickHandler, dragHandler));
         getContent().removeAll();
 
         for(ContextMenuElement element:menuElements) {//redraw elements when a new one is added
@@ -103,7 +100,7 @@ public class CircularContextMenu extends Popup {
         angle = (double)360 / (double)(size+1);
         double currentAngle = 0.0;
 
-        menuElements.add(new ContextMenuElement(image, this));
+        menuElements.add(new ContextMenuElement(image, this, display));
         getContent().clear();
 
         for(ContextMenuElement element:menuElements) {
@@ -185,16 +182,16 @@ public class CircularContextMenu extends Popup {
         super.requestFocus();
     }
 
-    public void fireEvent2(Event event){
-                MouseEvent mouseEvent = (MouseEvent) event;
-        double x = mouseEvent.getScreenX();
-        double y = mouseEvent.getScreenY();
-        x = x - this.getX();
-        y = y - this.getY();
-        for(ContextMenuElement element:menuElements){
-            element.path.fireEvent(event.copyFor(this,element.path));
-        }
-    }
+//    public void fireEvent2(Event event){
+//                MouseEvent mouseEvent = (MouseEvent) event;
+//        double x = mouseEvent.getScreenX();
+//        double y = mouseEvent.getScreenY();
+//        x = x - this.getX();
+//        y = y - this.getY();
+//        for(ContextMenuElement element:menuElements){
+//            element.path.fireEvent(event.copyFor(this,element.path));
+//        }
+//    }
     public String toString(){
         return("This menu has: " + menuElements.size() + " options.");
     }
@@ -225,15 +222,27 @@ public class CircularContextMenu extends Popup {
             mouseAngle += 360;
 
         mouseAngle %= 360;
-        System.out.println(mouseAngle);
-        if(innerRadius < dist && dist < outerRadius) {
+        if(dist < outerRadius) {
             highlight.draw(mouseAngle - angle / 2, angle, innerRadius, outerRadius);
             super.show(getOwnerNode(), getAnchorX(), getAnchorY());
         }
-        getContent().add(highlight.path);
-        highlight.path.setMouseTransparent(true);
-        highlight.path.setBlendMode(BlendMode.MULTIPLY);
+        draw();
 
     }
+
+    /**
+     * Draws the context Menu. Icons are always on top
+     */
+    public void draw(){
+        for (ContextMenuElement element: menuElements){
+            getContent().remove(element.path);
+        }
+
+        getContent().add(highlight.path);
+        for (ContextMenuElement element: menuElements) {
+            getContent().add(element.path);
+        }
+    }
+
 }
 

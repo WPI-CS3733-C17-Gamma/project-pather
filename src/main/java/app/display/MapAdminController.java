@@ -137,7 +137,8 @@ public class MapAdminController extends DisplayController {
             .forEach(node -> drawNode(node, imageviewMap));
         highlightSelected();
         addFloorLabel(this.currentMap);
-
+//---------------------------------------------------------------------------------------------------------------------
+        //Setup Contest Menu here
 
     }
 
@@ -821,13 +822,16 @@ public class MapAdminController extends DisplayController {
             //nodeMenu.hide();
             Shape circle = new Circle(event.getX(), event.getY(), 10);
             anchorpaneMap.getChildren().add(circle);
-            ImagePattern elevator = new ImagePattern(new Image("/Radial Icons/Add_Node.png"));
-            nodeMenu.addOption(elevator);
-            nodeMenu.addOption(Color.rgb(211,211,211));
-            nodeMenu.addOption(Color.rgb(211,211,211));
+            ImagePattern deleteRoom = new ImagePattern(new Image("/Radial Icons/Delete_Room.png"));
+            ImagePattern addRoom = new ImagePattern(new Image("/Radial Icons/Add_Room2.png"));
+            ImagePattern deleteNode = new ImagePattern(new Image("/Radial Icons/Delete_Node.png"));
+
+            nodeMenu.addOption(deleteRoom);
+            nodeMenu.addOption(addRoom);
+            nodeMenu.addOption(deleteNode);
             nodeMenu.show(circle,event.getScreenX(), event.getScreenY());
         }else{
-            //
+
             Shape circle = new Circle(event.getX(), event.getY(), 10);
             anchorpaneMap.getChildren().add(circle);
             screenMenu.addOption(Color.WHITE);
