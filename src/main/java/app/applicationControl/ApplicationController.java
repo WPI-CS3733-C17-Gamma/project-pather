@@ -66,7 +66,7 @@ public class ApplicationController extends Application {
         images.put("belkin3", new ProxyImage("Main_Belkin_Clean/Belkin_3clean.png"));
         images.put("belkin4", new ProxyImage("Main_Belkin_Clean/Belkin_4clean.png"));
         images.put("campus", new ProxyImage("Main_Belkin_Clean/campusclean.png"));
-
+        images.put("elevator", new ProxyImage("Icon_PNGs/ElevatorT.png"));
     }
 
     /**
@@ -152,7 +152,6 @@ public class ApplicationController extends Application {
     public void createAdminDisplay(){
         adminStage.close();
         adminStage = new Stage();
-        adminStage.setResizable(false);
         adminStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent event) {

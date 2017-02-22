@@ -2,8 +2,13 @@ package app.display;
 
 import app.CustomMenus.CircularContextMenu;
 import app.applicationControl.ApplicationController;
+import app.applicationControl.Login;
+import app.applicationControl.RealImage;
 import app.dataPrimitives.*;
 import app.pathfinding.PathNotFoundException;
+import com.sun.javafx.geom.BaseBounds;
+import com.sun.javafx.geom.transform.BaseTransform;
+import com.sun.javafx.scene.BoundsAccessor;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -20,6 +25,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.Effect;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -73,6 +79,7 @@ public class PatientController extends DisplayController implements Initializabl
     @FXML private Button login;
     @FXML private Button TextDirection;
     @FXML private Button miniMenuButton;
+    @FXML private Button floor1;
 
     private List<SubPath> currentPath;
     private int currentSubPath;
@@ -83,6 +90,8 @@ public class PatientController extends DisplayController implements Initializabl
 
     boolean selected = false;
     CircularContextMenu menu = new CircularContextMenu();
+
+    private Button previousButton;
 
     /**
      *
@@ -121,7 +130,7 @@ public class PatientController extends DisplayController implements Initializabl
             searchAnchorPane.setVisible(true);
             patientImageView.setImage(imageView.getImage());
             this.displayState = state.PATIENT_SEARCH;
-            miniMenuButton.setVisible(true);
+//            miniMenuButton.setVisible(true);
             displayImage();
         }
     }
@@ -132,11 +141,11 @@ public class PatientController extends DisplayController implements Initializabl
     public void exitSearch(){
         System.out.println("Exit button works");
         if (this.displayState == state.PATIENT_SEARCH || this.displayState == state.DISPLAYING_TEXT_DIRECTION ){//switch state
+            hideMultiMapAnimation();
             searchAnchorPane.setVisible(false);
             this.displayState = state.PATIENT_DEFAULT;
             clearSearchDisplay();
-            miniMenuButton.setVisible(false);
-            hideMultiMapAnimation();
+//            miniMenuButton.setVisible(false);
             displayImage();//display the original image
         }
     }
@@ -145,6 +154,10 @@ public class PatientController extends DisplayController implements Initializabl
      * perform search; get text from the textfield
      */
     public void search () {
+        if (displayState != state.DISPLAYING_TEXT_DIRECTION || displayState != state.PATIENT_SEARCH){
+            startSearch();
+        }
+
         clearSearchDisplay();
         currentPath = null;
         String search = searchBar.getText();
@@ -244,6 +257,20 @@ public class PatientController extends DisplayController implements Initializabl
         return null;
     }
 
+    public void selectPatientImage(MouseEvent e){
+        if (e.getSource() instanceof Button) {
+            Button temp = (Button) e.getSource();
+            System.out.println(temp.getId());
+            imageView.setImage(applicationController.getImage(temp.getId()));
+            if (previousButton != null){
+                //return to default image color
+                previousButton.setStyle("-fx-background-color: #F7F7F7");
+            }
+            previousButton = temp;
+            previousButton.setStyle("-fx-background-color: #898b95");
+        }
+    }
+
     /**
      * remove search result
      */
@@ -323,8 +350,8 @@ public class PatientController extends DisplayController implements Initializabl
                 ImageView currentImageView = new ImageView();
 
                 currentImageView.setPreserveRatio(true);
-                currentImageView.setFitHeight(95);
-                currentImageView.setFitWidth(165);
+                currentImageView.setFitHeight(75);
+                currentImageView.setFitWidth(133);
                 currentImageView.setOnMousePressed(e -> mapChoice(e));
                 currentImageView.setImage(applicationController.getImage(p.getFloor()));
                 currentImageView.setId(x + "floor in list");
@@ -386,12 +413,12 @@ public class PatientController extends DisplayController implements Initializabl
             timeline.setCycleCount(1);
             timeline.setAutoReverse(true);
             timeline.setOnFinished(e -> initializeMinimaps());
-            final KeyValue kv = new KeyValue(multiMapDisplayMenu.layoutYProperty(), 490);
+            final KeyValue kv = new KeyValue(multiMapDisplayMenu.layoutYProperty(), 510);
             final KeyFrame kf = new KeyFrame(Duration.millis(300), kv);
             timeline.getKeyFrames().add(kf);
             timeline.play();
-            miniMenuButton.setLayoutY(491);
-            miniMenuButton.setText("X");
+//            miniMenuButton.setLayoutY(491);
+//            miniMenuButton.setText("X");
             displayState  = s;
         }
     }
@@ -410,8 +437,8 @@ public class PatientController extends DisplayController implements Initializabl
             final KeyFrame kf = new KeyFrame(Duration.millis(100), kv);
             timeline.getKeyFrames().add(kf);
             timeline.play();
-            miniMenuButton.setLayoutY(568);
-            miniMenuButton.setText("^");
+//            miniMenuButton.setLayoutY(568);
+//            miniMenuButton.setText("^");
             displayState = s;
         }
     }
@@ -421,7 +448,7 @@ public class PatientController extends DisplayController implements Initializabl
      */
     public void initializeMinimaps(){
         displayMinipaths();
-        minimaps.getFirst().map.setEffect(new DropShadow());
+        minimaps.get(currentSubPath).map.setEffect(new DropShadow());
     }
 
     /**
@@ -556,6 +583,58 @@ public class PatientController extends DisplayController implements Initializabl
         return line;
     }
 
+    /**
+     * gets app.dataPrimitives.Room description on screen
+     * @param subpath
+     */
+    public LinkedList<Label> getRoomLabels(SubPath subpath){
+        LinkedList<Label> labels = new LinkedList<>();
+        Room room;
+
+        List<GraphNode> path = subpath.getPath();
+
+        for (GraphNode node: path){
+            Label current = new Label();
+            room = map.getRoomFromNode(node);
+            FloorPoint point;
+            int roomx;
+            int roomy;
+
+//            if(node.isElevator()){
+//                current = new Label("Elevator", new ImageView(applicationController.getImage("elevator")));
+//                point = graphPointToImage(room.getLocation(), patientImageView);
+//                roomx = point.getX() - 5;
+//                roomy = point.getY();
+//                labels.add(current);
+//            }
+            if(room != null) {
+                point = graphPointToImage(room.getLocation(), patientImageView);
+                roomx = point.getX() + 5;
+                roomy = point.getY();
+
+                current.setText(room.getName());
+                current.setLayoutX(roomx);
+                current.setLayoutY(roomy);
+                current.setBorder(new Border(new BorderStroke(Color.BLACK,BorderStrokeStyle.SOLID,new CornerRadii(4),BorderWidths.DEFAULT)));
+                current.setBackground(new Background(new BackgroundFill(Color.rgb(124,231,247), new CornerRadii(4),
+                    new Insets(0.0,0.0,0.0,0.0))));
+                current.setMouseTransparent(true);
+                labels.add(current);
+            }
+        }
+        return labels;
+    }
+
+    /**
+     * Display labels on app.datastore.Map
+     * @param labels
+     */
+    public void displayRoomLabels(LinkedList<Label> labels){
+        for(Label label: labels){
+            anchorPane.getChildren().add(label);
+        }
+    }
+
     public void textDirection(){
         if (textDirectionsTextBox.isVisible()){
             displayState = state.PATIENT_SEARCH;
@@ -607,6 +686,10 @@ public class PatientController extends DisplayController implements Initializabl
         System.out.println("INIT");
         displayImage();
 
+         previousButton = floor1;
+
+        imageView.setMouseTransparent(true);
+
         options.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -645,51 +728,6 @@ public class PatientController extends DisplayController implements Initializabl
     }
 
     /**
-     * gets app.dataPrimitives.Room description on screen
-     * @param subpath
-     */
-    public LinkedList<Label> getRoomLabels(SubPath subpath){
-        LinkedList<Label> labels = new LinkedList<>();
-        Room room;
-
-        List<GraphNode> path = subpath.getPath();
-
-        for (GraphNode node: path){
-            Label current = new Label();
-            room = map.getRoomFromNode(node);
-            FloorPoint point;
-            int roomx;
-            int roomy;
-
-            if(room != null) {
-                point = graphPointToImage(room.getLocation(), patientImageView);
-                roomx = point.getX() + 5;
-                roomy = point.getY();
-
-                current.setText(room.getName());
-                current.setLayoutX(roomx);
-                current.setLayoutY(roomy);
-                current.setBorder(new Border(new BorderStroke(Color.BLACK,BorderStrokeStyle.SOLID,new CornerRadii(4),BorderWidths.DEFAULT)));
-                current.setBackground(new Background(new BackgroundFill(Color.rgb(124,231,247), new CornerRadii(4),
-                    new Insets(0.0,0.0,0.0,0.0))));
-                current.setMouseTransparent(true);
-                labels.add(current);
-            }
-        }
-        return labels;
-    }
-
-    /**
-     * Display labels on app.datastore.Map
-     * @param labels
-     */
-    public void displayRoomLabels(LinkedList<Label> labels){
-        for(Label label: labels){
-            anchorPane.getChildren().add(label);
-        }
-    }
-
-    /**
      * Displays paths on minimaps
      */
     public void displayMinipaths(){
@@ -706,6 +744,10 @@ public class PatientController extends DisplayController implements Initializabl
             clearDisplay();
             displaySubPath(patientImageView, currentPath.get(currentSubPath), true, 10, 20);
         }
+    }
+
+    public void hideOptions(){
+        options.setVisible(false);
     }
 }
 
