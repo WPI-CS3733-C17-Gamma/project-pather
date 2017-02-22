@@ -34,19 +34,24 @@
               </ImageView>
               <Button fx:id="help" layoutX="825.0" layoutY="14.0" mnemonicParsing="false" onAction="#help" onKeyPressed="#help" prefHeight="50.0" prefWidth="50.0" styleClass="helpButton" stylesheets="@design.css" />
               <Button fx:id="adminButton" layoutX="915.0" layoutY="14.0" mnemonicParsing="false" onAction="#logIn" prefHeight="50.0" prefWidth="50.0" styleClass="adminMenuButton" stylesheets="@design.css" />
-            <TabPane layoutX="24.0" layoutY="79.0" prefHeight="485.0" prefWidth="948.0" stylesheets="@design.css" tabClosingPolicy="UNAVAILABLE">
+            <HBox alignment="CENTER" layoutY="130.0" prefHeight="438.0" prefWidth="1000.0">
+               <children>
+                    <ImageView fx:id="imageView" fitHeight="438.0" fitWidth="800.0" pickOnBounds="true" preserveRatio="true" />
+               </children>
+            </HBox>
+            <TabPane layoutX="662.0" layoutY="79.0" prefHeight="485.0" prefWidth="303.0" stylesheets="@design.css" tabClosingPolicy="UNAVAILABLE">
               <tabs>
                   <Tab text="Main">
                     <content>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
-                              <Button fx:id="floor1" layoutX="20.0" layoutY="14.0" mnemonicParsing="false" onMousePressed="#selectPatientImage" text="1" />
-                              <Button fx:id="floor2" layoutX="60.0" layoutY="14.0" mnemonicParsing="false" onMousePressed="#selectPatientImage" text="2" />
-                              <Button fx:id="floor3" layoutX="100.0" layoutY="14.0" mnemonicParsing="false" onMousePressed="#selectPatientImage" text="3" />
-                              <Button fx:id="floor4" layoutX="140.0" layoutY="14.0" mnemonicParsing="false" text="4" />
-                              <Button fx:id="floor5" layoutX="180.0" layoutY="14.0" mnemonicParsing="false" onMousePressed="#selectPatientImage" text="5" />
-                              <Button fx:id="floor6" layoutX="220.0" layoutY="14.0" mnemonicParsing="false" onMousePressed="#selectPatientImage" text="6" />
-                              <Button fx:id="floor7" layoutX="260.0" layoutY="14.0" mnemonicParsing="false" onMousePressed="#selectPatientImage" text="7" />
+                              <Button fx:id="floor1" layoutX="10.0" layoutY="14.0" mnemonicParsing="false" onMousePressed="#selectPatientImage" text="1" />
+                              <Button fx:id="floor2" layoutX="50.0" layoutY="14.0" mnemonicParsing="false" onMousePressed="#selectPatientImage" text="2" />
+                              <Button fx:id="floor3" layoutX="90.0" layoutY="14.0" mnemonicParsing="false" onMousePressed="#selectPatientImage" text="3" />
+                              <Button fx:id="floor4" layoutX="130.0" layoutY="14.0" mnemonicParsing="false" text="4" />
+                              <Button fx:id="floor5" layoutX="170.0" layoutY="14.0" mnemonicParsing="false" onMousePressed="#selectPatientImage" text="5" />
+                              <Button fx:id="floor6" layoutX="210.0" layoutY="14.0" mnemonicParsing="false" onMousePressed="#selectPatientImage" text="6" />
+                              <Button fx:id="floor7" layoutX="250.0" layoutY="14.0" mnemonicParsing="false" onMousePressed="#selectPatientImage" text="7" />
                            </children>
                         </AnchorPane>
                     </content>
@@ -55,10 +60,10 @@
                   <content>
                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
-                              <Button fx:id="belkin1" layoutX="20.0" layoutY="14.0" mnemonicParsing="false" onMousePressed="#selectPatientImage" text="1" />
-                              <Button fx:id="belkin2" layoutX="60.0" layoutY="14.0" mnemonicParsing="false" onMousePressed="#selectPatientImage" text="2" />
-                              <Button fx:id="belkin3" layoutX="100.0" layoutY="14.0" mnemonicParsing="false" onMousePressed="#selectPatientImage" text="3" />
-                              <Button fx:id="belkin4" layoutX="140.0" layoutY="14.0" mnemonicParsing="false" onMousePressed="#selectPatientImage" text="4" />
+                              <Button fx:id="belkin1" layoutX="130.0" layoutY="14.0" mnemonicParsing="false" onMousePressed="#selectPatientImage" text="1" />
+                              <Button fx:id="belkin2" layoutX="170.0" layoutY="14.0" mnemonicParsing="false" onMousePressed="#selectPatientImage" text="2" />
+                              <Button fx:id="belkin3" layoutX="210.0" layoutY="14.0" mnemonicParsing="false" onMousePressed="#selectPatientImage" text="3" />
+                              <Button fx:id="belkin4" layoutX="250.0" layoutY="14.0" mnemonicParsing="false" onMousePressed="#selectPatientImage" text="4" />
                            </children>
                         </AnchorPane>
                   </content>
@@ -74,7 +79,6 @@
                 </Tab>
               </tabs>
             </TabPane>
-              <ImageView fx:id="imageView" fitHeight="438.0" fitWidth="800.0" layoutX="124.0" layoutY="118.0" pickOnBounds="true" preserveRatio="true" />
               <AnchorPane fx:id="searchAnchorPane" prefHeight="600.0" prefWidth="1000.0" styleClass="patientBackground" stylesheets="@design.css" visible="false">
                  <children>
                     <ImageView fx:id="patientImageView" fitHeight="454.0" fitWidth="800.0" layoutX="100.0" layoutY="103.0" pickOnBounds="true" preserveRatio="true" />

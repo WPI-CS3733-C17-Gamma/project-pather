@@ -43,7 +43,7 @@
 	-fx-background-color: #229e9e;
 	-fx-font-size: 16px;
 	-fx-padding: 5px 10px;
-	-fx-shape: "M310,290 L300,168 L400,168 L410,290 L300,290 z";
+	-fx-shape: "M300,290 L310,168 L410,168 L400,290 L300,290 z";
 }
 
  .tab:selected
@@ -113,4 +113,8 @@
 	-fx-text-fill: grey;
 	-fx-font-size: 16px;
 	-fx-font-weight: bold;
+}
+
+.centerImage{
+	-fx-background-position: center; 
 }
