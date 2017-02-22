@@ -7,6 +7,19 @@ public class Room extends Ided implements Comparable {
     GraphNode location;
     String name;
 
+    /**
+     * Create a room without a location
+     * @param name
+     */
+    public Room (String name) {
+        this(null, name);
+    }
+
+    /**
+     *
+     * @param location graph node attached to the room
+     * @param name : name of the room
+     */
     public Room(GraphNode location, String name){
         this.location = location;
         this.name = name;
