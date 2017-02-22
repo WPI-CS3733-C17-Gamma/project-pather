@@ -12,4 +12,5 @@ public interface IPathFindingAlgorithm {
      * @throws PathNotFoundException
      */
     public LinkedList<GraphNode> findPath(GraphNode start, GraphNode end) throws PathNotFoundException;
+    public String getName();
 }

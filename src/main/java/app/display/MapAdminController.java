@@ -4,6 +4,8 @@ import app.applicationControl.ApplicationController;
 import app.dataPrimitives.FloorPoint;
 import app.dataPrimitives.GraphNode;
 import app.dataPrimitives.Room;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -78,6 +80,7 @@ public class MapAdminController extends DisplayController {
     @FXML private ToggleButton togglebuttonChangeFloor;
 
     @FXML private Button defaultKioskButton;
+    @FXML private ChoiceBox chooseAlgorithm;
 
     private GraphNode tempNode ;
     private String currentMap;
@@ -95,6 +98,20 @@ public class MapAdminController extends DisplayController {
         togglebuttonAddConnections.setUserData(State.ADD_CONNECTION);
         togglebuttonChainAdd.setUserData(State.CHAIN_ADD);
         togglebuttonAddElevator.setUserData(State.ADD_ELEVATOR);
+
+        List<String> choices = new ArrayList<>(map.getPathingAlgorithmList());
+        chooseAlgorithm.setItems(FXCollections.observableList(choices));
+        chooseAlgorithm.setValue(map.getPathingAlgorithm());
+        chooseAlgorithm.setTooltip(new Tooltip("Change Pathing Algorithm"));
+
+        chooseAlgorithm.getSelectionModel().selectedIndexProperty().addListener(
+            new ChangeListener<Number>() {
+                @Override
+                public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                    map.changeAlgorithm(choices.get((int)newValue));
+                }
+            }
+        );
 
         /**
          * Add click listener to the list of floor options

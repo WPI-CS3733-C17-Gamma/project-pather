@@ -7,6 +7,8 @@ import java.util.LinkedList;
 
 public class AStar implements IPathFindingAlgorithm {
 
+    private String name  = "A*";
+
     /**
      * Finds the shortest path using the A* path finding algorithm
      * @param startNode
@@ -58,7 +60,6 @@ public class AStar implements IPathFindingAlgorithm {
     }
     throw new PathNotFoundException(startNode, goalNode);
 }
-
     /***
      *
      * @param current
@@ -74,4 +75,12 @@ public class AStar implements IPathFindingAlgorithm {
         }
         return total_path;
     }
+
+
+    @Override
+    public String getName() {
+        return this.name;
+    }
+
+
 }
