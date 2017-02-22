@@ -133,11 +133,11 @@ public class PatientController extends DisplayController implements Initializabl
     public void exitSearch(){
         System.out.println("Exit button works");
         if (this.displayState == state.PATIENT_SEARCH || this.displayState == state.DISPLAYING_TEXT_DIRECTION ){//switch state
+            hideMultiMapAnimation();
             searchAnchorPane.setVisible(false);
             this.displayState = state.PATIENT_DEFAULT;
             clearSearchDisplay();
             miniMenuButton.setVisible(false);
-            hideMultiMapAnimation();
             displayImage();//display the original image
         }
     }
@@ -247,6 +247,7 @@ public class PatientController extends DisplayController implements Initializabl
 
     public void selectPatientImage(MouseEvent e){
         if (e.getSource() instanceof Button) {
+            System.out.println(((Button) e.getSource()).getId());
             imageView.setImage(applicationController.getImage(((Button) e.getSource()).getId()));
         }
     }

@@ -1,6 +1,6 @@
 .button{
 	-fx-text-fill: black;
-	-fx-background-color: #d3d3d3;
+	-fx-background-color: #d0d0d0;
 	-fx-font-size: 16px;
 	/*-fx-box-shadow: 10px 10px 5px #888888;*/
 	-fx-min-width: 30px;
@@ -92,8 +92,8 @@
 }
 
 .exitButton{
-	-fx-text-fill: #575757;
-	-fx-Font: "Britannic Bold";
+	-fx-text-fill: black;
+	/*-fx-Font: "Britannic Bold";*/
 	-fx-background-color: #F0F4F5;
 	-fx-font-size: 30px;
 	-fx-font-weight: bold;
