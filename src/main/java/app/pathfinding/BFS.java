@@ -13,6 +13,8 @@ public class BFS implements IPathFindingAlgorithm {
     List<BFSNode> checked;
     LinkedList<GraphNode> path;
 
+    public String name = "BFS";
+
     /**
      * finds a path from the start and the end node using breath first search algorithm
      * @param start
@@ -62,6 +64,11 @@ public class BFS implements IPathFindingAlgorithm {
         return path;
     }
 
+    @Override
+    public String getName() {
+        return this.name;
+    }
+
     /**
      * check if a given list contains a certain graphnode
      * @param list
@@ -70,7 +77,7 @@ public class BFS implements IPathFindingAlgorithm {
      */
     private boolean BFScontains(Collection<BFSNode> list, GraphNode node){
         for (BFSNode n : list){
-            if (n.current == node){
+            if (n.current.equals(node)){
                 return true;
             }
         }
