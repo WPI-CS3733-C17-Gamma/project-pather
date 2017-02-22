@@ -30,7 +30,7 @@
               </ImageView>
               <Button fx:id="help" layoutX="825.0" layoutY="14.0" mnemonicParsing="false" onAction="#help" onKeyPressed="#help" prefHeight="50.0" prefWidth="50.0" styleClass="helpButton" stylesheets="@design.css" />
               <Button fx:id="adminButton" layoutX="915.0" layoutY="14.0" mnemonicParsing="false" onAction="#logIn" prefHeight="50.0" prefWidth="50.0" styleClass="adminMenuButton" stylesheets="@design.css" />
-            <Line endX="970.0" layoutX="1.0" layoutY="116.0" startX="30.0" stroke="#1b449c" />
+            <Line endX="970.0" layoutX="1.0" layoutY="115.0" startX="30.0" stroke="#1b449c" />
             <HBox alignment="CENTER" layoutY="130.0" prefHeight="438.0" prefWidth="1000.0">
                <children>
                     <ImageView fx:id="imageView" fitHeight="438.0" fitWidth="800.0" pickOnBounds="true" preserveRatio="true" />
