@@ -1,33 +1,32 @@
 buildscript {
     dependencies {
         classpath group: 'de.dynamicfiles.projects.gradle.plugins', name: 'javafx-gradle-plugin', version: '8.7.0'
-        classpath group: 'com.layer', name: 'gradle-git-repo-plugin', version: '2.0.2'
-    }
+   }
     repositories {
         jcenter()
-        mavenCentral()
     }
 
 }
 apply plugin: 'java'
 apply plugin: 'javafx-gradle-plugin'
-apply plugin: 'git-repo'
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.+'
 
     // https://mvnrepository.com/artifact/org.apache.derby/derby
     compile group: 'org.apache.derby', name: 'derby', version: '10.13.1.1'
+    compile group:'com.github.dejv78.jfx.radialmenu', name:'radialmenu', version:'1.0.1'
 }
 
 repositories {
     jcenter()
-    mavenCentral()
-    git("https://github.com/dejv78/jfx.radialmenu.git", "radialmenu", "master", "releases")
+    maven {
+        url 'https://dl.bintray.com/dejv78/maven'
+    }
 }
 
 jfx {
-    mainClass = 'app.applicationControl.ApplicationController';
+    mainClass = 'ApplicationController';
     vendor = 'TeamGamma';
 }
 
