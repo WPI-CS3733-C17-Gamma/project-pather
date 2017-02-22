@@ -245,6 +245,12 @@ public class PatientController extends DisplayController implements Initializabl
         return null;
     }
 
+    public void selectPatientImage(MouseEvent e){
+        if (e.getSource() instanceof Button) {
+            imageView.setImage(applicationController.getImage(((Button) e.getSource()).getId()));
+        }
+    }
+
     /**
      * remove search result
      */
@@ -606,6 +612,8 @@ public class PatientController extends DisplayController implements Initializabl
     public void initialize(URL location, ResourceBundle resources) {
         System.out.println("INIT");
         displayImage();
+
+        imageView.setMouseTransparent(true);
 
         options.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override

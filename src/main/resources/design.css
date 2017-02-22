@@ -1,8 +1,11 @@
 .button{
 	-fx-text-fill: black;
-	-fx-background-color: #F4F4F9;
+	-fx-background-color: #d3d3d3;
 	-fx-font-size: 16px;
-	-fx-box-shadow: 10px 10px 5px #888888;
+	/*-fx-box-shadow: 10px 10px 5px #888888;*/
+	-fx-min-width: 30px;
+	-fx-min-height: 30px;
+	-fx-background-radius: 1000px;
 }
 /*1b449c*/
 
@@ -23,9 +26,31 @@
 	/*-fx-box-shadow: 10px 10px 5px #444;*/
 }
 
+.tab-pane{
+	-fx-tab-min-width:75px;
+	-fx-focus-color: transparent;
+	-fx-faint-focus-color: transparent;
+
+}
+
+.tab-header-area .tab-header-background{
+	-fx-background-color: none;
+}
+
 .tab{
-	-fx-fill: #1b449c;
-	-fx-stroke: none;
+	/*-fx-tab-min-width: 90px;*/	
+	-fx-text-fill: -fx-text-base-color;
+	-fx-background-color: #229e9e;
+	-fx-font-size: 16px;
+	-fx-padding: 5px 10px;
+	-fx-shape: "M310,290 L300,168 L400,168 L410,290 L300,290 z";
+}
+
+ .tab:selected
+ {
+	-fx-padding: 5px 10px;
+	-fx-background-color: #f4c3c2;
+	-fx-border: none;
 }
 
 .directoryAdminButton{
