@@ -20,17 +20,6 @@ public class AdminToolsController extends DisplayController{
     @FXML PasswordField passwordfieldNewAgain;
     @FXML Button buttonSave;
     @FXML Label labelErrors;
-    ApplicationController applicationController;
-
-    /**
-     *
-     * @param map
-     * @param applicationController
-     */
-    public AdminToolsController(Map map, ApplicationController applicationController){
-        super(map, applicationController);
-        this.applicationController = applicationController;
-    }
 
     /**
      * runs when Change Password button is pressed
@@ -167,13 +156,6 @@ public class AdminToolsController extends DisplayController{
             labelErrors.setTextFill(Color.GREEN);
             labelErrors.setVisible(true);
         }
-    }
-
-    /**
-     * takes back to the Admin Screen
-     */
-    public void back(){
-        applicationController.createDirectoryAdminDisplay();
     }
 
     /**

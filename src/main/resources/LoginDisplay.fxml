@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<StackPane fx:id="stackPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="900.0" styleClass="background" stylesheets="@design.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<StackPane fx:id="stackPane" prefHeight="500.0" prefWidth="900.0" styleClass="background" stylesheets="@design.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.display.LoginController">
     <children>
 <AnchorPane fx:id="loginPage" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="177.0" prefWidth="350.0" style="-fx-background-color: GREY;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
@@ -23,7 +23,6 @@
             <Font name="System Bold" size="16.0" />
          </font>
       </Label>
-            <Button fx:id="buttonAdminTools" focusTraversable="false" layoutX="12.0" layoutY="97.0" mnemonicParsing="false" onMouseClicked="#showAdminTools" prefHeight="25.0" prefWidth="149.0" style="-fx-background-color: WHITE;" text="Admin Tools" />
    </children>
 </AnchorPane>
     </children>

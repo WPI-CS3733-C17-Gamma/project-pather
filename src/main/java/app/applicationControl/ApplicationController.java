@@ -54,13 +54,18 @@ public class ApplicationController extends Application {
 
 
         images = new HashMap<>();
-        images.put("floor1", new ProxyImage("Maps/floor1.png"));
-        images.put("floor2", new ProxyImage("Maps/floor2.png"));
-        images.put("floor3", new ProxyImage("Maps/floor3.png"));
-        images.put("floor4", new ProxyImage("Maps/floor4.png"));
-        images.put("floor5", new ProxyImage("Maps/floor5.png"));
-        images.put("floor6", new ProxyImage("Maps/floor6.png"));
-        images.put("floor7", new ProxyImage("Maps/floor7.png"));
+        images.put("floor1", new ProxyImage("Main_Belkin_Clean/main_1clean.png"));
+        images.put("floor2", new ProxyImage("Main_Belkin_Clean/main_2clean.png"));
+        images.put("floor3", new ProxyImage("Main_Belkin_Clean/main_3clean.png"));
+        images.put("floor4", new ProxyImage("Main_Belkin_Clean/main_4clean.png"));
+        images.put("floor5", new ProxyImage("Main_Belkin_Clean/main_5clean.png"));
+        images.put("floor6", new ProxyImage("Main_Belkin_Clean/main_6clean.png"));
+        images.put("floor7", new ProxyImage("Main_Belkin_Clean/main_7clean.png"));
+        images.put("belkin1", new ProxyImage("Main_Belkin_Clean/Belkin_1clean.png"));
+        images.put("belkin2", new ProxyImage("Main_Belkin_Clean/Belkin_2clean.png"));
+        images.put("belkin3", new ProxyImage("Main_Belkin_Clean/Belkin_3clean.png"));
+        images.put("belkin4", new ProxyImage("Main_Belkin_Clean/Belkin_4clean.png"));
+        images.put("campus", new ProxyImage("Main_Belkin_Clean/campusclean.png"));
 
     }
 
@@ -92,7 +97,8 @@ public class ApplicationController extends Application {
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/PatientDisplay.fxml"));
-            PatientController controller = new PatientController(map,this, "floor3");
+            PatientController controller = new PatientController();
+            controller.init(map, this, pStage, "floor3");
             loader.setController(controller);
             Parent root = loader.load();
             pStage.setTitle("PatientDisplay");
@@ -141,40 +147,9 @@ public class ApplicationController extends Application {
     }
 
     /**
-     * create map admin display
-     */
-    public void createMapAdminDisplay(){
-
-        adminStage.close();
-        adminStage = new Stage();
-        adminStage.setResizable(false);
-        adminStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent event) {
-            }
-        });
-        try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/MapAdminDisplay.fxml"));
-                MapAdminController controller = new MapAdminController(map, this, "floor3.png", adminStage);
-                loader.setController(controller);
-                Parent root = loader.load();
-                adminStage.setTitle("Map Admin");
-                adminStage.setScene(new Scene(root, 600, 600));
-                adminStage.centerOnScreen();
-                adminStage.show();
-
-        }
-        catch (Exception e){
-            e.printStackTrace();
-            System.out.println(e.toString());
-        }
-    }
-
-
-    /**
      * Create map directory admin app
      */
-    public void createDirectoryAdminDisplay(){
+    public void createAdminDisplay(){
         adminStage.close();
         adminStage = new Stage();
         adminStage.setResizable(false);
@@ -185,12 +160,11 @@ public class ApplicationController extends Application {
         });
         //adminStage.initOwner(pStage);
         try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/DirectoryAdminDisplay.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/AdminDisplay.fxml"));
 
-                DirectoryAdminController controller = new DirectoryAdminController(map, this);
-
-                loader.setController(controller);
                 Parent root = loader.load();
+                AdminController controller = loader.<AdminController>getController();
+                controller.init(map, this, adminStage);
                 adminStage.setTitle("Directory Admin");
                 adminStage.setScene(new Scene(root, 600, 600));
                 adminStage.centerOnScreen();
@@ -198,32 +172,6 @@ public class ApplicationController extends Application {
 
         }
         catch (Exception e){
-            e.printStackTrace();
-            System.out.println(e.toString());
-        }
-    }
-
-    public void createAdminTools(){
-        adminStage.close();
-        adminStage = new Stage();
-        adminStage.setResizable(false);
-        adminStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent event) {
-
-            }
-        });
-
-        try{
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AdminTools.fxml"));
-            AdminToolsController controller = new AdminToolsController(map, this);
-            loader.setController(controller);
-            Parent root = loader.load();
-            adminStage.setTitle("Admin Tools");
-            adminStage.setScene(new Scene(root));
-            adminStage.centerOnScreen();
-            adminStage.show();
-        } catch (Exception e){
             e.printStackTrace();
             System.out.println(e.toString());
         }
@@ -241,11 +189,11 @@ public class ApplicationController extends Application {
 
         adminStage = new Stage();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/LoginDisplay.fxml"));
-        LoginController loginController = new LoginController(map, this, adminStage);
         Scene newScene;
         try{
-            loader.setController(loginController);
             Parent root = loader.load();
+            LoginController controller = loader.<LoginController>getController();
+            controller.init(map, this, adminStage);
             adminStage.setTitle("Login");
             adminStage.initOwner(pStage);
             adminStage.setScene(new Scene(root, 350, 150));

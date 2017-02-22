@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 
-<BorderPane maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#handleKey" prefHeight="600.0" prefWidth="600.0" style="-fx-background-color: #d4e3ed;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane onKeyPressed="#handleKey" style="-fx-background-color: #d4e3ed;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.display.MapAdminController">
     <top>
         <AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="100.0" prefWidth="600.0" BorderPane.alignment="CENTER">
             <children>
@@ -39,7 +39,6 @@
                 <Button layoutX="350.0" layoutY="15.0" mnemonicParsing="false" onAction="#preview" text="Preview" />
                 <Button layoutX="57.0" layoutY="15.0" mnemonicParsing="false" text="Help" />
                 <Button fx:id="buttonDone" layoutX="450.0" layoutY="15.0" mnemonicParsing="false" onAction="#done" onMouseClicked="#done" text="Save and Exit" />
-            <Button fx:id="switchToDirectoryAdmin" layoutX="137.0" layoutY="15.0" mnemonicParsing="false" onAction="#switchToDirectoryAdmin" prefHeight="26.0" prefWidth="190.0" text="SwitchToDirectoryAdmin" />
             </children></AnchorPane>
     </bottom>
     <center>
