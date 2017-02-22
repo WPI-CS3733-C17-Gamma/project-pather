@@ -5,6 +5,9 @@ import app.applicationControl.ApplicationController;
 import app.applicationControl.Login;
 import app.dataPrimitives.*;
 import app.pathfinding.PathNotFoundException;
+import com.sun.javafx.geom.BaseBounds;
+import com.sun.javafx.geom.transform.BaseTransform;
+import com.sun.javafx.scene.BoundsAccessor;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -21,6 +24,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.Effect;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -74,6 +78,7 @@ public class PatientController extends DisplayController implements Initializabl
     @FXML private Button login;
     @FXML private Button TextDirection;
     @FXML private Button miniMenuButton;
+    @FXML private Button floor1;
 
     private List<SubPath> currentPath;
     private int currentSubPath;
@@ -84,6 +89,8 @@ public class PatientController extends DisplayController implements Initializabl
 
     boolean selected = false;
     CircularContextMenu menu = new CircularContextMenu();
+
+    private Button previousButton;
 
     /**
      *
@@ -146,6 +153,10 @@ public class PatientController extends DisplayController implements Initializabl
      * perform search; get text from the textfield
      */
     public void search () {
+        if (displayState != state.DISPLAYING_TEXT_DIRECTION || displayState != state.PATIENT_SEARCH){
+            startSearch();
+        }
+
         clearSearchDisplay();
         currentPath = null;
         String search = searchBar.getText();
@@ -247,8 +258,15 @@ public class PatientController extends DisplayController implements Initializabl
 
     public void selectPatientImage(MouseEvent e){
         if (e.getSource() instanceof Button) {
-            System.out.println(((Button) e.getSource()).getId());
-            imageView.setImage(applicationController.getImage(((Button) e.getSource()).getId()));
+            Button temp = (Button) e.getSource();
+            System.out.println(temp.getId());
+            imageView.setImage(applicationController.getImage(temp.getId()));
+            if (previousButton != null){
+                //return to default image color
+                previousButton.setStyle("-fx-background-color: #F7F7F7");
+            }
+            previousButton = temp;
+            previousButton.setStyle("-fx-background-color: #898b95");
         }
     }
 
@@ -614,6 +632,8 @@ public class PatientController extends DisplayController implements Initializabl
         System.out.println("INIT");
         displayImage();
 
+         previousButton = floor1;
+
         imageView.setMouseTransparent(true);
 
         options.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -715,6 +735,10 @@ public class PatientController extends DisplayController implements Initializabl
             clearDisplay();
             displaySubPath(patientImageView, currentPath.get(currentSubPath), true, 10, 20);
         }
+    }
+
+    public void hideOptions(){
+        options.setVisible(false);
     }
 }
 
