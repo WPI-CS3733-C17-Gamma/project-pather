@@ -20,20 +20,26 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class ApplicationController extends Application {
 
     DatabaseManager databaseManager;
+
     // probably not needed
     DisplayController currentDisplayController;
+
     Map map ;
     Stage pStage;
-
     Stage adminStage;
     Login login;
     Scene currentScene;
 
     // NOTE with proxy pattern this will change to a prox image
     HashMap<String, ProxyImage> images;
+
+    final Logger logger = LoggerFactory.getLogger(ApplicationController.class);
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -51,7 +57,6 @@ public class ApplicationController extends Application {
     public void initialize(){
         databaseManager = new DatabaseManager("main");
         map = databaseManager.load();
-
 
         images = new HashMap<>();
         images.put("floor1", new ProxyImage("Main_Belkin_Clean/main_1clean.png"));
@@ -73,6 +78,7 @@ public class ApplicationController extends Application {
      * reload the state of the database
      */
     public Map reload () {
+        logger.info("reload");
         System.out.println("reload");
         map = databaseManager.load();
         return map;

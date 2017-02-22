@@ -37,10 +37,15 @@ import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * controls all interaction with the patient display
  */
 public class PatientController extends DisplayController implements Initializable {
+
+    final Logger logger = LoggerFactory.getLogger(ApplicationController.class);
 
     //what type/state of display the Patient Display is currently displaying
     private enum state{
@@ -611,6 +616,7 @@ public class PatientController extends DisplayController implements Initializabl
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        logger.info("INIT");
         System.out.println("INIT");
         displayImage();
 
