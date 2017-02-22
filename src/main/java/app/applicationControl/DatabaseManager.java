@@ -57,6 +57,7 @@ public class DatabaseManager {
      * @return the loaded map
      */
     public Map load(){
+
         // app.datastore.Map IDs for Rooms, Entries and Nodes to Rooms, Entries, and
         // Nodes, respectively
         TreeMap<Integer, GraphNode> nodes = new TreeMap<Integer, GraphNode>();

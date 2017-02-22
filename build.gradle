@@ -3,6 +3,9 @@ buildscript {
         classpath group: 'de.dynamicfiles.projects.gradle.plugins', name: 'javafx-gradle-plugin', version: '8.7.0'
         classpath group: 'com.layer', name: 'gradle-git-repo-plugin', version: '2.0.2'
     }
+
+
+    }
     repositories {
         jcenter()
         mavenCentral()
@@ -18,6 +21,9 @@ dependencies {
 
     // https://mvnrepository.com/artifact/org.apache.derby/derby
     compile group: 'org.apache.derby', name: 'derby', version: '10.13.1.1'
+    compile group:'com.github.dejv78.jfx.radialmenu', name:'radialmenu', version:'1.0.1'
+    // https://mvnrepository.com/artifact/org.mindrot/jbcrypt
+    compile group: 'org.mindrot', name: 'jbcrypt', version: '0.3m'
 }
 
 repositories {
