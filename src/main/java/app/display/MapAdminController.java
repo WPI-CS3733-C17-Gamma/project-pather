@@ -70,7 +70,7 @@ public class MapAdminController extends DisplayController {
     @FXML private ToggleGroup toggleTools;
     @FXML private ImageView imageviewMap;
     @FXML private AnchorPane anchorpaneMap;
-    @FXML private TextField roomName;
+    @FXML private ComboBox<String> roomName;
 
     @FXML private ListView<String> elevatorFloorOptions;
     @FXML private ListView<String> changeFloorOptions;
@@ -288,7 +288,7 @@ public class MapAdminController extends DisplayController {
      * Take the text from the roomName text field
      */
     public void addRoom () {
-        String newName = roomName.getText();
+        String newName = roomName.getValue();
         Room existingRoom = map.getRoomFromName(newName);
         // Entered name is empty, so delete room
         // TODO: maybe make this more explicit, like a separate button,
@@ -459,12 +459,12 @@ public class MapAdminController extends DisplayController {
     public void displayRoom (GraphNode selected) {
         Room room = map.getRoomFromNode(selectedNode);
         if (room != null) {
-            roomName.setText(room.getName());
+            roomName.setValue(room.getName());
             activeRoom = room;
             defaultKioskButton.setStyle("-fx-background-color: green;");
         }
         else {
-            roomName.setText("");
+            roomName.setValue("");
             activeRoom = null;
             defaultKioskButton.setStyle("-fx-background-color: gray;");
         }
@@ -663,7 +663,21 @@ public class MapAdminController extends DisplayController {
      * Deselects all buttons when textbox is selected
      */
     public void isFocused(){
+        System.out.println("getting unlocated rooms");
+        ObservableList<String> unlocatedRoomOptions = FXCollections.observableArrayList(map.getRoomsWithoutLocations());
+        roomName.setItems(unlocatedRoomOptions);
         changeState(State.NONE);
+    }
+
+
+    /**
+     * handles the mouse click event on the unlocated rooms drop down menu
+     * sets the romo name to the selected location
+     */
+    public void selectUnlocatedRoom () {
+        String selectedString = roomName.getSelectionModel().getSelectedItem();
+        roomName.setValue(selectedString);
+        map.setRoomLocation(selectedString, selectedNode);
     }
 
     /**
