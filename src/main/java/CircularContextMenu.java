@@ -23,7 +23,7 @@ public class CircularContextMenu extends Popup {
     private List<ContextMenuElement> menuElements = new LinkedList<>();
     Group root;
     Scene scene;
-    ContextMenuElement highlight = new ContextMenuElement(Color.BEIGE,this);
+    ContextMenuElement highlight = new ContextMenuElement(Color.rgb(41, 191,191),this);
     double angle;
     /**
      * Default Constructor
@@ -107,8 +107,8 @@ public class CircularContextMenu extends Popup {
         for(ContextMenuElement element:menuElements) {
             try{
                 element.draw(currentAngle, angle, this.innerRadius, this.outerRadius);
-                getContent().add(element.path);
                 getContent().add(element.background);
+                getContent().add(element.path);
             }catch(IllegalArgumentException e){
                 System.out.println("Angle parameters must be positive");
                 e.printStackTrace();
@@ -233,7 +233,7 @@ public class CircularContextMenu extends Popup {
         }
         getContent().add(highlight.path);
         highlight.path.setMouseTransparent(true);
-        highlight.path.setBlendMode(BlendMode.ADD);
+        highlight.path.setBlendMode(BlendMode.MULTIPLY);
     }
 }
 

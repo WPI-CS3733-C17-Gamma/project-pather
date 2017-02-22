@@ -12,6 +12,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
@@ -846,9 +847,10 @@ public class MapAdminController extends DisplayController implements Initializab
             //nodeMenu.hide();
             Shape circle = new Circle(event.getX(), event.getY(), 10);
             anchorpaneMap.getChildren().add(circle);
-            nodeMenu.addOption(Color.GREY);
-            nodeMenu.addOption(Color.GREY);
-            nodeMenu.addOption(Color.GREY);
+            ImagePattern elevator = new ImagePattern(new Image("/ElevatorT.png"));
+            nodeMenu.addOption(elevator);
+            nodeMenu.addOption(Color.rgb(211,211,211));
+            nodeMenu.addOption(Color.rgb(211,211,211));
             nodeMenu.show(circle,event.getScreenX(), event.getScreenY());
         }else{
             //

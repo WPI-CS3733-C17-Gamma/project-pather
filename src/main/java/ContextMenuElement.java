@@ -163,7 +163,7 @@ public class ContextMenuElement{
 
 
         path.setFill(icon);
-        background.setFill(Color.rgb(255, 255, 255, 0));
+        background.setFill(Color.rgb(211, 211, 211, 1));
     }
 
     public void fireEvent(Event event){
