@@ -74,6 +74,18 @@ public class Directory {
         return rooms.keySet().stream().collect(Collectors.toList());
     }
 
+
+    /**
+     * Get a list of roomes without locations
+     * @return List of room names for each room with a null location
+     */
+    public List<String> getRoomsWithoutLocations () {
+        return rooms.values().stream()
+            .filter(room -> ! room.hasLocation())
+            .map(room -> room.getName())
+            .collect(Collectors.toList()) ;
+    }
+
     /**
      * Search through names of all possible entries and return a list of all possible entry names containing that substring
      * @param key the given substring that needs to be searched for
@@ -313,5 +325,27 @@ public class Directory {
                 line = br.readLine();
             }
         }
+    }
+
+    /**
+     *
+     * @param roomName
+     * @param location
+     * @return false if the room cannot be set to the given location
+     */
+    public boolean setRoomLocation(String roomName, GraphNode location) {
+        Room roomAtNode = this.getRoom(location);
+        if (roomAtNode != null) {
+            System.out.println("There is already a room at this location");
+            return false;
+        }
+        Room roomToBeChanged = this.getRoom(roomName);
+        if (roomToBeChanged == null) {
+            System.out.println("there is no room with the given name");
+            return false;
+        }
+
+        roomToBeChanged.setLocation(location);
+        return true;
     }
 }
