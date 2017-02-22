@@ -11,7 +11,6 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -19,9 +18,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
@@ -31,7 +28,6 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
-import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -72,7 +68,7 @@ public class MapAdminController extends DisplayController {
     @FXML private ToggleButton togglebuttonAddElevator;
     @FXML private ToggleGroup toggleTools;
     @FXML private ImageView imageviewMap;
-    @FXML private AnchorPane anchorpaneMap;
+    @FXML private Pane mapPane;
     @FXML private ComboBox<String> roomName;
 
     @FXML private ListView<String> elevatorFloorOptions;
@@ -99,6 +95,20 @@ public class MapAdminController extends DisplayController {
         togglebuttonChainAdd.setUserData(State.CHAIN_ADD);
         togglebuttonAddElevator.setUserData(State.ADD_ELEVATOR);
 
+        mapPane.widthProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                imageviewMap.setFitWidth(mapPane.widthProperty().doubleValue());
+                drawMap();
+            }
+        });
+        mapPane.heightProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                imageviewMap.setFitHeight(mapPane.heightProperty().doubleValue());
+                drawMap();
+            }
+        });
         List<String> choices = new ArrayList<>(map.getPathingAlgorithmList());
         chooseAlgorithm.setItems(FXCollections.observableList(choices));
         chooseAlgorithm.setValue(map.getPathingAlgorithm());
@@ -143,12 +153,12 @@ public class MapAdminController extends DisplayController {
      * and clear
      */
     public void drawMap(){
-        anchorpaneMap.getChildren().removeAll(drawnNodes.values());
+        mapPane.getChildren().removeAll(drawnNodes.values());
         drawnNodes.clear();
-        anchorpaneMap.getChildren().removeAll(miscDrawnObjects);
+        mapPane.getChildren().removeAll(miscDrawnObjects);
         miscDrawnObjects.clear();
-        anchorpaneMap.getChildren().removeAll(
-            anchorpaneMap.getChildren().stream().filter(node -> node instanceof Shape).collect(Collectors.toList())
+        mapPane.getChildren().removeAll(
+            mapPane.getChildren().stream().filter(node -> node instanceof Shape).collect(Collectors.toList())
         );
         map.getGraphNodesOnFloor(currentMap)
             .stream()
@@ -171,7 +181,7 @@ public class MapAdminController extends DisplayController {
         label.setLayoutY(temp.getY() + 5);
         label.setTextFill(Color.rgb(27, 68, 156));
         label.setStyle("-fx-background-color: #E1F0F5; -fx-border-color: darkblue;-fx-padding: 2;");
-        anchorpaneMap.getChildren().add(label);
+        mapPane.getChildren().add(label);
         this.miscDrawnObjects.add(label);
     }
 
@@ -186,7 +196,7 @@ public class MapAdminController extends DisplayController {
         label.setLayoutX(temp.getX());
         label.setLayoutY(temp.getY());
         label.setTextFill(Color.rgb(27, 68, 156));
-        anchorpaneMap.getChildren().add(label);
+        mapPane.getChildren().add(label);
         this.miscDrawnObjects.add(label);
     }
 
@@ -229,7 +239,7 @@ public class MapAdminController extends DisplayController {
         Rectangle rect = new Rectangle(imagePoint.getX() - width / 2, imagePoint.getY() - height / 2 , width,height);
         rect.setFill(Color.BLACK);
         rect.setMouseTransparent(true);
-        anchorpaneMap.getChildren().add(rect);
+        mapPane.getChildren().add(rect);
         GraphNode graphNodeAttatched = map.getGraphNode(loc);
         drawnNodes.put(graphNodeAttatched.id, rect);
     }
@@ -348,7 +358,7 @@ public class MapAdminController extends DisplayController {
         circ.setLayoutX(imagePoint.getX());
         circ.setLayoutY(imagePoint.getY());
         circ.setMouseTransparent(true);
-        anchorpaneMap.getChildren().add(circ);
+        mapPane.getChildren().add(circ);
         GraphNode graphNodeAttatched = map.getGraphNode(loc);
         drawnNodes.put(graphNodeAttatched.id, circ);
     }
@@ -423,7 +433,7 @@ public class MapAdminController extends DisplayController {
         Line line = new Line(imagePoint1.getX(), imagePoint1.getY(), imagePoint2.getX(), imagePoint2.getY());
         line.setFill(Color.BLACK);
         line.setMouseTransparent(true);
-        anchorpaneMap.getChildren().add(line);
+        mapPane.getChildren().add(line);
         miscDrawnObjects.add(line);
     }
 
@@ -574,7 +584,7 @@ public class MapAdminController extends DisplayController {
      */
     public void isPressed(MouseEvent m) {
         if (roomName.isFocused()){
-            anchorpaneMap.requestFocus(); //deselects textbox if click outside
+            mapPane.requestFocus(); //deselects textbox if click outside
         }
         switch (currentState){
             case NONE:
@@ -842,7 +852,7 @@ public class MapAdminController extends DisplayController {
         });
         contextMenu.getItems().addAll(item1, item2);
         Shape circle = new Circle(event.getX(), event.getY(), 10);
-        anchorpaneMap.getChildren().add(circle);
+        mapPane.getChildren().add(circle);
         contextMenu.setId("MapAdminContextMenu");
         contextMenu.show(circle, event.getScreenX(), event.getScreenY());
         contextMenu.setStyle("-fx-shape:Circle ");

@@ -152,7 +152,6 @@ public class ApplicationController extends Application {
     public void createAdminDisplay(){
         adminStage.close();
         adminStage = new Stage();
-        adminStage.setResizable(false);
         adminStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent event) {
