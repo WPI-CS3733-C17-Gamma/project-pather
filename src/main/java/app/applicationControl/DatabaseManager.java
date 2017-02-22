@@ -53,8 +53,8 @@ public class DatabaseManager {
             logger.info("Connected to database " + dbName);
         }
         catch (SQLException e) {
-            logger.error(e.getMessage());
-            logger.error(e.getNextException().getMessage());
+            logger.error("Got error in {} : {}", this.getClass().getSimpleName(), e.getMessage());
+            logger.error("Also got error {}", e.getNextException().getMessage());
         }
     }
 
@@ -141,7 +141,7 @@ public class DatabaseManager {
             }
         }
         catch (SQLException e) {
-            logger.error(e.getMessage());
+            logger.error("Got error in {} : {}", this.getClass().getSimpleName(), e.getMessage());
         }
 
         Directory directory = new Directory(entries, rooms);
@@ -231,7 +231,7 @@ public class DatabaseManager {
             }
         }
         catch (SQLException e) {
-            logger.error(e.toString() + e.getMessage());
+            logger.error("Got error in {} : {}", this.getClass().getSimpleName(), e.toString() + e.getMessage());
         }
     }
 
@@ -246,7 +246,7 @@ public class DatabaseManager {
             statement.close();
         }
         catch (SQLException e) {
-            logger.error(e.getMessage());
+            logger.error("Got error in {} : {}", this.getClass().getSimpleName(), e.getMessage());
         }
     }
 
@@ -254,3 +254,4 @@ public class DatabaseManager {
         return connection;
     }
 }
+

@@ -71,7 +71,7 @@ public class DFS implements IPathFindingAlgorithm {
                     }
                     return result;
                 }catch(PathNotFoundException e){
-                    logger.debug("Dead end");
+                    logger.debug("DFS found a dead end");
                 }
             }
         }

@@ -194,7 +194,7 @@ public class Map {
      * @param floors list of floors to connect the elevator through
      */
     public void addElevator (FloorPoint point, List<String> floors) {
-        logger.info("In map create elevator @ : {}", point);
+        logger.debug("In map create elevator @ : {}", point);
         List<GraphNode> elevators = new ArrayList<>();
         // make elevators
         for (String floor : floors) {
@@ -297,7 +297,7 @@ public class Map {
         try {
             return graph.getPath(start, end);
         } catch( PathNotFoundException e) {
-            logger.error(e.getMessage());
+            logger.error("Got error in {} : {}", this.getClass().getSimpleName(), e.getMessage());
         }
         return new LinkedList<>();
     }

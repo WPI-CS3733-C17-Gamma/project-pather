@@ -13,7 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class BFSTest extends TestCase{
-    final Logger logger = LoggerFactory.getLogger(DatabaseManager.class);
+    final Logger logger = LoggerFactory.getLogger(BFSTest.class);
     GraphNode node1 = new GraphNode(0, 0, "");
     GraphNode node2 = new GraphNode(10, 0, "");
         GraphNode node3 = new GraphNode(20, 10, "");
@@ -114,7 +114,7 @@ public class BFSTest extends TestCase{
         public void testGetPath() throws PathNotFoundException {
             List<GraphNode> path1 = new LinkedList(Arrays.asList(node1, node3, node4, node5));
             for(GraphNode neighbour: nodes){
-                logger.debug(neighbour.toString());
+                logger.debug("testGetPath neighbour: {}", neighbour.toString());
             }
             List<GraphNode> path2 = new LinkedList<>();
             path2 = bfs.findPath(node1, node5);
@@ -128,7 +128,7 @@ public class BFSTest extends TestCase{
             List<GraphNode> path2 = new LinkedList<>();
             path2 = bfs.findPath(node51, node35);
             for(GraphNode neighbour: path2) {
-                logger.debug(neighbour.toString());
+                logger.debug("testGetPath2 neighbour: {}", neighbour.toString());
             }
             assertTrue(path1.equals(path2));
         }
@@ -141,7 +141,7 @@ public class BFSTest extends TestCase{
             List<GraphNode> path2 = new LinkedList<>();
             path2 = bfs.findPath(node11, node55);
             for(GraphNode neighbour: path2) {
-                logger.debug(neighbour.toString());
+                logger.debug("testGetPath3 neighbour: {}", neighbour.toString());
             }
             assertTrue(path1.equals(path2));
 
@@ -151,11 +151,10 @@ public class BFSTest extends TestCase{
         public void testGetPath4a() throws PathNotFoundException {
             List<GraphNode> path1 = new ArrayList<>(Arrays.asList(node14, node22, node23, node33));
             List<GraphNode> path3 = new ArrayList<>(Arrays.asList(node14, node15, node34, node33));
-            logger.debug(path1);
+            logger.debug("testGetPath4a testing path {}", path1.toString());
             List<GraphNode> path2 = bfs.findPath(node14, node33);
             for (GraphNode neighbour : path2) {
-                logger.debug("testGetPath4a ");
-                logger.debug(neighbour.toString());
+                logger.debug("testGetPath4a neighbour: {}", neighbour.toString());
             }
             assertTrue(path1.equals(path2) || path2.equals(path3));
         }

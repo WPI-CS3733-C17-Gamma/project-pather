@@ -15,7 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class CreateEntryTest extends TestCase {
-    final Logger logger = LoggerFactory.getLogger(DatabaseManager.class);
+    final Logger logger = LoggerFactory.getLogger(TestCase.class);
 
     DirectoryAdminController c;
     Map m;
@@ -53,7 +53,7 @@ public class CreateEntryTest extends TestCase {
         }
         assertEquals(3, d.getEntries().size());
         for (String s : d.getEntries().keySet()){
-            logger.debug(s);
+            logger.debug("Doing something to {} in testCreateEntryDAC, in {}", s, this.getClass().getSimpleName());
         }
     }
 

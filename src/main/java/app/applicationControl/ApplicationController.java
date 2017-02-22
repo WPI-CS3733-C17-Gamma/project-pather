@@ -16,6 +16,7 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -55,6 +56,9 @@ public class ApplicationController extends Application {
      * Load from the database and setup images
      */
     public void initialize(){
+        logger.info("Starting ApplicationController at {}",
+            Calendar.getInstance().getTime().toString());
+
         databaseManager = new DatabaseManager("main");
         map = databaseManager.load();
 
@@ -78,7 +82,7 @@ public class ApplicationController extends Application {
      * reload the state of the database
      */
     public Map reload () {
-        logger.debug("reload");
+        logger.debug("Reloading Map");
         map = databaseManager.load();
         return map;
     }
@@ -91,7 +95,6 @@ public class ApplicationController extends Application {
     public List<String> getAllFloors () {
         return images.keySet().stream().collect(Collectors.toList());
     }
-
 
     /**
      * load the patient display into the frame
@@ -112,21 +115,21 @@ public class ApplicationController extends Application {
             pStage.setScene(currentScene);
             currentScene.widthProperty().addListener(new ChangeListener<Number>() {
                 @Override public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneWidth, Number newSceneWidth) {
-                    logger.debug("Width: {}", newSceneWidth);
+                    logger.debug("Scaling {} Width: {}", this.getClass().getSimpleName(),newSceneWidth);
                     controller.scaleWidth(oldSceneWidth, newSceneWidth);
                 }
             });
             currentScene.heightProperty().addListener(new ChangeListener<Number>() {
                 @Override public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneHeight, Number newSceneHeight) {
                     controller.scaleHeight(oldSceneHeight, newSceneHeight);
-                    logger.debug("Height: {}", newSceneHeight);
+                    logger.debug("Scaling {} Height: {}", this.getClass().getSimpleName(),newSceneHeight);
                 }
             });
             pStage.setFullScreen(true);
         }
         catch (Exception e){
             e.printStackTrace();
-            logger.error(e.toString());
+            logger.error("Got error in {} : {}", this.getClass().getSimpleName(), e.toString());
         }
     }
 
@@ -177,7 +180,7 @@ public class ApplicationController extends Application {
         }
         catch (Exception e){
             e.printStackTrace();
-            logger.error(e.toString());
+            logger.error("Got error in {} : {}", this.getClass().getSimpleName(), e.toString());
         }
     }
 
@@ -204,10 +207,10 @@ public class ApplicationController extends Application {
             adminStage.show();
         } catch (IOException e){
             e.printStackTrace();
-            logger.error(e.toString());
+            logger.error("Got error in {} : {}", this.getClass().getSimpleName(), e.toString());
         } catch (Exception e){
             e.printStackTrace();
-            logger.error(e.toString());
+            logger.error("Got error in {} : {}", this.getClass().getSimpleName(), e.toString());
         }
     }
 
@@ -226,7 +229,6 @@ public class ApplicationController extends Application {
     public boolean changePassword(String uname, String oldPasswd, String newPasswd){
         return login.changePassword(uname, oldPasswd, newPasswd);
     }
-
 
     /**
      * Closes Admin Display
@@ -255,7 +257,7 @@ public class ApplicationController extends Application {
      * write current state to database
      */
     public void save () {
-        logger.debug("SAVE");
+        logger.debug("Saving to database in {}", this.getClass().getSimpleName());
         databaseManager.write(map);
     }
     /**
@@ -264,10 +266,11 @@ public class ApplicationController extends Application {
     @Override
     public void stop () {
         databaseManager.write(map);
-        logger.info("Application Closed");
+        logger.info("Application Closed at {}\n", Calendar.getInstance().getTime().toString());
     }
 
     public static void main (String[] args) {
         launch(args);
     }
 }
+

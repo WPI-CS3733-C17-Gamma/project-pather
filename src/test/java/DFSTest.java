@@ -13,7 +13,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class DFSTest extends TestCase{
-    final Logger logger = LoggerFactory.getLogger(DatabaseManager.class);
+    final Logger logger = LoggerFactory.getLogger(DFSTest.class);
+
     GraphNode node1 = new GraphNode(0, 0, "");
     GraphNode node2 = new GraphNode(10, 0, "");
     GraphNode node3 = new GraphNode(20, 10, "");
@@ -117,7 +118,7 @@ public class DFSTest extends TestCase{
         LinkedList<GraphNode> path1 = new LinkedList<GraphNode>(Arrays.asList(node51, node53, node45, node35));
         List<GraphNode> path2 = dfs.findPath(node51, node35);
         for(GraphNode neighbour: path2) {
-            logger.debug(neighbour.toString());
+            logger.debug("testGetPath2 neighbour: {}", neighbour.toString());
         }
         assertTrue(path1.equals(path2));
     }
@@ -129,8 +130,7 @@ public class DFSTest extends TestCase{
             node35, node45, node55));
         List<GraphNode> path2 = dfs.findPath(node11, node55);
         for(GraphNode neighbour: path2) {
-            logger.debug("00");
-            logger.debug(neighbour.toString());
+            logger.debug("testGetPath3, neighbour: {}", neighbour.toString());
         }
         assertTrue(!path2.isEmpty());
 
@@ -140,11 +140,10 @@ public class DFSTest extends TestCase{
     public void testGetPath4a() throws PathNotFoundException {
         List<GraphNode> path1 = new ArrayList<>(Arrays.asList(node14, node22, node23, node33));
         List<GraphNode> path3 = new ArrayList<>(Arrays.asList(node14, node15, node34, node33));
-        logger.debug(path1);
+        logger.debug("testGetPath4a with path: {}", path1);
         List<GraphNode> path2 = dfs.findPath(node14, node33);
         for (GraphNode neighbour : path2) {
-            logger.debug("testGetPath4a ");
-            logger.debug(neighbour.toString());
+            logger.debug("testGetPath4a neighbour: {}", neighbour.toString());
         }
         assertTrue(path1.equals(path2) || path2.equals(path3));
     }

@@ -27,7 +27,7 @@ public class ContextMenuElement{
     EventHandler<MouseEvent> onClickHandler = new EventHandler<MouseEvent>() { //Default Event Handler
         @Override
         public void handle(MouseEvent event) {
-            logger.info("This button has no Event");
+            logger.debug("Clicked a button with no event");
         }
     };
 

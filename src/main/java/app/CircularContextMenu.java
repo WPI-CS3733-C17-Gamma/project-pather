@@ -60,7 +60,8 @@ public class CircularContextMenu {
             try{
                 element.draw(currentAngle, angle, this.innerRadius, this.outerRadius);
             }catch(IllegalArgumentException e){
-                logger.debug("Angle parameters must be positive with angle > initialAngle.");
+                logger.debug("Angle parameters must be positive with angle > initialAngle."
+                + "They were CurrentAngle: {}, angle {}", currentAngle, angle);
             }
             currentAngle = currentAngle + angle;
         }
@@ -81,7 +82,8 @@ public class CircularContextMenu {
             try{
                 element.draw(currentAngle, angle, this.innerRadius, this.outerRadius);
             }catch(IllegalArgumentException e){
-                logger.debug("Angle parameters must be positive");
+                logger.debug("Angle parameters must be positive with angle > initialAngle."
+                    + "They were CurrentAngle: {}, angle {}", currentAngle, angle);
             }
 
             currentAngle = currentAngle + angle;
@@ -105,7 +107,8 @@ public class CircularContextMenu {
                 try {
                     element.draw(currentAngle, angle, this.innerRadius, this.outerRadius);
                 } catch (IllegalArgumentException e) {
-                    logger.debug("Angle parameters must be positive with angle > initialAngle.");
+                    logger.debug("Angle parameters must be positive with angle > initialAngle."
+                        + "They were CurrentAngle: {}, angle {}", currentAngle, angle);
                 }
 
                 currentAngle = currentAngle + angle;

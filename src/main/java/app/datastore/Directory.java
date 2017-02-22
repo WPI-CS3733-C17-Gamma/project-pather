@@ -205,7 +205,7 @@ public class Directory {
             return getRoom(kioskName).getLocation();
         }
         catch (Exception e) {
-            logger.error("No Kiosk");
+            logger.error("No Kiosk Found");
             return new GraphNode(0, 0, "");
         }
     }

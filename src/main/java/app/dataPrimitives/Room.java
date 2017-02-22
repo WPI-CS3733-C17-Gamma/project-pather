@@ -50,7 +50,7 @@ public class Room extends Ided implements Comparable {
     public int compareTo(Object room){
         try {
             Room p = (Room) room;
-            logger.debug(p.name + "\t" + this.name);
+            logger.debug("Comparing rooms: {}\t{}", p.name, this.name);
             return(this.name.compareTo(p.name));
         }
         catch(ClassCastException e) {

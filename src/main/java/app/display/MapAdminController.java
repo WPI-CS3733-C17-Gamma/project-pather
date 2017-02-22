@@ -220,7 +220,7 @@ public class MapAdminController extends DisplayController {
 
             Room nodeRoom = map.getRoomFromNode(node);
             if (nodeRoom != null) {
-                logger.info("drawing room " +  nodeRoom);
+                logger.info("Drawing room {}", nodeRoom.toString());
                 addRoomLabel(nodeRoom);
             }
 
@@ -831,12 +831,12 @@ public class MapAdminController extends DisplayController {
 
         contextMenu.setOnShowing(new EventHandler<WindowEvent>() {
             public void handle(WindowEvent e) {
-                logger.debug("showing");
+                logger.debug("Showing context menu ");
             }
         });
         contextMenu.setOnShown(new EventHandler<WindowEvent>() {
             public void handle(WindowEvent e) {
-                logger.debug("shown");
+                logger.debug("Shown context menu");
             }
         });
 

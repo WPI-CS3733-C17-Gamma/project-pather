@@ -45,7 +45,7 @@ public class DisplayController {
      * Creates patient display without changing the database
      */
     public void preview () {
-        logger.info("Preview");
+        logger.info("Preview from {}", this.getClass().getSimpleName());
         applicationController.createPatientDisplay();
     }
 
@@ -53,7 +53,7 @@ public class DisplayController {
      * toggle help message
      */
     public void help () {
-        logger.debug("Here is how to use this...");
+        logger.debug("Opening help for {}", this.getClass().getSimpleName());
         if (helpLabel.isVisible()) {
             helpLabel.setVisible(false);
         }

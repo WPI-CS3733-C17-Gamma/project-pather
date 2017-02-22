@@ -49,7 +49,7 @@ public class DatabaseTest extends TestCase{
             statement.close();
         }
         catch (SQLException e) {
-            logger.debug(e.getMessage());
+            logger.debug("Got error in {} : {}", this.getClass().getSimpleName(), e.getMessage());
         }
     }
 
