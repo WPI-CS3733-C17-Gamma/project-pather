@@ -600,13 +600,22 @@ public class PatientController extends DisplayController implements Initializabl
             int roomx;
             int roomy;
 
-//            if(node.isElevator()){
-//                current = new Label("Elevator", new ImageView(applicationController.getImage("elevator")));
-//                point = graphPointToImage(room.getLocation(), patientImageView);
-//                roomx = point.getX() - 5;
-//                roomy = point.getY();
-//                labels.add(current);
-//            }
+            if(node.isElevator()){
+//                current = new Label("Elevator");
+                ImageView image = new ImageView();
+                image.setImage(applicationController.getImage("elevator"));
+                image.setPreserveRatio(true);
+                image.setFitWidth(20);
+                image.setFitHeight(20);
+                current.setGraphic(image);
+                System.out.println("node to get image: " + node);
+                point = graphPointToImage(node, patientImageView);
+                roomx = point.getX() - 30;
+                roomy = point.getY() - 5;
+                current.setLayoutX(roomx);
+                current.setLayoutY(roomy);
+                labels.add(current);
+            }
             if(room != null) {
                 point = graphPointToImage(room.getLocation(), patientImageView);
                 roomx = point.getX() + 5;
