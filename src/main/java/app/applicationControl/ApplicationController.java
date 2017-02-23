@@ -178,7 +178,7 @@ public class ApplicationController extends Application {
                 AdminController controller = loader.<AdminController>getController();
                 controller.init(map, this, adminStage);
                 adminStage.setTitle("Directory Admin");
-                adminStage.setScene(new Scene(root, 600, 600));
+                adminStage.setScene(new Scene(root, 800, 800));
                 adminStage.centerOnScreen();
                 adminStage.show();
 
