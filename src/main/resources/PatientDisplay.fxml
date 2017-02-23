@@ -20,7 +20,7 @@
 
 <StackPane fx:id="stackPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" styleClass="background" stylesheets="@design.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
     <children>
-        <AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" styleClass="background" stylesheets="@design.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+        <AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMousePressed="#hideOptions" prefHeight="600.0" prefWidth="1000.0" styleClass="background" stylesheets="@design.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
            <children>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="470.0" layoutX="40.0" layoutY="115.0" stroke="#1b449c" strokeType="INSIDE" visible="false" width="920.0" />
               <ImageView fitHeight="57.0" fitWidth="374.0" layoutX="343.0" layoutY="22.0" pickOnBounds="true" preserveRatio="true">
@@ -28,9 +28,9 @@
                     <Image url="@BWFH_logo_rgb%20(1).png" />
                  </image>
               </ImageView>
-              <Button fx:id="help" layoutX="825.0" layoutY="14.0" mnemonicParsing="false" onAction="#help" onKeyPressed="#help" prefHeight="50.0" prefWidth="50.0" styleClass="helpButton" stylesheets="@design.css" />
+              <Button fx:id="help" layoutX="825.0" layoutY="14.0" mnemonicParsing="false" onAction="#help" onKeyPressed="#help" prefHeight="50.0" prefWidth="50.0" style="-fx-background-color: none;" styleClass="helpButton" stylesheets="@design.css" />
               <Button fx:id="adminButton" layoutX="915.0" layoutY="14.0" mnemonicParsing="false" onAction="#logIn" prefHeight="50.0" prefWidth="50.0" styleClass="adminMenuButton" stylesheets="@design.css" />
-            <Line endX="970.0" layoutX="1.0" layoutY="115.0" startX="30.0" stroke="#1b449c" />
+            <Line endX="970.0" layoutX="1.0" layoutY="115.0" startX="30.0" stroke="#424556" />
             <HBox alignment="CENTER" layoutY="130.0" prefHeight="438.0" prefWidth="1000.0">
                <children>
                     <ImageView fx:id="imageView" fitHeight="438.0" fitWidth="800.0" pickOnBounds="true" preserveRatio="true" />
@@ -42,9 +42,9 @@
                     <content>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
-                              <HBox alignment="CENTER_RIGHT" prefHeight="50.0" prefWidth="295.0" spacing="10.0">
+                              <HBox alignment="CENTER_RIGHT" prefHeight="50.0" prefWidth="295.0">
                                  <children>
-                                    <Button fx:id="floor1" mnemonicParsing="false" onMousePressed="#selectPatientImage" text="1" />
+                                    <Button fx:id="floor1" mnemonicParsing="false" onMousePressed="#selectPatientImage" style="-fx-background-color: #898b95;" text="1" />
                                     <Button fx:id="floor2" mnemonicParsing="false" onMousePressed="#selectPatientImage" text="2" />
                                     <Button fx:id="floor3" mnemonicParsing="false" onMousePressed="#selectPatientImage" text="3" />
                                     <Button fx:id="floor4" mnemonicParsing="false" onMousePressed="#selectPatientImage" text="4" />
@@ -61,7 +61,7 @@
                   <content>
                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
-                              <HBox alignment="CENTER_RIGHT" prefHeight="50.0" prefWidth="287.0" spacing="10.0">
+                              <HBox alignment="CENTER_RIGHT" prefHeight="50.0" prefWidth="287.0">
                                  <children>
                                     <Button fx:id="belkin1" mnemonicParsing="false" onMousePressed="#selectPatientImage" text="1" />
                                     <Button fx:id="belkin2" mnemonicParsing="false" onMousePressed="#selectPatientImage" text="2" />
@@ -92,11 +92,11 @@
                     <Font size="30.0" />
                  </font>
               </Label>
-              <AnchorPane fx:id="searchAnchorPane" prefHeight="600.0" prefWidth="1000.0" styleClass="patientBackground" stylesheets="@design.css" visible="false">
+              <AnchorPane fx:id="searchAnchorPane" onMousePressed="#hideOptions" prefHeight="600.0" prefWidth="1000.0" styleClass="patientBackground" stylesheets="@design.css" visible="false">
                  <children>
                     <ImageView fx:id="patientImageView" fitHeight="420.0" fitWidth="695.0" layoutX="166.0" layoutY="83.0" pickOnBounds="true" preserveRatio="true" />
                      <Label fx:id="textDirectionsTextBox" alignment="TOP_LEFT" layoutX="790.0" layoutY="83.0" prefHeight="390.0" prefWidth="210.0" styleClass="textDirection" stylesheets="@design.css" text="Test Directions Please Ignore" visible="false" wrapText="true" />
-                  <Button fx:id="TextDirection" layoutX="790.0" layoutY="472.0" mnemonicParsing="false" onMousePressed="#textDirection" prefHeight="37.0" prefWidth="210.0" style="-fx-background-radius: 5px;" text="Show Text Direction" visible="false" />
+                  <Button fx:id="TextDirection" layoutX="790.0" layoutY="473.0" mnemonicParsing="false" onMousePressed="#textDirection" prefHeight="37.0" prefWidth="210.0" style="-fx-background-radius: 3px;" text="Show Text Direction" visible="false" />
                   <ImageView fitHeight="57.0" fitWidth="374.0" layoutX="343.0" layoutY="22.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@BWFH_logo_rgb%20(1).png" />
@@ -122,7 +122,6 @@
                <padding>
                   <Insets left="30.0" />
                </padding></HBox>
-            <Button fx:id="miniMenuButton" layoutX="926.0" layoutY="568.0" mnemonicParsing="false" onMousePressed="#menuControl" opacity="0.8" prefHeight="37.0" prefWidth="60.0" style="-fx-background-color: #F2F2F2;" text="^" visible="false" />
            </children>
         </AnchorPane>
     </children>

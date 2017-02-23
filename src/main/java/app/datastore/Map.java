@@ -9,7 +9,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class Map {
+    final Logger logger = LoggerFactory.getLogger(Map.class);
+
     Directory directory;
     GraphNetwork graph;
     HashMap<String, String> settings;
@@ -189,7 +194,7 @@ public class Map {
      * @param floors list of floors to connect the elevator through
      */
     public void addElevator (FloorPoint point, List<String> floors) {
-        System.out.println("In map create elevator @ : " + point);
+        logger.debug("In map create elevator @ : {}", point);
         List<GraphNode> elevators = new ArrayList<>();
         // make elevators
         for (String floor : floors) {
@@ -292,7 +297,7 @@ public class Map {
         try {
             return graph.getPath(start, end);
         } catch( PathNotFoundException e) {
-            System.err.println(e.getMessage());
+            logger.error("Got error in {} : {}", this.getClass().getSimpleName(), e.getMessage());
         }
         return new LinkedList<>();
     }
