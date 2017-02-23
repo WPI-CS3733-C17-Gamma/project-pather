@@ -27,7 +27,7 @@ public class DatabaseManager {
             "constraint pk_e Primary key (ID1, ID2)," +
             "constraint id1_fk foreign key (ID1) references GraphNodes(ID)," +
             "constraint id2_fk foreign key (ID2) references GraphNodes(ID))",
-        "create table Rooms (rID Integer Primary key, Name varchar(30), nID Integer," +
+        "create table Rooms (rID Integer Primary key, Name varchar(100), nID Integer," +
             "constraint fk_gn foreign key (nID) references GraphNodes(ID))",
         "create table Entries (eID Integer Primary Key, Title varchar(100), Name varchar(100))",
         "create table RoomEntryAssoc (eID integer, rID integer," +
