@@ -408,6 +408,7 @@ public class DirectoryAdminController extends DisplayController{
                 logger.error("Got error in {} : {}", this.getClass().getSimpleName(), e.getMessage());
             }
         }
+        filterAllEntries(); //Refresh entries
     }
 
     /**
