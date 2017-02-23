@@ -3,8 +3,12 @@ package app.display;
 import app.*;
 import app.applicationControl.ApplicationController;
 import app.applicationControl.Login;
+import app.applicationControl.RealImage;
 import app.dataPrimitives.*;
 import app.pathfinding.PathNotFoundException;
+import com.sun.javafx.geom.BaseBounds;
+import com.sun.javafx.geom.transform.BaseTransform;
+import com.sun.javafx.scene.BoundsAccessor;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -21,6 +25,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.Effect;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -73,7 +78,7 @@ public class PatientController extends DisplayController implements Initializabl
     @FXML private Button patientDisplayButton;
     @FXML private Button login;
     @FXML private Button TextDirection;
-    @FXML private Button miniMenuButton;
+    @FXML private Button floor1;
 
     private List<SubPath> currentPath;
     private int currentSubPath;
@@ -84,6 +89,8 @@ public class PatientController extends DisplayController implements Initializabl
 
     boolean selected = false;
     CircularContextMenu menu = new CircularContextMenu();
+
+    private Button previousButton;
 
     /**
      *
@@ -109,9 +116,6 @@ public class PatientController extends DisplayController implements Initializabl
         if (displayState == state.PATIENT_DEFAULT){
             imageView.setImage(floor);
         }
-//        if (displayState == state.PATIENT_SEARCH){d
-//            patientImageView.setImage(floor);
-//        }
     }
 
     /**
@@ -122,7 +126,6 @@ public class PatientController extends DisplayController implements Initializabl
             searchAnchorPane.setVisible(true);
             patientImageView.setImage(imageView.getImage());
             this.displayState = state.PATIENT_SEARCH;
-//            miniMenuButton.setVisible(true);
             displayImage();
         }
     }
@@ -137,7 +140,6 @@ public class PatientController extends DisplayController implements Initializabl
             searchAnchorPane.setVisible(false);
             this.displayState = state.PATIENT_DEFAULT;
             clearSearchDisplay();
-//            miniMenuButton.setVisible(false);
             displayImage();//display the original image
         }
     }
@@ -146,6 +148,10 @@ public class PatientController extends DisplayController implements Initializabl
      * perform search; get text from the textfield
      */
     public void search () {
+        if (displayState != state.DISPLAYING_TEXT_DIRECTION || displayState != state.PATIENT_SEARCH){
+            startSearch();
+        }
+
         clearSearchDisplay();
         currentPath = null;
         String search = searchBar.getText();
@@ -245,10 +251,22 @@ public class PatientController extends DisplayController implements Initializabl
         return null;
     }
 
+    /**
+     * change the patient image display depending on the button being clicked on using the id of the button
+     * @param e
+     */
     public void selectPatientImage(MouseEvent e){
         if (e.getSource() instanceof Button) {
-            System.out.println(((Button) e.getSource()).getId());
-            imageView.setImage(applicationController.getImage(((Button) e.getSource()).getId()));
+            Button temp = (Button) e.getSource();
+            System.out.println(temp.getId());
+            imageView.setImage(applicationController.getImage(temp.getId()));
+            if (previousButton != null){
+                //return to default image color
+                previousButton.setStyle("-fx-background-color: #F7F7F7");
+            }
+            previousButton = temp;
+            //selected color
+            previousButton.setStyle("-fx-background-color: #898b95");
         }
     }
 
@@ -375,14 +393,6 @@ public class PatientController extends DisplayController implements Initializabl
         }
     }
 
-    public void menuControl(){
-        if (miniMenuButton.getText() == "^"){
-            showMultiMapAnimation();
-        } else if (miniMenuButton.getText() == "X") {
-            hideMultiMapAnimation();
-        }
-    }
-
     /**
      * show the HBox from the bottom
      */
@@ -398,14 +408,12 @@ public class PatientController extends DisplayController implements Initializabl
             final KeyFrame kf = new KeyFrame(Duration.millis(300), kv);
             timeline.getKeyFrames().add(kf);
             timeline.play();
-//            miniMenuButton.setLayoutY(491);
-//            miniMenuButton.setText("X");
             displayState  = s;
         }
     }
 
     /**
-     * hide the HBox
+     * hide the HBox to the bottom
      */
     public void hideMultiMapAnimation(){
         if(displayState == state.PATIENT_SEARCH || displayState == state.DISPLAYING_TEXT_DIRECTION){
@@ -418,8 +426,6 @@ public class PatientController extends DisplayController implements Initializabl
             final KeyFrame kf = new KeyFrame(Duration.millis(100), kv);
             timeline.getKeyFrames().add(kf);
             timeline.play();
-//            miniMenuButton.setLayoutY(568);
-//            miniMenuButton.setText("^");
             displayState = s;
         }
     }
@@ -564,6 +570,67 @@ public class PatientController extends DisplayController implements Initializabl
         return line;
     }
 
+    /**
+     * gets app.dataPrimitives.Room description on screen or display elevators
+     * @param subpath
+     */
+    public LinkedList<Label> getRoomLabels(SubPath subpath){
+        LinkedList<Label> labels = new LinkedList<>();
+        Room room;
+
+        List<GraphNode> path = subpath.getPath();
+
+        for (GraphNode node: path){
+            Label current = new Label();
+            room = map.getRoomFromNode(node);
+            FloorPoint point;
+            int roomx;
+            int roomy;
+
+            //add elevator icon if applicable
+            if(node.isElevator()){
+                ImageView image = new ImageView();
+                image.setImage(applicationController.getImage("elevator"));
+                image.setPreserveRatio(true);
+                image.setFitWidth(20);
+                image.setFitHeight(20);
+                current.setGraphic(image);
+                System.out.println("node to get image: " + node);
+                point = graphPointToImage(node, patientImageView);
+                roomx = point.getX() - 30;
+                roomy = point.getY() - 5;
+                current.setLayoutX(roomx);
+                current.setLayoutY(roomy);
+                labels.add(current);
+            }
+            if(room != null) {
+                point = graphPointToImage(room.getLocation(), patientImageView);
+                roomx = point.getX() + 5;
+                roomy = point.getY();
+
+                current.setText(room.getName());
+                current.setLayoutX(roomx);
+                current.setLayoutY(roomy);
+                current.setBorder(new Border(new BorderStroke(Color.BLACK,BorderStrokeStyle.SOLID,new CornerRadii(4),BorderWidths.DEFAULT)));
+                current.setBackground(new Background(new BackgroundFill(Color.rgb(124,231,247), new CornerRadii(4),
+                    new Insets(0.0,0.0,0.0,0.0))));
+                current.setMouseTransparent(true);
+                labels.add(current);
+            }
+        }
+        return labels;
+    }
+
+    /**
+     * Display labels on app.datastore.Map
+     * @param labels
+     */
+    public void displayRoomLabels(LinkedList<Label> labels){
+        for(Label label: labels){
+            anchorPane.getChildren().add(label);
+        }
+    }
+
     public void textDirection(){
         if (textDirectionsTextBox.isVisible()){
             displayState = state.PATIENT_SEARCH;
@@ -614,6 +681,8 @@ public class PatientController extends DisplayController implements Initializabl
         System.out.println("INIT");
         displayImage();
 
+         previousButton = floor1;
+
         imageView.setMouseTransparent(true);
 
         options.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -654,51 +723,6 @@ public class PatientController extends DisplayController implements Initializabl
     }
 
     /**
-     * gets app.dataPrimitives.Room description on screen
-     * @param subpath
-     */
-    public LinkedList<Label> getRoomLabels(SubPath subpath){
-        LinkedList<Label> labels = new LinkedList<>();
-        Room room;
-
-        List<GraphNode> path = subpath.getPath();
-
-        for (GraphNode node: path){
-            Label current = new Label();
-            room = map.getRoomFromNode(node);
-            FloorPoint point;
-            int roomx;
-            int roomy;
-
-            if(room != null) {
-                point = graphPointToImage(room.getLocation(), patientImageView);
-                roomx = point.getX() + 5;
-                roomy = point.getY();
-
-                current.setText(room.getName());
-                current.setLayoutX(roomx);
-                current.setLayoutY(roomy);
-                current.setBorder(new Border(new BorderStroke(Color.BLACK,BorderStrokeStyle.SOLID,new CornerRadii(4),BorderWidths.DEFAULT)));
-                current.setBackground(new Background(new BackgroundFill(Color.rgb(124,231,247), new CornerRadii(4),
-                    new Insets(0.0,0.0,0.0,0.0))));
-                current.setMouseTransparent(true);
-                labels.add(current);
-            }
-        }
-        return labels;
-    }
-
-    /**
-     * Display labels on app.datastore.Map
-     * @param labels
-     */
-    public void displayRoomLabels(LinkedList<Label> labels){
-        for(Label label: labels){
-            anchorPane.getChildren().add(label);
-        }
-    }
-
-    /**
      * Displays paths on minimaps
      */
     public void displayMinipaths(){
@@ -715,6 +739,10 @@ public class PatientController extends DisplayController implements Initializabl
             clearDisplay();
             displaySubPath(patientImageView, currentPath.get(currentSubPath), true, 10, 20);
         }
+    }
+
+    public void hideOptions(){
+        options.setVisible(false);
     }
 }
 

@@ -1,11 +1,13 @@
 .button{
 	-fx-text-fill: black;
-	-fx-background-color: #d0d0d0;
+	-fx-background-color: #F7F7F7;
+	-fx-border: 1px solid black; 
+	/*-fx-border-left: 1px solid black; */
 	-fx-font-size: 16px;
 	/*-fx-box-shadow: 10px 10px 5px #888888;*/
 	-fx-min-width: 30px;
 	-fx-min-height: 30px;
-	-fx-background-radius: 1000px;
+	/*-fx-background-radius: 1000px;*/
 }
 /*1b449c*/
 
@@ -14,7 +16,7 @@
 }
 
 .patientBackground{
-	-fx-background-color: #F0F4F5;
+	-fx-background-color: #FAF7F0;
 }
 
 .search{
@@ -40,7 +42,7 @@
 .tab{
 	/*-fx-tab-min-width: 90px;*/	
 	/*-fx-text-fill: red;*/
-	-fx-background-color: #1b449c;
+	-fx-background-color: #424556;
 	-fx-font-size: 16px;
 	-fx-padding: 5px 10px;
 	-fx-shape: "M300,290 L310,168 L410,168 L400,290 L300,290 z";
@@ -50,7 +52,7 @@
  .tab:selected
  {
 	-fx-padding: 5px 10px;
-	-fx-background-color: #3F8EA9;
+	-fx-background-color: #e89014;
 	-fx-border: none;
 	/*-fx-color: black;*/
 }
@@ -94,9 +96,9 @@
 }
 
 .exitButton{
-	-fx-text-fill: black;
+	-fx-text-fill: #424556;
 	/*-fx-Font: "Britannic Bold";*/
-	-fx-background-color: #F0F4F5;
+	-fx-background-color: #F3EFE7;
 	-fx-font-size: 30px;
 	-fx-font-weight: bold;
 }
@@ -108,11 +110,11 @@
 }
 
 .textDirection{
-	-fx-padding: 3px;
-	-fx-background-radius: 5px;
+	-fx-padding: 5px;
+	-fx-background-radius: 3px;
 	-fx-background-color: #FAFAFA;
 	-fx-opacity: 75%;
-	-fx-text-fill: #1b449c;
+	-fx-text-fill: #424556;
 	-fx-font-size: 16px;
 	-fx-font-weight: bold;
 }
