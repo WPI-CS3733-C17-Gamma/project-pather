@@ -185,6 +185,7 @@ public class MapAdminController extends DisplayController {
         label.setLayoutY(temp.getY() + 5);
         label.setTextFill(Color.rgb(27, 68, 156));
         label.setStyle("-fx-background-color: #E1F0F5; -fx-border-color: darkblue;-fx-padding: 2;");
+        label.setMouseTransparent(true);
         mapPane.getChildren().add(label);
         this.miscDrawnObjects.add(label);
     }
