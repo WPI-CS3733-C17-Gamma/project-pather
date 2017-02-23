@@ -16,25 +16,38 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class ApplicationController extends Application {
 
     DatabaseManager databaseManager;
+
     // probably not needed
     DisplayController currentDisplayController;
+
     Map map ;
     Stage pStage;
-
     Stage adminStage;
     Login login;
     Scene currentScene;
 
     // NOTE with proxy pattern this will change to a prox image
     HashMap<String, ProxyImage> images;
+
     boolean isLoginPage;
+
+
+    final Logger logger = LoggerFactory.getLogger(ApplicationController.class);
+
+
     @Override
     public void start(Stage primaryStage) throws Exception {
         initialize();
@@ -49,9 +62,10 @@ public class ApplicationController extends Application {
      * Load from the database and setup images
      */
     public void initialize(){
+        logger.info("Starting ApplicationController");
+
         databaseManager = new DatabaseManager("main");
         map = databaseManager.load();
-
 
         images = new HashMap<>();
         images.put("floor1", new ProxyImage("Main_Belkin_Clean/main_1clean.png"));
@@ -66,14 +80,14 @@ public class ApplicationController extends Application {
         images.put("belkin3", new ProxyImage("Main_Belkin_Clean/Belkin_3clean.png"));
         images.put("belkin4", new ProxyImage("Main_Belkin_Clean/Belkin_4clean.png"));
         images.put("campus", new ProxyImage("Main_Belkin_Clean/campusclean.png"));
-
+        images.put("elevator", new ProxyImage("Icon_PNGs/ElevatorT.png"));
     }
 
     /**
      * reload the state of the database
      */
     public Map reload () {
-        System.out.println("reload");
+        logger.debug("Reloading Map");
         map = databaseManager.load();
         return map;
     }
@@ -86,7 +100,6 @@ public class ApplicationController extends Application {
     public List<String> getAllFloors () {
         return images.keySet().stream().collect(Collectors.toList());
     }
-
 
     /**
      * load the patient display into the frame
@@ -107,21 +120,21 @@ public class ApplicationController extends Application {
             pStage.setScene(currentScene);
             currentScene.widthProperty().addListener(new ChangeListener<Number>() {
                 @Override public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneWidth, Number newSceneWidth) {
-                    System.out.println("Width: " + newSceneWidth);
+                    logger.debug("Scaling {} Width: {}", this.getClass().getSimpleName(),newSceneWidth);
                     controller.scaleWidth(oldSceneWidth, newSceneWidth);
                 }
             });
             currentScene.heightProperty().addListener(new ChangeListener<Number>() {
                 @Override public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneHeight, Number newSceneHeight) {
                     controller.scaleHeight(oldSceneHeight, newSceneHeight);
-                    System.out.println("Height: " + newSceneHeight);
+                    logger.debug("Scaling {} Height: {}", this.getClass().getSimpleName(),newSceneHeight);
                 }
             });
             pStage.setFullScreen(true);
         }
         catch (Exception e){
             e.printStackTrace();
-            System.out.println(e.toString());
+            logger.error("Got error in {} : {}", this.getClass().getSimpleName(), e.toString());
         }
     }
 
@@ -172,7 +185,7 @@ public class ApplicationController extends Application {
         }
         catch (Exception e){
             e.printStackTrace();
-            System.out.println(e.toString());
+            logger.error("Got error in {} : {}", this.getClass().getSimpleName(), e.toString());
         }
     }
 
@@ -198,10 +211,10 @@ public class ApplicationController extends Application {
             adminStage.show();
         } catch (IOException e){
             e.printStackTrace();
-            System.out.println(e.toString());
+            logger.error("Got error in {} : {}", this.getClass().getSimpleName(), e.toString());
         } catch (Exception e){
             e.printStackTrace();
-            System.out.println(e.toString());
+            logger.error("Got error in {} : {}", this.getClass().getSimpleName(), e.toString());
         }
     }
 
@@ -222,7 +235,6 @@ public class ApplicationController extends Application {
         return login.changePassword(uname, oldPasswd, newPasswd);
     }
 
-
     /**
      * Closes Admin Display
      */
@@ -230,7 +242,7 @@ public class ApplicationController extends Application {
         try{
             login.signOut();
         } catch(NullPointerException n){
-            System.out.println("Logout Error - no login class detected");
+            logger.error("Logout Error - no login class detected");
         }
 
         save();
@@ -250,7 +262,7 @@ public class ApplicationController extends Application {
      * write current state to database
      */
     public void save () {
-        System.out.println("SAVE");
+        logger.debug("Saving to database in {}", this.getClass().getSimpleName());
         databaseManager.write(map);
     }
     /**
@@ -259,10 +271,14 @@ public class ApplicationController extends Application {
     @Override
     public void stop () {
         databaseManager.write(map);
-        System.out.println("Application Closed");
+        logger.info("Application Closed at {}\n", Calendar.getInstance().getTime().toString());
     }
 
     public static void main (String[] args) {
+        Date date = Calendar.getInstance().getTime();
+        SimpleDateFormat f1 = new SimpleDateFormat("EEE-dd 'at' hh-mm");
+        System.setProperty("logname", f1.format(date));
         launch(args);
     }
 }
+
