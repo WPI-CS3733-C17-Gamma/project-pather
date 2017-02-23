@@ -536,7 +536,6 @@ public class PatientController extends DisplayController implements Initializabl
             GraphNode loc = cur.getLocation();
             // skip rooms without locations
             if (loc == null || ! loc.getLocation().getFloor().equals(floorName)) {
-                System.out.println("passing");
                 continue;
             }
 
