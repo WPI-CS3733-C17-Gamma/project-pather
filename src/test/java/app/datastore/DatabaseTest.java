@@ -5,11 +5,10 @@ import app.dataPrimitives.DirectoryEntry;
 import app.dataPrimitives.FloorPoint;
 import app.dataPrimitives.GraphNode;
 import app.dataPrimitives.Room;
-import app.datastore.Directory;
-import app.datastore.GraphNetwork;
-import app.datastore.Map;
 import junit.framework.TestCase;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -17,8 +16,6 @@ import java.sql.Statement;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class DatabaseTest extends TestCase{
     final Logger logger = LoggerFactory.getLogger(DatabaseManager.class);

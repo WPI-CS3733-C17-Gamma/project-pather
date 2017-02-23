@@ -1,16 +1,13 @@
 package app.datastore;
 
 import app.dataPrimitives.*;
-import app.pathfinding.IPathFindingAlgorithm;
 import app.pathfinding.PathNotFoundException;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.*;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
 
 public class Map {
     final Logger logger = LoggerFactory.getLogger(Map.class);

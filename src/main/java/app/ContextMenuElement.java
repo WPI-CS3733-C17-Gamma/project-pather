@@ -4,7 +4,6 @@ import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.SVGPath;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

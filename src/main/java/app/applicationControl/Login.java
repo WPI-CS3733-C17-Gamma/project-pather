@@ -1,6 +1,5 @@
 package app.applicationControl;
 
-import java.net.PasswordAuthentication;
 import java.util.HashMap;
 
 /**

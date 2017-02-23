@@ -1,17 +1,16 @@
 package app.datastore;
 
-import app.pathfinding.*;
 import app.dataPrimitives.FloorPoint;
 import app.dataPrimitives.GraphNode;
+import app.pathfinding.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class GraphNetwork {
     final Logger logger = LoggerFactory.getLogger(GraphNetwork.class);

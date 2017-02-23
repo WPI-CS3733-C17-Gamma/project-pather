@@ -1,11 +1,12 @@
 package app.pathfinding;
 
 import app.dataPrimitives.GraphNode;
-import app.datastore.GraphNetwork;
-
-import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 public class DFS implements IPathFindingAlgorithm {
     final Logger logger = LoggerFactory.getLogger(IPathFindingAlgorithm.class);
