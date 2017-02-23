@@ -1,5 +1,4 @@
 package app.CustomMenus;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
@@ -152,16 +151,4 @@ public class ContextMenuElement{
         background.setFill(Color.rgb(211, 211, 211, 1));
     }
 
-    public void fireEvent(Event event){
-//        MouseEvent mouseEvent = (MouseEvent) event;
-//        double x = mouseEvent.getScreenX();
-//        double y = mouseEvent.getScreenY();
-//        x = x - this.parentMenu.getX();
-//        y = y - this.parentMenu.getY();
-//        System.out.println("x: " + x + "y: " + y);
-//        System.out.println(path.getLayoutX() + " : " + path.getLayoutY());
-//        if(path.contains(x,y))
-            path.fireEvent(event);
-//        System.out.println("works");
-    }
 }

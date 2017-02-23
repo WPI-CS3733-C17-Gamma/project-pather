@@ -14,9 +14,7 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.ContextMenuEvent;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.input.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
@@ -55,7 +53,7 @@ public class MapAdminController extends DisplayController {
     // keep track of the objects that have been drawn on the screen
     HashMap<Long, Shape> drawnNodes = new HashMap<>();
     CircularContextMenu nodeMenu = new CircularContextMenu();
-    CircularContextMenu screenMenu = new CircularContextMenu();
+    CircularContextMenu screenMenu = new CircularContextMenu(50, 100);
     List<Node> miscDrawnObjects = new ArrayList<>();
     Stage stage;
 
@@ -82,6 +80,7 @@ public class MapAdminController extends DisplayController {
 
     private GraphNode tempNode ;
     private String currentMap;
+    private ContextMenuEvent mouseEvent;
 
     /**
      *  Construct map admin controller
@@ -147,22 +146,56 @@ public class MapAdminController extends DisplayController {
         imageviewMap.toBack();
 
         setMap("floor3");
-        //---------------------------------------------------------------------------------------------------------------------
+        /*TODO Add onclick event handlers for circular menus. screenMenu is for options when you click on the screen.
+        TODO nodeMenu is for rightclicking on a node
+        */
+        //---------------------------------------------------------------------------------------------------------------
         //Setup Contest Menu here
-        //nodeMenu.hide();
-        ImagePattern deleteRoom = new ImagePattern(new Image("/Radial Icons/Delete_Room.png"));
-        ImagePattern addRoom = new ImagePattern(new Image("/Radial Icons/Add_Room2.png"));
-        ImagePattern deleteNode = new ImagePattern(new Image("/Radial Icons/Delete_Node.png"));
+        EventHandler<MouseEvent> deleteNode = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                deleteNode(selectedNode);
+            }
+        };
+        EventHandler<MouseEvent> deleteRoom = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if(activeRoom != null){
+                    map.deleteRoom(activeRoom);
+                }
+            }
+        };
+        EventHandler<MouseEvent> addNodeEvent = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                addNode(contextToGraph(mouseEvent));
+                selectedNode = null;
+                screenMenu.hide();
+            }
+        };
+//        EventHandler<MouseEvent> addRoom = new EventHandler<MouseEvent>() {
+//            @Override
+//            public void handle(MouseEvent event) {
+//                if(activeRoom != null){
+//                    map.addRoom()
+//                }
+//            }
+//        };
+        ImagePattern deleteRoomImage = new ImagePattern(new Image("/Radial Icons/Delete_Room.png"));
+        ImagePattern addRoomImage = new ImagePattern(new Image("/Radial Icons/Add_Room2.png"));
+        ImagePattern addNodeImage = new ImagePattern(new Image("/Radial Icons/Add_Node.png"));
+        ImagePattern deleteNodeImage = new ImagePattern(new Image("/Radial Icons/Delete_Node.png"));
 
-        nodeMenu.addOption(deleteRoom);
-        nodeMenu.addOption(addRoom);
-        nodeMenu.addOption(deleteNode);
+        nodeMenu.addOption(deleteRoomImage,deleteRoom,null);//Add delete Room, add/change Room, delete node to this menu, delete elevator if this node is an elevator
+        nodeMenu.addOption(addNodeImage,addNodeEvent,null);
+        nodeMenu.addOption(deleteNodeImage,deleteNode,null);
 
-        screenMenu.addOption(Color.WHITE);
+        screenMenu.addOption(Color.WHITE);//Add add elevator, addnode, add elevator
         screenMenu.addOption(Color.RED);
         screenMenu.addOption(Color.BLUE);
+        screenMenu.setAutoHide(true);
         drawMap();
-
+        //------------------------------------------------------------------------------------------------------------------
     }
 
     /**
@@ -458,6 +491,28 @@ public class MapAdminController extends DisplayController {
      * @return
      */
     private FloorPoint mouseToGraph(MouseEvent m){
+        Node producer = null;
+        // Find the container for the image
+        if (m.getSource() instanceof Node) {
+            producer = (Node) m.getSource();
+        }
+        else {
+            return null;
+        }
+        double imageWidth = producer.getBoundsInLocal().getWidth();
+        double imageHeight = producer.getBoundsInLocal().getHeight();
+
+        int newX = (int) ( m.getX()  * 1000. / imageWidth );
+        int newY = (int) ( m.getY() * 1000. / imageHeight);
+
+        return new FloorPoint(newX, newY, currentMap);
+    }
+    /**
+     * convert to map coords
+     * @param m
+     * @return
+     */
+    private FloorPoint contextToGraph(ContextMenuEvent m){
         Node producer = null;
         // Find the container for the image
         if (m.getSource() instanceof Node) {
@@ -874,8 +929,9 @@ public class MapAdminController extends DisplayController {
 //        contextMenu.setStyle("fx-background-image: red");
 
     public void showContextMenu(ContextMenuEvent event){
+        mouseEvent = event;
+
         Shape circle = new Circle(event.getX(), event.getY(), 10);
-        circle.setOpacity(0);
         mapPane.getChildren().add(circle);
         if(selectedNode == null){
             nodeMenu.show(circle,event.getScreenX(), event.getScreenY());

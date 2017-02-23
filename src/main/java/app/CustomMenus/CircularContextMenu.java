@@ -16,7 +16,7 @@ import java.util.List;
  * Created by dominic on 2/18/17.
  */
 public class CircularContextMenu extends Popup {
-    double innerRadius = 80;
+    double innerRadius = 50;
     double outerRadius = 100;
     private List<ContextMenuElement> menuElements = new LinkedList<>();
     Group root;
@@ -24,6 +24,7 @@ public class CircularContextMenu extends Popup {
     ContextMenuElement highlight = new ContextMenuElement(Color.rgb(41, 191,191),this,null);
     double angle;
     CentralDisplay display = new CentralDisplay(innerRadius,outerRadius);
+
     /**
      * Default Constructor
      */
@@ -39,7 +40,6 @@ public class CircularContextMenu extends Popup {
             @Override
             public void handle(MouseEvent event) {
                 drawHighlight(event);
-                System.out.println("movingh");
             }
         });
         root = new Group();
@@ -49,7 +49,6 @@ public class CircularContextMenu extends Popup {
     }
 
     /**
-     * Having innerRadius > outerRadius gives interesting shapes. Try it out!
      * @param innerRadius Inner radius of Context Menu
      * @param outerRadius Outer Radius of Context Menu
      */
@@ -64,7 +63,7 @@ public class CircularContextMenu extends Popup {
     }
 
     /**
-     * Adds an option to the context menu. The option does not work for places where the paint is transparent. Use solid paints for now
+     * Adds an option to the context menu.
      * @param image Fill for menu
      * @param clickHandler Actioned to be performe by optiion
      * @param dragHandler Actioned to be performe by optiion
@@ -76,17 +75,18 @@ public class CircularContextMenu extends Popup {
         setAutoHide(true);
 
         menuElements.add(new ContextMenuElement(image, this, display, clickHandler, dragHandler));
-        getContent().removeAll();
+        getContent().clear();
 
-        for(ContextMenuElement element:menuElements) {//redraw elements when a new one is added
+        for(ContextMenuElement element:menuElements) {
             try{
                 element.draw(currentAngle, angle, this.innerRadius, this.outerRadius);
-                getContent().add(element.path);
                 getContent().add(element.background);
+                getContent().add(element.path);
             }catch(IllegalArgumentException e){
                 System.out.println("Angle parameters must be positive");
                 e.printStackTrace();
             }
+
             currentAngle = currentAngle + angle;
         }
         getContent().add(display.centralDisplay);
@@ -153,18 +153,6 @@ public class CircularContextMenu extends Popup {
 
 
     /**
-     * Removes context menu from pane
-     *
-     */
-//    public void hide() {
-//
-//        List<Node> anchorPaneElements = pane.getChildren();
-//        for (Node element : drawnItems) {
-//            anchorPaneElements.remove(element);
-//        }
-//        this.pane = null;//Set pane to null since the menu is now hidden
-//    }
-    /**
      * Getter for Menu Elements
      * @return
      */
@@ -183,16 +171,6 @@ public class CircularContextMenu extends Popup {
         super.requestFocus();
     }
 
-//    public void fireEvent2(Event event){
-//                MouseEvent mouseEvent = (MouseEvent) event;
-//        double x = mouseEvent.getScreenX();
-//        double y = mouseEvent.getScreenY();
-//        x = x - this.getX();
-//        y = y - this.getY();
-//        for(ContextMenuElement element:menuElements){
-//            element.path.fireEvent(event.copyFor(this,element.path));
-//        }
-//    }
     public String toString(){
         return("This menu has: " + menuElements.size() + " options.");
     }
@@ -232,7 +210,7 @@ public class CircularContextMenu extends Popup {
     }
 
     /**
-     * reraws the context Menu. Icons are always on top
+     * reraws the context Menu. Icons are drawn on top with highlight below.
      */
     public void redraw(){
         for (ContextMenuElement element: menuElements){
