@@ -1,5 +1,7 @@
 package app.applicationControl;
 
+import org.mindrot.jbcrypt.BCrypt;
+
 import java.net.PasswordAuthentication;
 import java.util.HashMap;
 
@@ -13,7 +15,9 @@ public class Login {
     private HashMap<String, String> passwordStorage = new HashMap<>();    //Stores all passwords and username combinations
 
     Login() {
-        passwordStorage.put("admin", "admin");
+        String password = "admin";
+        String hashed = BCrypt.hashpw(password, BCrypt.gensalt());
+        passwordStorage.put("admin", hashed);
         requiredSignin = true;     //change to true after development and when testing
         isSignedIn = false;
     }
@@ -25,12 +29,14 @@ public class Login {
      * @return
      */
     boolean signIn(String uname, String password) {
+        //rehashing  the password
+        //String hashed = BCrypt.hashpw(password, BCrypt.gensalt(12));
 
         if (!requiredSignin) {
             return true;
         }
         try {
-            if (passwordStorage.get(uname).equals(password)) {
+            if (BCrypt.checkpw(password, passwordStorage.get(uname))) {
                 return true;
             }
             return false;
@@ -63,7 +69,8 @@ public class Login {
      * @return
      */
     boolean addUser(String uname, String passwd){
-        passwordStorage.put(uname, passwd);
+        String hashed = BCrypt.hashpw(passwd, BCrypt.gensalt(12));
+        passwordStorage.put(uname, hashed);
             return true;
     }
 
@@ -75,6 +82,8 @@ public class Login {
      * @return
      */
     boolean changePassword(String uname, String oldPasswd, String newPasswd){
-        return passwordStorage.replace(uname, oldPasswd, newPasswd);
+        String oldHashed = BCrypt.hashpw(oldPasswd, BCrypt.gensalt(12));
+        String newHashed = BCrypt.hashpw(newPasswd, BCrypt.gensalt(12));
+        return passwordStorage.replace(uname, oldHashed, newHashed);
     }
 }
