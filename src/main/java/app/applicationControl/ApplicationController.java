@@ -41,6 +41,7 @@ public class ApplicationController extends Application {
 
     // NOTE with proxy pattern this will change to a prox image
     HashMap<String, ProxyImage> images;
+    HashMap<String, ProxyImage> extraImages;
 
     boolean isLoginPage;
 
@@ -80,7 +81,9 @@ public class ApplicationController extends Application {
         images.put("belkin3", new ProxyImage("Main_Belkin_Clean/Belkin_3clean.png"));
         images.put("belkin4", new ProxyImage("Main_Belkin_Clean/Belkin_4clean.png"));
         images.put("campus", new ProxyImage("Main_Belkin_Clean/campusclean.png"));
-        images.put("elevator", new ProxyImage("Icon_PNGs/ElevatorT.png"));
+
+        extraImages = new HashMap<>();
+        extraImages.put("elevator", new ProxyImage("Icon_PNGs/ElevatorT.png"));
     }
 
     /**
@@ -145,6 +148,22 @@ public class ApplicationController extends Application {
      */
     public Image getImage (String floor) {
         ProxyImage proxyFloor = images.get(floor);
+        if (proxyFloor != null) {
+            try {
+                return proxyFloor.getValue();
+            }
+            catch (IllegalArgumentException e){
+                e.printStackTrace();
+                return null;
+            }
+        }
+        else {
+            return null;
+        }
+    }
+
+    public Image getExtraImage (String floor) {
+        ProxyImage proxyFloor = extraImages.get(floor);
         if (proxyFloor != null) {
             try {
                 return proxyFloor.getValue();

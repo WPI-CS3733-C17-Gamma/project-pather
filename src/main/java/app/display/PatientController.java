@@ -628,7 +628,7 @@ public class PatientController extends DisplayController implements Initializabl
             //add elevator icon if applicable
             if(node.isElevator()){
                 ImageView image = new ImageView();
-                image.setImage(applicationController.getImage("elevator"));
+                image.setImage(applicationController.getExtraImage("elevator"));
                 image.setPreserveRatio(true);
                 image.setFitWidth(20);
                 image.setFitHeight(20);
@@ -656,7 +656,7 @@ public class PatientController extends DisplayController implements Initializabl
                 labels.add(current);
             }
         }
-	drawnObjects.addAll(labels); 
+	drawnObjects.addAll(labels);
         return labels;
     }
 
@@ -669,7 +669,7 @@ public class PatientController extends DisplayController implements Initializabl
 	    if(! anchorPane.getChildren().contains(label)){
 		anchorPane.getChildren().add(label);
 	    }
-		
+
 	}
     }
 
