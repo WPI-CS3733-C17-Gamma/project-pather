@@ -16,6 +16,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ContextMenuEvent;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
@@ -27,12 +28,14 @@ import javafx.scene.shape.Shape;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-
-import java.util.*;
-import java.util.stream.Collectors;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class MapAdminController extends DisplayController {
     final Logger logger = LoggerFactory.getLogger(MapAdminController.class);
@@ -132,6 +135,17 @@ public class MapAdminController extends DisplayController {
             @Override
             public void changed(ObservableValue ov, String t, String t1) {
                 setMap(t1);
+            }
+        });
+        /** Added the ability to change a room name by pressing enter on the selected combo box
+         */
+        roomName.addEventFilter(KeyEvent.KEY_PRESSED, e->{
+            if(e.getCode() == KeyCode.ENTER){
+                System.out.println(roomName.getEditor().getText());
+                roomName.setValue(roomName.getEditor().getText());
+                addRoom();
+                mapPane.requestFocus();
+                drawMap();
             }
         });
         imageviewMap.toBack();
