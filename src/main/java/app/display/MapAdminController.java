@@ -31,7 +31,11 @@ import javafx.stage.WindowEvent;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class MapAdminController extends DisplayController {
+    final Logger logger = LoggerFactory.getLogger(MapAdminController.class);
 
     /**
      * Keep track of the state of the system
@@ -50,7 +54,6 @@ public class MapAdminController extends DisplayController {
     GraphNode selectedNode;
     GraphNode secondaryNode;
     Room activeRoom ;
-    List<String> elevatorFloors = new ArrayList<>();
 
     // keep track of the objects that have been drawn on the screen
     HashMap<Long, Shape> drawnNodes = new HashMap<>();
@@ -71,9 +74,8 @@ public class MapAdminController extends DisplayController {
     @FXML private Pane mapPane;
     @FXML private ComboBox<String> roomName;
 
-    @FXML private ListView<String> elevatorFloorOptions;
-    @FXML private ListView<String> changeFloorOptions;
-    @FXML private ToggleButton togglebuttonChangeFloor;
+    @FXML private MenuButton elevatorSelector;
+    @FXML private ComboBox<String> floorSelector;
 
     @FXML private Button defaultKioskButton;
     @FXML private ChoiceBox chooseAlgorithm;
@@ -123,28 +125,24 @@ public class MapAdminController extends DisplayController {
             }
         );
 
-        /**
-         * Add click listener to the list of floor options
-         */
-        elevatorFloorOptions.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        elevatorFloorOptions.setOnMouseClicked(new EventHandler<MouseEvent>() {
+        List<String> floorOptions = applicationController.getAllFloors();
+        Collections.sort(floorOptions);
+        floorSelector.setItems(FXCollections.observableArrayList(floorOptions));
+        floorSelector.valueProperty().addListener(new ChangeListener<String>() {
             @Override
-            public void handle(MouseEvent event) {
-                String selectedString = elevatorFloorOptions.getSelectionModel().getSelectedItem();
-                selectFloor(selectedString);
-            }
-        });
-        elevatorFloorOptions.toFront();
-        changeFloorOptions.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                String selectedString = changeFloorOptions.getSelectionModel().getSelectedItem();
-                setMap(selectedString);
+            public void changed(ObservableValue ov, String t, String t1) {
+                setMap(t1);
             }
         });
         imageviewMap.toBack();
 
-        setMap("floor3");
+        for (String floor : floorOptions) {
+            CustomMenuItem cmi = new CustomMenuItem(new CheckBox(floor));
+            cmi.setHideOnClick(false);
+            elevatorSelector.getItems().add(cmi);
+        }
+
+        floorSelector.setValue("floor3");
         drawMap();
     }
 
@@ -181,6 +179,7 @@ public class MapAdminController extends DisplayController {
         label.setLayoutY(temp.getY() + 5);
         label.setTextFill(Color.rgb(27, 68, 156));
         label.setStyle("-fx-background-color: #E1F0F5; -fx-border-color: darkblue;-fx-padding: 2;");
+        label.setMouseTransparent(true);
         mapPane.getChildren().add(label);
         this.miscDrawnObjects.add(label);
     }
@@ -216,7 +215,7 @@ public class MapAdminController extends DisplayController {
 
             Room nodeRoom = map.getRoomFromNode(node);
             if (nodeRoom != null) {
-                System.out.println("drawing room " +  nodeRoom);
+                logger.info("Drawing room {}", nodeRoom.toString());
                 addRoomLabel(nodeRoom);
             }
 
@@ -255,22 +254,6 @@ public class MapAdminController extends DisplayController {
         else {
             changeState((State) toggleTools.getSelectedToggle().getUserData());
         }
-    }
-
-    /**
-     * Open the menu to switch between floors
-     */
-    public void toggleSwitchMap () {
-        toggleSwitchMap(togglebuttonChangeFloor.isSelected());
-    }
-
-    public void toggleSwitchMap (boolean selected) {
-        togglebuttonChangeFloor.setSelected(selected);
-        changeFloorOptions.setVisible(selected);
-        List<String> options = applicationController.getAllFloors();
-        ObservableList<String> observOptions= FXCollections.observableArrayList(options);
-        changeFloorOptions.setItems(observOptions);
-        changeFloorOptions.toFront();
     }
 
     /**
@@ -488,12 +471,12 @@ public class MapAdminController extends DisplayController {
         if (room != null) {
             roomName.setValue(room.getName());
             activeRoom = room;
-            defaultKioskButton.setStyle("-fx-background-color: green;");
+            defaultKioskButton.setDisable(false);
         }
         else {
             roomName.setValue("");
             activeRoom = null;
-            defaultKioskButton.setStyle("-fx-background-color: gray;");
+            defaultKioskButton.setDisable(true);
         }
     }
 
@@ -542,40 +525,7 @@ public class MapAdminController extends DisplayController {
             secondaryNode = null;
         }
 
-        if (currentState == State.ADD_ELEVATOR) {
-            elevatorFloorOptions.setVisible(true);
-            displayElevatorOptions();
-        }
-        else {
-            elevatorFloorOptions.setVisible(false);
-        }
-
-        toggleSwitchMap(false);
-
         drawMap();
-    }
-
-    /**
-     * When in add elevator, display the elevatorFloor options
-     */
-    public void displayElevatorOptions () {
-       List<String> options = applicationController.getAllFloors();
-       ObservableList<String> observOptions= FXCollections.observableArrayList(options);
-       elevatorFloorOptions.setItems(observOptions);
-       elevatorFloorOptions.getSelectionModel().clearSelection();
-        for (String floor : elevatorFloors) {
-            elevatorFloorOptions.getSelectionModel().select(floor);
-        }
-    }
-
-    public void selectFloor (String floor) {
-        if (!elevatorFloors.contains(floor)){
-            elevatorFloors.add(floor);
-        }
-        else {
-            elevatorFloors.remove(floor);
-        }
-        displayElevatorOptions();
     }
 
     /**
@@ -615,6 +565,14 @@ public class MapAdminController extends DisplayController {
      */
     public void handleMouseEventAddElevator (MouseEvent e) {
         FloorPoint graphPoint = mouseToGraph(e);
+        List<String> elevatorFloors = elevatorSelector
+            .getItems()
+            .stream()
+            .map(floor -> ((CheckBox) ((CustomMenuItem) floor).getContent()))
+            .filter(cb -> (cb.isSelected()))
+            .map(cb -> (cb.getText()))
+            .collect(Collectors.toList());
+        System.out.println(elevatorFloors);
         addElevator(graphPoint, elevatorFloors);
     }
 
@@ -819,10 +777,18 @@ public class MapAdminController extends DisplayController {
         Image floorImage = applicationController.getImage(loc);
         imageviewMap.setImage(floorImage);
         currentMap = loc;
+
+        // deselect all elevator floors
+        elevatorSelector.getItems().stream()
+            .map(floor -> (CheckBox) ((CustomMenuItem) floor).getContent())
+            .forEach(cb -> {cb.setSelected(false);
+                            cb.setDisable(false);});
         // must make elevator on current floor
-        if(! elevatorFloors.contains(loc)) {
-            elevatorFloors.add(loc);
-        }
+        elevatorSelector.getItems().stream()
+            .map(floor -> (CheckBox) ((CustomMenuItem) floor).getContent())
+            .filter(cb -> cb.getText() == loc)
+            .forEach(cb -> {cb.setSelected(true);
+                            cb.setDisable(true);});
         drawMap();
     }
 
@@ -835,12 +801,10 @@ public class MapAdminController extends DisplayController {
 
         contextMenu.setOnShowing(new EventHandler<WindowEvent>() {
             public void handle(WindowEvent e) {
-                System.out.println("showing");
             }
         });
         contextMenu.setOnShown(new EventHandler<WindowEvent>() {
             public void handle(WindowEvent e) {
-                System.out.println("shown");
             }
         });
 
@@ -848,14 +812,12 @@ public class MapAdminController extends DisplayController {
         item1.setStyle("MapAdminContextMenu");
         item1.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent e) {
-                System.out.println("About");
             }
         });
         MenuItem item2 = new MenuItem("Preferences");
         item2.setStyle("fx-background-image: red");
         item2.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent e) {
-                System.out.println("Preferences");
             }
         });
         contextMenu.getItems().addAll(item1, item2);
