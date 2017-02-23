@@ -61,7 +61,7 @@ public class MapAdminController extends DisplayController {
     // keep track of the objects that have been drawn on the screen
     HashMap<Long, Shape> drawnNodes = new HashMap<>();
     CircularContextMenu nodeMenu = new CircularContextMenu();
-    CircularContextMenu screenMenu = new CircularContextMenu(50, 100);
+    CircularContextMenu screenMenu = new CircularContextMenu();
     List<Node> miscDrawnObjects = new ArrayList<>();
     Stage stage;
 
@@ -133,7 +133,6 @@ public class MapAdminController extends DisplayController {
         /**
          * Added the ability to change a room name by pressing enter on the selected combo box
          */
-       // mapPane.addEventFilter(KeyEvent.KEY_PRESSED, e->{System.out.println(e);});
         roomName.addEventFilter(KeyEvent.KEY_PRESSED, e->{
             if(e.getCode() == KeyCode.ENTER){
                 System.out.println(roomName.getEditor().getText());
@@ -177,6 +176,9 @@ public class MapAdminController extends DisplayController {
             public void handle(MouseEvent event) {
                 if(activeRoom != null){
                     map.deleteRoom(activeRoom);
+                    drawMap();
+                    screenMenu.hide();
+                    nodeMenu.hide();
                 }
             }
         };
@@ -189,6 +191,14 @@ public class MapAdminController extends DisplayController {
                 nodeMenu.hide();
             }
         };
+        EventHandler<MouseEvent> addConnectionOption = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                togglebuttonAddConnections.fire();
+                screenMenu.hide();
+                nodeMenu.hide();
+            }
+        };
         EventHandler<MouseEvent> addChangeRoom = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -197,18 +207,19 @@ public class MapAdminController extends DisplayController {
                 nodeMenu.hide();
             }
         };
-        ImagePattern deleteRoomImage = new ImagePattern(new Image("/Radial Icons/Delete_Room.png"));
-        ImagePattern addRoomImage = new ImagePattern(new Image("/Radial Icons/Add_Room2.png"));
-        ImagePattern addNodeImage = new ImagePattern(new Image("/Radial Icons/Add_Node.png"));
-        ImagePattern deleteNodeImage = new ImagePattern(new Image("/Radial Icons/Delete_Node.png"));
-
+        ImagePattern deleteRoomImage = new ImagePattern(new Image("/Radial Icons/Delete_Room.png"), 0, 0, 50, 50, false);
+        ImagePattern addRoomImage = new ImagePattern(new Image("/Radial Icons/Add_Room2.png"),0, 0, 50, 50, false);
+        ImagePattern addNodeImage = new ImagePattern(new Image("/Radial Icons/Add_Node.png"),0, 0, 50, 50, false);
+        ImagePattern deleteNodeImage = new ImagePattern(new Image("/Radial Icons/Delete_Node.png"),0, 0, 50, 50, false);
+        ImagePattern addConnectionImage = new ImagePattern(new Image("/Icon_PNGs/atmT.png"),0,0,50,50,false);
         screenMenu.addOption(deleteRoomImage, deleteRoom,null);//Add delete Room, add/change Room, delete node to this menu, delete elevator if this node is an elevator
         screenMenu.addOption(addNodeImage, addNodeOption,null);
-        screenMenu.addOption(deleteNodeImage, deleteNode,null);
+        screenMenu.addOption(addConnectionImage, addConnectionOption,null);
 
         nodeMenu.addOption(deleteRoomImage, deleteRoom,null);//Add add elevator, addnode, add elevator
         nodeMenu.addOption(deleteNodeImage, deleteNode,null);
         nodeMenu.addOption(addRoomImage, addChangeRoom, null);
+        screenMenu.addOption(addConnectionImage, addConnectionOption,null);
         nodeMenu.setAutoHide(true);
         for (String floor : floorOptions) {
             CustomMenuItem cmi = new CustomMenuItem(new CheckBox(floor));
@@ -358,6 +369,20 @@ public class MapAdminController extends DisplayController {
      */
     public GraphNode nearbyNode (MouseEvent n) {
         FloorPoint graphPoint = mouseToGraph(n);
+
+        tempNode = map.getGraphNode(graphPoint);
+        if (tempNode != null && tempNode.getLocation().distance(graphPoint) > 20 ){
+            tempNode = null;
+        }
+        return tempNode;
+    }
+    /**
+     *
+     * @return
+     */
+    public GraphNode nearbyNodeContext (ContextMenuEvent n) {
+        System.out.println(n.toString());
+        FloorPoint graphPoint = contextToGraph(n);
 
         tempNode = map.getGraphNode(graphPoint);
         if (tempNode != null && tempNode.getLocation().distance(graphPoint) > 20 ){
@@ -882,46 +907,10 @@ public class MapAdminController extends DisplayController {
         drawMap();
     }
 
-    /**
-     * Opens ContextMenu
-     */
-//    public void showContextMenu(ContextMenuEvent event){
-
-//        ContextMenu contextMenu = new ContextMenu();
-//
-//        contextMenu.setOnShowing(new EventHandler<WindowEvent>() {
-//            public void handle(WindowEvent e) {
-//                System.out.println("showing");
-//            }
-//        });
-//        contextMenu.setOnShown(new EventHandler<WindowEvent>() {
-//            public void handle(WindowEvent e) {
-//                System.out.println("shown");
-//            }
-//        });
-//
-//        MenuItem item1 = new MenuItem("About");
-//        item1.setStyle("MapAdminContextMenu");
-//        item1.setOnAction(new EventHandler<ActionEvent>() {
-//            public void handle(ActionEvent e) {
-//                System.out.println("About");
-//            }
-//        });
-//        MenuItem item2 = new MenuItem("Preferences");
-//        item2.setStyle("fx-background-image: red");
-//        item2.setOnAction(new EventHandler<ActionEvent>() {
-//            public void handle(ActionEvent e) {
-//                System.out.println("Preferences");
-//            }
-//        });
-//        contextMenu.getItems().addAll(item1, item2);
-//        contextMenu.setId("MapAdminContextMenu");
-//        contextMenu.show(circle, event.getScreenX(), event.getScreenY());
-//        contextMenu.setStyle("-fx-shape:Circle ");
-//        contextMenu.setStyle("fx-background-image: red");
 
     public void showContextMenu(ContextMenuEvent event){
         contextEvent = event;
+        selectedNode = nearbyNodeContext(contextEvent);
 
 //        ContextMenu contextMenu = new ContextMenu();
 //
@@ -956,28 +945,6 @@ public class MapAdminController extends DisplayController {
             screenMenu.show(circle, event.getScreenX(), event.getScreenY());
         }
 
-//        stage.getScene().setOnDragDetected(new EventHandler<MouseEvent>() {
-//            @Override
-//            public void handle(MouseEvent event) {
-//                stage.getScene().startFullDrag();
-//            }
-//        });
-//        stage.getScene().setOnMouseReleased(new EventHandler<MouseEvent>() {
-//            @Override
-//            public void handle(MouseEvent event) {
-////                Event.fireEvent(menu.getOwnerWindow(), new MouseEvent(MouseEvent.MOUSE_RELEASED,
-////                    event.getX(), event.getY(), event.getX(), event.getY(), MouseButton.PRIMARY, 1,
-////                    true, true, true, true, true, true, true, true, true, true, null));
-//                nodeMenu.fireEvent2(event.copyFor(nodeMenu,nodeMenu.getOwnerNode()));
-//            }
-//        });
-//        contextMenu.getItems().addAll(item1, item2);
-//        Shape circle = new Circle(event.getX(), event.getY(), 10);
-//        anchorpaneMap.getChildren().add(circle);
-//        contextMenu.setId("MapAdminContextMenu");
-//        contextMenu.show(circle, event.getScreenX(), event.getScreenY());
-//        contextMenu.setStyle("-fx-shape:Circle ");
-//        contextMenu.setStyle("fx-background-image: red");
     }
 }
 

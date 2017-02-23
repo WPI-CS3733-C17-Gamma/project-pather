@@ -36,7 +36,7 @@ public class ContextMenuElement{
     EventHandler<MouseEvent> mouseExitHandler = new EventHandler<MouseEvent>() {
         @Override
         public void handle(MouseEvent event) {
-            centralDisplay.centralDisplay.setOpacity(0.4);
+            centralDisplay.centralDisplay.setOpacity(0);
             centralDisplay.centralDisplay.setVisible(true);
         }
     };
