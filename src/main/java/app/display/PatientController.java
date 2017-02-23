@@ -307,6 +307,7 @@ public class PatientController extends DisplayController implements Initializabl
             anchorPane.getChildren().remove(label);
         }
 
+
     }
 
     /**
