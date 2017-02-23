@@ -78,7 +78,6 @@ public class PatientController extends DisplayController implements Initializabl
     @FXML private Button patientDisplayButton;
     @FXML private Button login;
     @FXML private Button TextDirection;
-    @FXML private Button miniMenuButton;
     @FXML private Button floor1;
 
     private List<SubPath> currentPath;
@@ -117,9 +116,6 @@ public class PatientController extends DisplayController implements Initializabl
         if (displayState == state.PATIENT_DEFAULT){
             imageView.setImage(floor);
         }
-//        if (displayState == state.PATIENT_SEARCH){d
-//            patientImageView.setImage(floor);
-//        }
     }
 
     /**
@@ -130,7 +126,6 @@ public class PatientController extends DisplayController implements Initializabl
             searchAnchorPane.setVisible(true);
             patientImageView.setImage(imageView.getImage());
             this.displayState = state.PATIENT_SEARCH;
-//            miniMenuButton.setVisible(true);
             displayImage();
         }
     }
@@ -145,7 +140,6 @@ public class PatientController extends DisplayController implements Initializabl
             searchAnchorPane.setVisible(false);
             this.displayState = state.PATIENT_DEFAULT;
             clearSearchDisplay();
-//            miniMenuButton.setVisible(false);
             displayImage();//display the original image
         }
     }
@@ -257,6 +251,10 @@ public class PatientController extends DisplayController implements Initializabl
         return null;
     }
 
+    /**
+     * change the patient image display depending on the button being clicked on using the id of the button
+     * @param e
+     */
     public void selectPatientImage(MouseEvent e){
         if (e.getSource() instanceof Button) {
             Button temp = (Button) e.getSource();
@@ -267,6 +265,7 @@ public class PatientController extends DisplayController implements Initializabl
                 previousButton.setStyle("-fx-background-color: #F7F7F7");
             }
             previousButton = temp;
+            //selected color
             previousButton.setStyle("-fx-background-color: #898b95");
         }
     }
@@ -394,14 +393,6 @@ public class PatientController extends DisplayController implements Initializabl
         }
     }
 
-    public void menuControl(){
-        if (miniMenuButton.getText() == "^"){
-            showMultiMapAnimation();
-        } else if (miniMenuButton.getText() == "X") {
-            hideMultiMapAnimation();
-        }
-    }
-
     /**
      * show the HBox from the bottom
      */
@@ -417,14 +408,12 @@ public class PatientController extends DisplayController implements Initializabl
             final KeyFrame kf = new KeyFrame(Duration.millis(300), kv);
             timeline.getKeyFrames().add(kf);
             timeline.play();
-//            miniMenuButton.setLayoutY(491);
-//            miniMenuButton.setText("X");
             displayState  = s;
         }
     }
 
     /**
-     * hide the HBox
+     * hide the HBox to the bottom
      */
     public void hideMultiMapAnimation(){
         if(displayState == state.PATIENT_SEARCH || displayState == state.DISPLAYING_TEXT_DIRECTION){
@@ -437,8 +426,6 @@ public class PatientController extends DisplayController implements Initializabl
             final KeyFrame kf = new KeyFrame(Duration.millis(100), kv);
             timeline.getKeyFrames().add(kf);
             timeline.play();
-//            miniMenuButton.setLayoutY(568);
-//            miniMenuButton.setText("^");
             displayState = s;
         }
     }
@@ -584,7 +571,7 @@ public class PatientController extends DisplayController implements Initializabl
     }
 
     /**
-     * gets app.dataPrimitives.Room description on screen
+     * gets app.dataPrimitives.Room description on screen or display elevators
      * @param subpath
      */
     public LinkedList<Label> getRoomLabels(SubPath subpath){
@@ -600,8 +587,8 @@ public class PatientController extends DisplayController implements Initializabl
             int roomx;
             int roomy;
 
+            //add elevator icon if applicable
             if(node.isElevator()){
-//                current = new Label("Elevator");
                 ImageView image = new ImageView();
                 image.setImage(applicationController.getImage("elevator"));
                 image.setPreserveRatio(true);
