@@ -52,7 +52,7 @@ public class ApplicationController extends Application {
     public void start(Stage primaryStage) throws Exception {
         initialize();
         this.pStage = primaryStage;
-
+        adminStage = new Stage();
         createPatientDisplay();
         primaryStage.show();
         login = new Login();
@@ -194,7 +194,7 @@ public class ApplicationController extends Application {
      *
      */
     public void createLoginAdmin(){
-        if(adminStage != null) {
+        if(adminStage.isShowing()) {
             adminStage.toFront();
             return;
         }
@@ -219,7 +219,6 @@ public class ApplicationController extends Application {
     }
 
     public boolean login(String uname, String passwd){
-
         return login.signIn(uname, passwd);
     }
 
@@ -247,6 +246,7 @@ public class ApplicationController extends Application {
 
         save();
         adminStage.close();
+
         //createPatientDisplay();
     }
 
