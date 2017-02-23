@@ -36,7 +36,6 @@ public class DirectoryAdminController extends DisplayController{
 
     DirectoryEntry activeDirectoryEntry;
     Room activeRoom;
-    String activeEntryRoomSelected;
 
     // FXML stuff
     @FXML TextField searchBar;
@@ -70,33 +69,17 @@ public class DirectoryAdminController extends DisplayController{
         entryList.sort(String::compareTo);
         ObservableList<String> allEntries = FXCollections.observableList(entryList);
         listEntries.setItems(allEntries);
-        listEntries.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
+        listEntries.getSelectionModel().selectedItemProperty().addListener(
+            (ov, old_val, new_val) -> {
                 String selectedString = listEntries.getSelectionModel().getSelectedItem();
                 selectEntry(selectedString);
-            }
         });
 
-        // add click handler for the dropdown list of poossible locations
-        entryRoomOptions.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                String selectedString = entryRoomOptions.getSelectionModel().getSelectedItem();
-                entryAddRoom(selectedString);
-            }
-        });
-        // add click handlers to the list of currentRooms
-        entryCurrentLocations.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                String selectedString = entryCurrentLocations.getSelectionModel().getSelectedItem();
-                activeEntryRoomSelected = selectedString;
-                entryDeleteRoom.setVisible(true);
-                logger.debug("Removing entry {}", selectedString);
-                // TODO should this be here
-                // entryRemoveRoom(selectedString);
-            }
+        // add change handler for the dropdown list of poossible locations
+        entryRoomOptions.getSelectionModel().selectedItemProperty().addListener(
+            (ov, old_val, new_val) -> {
+            String selectedString = entryRoomOptions.getSelectionModel().getSelectedItem();
+            entryAddRoom(selectedString);
         });
     }
 
@@ -173,7 +156,6 @@ public class DirectoryAdminController extends DisplayController{
         searchBar.setText("");
         activeDirectoryEntry = null;
         activeRoom = null;
-        activeEntryRoomSelected = null;
         filterAllEntries();
     }
 
@@ -323,13 +305,13 @@ public class DirectoryAdminController extends DisplayController{
     }
 
     /**
-     * Function to delete the activeEntryRoomSelected
+     * Function to delete the selected Room
      */
     public void entryDeleteSelectedRoom () {
-        if (activeEntryRoomSelected != null) {
-            entryRemoveRoom(activeEntryRoomSelected);
+        String selectedString = entryCurrentLocations.getSelectionModel().getSelectedItem();
+        if (selectedString != null) {
+            entryRemoveRoom(selectedString);
             entryDeleteRoom.setVisible(false);
-            activeEntryRoomSelected = null;
         }
         else {
             logger.error("Cannot delete room, no room selected");
