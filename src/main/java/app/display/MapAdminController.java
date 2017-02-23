@@ -84,7 +84,6 @@ public class MapAdminController extends DisplayController {
     private GraphNode tempNode ;
     private String currentMap;
     private ContextMenuEvent contextEvent;
-    ComboBox<String> roomField = roomName;
 
     /**
      *  Construct map admin controller
@@ -155,11 +154,14 @@ public class MapAdminController extends DisplayController {
         */
         //---------------------------------------------------------------------------------------------------------------
         //Setup Contest Menu here
+
         EventHandler<MouseEvent> deleteNode = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 deleteNode(selectedNode);
                 drawMap();
+                screenMenu.hide();
+                nodeMenu.hide();
             }
         };
         EventHandler<MouseEvent> deleteRoom = new EventHandler<MouseEvent>() {
@@ -182,11 +184,9 @@ public class MapAdminController extends DisplayController {
         EventHandler<MouseEvent> addChangeRoom = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                roomField = roomName;
-                roomField.setId("roomField");
-                roomField.setLayoutX(event.getSceneX());
-                roomField.setLayoutX(event.getSceneY());
-                roomField.show();
+                roomName.requestFocus();
+                screenMenu.hide();
+                nodeMenu.hide();
             }
         };
         ImagePattern deleteRoomImage = new ImagePattern(new Image("/Radial Icons/Delete_Room.png"));
