@@ -9,7 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 /**
@@ -20,11 +20,9 @@ public class LoginController extends DisplayController {
     @FXML private PasswordField passwordBox;
     @FXML private TextField textboxUsername;
     @FXML private Label labelWrongCreds;
-    @FXML private AnchorPane loginPage;
+    @FXML private GridPane loginPage;
     @FXML private Button loginButton;
     @FXML private Button buttonAdminTools;
-
-    private String inputPassword = "";
 
     /**
      * Checks credentials
@@ -36,7 +34,7 @@ public class LoginController extends DisplayController {
         return login(textboxUsername.getText(), passwordBox.getText());
     }
 
-    public void isSelected(){       //for auto-disapearing
+    public void isSelected(){ //for auto-disapearing
         labelWrongCreds.setVisible(false);
     }
 

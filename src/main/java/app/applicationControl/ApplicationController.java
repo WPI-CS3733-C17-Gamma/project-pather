@@ -207,7 +207,7 @@ public class ApplicationController extends Application {
             controller.init(map, this, adminStage);
             adminStage.setTitle("Login");
             adminStage.initOwner(pStage);
-            adminStage.setScene(new Scene(root, 350, 150));
+            adminStage.setScene(new Scene(root));
             adminStage.show();
         } catch (IOException e){
             e.printStackTrace();
