@@ -656,6 +656,7 @@ public class PatientController extends DisplayController implements Initializabl
                 labels.add(current);
             }
         }
+	drawnObjects.addAll(labels); 
         return labels;
     }
 
@@ -665,8 +666,11 @@ public class PatientController extends DisplayController implements Initializabl
      */
     public void displayRoomLabels(LinkedList<Label> labels){
         for(Label label: labels){
-            anchorPane.getChildren().add(label);
-        }
+	    if(! anchorPane.getChildren().contains(label)){
+		anchorPane.getChildren().add(label);
+	    }
+		
+	}
     }
 
     public void textDirection(){
