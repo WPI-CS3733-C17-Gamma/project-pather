@@ -53,7 +53,7 @@ public class PatientController extends DisplayController implements Initializabl
 
     state displayState;
     // list of shapes that have been drawn on the screen
-    List<Node> drawnObjects;
+    List<Node> drawnObjects = new ArrayList<>();
     // FXML Things
     @FXML private TextField searchBar;
     @FXML private ListView<String> options;
@@ -118,6 +118,7 @@ public class PatientController extends DisplayController implements Initializabl
      * shows the patient search interface (the dark one)
      */
     public void startSearch(){
+        clearDisplay();
         if (this.displayState == state.PATIENT_DEFAULT){//switch state
             searchAnchorPane.setVisible(true);
             patientImageView.setImage(imageView.getImage());
@@ -139,6 +140,7 @@ public class PatientController extends DisplayController implements Initializabl
             clearSearchDisplay();
 //            miniMenuButton.setVisible(false);
             displayImage();//display the original image
+            drawRoomLabel(currentMap, imageView);
         }
     }
 
@@ -248,7 +250,10 @@ public class PatientController extends DisplayController implements Initializabl
     public void selectPatientImage(MouseEvent e){
         if (e.getSource() instanceof Button) {
             System.out.println(((Button) e.getSource()).getId());
-            imageView.setImage(applicationController.getImage(((Button) e.getSource()).getId()));
+            currentMap = ((Button) e.getSource()).getId();
+            imageView.setImage(applicationController.getImage(currentMap));
+            clearDisplay();
+            drawRoomLabel(currentMap, imageView);
         }
     }
 
@@ -277,6 +282,7 @@ public class PatientController extends DisplayController implements Initializabl
         for (Label label :roomLabels){
             anchorPane.getChildren().remove(label);
         }
+
     }
 
     /**
@@ -512,6 +518,36 @@ public class PatientController extends DisplayController implements Initializabl
         this.drawnObjects.add(label);
     }
 
+
+    public void drawRoomLabel (String floorName, ImageView imageView) {
+        List<String> roomNames= map.getAllRooms();
+        for (String roomName : roomNames) {
+            Room cur = map.getRoomFromName(roomName);
+            GraphNode loc = cur.getLocation();
+            // skip rooms without locations
+            if (loc == null || ! loc.getLocation().getFloor().equals(floorName)) {
+                System.out.println("passing");
+                continue;
+            }
+
+            FloorPoint imageLoc = graphPointToImage(loc, imageView);
+            String labelName = cur.getName();
+            Label label = new Label(labelName);
+            label.setLayoutX(imageLoc.getX() + 3);
+            label.setLayoutY(imageLoc.getY() + 3);
+            label.setFont(Font.font ("Georgia", 10));
+            label.setStyle("-fx-background-color: #F0F4F5; -fx-border-color: darkblue;-fx-padding: 2;");
+            Circle circ = new Circle(2, Color.BLACK);
+            circ.setLayoutX(imageLoc.getX());
+            circ.setLayoutY(imageLoc.getY());
+            anchorPane.getChildren().add(circ);
+            anchorPane.getChildren().add(label);
+            System.out.println("Adding Label "  + labelName);
+            drawnObjects.add(label);
+            drawnObjects.add(circ);
+        }
+    }
+
     /**
      * given local point, draw the starting point of a sub path
      * @param localPoint
@@ -631,6 +667,8 @@ public class PatientController extends DisplayController implements Initializabl
             "\n\nTo get started, start typing into the search bar. " +
             "\n Then, select the option you would like to get a path to." +
             "\n\nTo close this menu, click on this");
+
+        drawRoomLabel(currentMap, imageView);
     }
 
     /**
@@ -640,6 +678,8 @@ public class PatientController extends DisplayController implements Initializabl
      */
     public void scaleWidth(Number oldSceneWidth, Number newSceneWidth){
         anchorPane.setScaleX(anchorPane.getScaleX()*newSceneWidth.doubleValue()/oldSceneWidth.doubleValue());
+        clearDisplay();
+        drawRoomLabel(currentMap, imageView);
         //imageView.setScaleX(imageView.getScaleX()*newSceneWidth.doubleValue()/oldSceneWidth.doubleValue());
     }
 
@@ -650,6 +690,8 @@ public class PatientController extends DisplayController implements Initializabl
      */
     public void scaleHeight(Number oldSceneHeight, Number newSceneHeight){
         anchorPane.setScaleY(anchorPane.getScaleY()*newSceneHeight.doubleValue()/oldSceneHeight.doubleValue());
+        clearDisplay();
+        drawRoomLabel(currentMap, imageView);
         //imageView.setScaleX(imageView.getScaleY()*newSceneHeight.doubleValue()/oldSceneHeight.doubleValue());
     }
 
