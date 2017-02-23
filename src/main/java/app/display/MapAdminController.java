@@ -34,6 +34,8 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.swing.plaf.basic.BasicComboBoxUI;
+
 public class MapAdminController extends DisplayController {
     final Logger logger = LoggerFactory.getLogger(MapAdminController.class);
 
@@ -47,6 +49,8 @@ public class MapAdminController extends DisplayController {
         ADD_CONNECTION, // the user is adding connections
         ADD_ELEVATOR,
         DRAG_NODE,
+        DELETE_NODE,
+        DELETE_CONNECTION
     }
 
     State currentState = State.NONE;
@@ -97,6 +101,7 @@ public class MapAdminController extends DisplayController {
         togglebuttonChainAdd.setUserData(State.CHAIN_ADD);
         togglebuttonAddElevator.setUserData(State.ADD_ELEVATOR);
 
+
         mapPane.widthProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
@@ -111,6 +116,8 @@ public class MapAdminController extends DisplayController {
                 drawMap();
             }
         });
+
+
         List<String> choices = new ArrayList<>(map.getPathingAlgorithmList());
         chooseAlgorithm.setItems(FXCollections.observableList(choices));
         chooseAlgorithm.setValue(map.getPathingAlgorithm());
@@ -144,6 +151,8 @@ public class MapAdminController extends DisplayController {
 
         floorSelector.setValue("floor3");
         drawMap();
+        stage.addEventFilter(KeyEvent.KEY_PRESSED, event -> handleKey(event));
+
     }
 
     /**
@@ -163,7 +172,6 @@ public class MapAdminController extends DisplayController {
             .forEach(node -> drawNode(node, imageviewMap));
         highlightSelected();
         addFloorLabel(this.currentMap);
-
 
     }
 
@@ -507,6 +515,7 @@ public class MapAdminController extends DisplayController {
                 selected2.setFill(Color.PURPLE);
             }
         }
+
     }
 
     /**
@@ -553,6 +562,8 @@ public class MapAdminController extends DisplayController {
             case ADD_ELEVATOR:
                 handleMouseEventAddElevator(m);
                 break;
+
+
         }
         displayRoom(selectedNode);
         drawMap();
@@ -671,13 +682,13 @@ public class MapAdminController extends DisplayController {
     @FXML
     public void handleKey(KeyEvent key){
         if (!roomName.isFocused()) {
-            System.out.println("hi mom!");
             switch (key.getCode()) {
                 case DELETE:
+                    changeState(State.NONE);
                     deleteSelected();
                     break;
                 case BACK_SPACE:
-                    System.out.println("delete");
+                    changeState(State.NONE);
                     deleteConnection();
                     break;
                 case N:
@@ -693,10 +704,7 @@ public class MapAdminController extends DisplayController {
                     changeState(State.CHAIN_ADD);
                     break;
             }
-        }else {
-            System.out.println("Hi mom");
         }
-        System.out.println("Hi mom!");
     }
 
     /**

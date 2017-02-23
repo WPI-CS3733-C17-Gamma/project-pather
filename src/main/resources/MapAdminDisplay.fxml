@@ -10,11 +10,13 @@
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
 
-<BorderPane onKeyPressed="#handleKey" style="-fx-background-color: #d4e3ed;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.display.MapAdminController">
+<BorderPane focusTraversable="true" onKeyPressed="#handleKey" style="-fx-background-color: #d4e3ed;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.display.MapAdminController">
     <top>
         <GridPane hgap="5.0" vgap="5.0" BorderPane.alignment="TOP_CENTER">
             <children>
@@ -40,10 +42,23 @@
                     </children>
                 </HBox>
             </children>
+         <columnConstraints>
+            <ColumnConstraints />
+            <ColumnConstraints />
+            <ColumnConstraints />
+            <ColumnConstraints />
+            <ColumnConstraints />
+            <ColumnConstraints />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+         </rowConstraints>
         </GridPane>
     </top>
     <center>
-        <Pane fx:id="mapPane" minHeight="100.0">
+        <Pane fx:id="mapPane" minHeight="100.0" onKeyPressed="#handleKey">
             <children>
                 <ImageView fx:id="imageviewMap" onContextMenuRequested="#showContextMenu" onMouseDragged="#handleDragEvent" onMousePressed="#isPressed" onMouseReleased="#isReleased" pickOnBounds="true" preserveRatio="true" />
             </children>
