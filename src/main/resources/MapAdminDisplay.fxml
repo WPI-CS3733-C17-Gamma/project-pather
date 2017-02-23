@@ -13,7 +13,7 @@
 
 <BorderPane onKeyPressed="#handleKey" style="-fx-background-color: #d4e3ed;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.display.MapAdminController">
     <top>
-        <AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="100.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+        <AnchorPane minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#handleKey" prefHeight="100.0" prefWidth="600.0" BorderPane.alignment="CENTER">
             <children>
                 <ToggleButton fx:id="togglebuttonChainAdd" layoutX="259.0" mnemonicParsing="false" onAction="#handleToggleTools" prefHeight="26.0" prefWidth="128.0" text="Chain Add">
                <toggleGroup>

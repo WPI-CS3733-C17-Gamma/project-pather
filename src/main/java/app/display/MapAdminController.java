@@ -713,9 +713,14 @@ public class MapAdminController extends DisplayController {
     @FXML
     public void handleKey(KeyEvent key){
         if (!roomName.isFocused()) {
+            System.out.println("hi mom!");
             switch (key.getCode()) {
                 case DELETE:
                     deleteSelected();
+                    break;
+                case BACK_SPACE:
+                    System.out.println("delete");
+                    deleteConnection();
                     break;
                 case N:
                     changeState(State.ADD_NODES);
@@ -730,7 +735,10 @@ public class MapAdminController extends DisplayController {
                     changeState(State.CHAIN_ADD);
                     break;
             }
+        }else {
+            System.out.println("Hi mom");
         }
+        System.out.println("Hi mom!");
     }
 
     /**
