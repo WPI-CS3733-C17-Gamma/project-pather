@@ -699,9 +699,18 @@ public class PatientController extends DisplayController implements Initializabl
         for(String line : directions) {
             dir += (line + "\n");
         }
+        String currFloor = path.get(0).getLocation().getFloor();
         if(floor != null) {
-            dir += ("Take elevator to " + floor);
+            //TODO: Check floor you came from for going to a floor
+            //TODO: Also should probably rename the floors in the hashmap in applicationController
+            switch(floor) {
+                case "campus": dir += ("Exit building"); break;
+                case "floor1": dir += ("Enter Faulkner Hospital"); break;
+                case "belkin1": dir += ("Enter Belkin House"); break;
+                default: dir += ("Take elevator to " + floor);
+            }
         }
+
         textDirectionsTextBox.setText(dir);
         return;
     }
