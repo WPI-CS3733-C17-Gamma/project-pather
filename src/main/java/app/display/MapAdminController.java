@@ -133,24 +133,14 @@ public class MapAdminController extends DisplayController {
        // mapPane.addEventFilter(KeyEvent.KEY_PRESSED, e->{System.out.println(e);});
         roomName.addEventFilter(KeyEvent.KEY_PRESSED, e->{
             if(e.getCode() == KeyCode.ENTER){
+                System.out.println(roomName.getEditor().getText());
+                roomName.setValue(roomName.getEditor().getText());
                 addRoom();
                 mapPane.requestFocus();
+                drawMap();
             }
         });
 
-//        roomName.getEditor().addEventFilter(KeyEvent.KEY_PRESSED, (KeyEvent E) -> {
-//            if(E.getCode() == KeyCode.ENTER){
-//                System.out.println("lol");
-//                        if (roomName.getItems().contains(roomName.getEditor().getText())) {
-//                        E.consume();
-//                    }else {
-//                        System.out.println("lol");
-//                        addRoom();
-//                        mapPane.requestFocus();
-//                        E.consume();
-//                    }
-//            }
-//        });
         /**
          * Add click listener to the list of floor options
          */
@@ -394,39 +384,6 @@ public class MapAdminController extends DisplayController {
      * Add a room to the map.
      * Take the text from the roomName text field
      */
-    public void addRoomContext (ComboBox<String> roomName) {
-        String newName = roomName.getValue();
-        Room existingRoom = map.getRoomFromName(newName);
-        // Entered name is empty, so delete room
-        // TODO: maybe make this more explicit, like a separate button,
-        // and ignore this case
-        if (newName.isEmpty()) {
-            if (activeRoom != null) {
-                map.deleteRoom(activeRoom);
-            }
-        }
-        // Already a room of that name, so change room location
-        else if (existingRoom != null) {
-            // if there is also an active room, remove this node from it
-            if (activeRoom != null) {
-                activeRoom.setLocation(null);
-            }
-            existingRoom.setLocation(selectedNode);
-        }
-        // Node already has a room, so rename room
-        else if (activeRoom != null) {
-            map.changeRoomName(activeRoom, newName);
-        }
-        // No room either existed at this node or had the new name, so
-        // add a new room
-        else {
-            map.addRoom(new Room(selectedNode, newName));
-        }
-    }
-    /**
-     * Add a room to the map.
-     * Take the text from the roomName text field
-     */
     public void addRoom () {
         String newName = roomName.getValue();
         Room existingRoom = map.getRoomFromName(newName);
@@ -454,7 +411,7 @@ public class MapAdminController extends DisplayController {
         // add a new room
         else {
             map.addRoom(new Room(selectedNode, newName));
-        }
+        };
     }
 
     /**
