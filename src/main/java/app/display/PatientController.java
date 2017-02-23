@@ -44,8 +44,6 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * controls all interaction with the patient display
@@ -266,7 +264,7 @@ public class PatientController extends DisplayController implements Initializabl
      */
     public void selectPatientImage(MouseEvent e){
         if (e.getSource() instanceof Button) {
-            
+
             imageView.setImage(applicationController.getImage(currentMap));
             Button temp = (Button) e.getSource();
 	    currentMap = temp.getId();
@@ -690,18 +688,32 @@ public class PatientController extends DisplayController implements Initializabl
     /**
      * Function to get textual directions and print it on screen
      * @param path the path to be converted to text
-     * @param floor
+     * @param nextFloor the next floor to be pathed to, can be null
      */
-    public void displayTextDirections(List<GraphNode> path, String floor) {
+    public void displayTextDirections(List<GraphNode> path, String nextFloor) {
         textDirectionsTextBox.setVisible(true);
         List<String> directions = map.getTextualDirections(path);
         String dir = "";
         for(String line : directions) {
             dir += (line + "\n");
         }
-        if(floor != null) {
-            dir += ("Take elevator to " + floor);
+        String currFloor = path.get(0).getLocation().getFloor();
+        if(nextFloor != null) {
+            if(!currFloor.contains("floor") && nextFloor.contains("floor")) {
+                dir += "Enter Faulkner Hospital";
+            }
+            else if(!currFloor.contains("belkin") && nextFloor.contains("belkin")) {
+                dir += "Enter Belkin House";
+            }
+            else if(nextFloor.contains("campus")) {
+                dir += "Exit building";
+            }
+            else {
+                String floor = nextFloor.replaceFirst("floor|belkin", "floor ");
+                dir += "Take elevator to " + floor;
+            }
         }
+
         textDirectionsTextBox.setText(dir);
         return;
     }
