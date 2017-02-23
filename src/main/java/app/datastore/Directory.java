@@ -12,7 +12,12 @@ import java.io.Reader;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class Directory {
+    final Logger logger = LoggerFactory.getLogger(Directory.class);
+
     HashMap<String, DirectoryEntry> entries;
     HashMap<String, Room> rooms;
 
@@ -200,7 +205,7 @@ public class Directory {
             return getRoom(kioskName).getLocation();
         }
         catch (Exception e) {
-            System.out.println("No Kiosk");
+            logger.error("No Kiosk Found");
             return new GraphNode(0, 0, "");
         }
     }
@@ -336,12 +341,12 @@ public class Directory {
     public boolean setRoomLocation(String roomName, GraphNode location) {
         Room roomAtNode = this.getRoom(location);
         if (roomAtNode != null) {
-            System.out.println("There is already a room at this location");
+            logger.debug("Tried to set room location but there is already a room at the given node");
             return false;
         }
         Room roomToBeChanged = this.getRoom(roomName);
         if (roomToBeChanged == null) {
-            System.out.println("there is no room with the given name");
+            logger.debug("Tried to set room location but room with name {} was not found", roomName);
             return false;
         }
 

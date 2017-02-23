@@ -122,7 +122,6 @@
                <padding>
                   <Insets left="30.0" />
                </padding></HBox>
-            <Button fx:id="miniMenuButton" layoutX="926.0" layoutY="568.0" mnemonicParsing="false" onMousePressed="#menuControl" opacity="0.8" prefHeight="37.0" prefWidth="60.0" style="-fx-background-color: #F2F2F2;" text="^" visible="false" />
            </children>
         </AnchorPane>
     </children>

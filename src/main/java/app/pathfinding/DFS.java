@@ -4,8 +4,12 @@ import app.dataPrimitives.GraphNode;
 import app.datastore.GraphNetwork;
 
 import java.util.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DFS implements IPathFindingAlgorithm {
+    final Logger logger = LoggerFactory.getLogger(IPathFindingAlgorithm.class);
+
     List<GraphNode> checked;
     LinkedList<GraphNode> path;
 
@@ -67,7 +71,7 @@ public class DFS implements IPathFindingAlgorithm {
                     }
                     return result;
                 }catch(PathNotFoundException e){
-                    System.err.println("Dead end");
+                    logger.debug("DFS found a dead end");
                 }
             }
         }

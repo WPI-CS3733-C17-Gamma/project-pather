@@ -17,8 +17,11 @@ import java.sql.Statement;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DatabaseTest extends TestCase{
+    final Logger logger = LoggerFactory.getLogger(DatabaseManager.class);
     // Using databases in memory to not clutter up the file system
     private final String DBName = "memory:testDB";
     private Connection conn;
@@ -46,7 +49,7 @@ public class DatabaseTest extends TestCase{
             statement.close();
         }
         catch (SQLException e) {
-            System.err.println(e.getMessage());
+            logger.debug("Got error in {} : {}", this.getClass().getSimpleName(), e.getMessage());
         }
     }
 
