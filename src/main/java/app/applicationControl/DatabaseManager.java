@@ -13,7 +13,12 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.TreeMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class DatabaseManager {
+    final Logger logger = LoggerFactory.getLogger(DatabaseManager.class);
+
     String connectionURL;
     Connection connection;
     public static final String[] initStatements = {
@@ -45,11 +50,11 @@ public class DatabaseManager {
         this.connectionURL = "jdbc:derby:" + dbName + ";create=true";
         try {
             this.connection = DriverManager.getConnection(connectionURL);
-            System.out.println("Connected to database " + dbName);
+            logger.info("Connected to database {}", dbName);
         }
         catch (SQLException e) {
-            System.err.println(e.getMessage());
-            System.err.println(e.getNextException().getMessage());
+            logger.error("Got error in {} : {}", this.getClass().getSimpleName(), e.getMessage());
+            logger.error("Also got error {}", e.getNextException().getMessage());
         }
     }
 
@@ -136,7 +141,7 @@ public class DatabaseManager {
             }
         }
         catch (SQLException e) {
-            System.out.println(e.getMessage());
+            logger.error("Got error in {} : {}", this.getClass().getSimpleName(), e.getMessage());
         }
 
         Directory directory = new Directory(entries, rooms);
@@ -226,7 +231,7 @@ public class DatabaseManager {
             }
         }
         catch (SQLException e) {
-            System.out.println(e.toString() + e.getMessage());
+            logger.error("Got error in {} : {}", this.getClass().getSimpleName(), e.toString() + e.getMessage());
         }
     }
 
@@ -241,7 +246,7 @@ public class DatabaseManager {
             statement.close();
         }
         catch (SQLException e) {
-            System.err.println(e.getMessage());
+            logger.error("Got error in {} : {}", this.getClass().getSimpleName(), e.getMessage());
         }
     }
 
@@ -249,3 +254,4 @@ public class DatabaseManager {
         return connection;
     }
 }
+

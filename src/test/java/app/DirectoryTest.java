@@ -50,7 +50,6 @@ public class DirectoryTest{
         List<String> temp = new ArrayList<>();
         temp.add("3A");
         List result = d.searchRooms("3A");
-        // System.err.println(result.toString()+"***********************************************");
         assertNotNull(result);
         assertListEquals(result, temp);
         assertListEquals(d.searchRooms("3B"), new ArrayList());
@@ -89,7 +88,6 @@ public class DirectoryTest{
         List<String> temp = new ArrayList();
         temp.add("Albert");
         List result = d.searchEntries("Albert");
-        // System.err.println(result.toString()+"***********************************************");
         assertListEquals(result, temp);
         assertListEquals(d.searchEntries("Alb"), temp);
         temp.add("Bernie");

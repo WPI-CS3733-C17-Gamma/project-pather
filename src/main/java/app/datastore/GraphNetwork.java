@@ -10,7 +10,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class GraphNetwork {
+    final Logger logger = LoggerFactory.getLogger(GraphNetwork.class);
+
     LinkedList<GraphNode> graphNodes = new LinkedList<>();
     private HashMap<String, IPathFindingAlgorithm> pathingAlgorithm = new HashMap<>();
     private IPathFindingAlgorithm currentPathingAlgorithm;
@@ -38,7 +43,7 @@ public class GraphNetwork {
      * @param algo
      */
     public void changeAlgorithm(String algo){
-        System.out.println(algo);
+        logger.info("Changing algorithm to {}", algo);
         currentPathingAlgorithm = pathingAlgorithm.get(algo);
     }
 

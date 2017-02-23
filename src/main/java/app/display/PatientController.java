@@ -42,12 +42,18 @@ import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * controls all interaction with the patient display
  */
 public class PatientController extends DisplayController implements Initializable {
+    final Logger logger = LoggerFactory.getLogger(PatientController.class);
 
-    //what type/state of display the Patient Display is currently displaying
+   //what type/state of display the Patient Display is currently displaying
     private enum state{
         PATIENT_DEFAULT,
         PATIENT_SEARCH,
@@ -134,7 +140,7 @@ public class PatientController extends DisplayController implements Initializabl
      * hides the patient search interface and returns to the default patient interface
      */
     public void exitSearch(){
-        System.out.println("Exit button works");
+        logger.debug("Exiting search in {}", this.getClass().getSimpleName());
         if (this.displayState == state.PATIENT_SEARCH || this.displayState == state.DISPLAYING_TEXT_DIRECTION ){//switch state
             hideMultiMapAnimation();
             searchAnchorPane.setVisible(false);
@@ -162,7 +168,7 @@ public class PatientController extends DisplayController implements Initializabl
             options.setVisible(false);
             return;
         }
-        System.out.println("search : " + search);
+        logger.info("Searching : {}", search);
         List<String> results = search(search);
         displayResults(results);
     }
@@ -208,11 +214,11 @@ public class PatientController extends DisplayController implements Initializabl
      */
     public GraphNode select(String option) {
         searchBar.setText(option);
-        System.out.println("select");
+        logger.info("Select {}", option);
         DirectoryEntry entry = map.getEntry(option);
         // if the selected entry is an entry not a room
         if (entry != null) {
-            System.out.println("Found Entry!");
+            logger.debug("Found Entry!");
             List<Room> locs = entry.getLocation();
 
             // if no location, should (probably) throw error
@@ -221,7 +227,8 @@ public class PatientController extends DisplayController implements Initializabl
             }
             // take first option if only one
             else if (locs.size() == 1) {
-                System.out.println(locs.get(0).getLocation());
+                logger.debug("Found desired graph node at: {}",
+                    locs.get(0).getLocation().toString());
                 displayResults(new LinkedList<>());
                 getPath(map.getKioskLocation(), locs.get(0).getLocation());
                 return locs.get(0).getLocation();
@@ -238,13 +245,13 @@ public class PatientController extends DisplayController implements Initializabl
         else {
             Room room =  map.getRoomFromName(option);
             if (room != null) {
-                System.out.println("FOUND ROOM! : " + room);
+                logger.debug("FOUND ROOM! : " + room);
                 displayResults(new LinkedList<>());
                 getPath(map.getKioskLocation(), room.getLocation());
                 return room.getLocation();
             }
             else {
-                System.out.println("no entry :( ");
+                logger.debug("No entry found");
             }
         }
 
@@ -319,11 +326,11 @@ public class PatientController extends DisplayController implements Initializabl
             currentParent = currentParent.getParent();
         }
 
-        System.out.println("off x " + offsetX + "  off y "  + offsetY);
+        logger.debug("Offsets: off x {}, off y {}", offsetX, offsetY);
 
         int newX = (int)(node.getLocation().getX() * imageWidth / 1000. + offsetX );
         int newY = (int)(node.getLocation().getY() * imageHeight / 1000. + offsetY );
-        System.out.printf("image width : %f \nimage Height : %f\n", imageWidth, imageHeight);
+        logger.debug("Image width : {}, Image Height : {}", imageWidth, imageHeight);
 
         return new FloorPoint(newX, newY, node.getLocation().getFloor());
     }
@@ -336,7 +343,7 @@ public class PatientController extends DisplayController implements Initializabl
     public void getPath (GraphNode start, GraphNode end) {
         minimaps = new LinkedList<>();
         if (start == null || end == null) {
-            System.out.println("Start or end is null!");
+            logger.error("Cannot path, start or end is null!");
         }
         try {
             currentPath = map.getPathByFloor(start, end);
@@ -354,13 +361,13 @@ public class PatientController extends DisplayController implements Initializabl
                 currentImageView.setOnMousePressed(e -> mapChoice(e));
                 currentImageView.setImage(applicationController.getImage(p.getFloor()));
                 currentImageView.setId(x + "floor in list");
-                System.out.println(currentImageView.getId());
+                logger.debug("Current image view id: {}", currentImageView.getId());
                multiMapDisplayMenu.getChildren().add(currentImageView);
                minimaps.add(new Minimap(currentImageView,p));
             }
             showMultiMapAnimation();
         } catch (PathNotFoundException e) {
-            System.out.println("No path can be drawn");
+            logger.error("No path can be drawn");
         }
     }
 
@@ -374,7 +381,7 @@ public class PatientController extends DisplayController implements Initializabl
             for(Node child :iv.getParent().getChildrenUnmodifiable()){
                 child.setEffect(null);
             }
-            System.out.println(iv.getId() + "*******");
+            logger.debug("Image view ID: {}", iv.getId());
             currentSubPath = (int) iv.getId().charAt(0) - 48;
             SubPath path = currentPath.get(currentSubPath);//ascii conversion
             clearDisplay();
@@ -389,7 +396,7 @@ public class PatientController extends DisplayController implements Initializabl
                 displayTextDirections(path.getPath(), nextFloor);
             }
         }catch(ClassCastException cc){
-            System.err.println("you are implementing this method in a wrong place");
+            logger.error("This method, mapChoice(MouseEvent e), is implemented incorrectly");
         }
     }
 
@@ -446,8 +453,6 @@ public class PatientController extends DisplayController implements Initializabl
      * @param subPath subpath to be drawn
      */
     public void displaySubPath (ImageView mapImage, SubPath subPath, boolean drawLabels,int nodeRadius, int lableFontSize) {
-
-        System.out.println("app.dataPrimitives.SubPath");
         GraphNode prev = null;
         mapImage.setImage(applicationController.getImage(subPath.getFloor()));
         List<Shape> listToDraw = new ArrayList<>();
@@ -468,7 +473,6 @@ public class PatientController extends DisplayController implements Initializabl
         if (iterator.hasNext()){
             prev = iterator.next();
             FloorPoint localPoint = graphPointToImage(prev, mapImage);
-            System.out.println(localPoint);
             startPoint = drawStartPoint(localPoint,nodeRadius);
             listToDraw.add(startPoint);
         }
@@ -476,7 +480,6 @@ public class PatientController extends DisplayController implements Initializabl
         while(iterator.hasNext()){
             GraphNode node = iterator.next();
             FloorPoint localPoint = graphPointToImage(node, mapImage);
-            System.out.println(localPoint);
             if (!iterator.hasNext()){
                 endPoint = drawEndPoint(localPoint,nodeRadius);
                 listToDraw.add(endPoint);
@@ -678,7 +681,7 @@ public class PatientController extends DisplayController implements Initializabl
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        System.out.println("INIT");
+        logger.info("INIT PatientController");
         displayImage();
 
          previousButton = floor1;
@@ -689,7 +692,7 @@ public class PatientController extends DisplayController implements Initializabl
             @Override
             public void handle(MouseEvent event) {
                 String selectedString = options.getSelectionModel().getSelectedItem();
-                System.out.println("clicked on " + selectedString);
+                logger.debug("clicked on {}", selectedString);
                 select(selectedString);
             }
         });
