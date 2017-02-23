@@ -831,12 +831,10 @@ public class MapAdminController extends DisplayController {
 
         contextMenu.setOnShowing(new EventHandler<WindowEvent>() {
             public void handle(WindowEvent e) {
-                logger.debug("Showing context menu ");
             }
         });
         contextMenu.setOnShown(new EventHandler<WindowEvent>() {
             public void handle(WindowEvent e) {
-                logger.debug("Shown context menu");
             }
         });
 
@@ -844,14 +842,12 @@ public class MapAdminController extends DisplayController {
         item1.setStyle("MapAdminContextMenu");
         item1.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent e) {
-                logger.debug("About");
             }
         });
         MenuItem item2 = new MenuItem("Preferences");
         item2.setStyle("fx-background-image: red");
         item2.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent e) {
-                logger.debug("Preferences");
             }
         });
         contextMenu.getItems().addAll(item1, item2);

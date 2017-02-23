@@ -308,11 +308,11 @@ public class PatientController extends DisplayController implements Initializabl
             currentParent = currentParent.getParent();
         }
 
-        logger.info("Offsets: off x {}, off y {}", offsetX, offsetY);
+        logger.debug("Offsets: off x {}, off y {}", offsetX, offsetY);
 
         int newX = (int)(node.getLocation().getX() * imageWidth / 1000. + offsetX );
         int newY = (int)(node.getLocation().getY() * imageHeight / 1000. + offsetY );
-        logger.info("Image width : {}, Image Height : {}", imageWidth, imageHeight);
+        logger.debug("Image width : {}, Image Height : {}", imageWidth, imageHeight);
 
         return new FloorPoint(newX, newY, node.getLocation().getFloor());
     }

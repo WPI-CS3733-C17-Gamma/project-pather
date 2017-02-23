@@ -43,7 +43,7 @@ public class GraphNetwork {
      * @param algo
      */
     public void changeAlgorithm(String algo){
-        logger.info(algo);
+        logger.info("Changing algorithm to {}", algo);
         currentPathingAlgorithm = pathingAlgorithm.get(algo);
     }
 

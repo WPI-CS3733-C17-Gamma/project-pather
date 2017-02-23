@@ -16,7 +16,9 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -56,8 +58,7 @@ public class ApplicationController extends Application {
      * Load from the database and setup images
      */
     public void initialize(){
-        logger.info("Starting ApplicationController at {}",
-            Calendar.getInstance().getTime().toString());
+        logger.info("Starting ApplicationController");
 
         databaseManager = new DatabaseManager("main");
         map = databaseManager.load();
@@ -270,6 +271,9 @@ public class ApplicationController extends Application {
     }
 
     public static void main (String[] args) {
+        Date date = Calendar.getInstance().getTime();
+        SimpleDateFormat f1 = new SimpleDateFormat("EEE-dd 'at' hh-mm");
+        System.setProperty("logname", f1.format(date));
         launch(args);
     }
 }

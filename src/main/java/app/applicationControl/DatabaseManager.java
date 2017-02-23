@@ -50,7 +50,7 @@ public class DatabaseManager {
         this.connectionURL = "jdbc:derby:" + dbName + ";create=true";
         try {
             this.connection = DriverManager.getConnection(connectionURL);
-            logger.info("Connected to database " + dbName);
+            logger.info("Connected to database {}", dbName);
         }
         catch (SQLException e) {
             logger.error("Got error in {} : {}", this.getClass().getSimpleName(), e.getMessage());

@@ -24,7 +24,7 @@ public class RealImage implements IProxyImage {
         // if the image has not been loaded, load it
         if (image == null) {
             image = new Image(imageName);
-            logger.info("Loaded image : " + imageName);
+            logger.info("Loaded image : {}", imageName);
         }
         return image;
     }

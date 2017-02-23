@@ -88,7 +88,7 @@ public class CircularContextMenu {
 
             currentAngle = currentAngle + angle;
         }
-        logger.info("Current angel: {}", currentAngle);
+        logger.debug("Current angel: {}", currentAngle);
     }
 
     /**

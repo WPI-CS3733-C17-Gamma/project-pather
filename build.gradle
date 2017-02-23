@@ -15,7 +15,9 @@ dependencies {
 
     // https://mvnrepository.com/artifact/org.apache.derby/derby
     compile group: 'org.apache.derby', name: 'derby', version: '10.13.1.1'
-    compile group:'com.github.dejv78.jfx.radialmenu', name:'radialmenu', version:'1.0.1'
+
+    // Causing issues with logging
+    //compile group:'com.github.dejv78.jfx.radialmenu', name:'radialmenu', version:'1.0.1'
 
     compile group: 'org.slf4j', name:'slf4j-api', version: '1.7.2'
     compile group: 'org.slf4j', name:'slf4j-log4j12', version: '1.7.2'
