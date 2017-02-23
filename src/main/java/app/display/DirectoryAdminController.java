@@ -62,17 +62,15 @@ public class DirectoryAdminController extends DisplayController{
         ObservableList<String> allEntries = FXCollections.observableList(entryList);
         listEntries.setItems(allEntries);
         listEntries.getSelectionModel().selectedItemProperty().addListener(
-            (ov, old_val, new_val) -> {
-                String selectedString = listEntries.getSelectionModel().getSelectedItem();
-                selectEntry(selectedString);
-        });
+            (ov, old_val, new_val) -> selectEntry(new_val));
 
         // add change handler for the dropdown list of poossible locations
         entryRoomOptions.getSelectionModel().selectedItemProperty().addListener(
-            (ov, old_val, new_val) -> {
-            String selectedString = entryRoomOptions.getSelectionModel().getSelectedItem();
-            entryAddRoom(selectedString);
-        });
+            (ov, old_val, new_val) -> entryAddRoom(new_val));
+
+        // add click handlers to the list of currentRooms
+        entryCurrentLocations.getSelectionModel().selectedItemProperty().addListener(
+            (ov, old_val, new_val) -> entryDeleteRoom.setVisible(true));
     }
 
     /** See the method {@link Map#searchEntry(String)} */
