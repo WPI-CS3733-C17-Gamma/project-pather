@@ -4,13 +4,13 @@ import app.pathfinding.BFS;
 import app.pathfinding.PathNotFoundException;
 import junit.framework.TestCase;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class BFSTest extends TestCase{
     final Logger logger = LoggerFactory.getLogger(BFSTest.class);

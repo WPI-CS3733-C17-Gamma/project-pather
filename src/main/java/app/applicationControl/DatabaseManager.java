@@ -6,15 +6,14 @@ import app.dataPrimitives.Room;
 import app.datastore.Directory;
 import app.datastore.GraphNetwork;
 import app.datastore.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.TreeMap;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class DatabaseManager {
     final Logger logger = LoggerFactory.getLogger(DatabaseManager.class);

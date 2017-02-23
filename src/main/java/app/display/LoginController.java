@@ -1,16 +1,11 @@
 package app.display;
 
-import app.applicationControl.ApplicationController;
-import app.applicationControl.Login;
-import app.datastore.Map;
 import javafx.fxml.FXML;
-import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
 
 /**
  * Created by alext on 2/13/2017.
