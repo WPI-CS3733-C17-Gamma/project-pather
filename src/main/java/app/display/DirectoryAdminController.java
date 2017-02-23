@@ -313,6 +313,7 @@ public class DirectoryAdminController extends DisplayController{
                 .filter(res -> !currentLocs.contains(res))
                 .collect(Collectors.toList());
 
+            //TODO How to log this
             results.stream().forEach(System.out::println);
 
             ObservableList<String> roomEntries = FXCollections.observableList(results);
@@ -385,6 +386,7 @@ public class DirectoryAdminController extends DisplayController{
         }
         else {
             List<String> results = map.searchEntry(searchText);
+            //TODO how to log this
             results.stream().forEach(System.out::println);
             ObservableList<String> allEntries = FXCollections.observableList(results);
             listEntries.setItems(allEntries);

@@ -550,7 +550,7 @@ public class PatientController extends DisplayController implements Initializabl
             circ.setLayoutY(imageLoc.getY());
             anchorPane.getChildren().add(circ);
             anchorPane.getChildren().add(label);
-            System.out.println("Adding Label "  + labelName);
+            logger.debug("Adding Label {}", labelName);
             drawnObjects.add(label);
             drawnObjects.add(circ);
         }
@@ -633,7 +633,7 @@ public class PatientController extends DisplayController implements Initializabl
                 image.setFitWidth(20);
                 image.setFitHeight(20);
                 current.setGraphic(image);
-                System.out.println("node to get image: " + node);
+                logger.debug("node to get image: {}", node);
                 point = graphPointToImage(node, patientImageView);
                 roomx = point.getX() - 30;
                 roomy = point.getY() - 5;
