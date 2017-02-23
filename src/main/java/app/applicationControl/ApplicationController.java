@@ -34,12 +34,12 @@ public class ApplicationController extends Application {
 
     // NOTE with proxy pattern this will change to a prox image
     HashMap<String, ProxyImage> images;
-
+    boolean isLoginPage;
     @Override
     public void start(Stage primaryStage) throws Exception {
         initialize();
         this.pStage = primaryStage;
-        adminStage = new Stage();
+
         createPatientDisplay();
         primaryStage.show();
         login = new Login();
@@ -181,11 +181,10 @@ public class ApplicationController extends Application {
      *
      */
     public void createLoginAdmin(){
-        if(isLoggedIn()) {
+        if(adminStage != null) {
             adminStage.toFront();
             return;
         }
-
         adminStage = new Stage();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/LoginDisplay.fxml"));
         Scene newScene;
@@ -207,6 +206,7 @@ public class ApplicationController extends Application {
     }
 
     public boolean login(String uname, String passwd){
+
         return login.signIn(uname, passwd);
     }
 
