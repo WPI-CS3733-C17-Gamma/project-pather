@@ -14,7 +14,9 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.*;
+import javafx.scene.input.ContextMenuEvent;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
@@ -24,6 +26,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -81,6 +84,7 @@ public class MapAdminController extends DisplayController {
     private GraphNode tempNode ;
     private String currentMap;
     private ContextMenuEvent contextEvent;
+    ComboBox<String> roomField = roomName;
 
     /**
      *  Construct map admin controller
@@ -155,6 +159,7 @@ public class MapAdminController extends DisplayController {
             @Override
             public void handle(MouseEvent event) {
                 deleteNode(selectedNode);
+                drawMap();
             }
         };
         EventHandler<MouseEvent> deleteRoom = new EventHandler<MouseEvent>() {
@@ -165,7 +170,7 @@ public class MapAdminController extends DisplayController {
                 }
             }
         };
-        EventHandler<MouseEvent> addNodeEvent = new EventHandler<MouseEvent>() {
+        EventHandler<MouseEvent> addNodeOption = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 addNode(contextToGraph(contextEvent));
@@ -174,26 +179,28 @@ public class MapAdminController extends DisplayController {
                 nodeMenu.hide();
             }
         };
-//        EventHandler<MouseEvent> addRoom = new EventHandler<MouseEvent>() {
-//            @Override
-//            public void handle(MouseEvent event) {
-//                if(activeRoom != null){
-//                    map.addRoom()
-//                }
-//            }
-//        };
+        EventHandler<MouseEvent> addChangeRoom = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                roomField = roomName;
+                roomField.setId("roomField");
+                roomField.setLayoutX(event.getSceneX());
+                roomField.setLayoutX(event.getSceneY());
+                roomField.show();
+            }
+        };
         ImagePattern deleteRoomImage = new ImagePattern(new Image("/Radial Icons/Delete_Room.png"));
         ImagePattern addRoomImage = new ImagePattern(new Image("/Radial Icons/Add_Room2.png"));
         ImagePattern addNodeImage = new ImagePattern(new Image("/Radial Icons/Add_Node.png"));
         ImagePattern deleteNodeImage = new ImagePattern(new Image("/Radial Icons/Delete_Node.png"));
 
         screenMenu.addOption(deleteRoomImage, deleteRoom,null);//Add delete Room, add/change Room, delete node to this menu, delete elevator if this node is an elevator
-        screenMenu.addOption(addNodeImage, addNodeEvent,null);
+        screenMenu.addOption(addNodeImage, addNodeOption,null);
         screenMenu.addOption(deleteNodeImage, deleteNode,null);
 
         nodeMenu.addOption(deleteRoomImage, deleteRoom,null);//Add add elevator, addnode, add elevator
         nodeMenu.addOption(deleteNodeImage, deleteNode,null);
-        nodeMenu.addOption(Color.BLUE);
+        nodeMenu.addOption(addRoomImage, addChangeRoom, null);
         nodeMenu.setAutoHide(true);
         drawMap();
         //------------------------------------------------------------------------------------------------------------------
@@ -359,6 +366,39 @@ public class MapAdminController extends DisplayController {
         return tempNode;
     }
 
+    /**
+     * Add a room to the map.
+     * Take the text from the roomName text field
+     */
+    public void addRoomContext (ComboBox<String> roomName) {
+        String newName = roomName.getValue();
+        Room existingRoom = map.getRoomFromName(newName);
+        // Entered name is empty, so delete room
+        // TODO: maybe make this more explicit, like a separate button,
+        // and ignore this case
+        if (newName.isEmpty()) {
+            if (activeRoom != null) {
+                map.deleteRoom(activeRoom);
+            }
+        }
+        // Already a room of that name, so change room location
+        else if (existingRoom != null) {
+            // if there is also an active room, remove this node from it
+            if (activeRoom != null) {
+                activeRoom.setLocation(null);
+            }
+            existingRoom.setLocation(selectedNode);
+        }
+        // Node already has a room, so rename room
+        else if (activeRoom != null) {
+            map.changeRoomName(activeRoom, newName);
+        }
+        // No room either existed at this node or had the new name, so
+        // add a new room
+        else {
+            map.addRoom(new Room(selectedNode, newName));
+        }
+    }
     /**
      * Add a room to the map.
      * Take the text from the roomName text field
