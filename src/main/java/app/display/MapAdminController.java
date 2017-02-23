@@ -15,6 +15,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ContextMenuEvent;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
@@ -126,7 +127,30 @@ public class MapAdminController extends DisplayController {
                 }
             }
         );
+        /**
+         * Added the ability to change a room name by pressing enter on the selected combo box
+         */
+       // mapPane.addEventFilter(KeyEvent.KEY_PRESSED, e->{System.out.println(e);});
+        roomName.addEventFilter(KeyEvent.KEY_PRESSED, e->{
+            if(e.getCode() == KeyCode.ENTER){
+                addRoom();
+                mapPane.requestFocus();
+            }
+        });
 
+//        roomName.getEditor().addEventFilter(KeyEvent.KEY_PRESSED, (KeyEvent E) -> {
+//            if(E.getCode() == KeyCode.ENTER){
+//                System.out.println("lol");
+//                        if (roomName.getItems().contains(roomName.getEditor().getText())) {
+//                        E.consume();
+//                    }else {
+//                        System.out.println("lol");
+//                        addRoom();
+//                        mapPane.requestFocus();
+//                        E.consume();
+//                    }
+//            }
+//        });
         /**
          * Add click listener to the list of floor options
          */
