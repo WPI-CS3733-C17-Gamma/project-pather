@@ -266,7 +266,7 @@ public class PatientController extends DisplayController implements Initializabl
      */
     public void selectPatientImage(MouseEvent e){
         if (e.getSource() instanceof Button) {
-            
+
             imageView.setImage(applicationController.getImage(currentMap));
             Button temp = (Button) e.getSource();
 	    currentMap = temp.getId();
@@ -308,6 +308,7 @@ public class PatientController extends DisplayController implements Initializabl
         for (Label label :roomLabels){
             anchorPane.getChildren().remove(label);
         }
+
 
     }
 
