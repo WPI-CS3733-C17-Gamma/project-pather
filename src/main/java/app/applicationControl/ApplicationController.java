@@ -1,11 +1,14 @@
 package app.applicationControl;
 
 import app.datastore.Map;
-import app.display.*;
+import app.display.AdminController;
+import app.display.DisplayController;
+import app.display.LoginController;
+import app.display.PatientController;
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
@@ -14,6 +17,8 @@ import javafx.scene.image.Image;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -22,9 +27,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class ApplicationController extends Application {
 
@@ -178,7 +180,7 @@ public class ApplicationController extends Application {
                 AdminController controller = loader.<AdminController>getController();
                 controller.init(map, this, adminStage);
                 adminStage.setTitle("Directory Admin");
-                adminStage.setScene(new Scene(root, 600, 600));
+                adminStage.setScene(new Scene(root, 800, 800));
                 adminStage.centerOnScreen();
                 adminStage.show();
 
@@ -207,7 +209,7 @@ public class ApplicationController extends Application {
             controller.init(map, this, adminStage);
             adminStage.setTitle("Login");
             adminStage.initOwner(pStage);
-            adminStage.setScene(new Scene(root, 350, 150));
+            adminStage.setScene(new Scene(root));
             adminStage.show();
         } catch (IOException e){
             e.printStackTrace();

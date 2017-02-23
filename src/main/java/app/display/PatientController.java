@@ -1,14 +1,9 @@
 package app.display;
 
-import app.*;
+import app.CircularContextMenu;
 import app.applicationControl.ApplicationController;
-import app.applicationControl.Login;
-import app.applicationControl.RealImage;
 import app.dataPrimitives.*;
 import app.pathfinding.PathNotFoundException;
-import com.sun.javafx.geom.BaseBounds;
-import com.sun.javafx.geom.transform.BaseTransform;
-import com.sun.javafx.scene.BoundsAccessor;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -25,7 +20,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.DropShadow;
-import javafx.scene.effect.Effect;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -37,15 +31,12 @@ import javafx.scene.shape.Shape;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * controls all interaction with the patient display
@@ -266,7 +257,7 @@ public class PatientController extends DisplayController implements Initializabl
      */
     public void selectPatientImage(MouseEvent e){
         if (e.getSource() instanceof Button) {
-            
+
             imageView.setImage(applicationController.getImage(currentMap));
             Button temp = (Button) e.getSource();
 	    currentMap = temp.getId();
@@ -308,6 +299,7 @@ public class PatientController extends DisplayController implements Initializabl
         for (Label label :roomLabels){
             anchorPane.getChildren().remove(label);
         }
+
 
     }
 
@@ -551,7 +543,7 @@ public class PatientController extends DisplayController implements Initializabl
             circ.setLayoutY(imageLoc.getY());
             anchorPane.getChildren().add(circ);
             anchorPane.getChildren().add(label);
-            System.out.println("Adding Label "  + labelName);
+            logger.debug("Adding Label {}", labelName);
             drawnObjects.add(label);
             drawnObjects.add(circ);
         }
@@ -634,7 +626,7 @@ public class PatientController extends DisplayController implements Initializabl
                 image.setFitWidth(20);
                 image.setFitHeight(20);
                 current.setGraphic(image);
-                System.out.println("node to get image: " + node);
+                logger.debug("node to get image: {}", node);
                 point = graphPointToImage(node, patientImageView);
                 roomx = point.getX() - 30;
                 roomy = point.getY() - 5;
@@ -657,6 +649,7 @@ public class PatientController extends DisplayController implements Initializabl
                 labels.add(current);
             }
         }
+	drawnObjects.addAll(labels);
         return labels;
     }
 
@@ -666,8 +659,11 @@ public class PatientController extends DisplayController implements Initializabl
      */
     public void displayRoomLabels(LinkedList<Label> labels){
         for(Label label: labels){
-            anchorPane.getChildren().add(label);
-        }
+	    if(! anchorPane.getChildren().contains(label)){
+		anchorPane.getChildren().add(label);
+	    }
+
+	}
     }
 
     public void textDirection(){
@@ -690,18 +686,32 @@ public class PatientController extends DisplayController implements Initializabl
     /**
      * Function to get textual directions and print it on screen
      * @param path the path to be converted to text
-     * @param floor
+     * @param nextFloor the next floor to be pathed to, can be null
      */
-    public void displayTextDirections(List<GraphNode> path, String floor) {
+    public void displayTextDirections(List<GraphNode> path, String nextFloor) {
         textDirectionsTextBox.setVisible(true);
         List<String> directions = map.getTextualDirections(path);
         String dir = "";
         for(String line : directions) {
             dir += (line + "\n");
         }
-        if(floor != null) {
-            dir += ("Take elevator to " + floor);
+        String currFloor = path.get(0).getLocation().getFloor();
+        if(nextFloor != null) {
+            if(!currFloor.contains("floor") && nextFloor.contains("floor")) {
+                dir += "Enter Faulkner Hospital";
+            }
+            else if(!currFloor.contains("belkin") && nextFloor.contains("belkin")) {
+                dir += "Enter Belkin House";
+            }
+            else if(nextFloor.contains("campus")) {
+                dir += "Exit building";
+            }
+            else {
+                String floor = nextFloor.replaceFirst("floor|belkin", "floor ");
+                dir += "Take elevator to " + floor;
+            }
         }
+
         textDirectionsTextBox.setText(dir);
         return;
     }

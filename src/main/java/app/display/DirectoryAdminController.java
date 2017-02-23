@@ -3,40 +3,31 @@ package app.display;
 import app.applicationControl.ApplicationController;
 import app.dataPrimitives.DirectoryEntry;
 import app.dataPrimitives.GraphNode;
-import app.datastore.Map;
 import app.dataPrimitives.Room;
-import app.applicationControl.Login;
+import app.datastore.Map;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 import javafx.stage.FileChooser;
-import java.io.File;
-import java.io.IOException;
-
-import java.net.URL;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ResourceBundle;
-import java.util.stream.Collectors;
-
+import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class DirectoryAdminController extends DisplayController{
     final Logger logger = LoggerFactory.getLogger(DirectoryAdminController.class);
 
     DirectoryEntry activeDirectoryEntry;
     Room activeRoom;
-    String activeEntryRoomSelected;
 
     // FXML stuff
     @FXML TextField searchBar;
@@ -70,33 +61,17 @@ public class DirectoryAdminController extends DisplayController{
         entryList.sort(String::compareTo);
         ObservableList<String> allEntries = FXCollections.observableList(entryList);
         listEntries.setItems(allEntries);
-        listEntries.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
+        listEntries.getSelectionModel().selectedItemProperty().addListener(
+            (ov, old_val, new_val) -> {
                 String selectedString = listEntries.getSelectionModel().getSelectedItem();
                 selectEntry(selectedString);
-            }
         });
 
-        // add click handler for the dropdown list of poossible locations
-        entryRoomOptions.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                String selectedString = entryRoomOptions.getSelectionModel().getSelectedItem();
-                entryAddRoom(selectedString);
-            }
-        });
-        // add click handlers to the list of currentRooms
-        entryCurrentLocations.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                String selectedString = entryCurrentLocations.getSelectionModel().getSelectedItem();
-                activeEntryRoomSelected = selectedString;
-                entryDeleteRoom.setVisible(true);
-                logger.debug("Removing entry {}", selectedString);
-                // TODO should this be here
-                // entryRemoveRoom(selectedString);
-            }
+        // add change handler for the dropdown list of poossible locations
+        entryRoomOptions.getSelectionModel().selectedItemProperty().addListener(
+            (ov, old_val, new_val) -> {
+            String selectedString = entryRoomOptions.getSelectionModel().getSelectedItem();
+            entryAddRoom(selectedString);
         });
     }
 
@@ -173,7 +148,6 @@ public class DirectoryAdminController extends DisplayController{
         searchBar.setText("");
         activeDirectoryEntry = null;
         activeRoom = null;
-        activeEntryRoomSelected = null;
         filterAllEntries();
     }
 
@@ -313,6 +287,7 @@ public class DirectoryAdminController extends DisplayController{
                 .filter(res -> !currentLocs.contains(res))
                 .collect(Collectors.toList());
 
+            //TODO How to log this
             results.stream().forEach(System.out::println);
 
             ObservableList<String> roomEntries = FXCollections.observableList(results);
@@ -322,13 +297,13 @@ public class DirectoryAdminController extends DisplayController{
     }
 
     /**
-     * Function to delete the activeEntryRoomSelected
+     * Function to delete the selected Room
      */
     public void entryDeleteSelectedRoom () {
-        if (activeEntryRoomSelected != null) {
-            entryRemoveRoom(activeEntryRoomSelected);
+        String selectedString = entryCurrentLocations.getSelectionModel().getSelectedItem();
+        if (selectedString != null) {
+            entryRemoveRoom(selectedString);
             entryDeleteRoom.setVisible(false);
-            activeEntryRoomSelected = null;
         }
         else {
             logger.error("Cannot delete room, no room selected");
@@ -385,6 +360,7 @@ public class DirectoryAdminController extends DisplayController{
         }
         else {
             List<String> results = map.searchEntry(searchText);
+            //TODO how to log this
             results.stream().forEach(System.out::println);
             ObservableList<String> allEntries = FXCollections.observableList(results);
             listEntries.setItems(allEntries);
