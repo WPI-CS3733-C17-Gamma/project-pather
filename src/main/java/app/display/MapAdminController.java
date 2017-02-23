@@ -80,7 +80,7 @@ public class MapAdminController extends DisplayController {
 
     private GraphNode tempNode ;
     private String currentMap;
-    private ContextMenuEvent mouseEvent;
+    private ContextMenuEvent contextEvent;
 
     /**
      *  Construct map admin controller
@@ -168,9 +168,10 @@ public class MapAdminController extends DisplayController {
         EventHandler<MouseEvent> addNodeEvent = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                addNode(contextToGraph(mouseEvent));
+                addNode(contextToGraph(contextEvent));
                 selectedNode = null;
                 screenMenu.hide();
+                nodeMenu.hide();
             }
         };
 //        EventHandler<MouseEvent> addRoom = new EventHandler<MouseEvent>() {
@@ -186,14 +187,14 @@ public class MapAdminController extends DisplayController {
         ImagePattern addNodeImage = new ImagePattern(new Image("/Radial Icons/Add_Node.png"));
         ImagePattern deleteNodeImage = new ImagePattern(new Image("/Radial Icons/Delete_Node.png"));
 
-        nodeMenu.addOption(deleteRoomImage,deleteRoom,null);//Add delete Room, add/change Room, delete node to this menu, delete elevator if this node is an elevator
-        nodeMenu.addOption(addNodeImage,addNodeEvent,null);
-        nodeMenu.addOption(deleteNodeImage,deleteNode,null);
+        screenMenu.addOption(deleteRoomImage, deleteRoom,null);//Add delete Room, add/change Room, delete node to this menu, delete elevator if this node is an elevator
+        screenMenu.addOption(addNodeImage, addNodeEvent,null);
+        screenMenu.addOption(deleteNodeImage, deleteNode,null);
 
-        screenMenu.addOption(Color.WHITE);//Add add elevator, addnode, add elevator
-        screenMenu.addOption(Color.RED);
-        screenMenu.addOption(Color.BLUE);
-        screenMenu.setAutoHide(true);
+        nodeMenu.addOption(deleteRoomImage, deleteRoom,null);//Add add elevator, addnode, add elevator
+        nodeMenu.addOption(deleteNodeImage, deleteNode,null);
+        nodeMenu.addOption(Color.BLUE);
+        nodeMenu.setAutoHide(true);
         drawMap();
         //------------------------------------------------------------------------------------------------------------------
     }
@@ -654,6 +655,7 @@ public class MapAdminController extends DisplayController {
      */
     public void isPressed(MouseEvent m) {
         screenMenu.hide();
+        nodeMenu.hide();
         if (roomName.isFocused()){
             mapPane.requestFocus(); //deselects textbox if click outside
         }
@@ -929,11 +931,12 @@ public class MapAdminController extends DisplayController {
 //        contextMenu.setStyle("fx-background-image: red");
 
     public void showContextMenu(ContextMenuEvent event){
-        mouseEvent = event;
+        contextEvent = event;
 
         Shape circle = new Circle(event.getX(), event.getY(), 10);
+        circle.setOpacity(0);
         mapPane.getChildren().add(circle);
-        if(selectedNode == null){
+        if(selectedNode != null){
             nodeMenu.show(circle,event.getScreenX(), event.getScreenY());
         }else{
             screenMenu.show(circle, event.getScreenX(), event.getScreenY());

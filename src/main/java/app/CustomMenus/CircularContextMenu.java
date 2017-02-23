@@ -72,7 +72,6 @@ public class CircularContextMenu extends Popup {
         int size = menuElements.size();
         angle = (double)360 / (double)(size+1);
         double currentAngle = 0;
-        setAutoHide(true);
 
         menuElements.add(new ContextMenuElement(image, this, display, clickHandler, dragHandler));
         getContent().clear();
@@ -142,15 +141,6 @@ public class CircularContextMenu extends Popup {
             }
         }
     }
-
-    /**
-     * Get the number of options currently in menu
-     * @return
-     */
-    public int getNumOptions(){
-        return menuElements.size();
-    }
-
 
     /**
      * Getter for Menu Elements
