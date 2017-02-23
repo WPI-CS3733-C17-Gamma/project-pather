@@ -135,7 +135,6 @@ public class MapAdminController extends DisplayController {
          */
         roomName.addEventFilter(KeyEvent.KEY_PRESSED, e->{
             if(e.getCode() == KeyCode.ENTER){
-                System.out.println(roomName.getEditor().getText());
                 roomName.setValue(roomName.getEditor().getText());
                 addRoom();
                 mapPane.requestFocus();
@@ -187,6 +186,7 @@ public class MapAdminController extends DisplayController {
             public void handle(MouseEvent event) {
                 addNode(contextToGraph(contextEvent));
                 selectedNode = null;
+                drawMap();
                 screenMenu.hide();
                 nodeMenu.hide();
             }
@@ -195,6 +195,7 @@ public class MapAdminController extends DisplayController {
             @Override
             public void handle(MouseEvent event) {
                 togglebuttonAddConnections.fire();
+                drawMap();
                 screenMenu.hide();
                 nodeMenu.hide();
             }
@@ -212,14 +213,14 @@ public class MapAdminController extends DisplayController {
         ImagePattern addNodeImage = new ImagePattern(new Image("/Radial Icons/Add_Node.png"),0, 0, 50, 50, false);
         ImagePattern deleteNodeImage = new ImagePattern(new Image("/Radial Icons/Delete_Node.png"),0, 0, 50, 50, false);
         ImagePattern addConnectionImage = new ImagePattern(new Image("/Icon_PNGs/atmT.png"),0,0,50,50,false);
-        screenMenu.addOption(deleteRoomImage, deleteRoom,null);//Add delete Room, add/change Room, delete node to this menu, delete elevator if this node is an elevator
-        screenMenu.addOption(addNodeImage, addNodeOption,null);
-        screenMenu.addOption(addConnectionImage, addConnectionOption,null);
+        screenMenu.addOption(deleteRoomImage,Color.RED, null,null);//Add delete Room, add/change Room, delete node to this menu, delete elevator if this node is an elevator
+        screenMenu.addOption(addNodeImage,Color.AQUA, addNodeOption,addNodeOption);
+        screenMenu.addOption(addConnectionImage, Color.GREEN,addConnectionOption,addConnectionOption);
 
-        nodeMenu.addOption(deleteRoomImage, deleteRoom,null);//Add add elevator, addnode, add elevator
-        nodeMenu.addOption(deleteNodeImage, deleteNode,null);
-        nodeMenu.addOption(addRoomImage, addChangeRoom, null);
-        screenMenu.addOption(addConnectionImage, addConnectionOption,null);
+        nodeMenu.addOption(Color.RED, Color.RED,deleteRoom,deleteRoom);//Add add elevator, addnode, add elevator
+        nodeMenu.addOption(Color.ORANGE,Color.ORANGE, deleteRoom, deleteRoom);
+        nodeMenu.addOption(Color.GREEN,Color.GREEN, addChangeRoom, addChangeRoom);
+        nodeMenu.addOption(Color.BLUE,Color.BLUE, addConnectionOption,addConnectionOption);
         nodeMenu.setAutoHide(true);
         for (String floor : floorOptions) {
             CustomMenuItem cmi = new CustomMenuItem(new CheckBox(floor));
@@ -381,7 +382,7 @@ public class MapAdminController extends DisplayController {
      * @return
      */
     public GraphNode nearbyNodeContext (ContextMenuEvent n) {
-        System.out.println(n.toString());
+
         FloorPoint graphPoint = contextToGraph(n);
 
         tempNode = map.getGraphNode(graphPoint);
@@ -743,6 +744,7 @@ public class MapAdminController extends DisplayController {
                 // just move the point every drag event
                 drawMap();
         }
+        screenMenu.fireEvent(e);
     }
 
     /**
@@ -937,7 +939,6 @@ public class MapAdminController extends DisplayController {
 //        });
 //        contextMenu.getItems().addAll(item1, item2);
         Shape circle = new Circle(event.getX(), event.getY(), 10);
-        circle.setOpacity(0);
         mapPane.getChildren().add(circle);
         if(selectedNode != null){
             nodeMenu.show(circle,event.getScreenX(), event.getScreenY());

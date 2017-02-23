@@ -1,7 +1,6 @@
 package app.CustomMenus;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.SVGPath;
 
@@ -40,11 +39,11 @@ public class ContextMenuElement{
             centralDisplay.centralDisplay.setVisible(true);
         }
     };
-    EventHandler onDragHandler = new EventHandler<MouseEvent>() { //Default drag event handler
+    EventHandler<MouseEvent> onDragAndReleaseHandler = new EventHandler<MouseEvent>() { //Default drag event handler
         @Override
         public void handle(MouseEvent event) {
             System.out.println("This button has no release event");
-        parentMenu.hide();
+            parentMenu.hide();
         }
     };
 
@@ -54,14 +53,16 @@ public class ContextMenuElement{
      * Constructor for a button that does not do anything
      * @param icon
      */
-    ContextMenuElement( Paint icon, CircularContextMenu parentMenu, CentralDisplay centralDisplay){
+    ContextMenuElement( Paint icon, Paint background, CircularContextMenu parentMenu, CentralDisplay centralDisplay){
         path.setMouseTransparent(true);
         this.centralDisplay = centralDisplay;
         this.parentMenu = parentMenu;
         this.background.setOnMouseClicked(onClickHandler);
+        this.background.setOnMouseReleased(onDragAndReleaseHandler);
         this.background.setOnMouseEntered(mouseEnterHandler);
         this.background.setOnMouseExited(mouseExitHandler);
         this.icon = icon;
+        this.background.setFill(background);
 
     }
 
@@ -70,7 +71,7 @@ public class ContextMenuElement{
      * @param icon
      * @param onClickHandler
      */
-    ContextMenuElement (Paint icon, CircularContextMenu parentMenu, CentralDisplay centralDisplay,  EventHandler onClickHandler, EventHandler onDragHandler){
+    ContextMenuElement (Paint icon, Paint background, CircularContextMenu parentMenu, CentralDisplay centralDisplay,  EventHandler onClickHandler, EventHandler onDragAndReleaseHandler){
         path.setMouseTransparent(true);
         this.centralDisplay = centralDisplay;
         this.parentMenu = parentMenu;
@@ -79,10 +80,10 @@ public class ContextMenuElement{
         this.background.setOnMouseExited(mouseExitHandler);
         if (onClickHandler != null) {
             this.background.setOnMouseClicked( onClickHandler);}
-        if (onDragHandler != null) {
-            this.background.setOnMouseReleased(onDragHandler);}
+        if (onDragAndReleaseHandler != null) {
+            this.background.setOnMouseReleased(onDragAndReleaseHandler);}
         this.icon = icon;
-
+        this.background.setFill(background);
 
     }
 
@@ -148,7 +149,6 @@ public class ContextMenuElement{
 
 
         path.setFill(icon);
-        background.setFill(Color.rgb(211, 211, 211, 1));
     }
 
 }
