@@ -621,7 +621,7 @@ public class PatientController extends DisplayController implements Initializabl
             //add elevator icon if applicable
             if(node.isElevator()){
                 ImageView image = new ImageView();
-                image.setImage(applicationController.getImage("elevator"));
+                image.setImage(applicationController.getExtraImage("elevator"));
                 image.setPreserveRatio(true);
                 image.setFitWidth(20);
                 image.setFitHeight(20);
