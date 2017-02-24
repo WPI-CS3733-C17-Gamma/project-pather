@@ -1,6 +1,6 @@
 package app.applicationControl;
 
-import app.Email.EmailController;
+import app.applicationControl.email.EmailController;
 import app.datastore.Map;
 import app.display.AdminController;
 import app.display.DisplayController;
@@ -273,6 +273,16 @@ public class ApplicationController extends Application {
         adminStage.close();
 
         //createPatientDisplay();
+    }
+
+    /**
+     * Send an email to the given email address
+     * @param to email address of recipient
+     * @param message contents you want the user to recieve
+     * @return
+     */
+    public boolean sendEmail (String to, String message) {
+        return emailController.send(to, message);
     }
 
     /**

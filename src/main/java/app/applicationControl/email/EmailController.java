@@ -1,4 +1,4 @@
-package app.Email;
+package app.applicationControl.email;
 
 import app.applicationControl.ApplicationController;
 import app.datastore.Map;

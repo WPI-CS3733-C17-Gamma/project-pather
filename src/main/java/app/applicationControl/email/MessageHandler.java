@@ -1,4 +1,4 @@
-package app.Email;
+package app.applicationControl.email;
 
 import com.sun.media.jfxmedia.logging.Logger;
 

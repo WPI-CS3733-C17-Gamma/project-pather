@@ -1,4 +1,4 @@
-package app.Email;
+package app.applicationControl.email;
 
 import javax.mail.*;
 
