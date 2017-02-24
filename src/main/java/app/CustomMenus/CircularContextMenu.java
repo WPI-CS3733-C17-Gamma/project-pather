@@ -178,7 +178,7 @@ public class CircularContextMenu extends Popup {
      * @param anchorY
      */
     public void show(Node nodeOwner, double anchorX, double anchorY ){
-        setMoustTransparent(false);
+        setMouseTransparent(false);
 
         super.show(nodeOwner, anchorX - outerRadius, anchorY - outerRadius);
         getOwnerWindow().addEventFilter(MouseEvent.MOUSE_DRAGGED, windowMouseDrag);
@@ -189,6 +189,25 @@ public class CircularContextMenu extends Popup {
 
     public String toString(){
         return("This menu has: " + menuElements.size() + " options.");
+    }
+
+    public void fireOption(MouseEvent event){
+        double x = event.getScreenX() - this.getX()-outerRadius;
+        double y = event.getScreenY() - this.getY() -outerRadius;
+        double dist = Math.sqrt(Math.pow(x,2)+Math.pow(y,2));
+
+        double mouseAngle = calculateMouseAngle(x, y);
+        mouseAngle = Math.toRadians(mouseAngle);
+        System.out.println(mouseAngle);
+        for (ContextMenuElement element:menuElements) {
+            double elementAngle = element.initialAngle + element.angle;
+            if(dist > innerRadius) {
+                if (mouseAngle > element.initialAngle && mouseAngle < elementAngle) {
+                    System.out.println(event.toString());
+                    element.background.fireEvent(event);
+                }
+            }
+        }
     }
     public void drawHighlightDrag(MouseEvent event){
         if(highlight != null) {
@@ -202,28 +221,11 @@ public class CircularContextMenu extends Popup {
 
         if(dist < outerRadius) {
             highlight.draw(mouseAngle - angle / 2, angle, innerRadius, outerRadius);
-            super.show(getOwnerNode(), getAnchorX(), getAnchorY());
+            if(getOwnerNode().getScene() != null)
+                super.show(getOwnerNode(), getAnchorX(), getAnchorY());
         }
         redraw();
 
-    }
-    public void fireOption(MouseEvent event){
-        double x = event.getScreenX() - this.getX()-outerRadius;
-        double y = event.getScreenY() - this.getY() -outerRadius;
-        double dist = Math.sqrt(Math.pow(x,2)+Math.pow(y,2));
-
-        double mouseAngle = calculateMouseAngle(x, y);
-        mouseAngle = Math.toRadians(mouseAngle);
-        System.out.println(mouseAngle);
-        for (ContextMenuElement element:menuElements) {
-            double elementAngle = element.initialAngle + element.angle;
-            if(dist > innerRadius && dist < outerRadius) {
-                if (mouseAngle > element.initialAngle && mouseAngle < elementAngle) {
-                    System.out.println(event.toString());
-                    element.background.fireEvent(event);
-                }
-            }
-        }
     }
 
     public void drawHighlightClick(MouseEvent event){
@@ -279,12 +281,10 @@ public class CircularContextMenu extends Popup {
     }
     @Override
     public void hide(){
-        getOwnerWindow().removeEventFilter(MouseEvent.MOUSE_RELEASED, windowMouseRelease);
-        getOwnerWindow().removeEventHandler(MouseEvent.MOUSE_DRAGGED, windowMouseDrag);
         super.hide();
     }
 
-    public void setMoustTransparent(boolean value){
+    public void setMouseTransparent(boolean value){
         if(value) {
             for (ContextMenuElement element : menuElements) {
                 element.background.setMouseTransparent(true);

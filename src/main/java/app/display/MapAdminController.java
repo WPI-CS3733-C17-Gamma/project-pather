@@ -30,18 +30,6 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import javafx.stage.WindowEvent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-
-import javax.swing.plaf.basic.BasicComboBoxUI;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -102,6 +90,7 @@ public class MapAdminController extends DisplayController {
     private GraphNode tempNode ;
     private String currentMap;
     private ContextMenuEvent contextEvent;
+
 
     /**
      *  Construct map admin controller
@@ -189,7 +178,29 @@ public class MapAdminController extends DisplayController {
         //---------------------------------------------------------------------------------------------------------------
         //Setup Contest Menu here
 
-        EventHandler<MouseEvent> deleteNode = new EventHandler<MouseEvent>() {
+        EventHandler<MouseEvent> moveUpFloorOtion = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                int size = floorSelector.getItems().size();
+                int index = floorSelector.getItems().indexOf(currentMap);
+                index = (index + 1)%size;
+                floorSelector.setValue(floorSelector.getItems().get(index));
+                screenMenu.hide();
+                nodeMenu.hide();
+            }
+        };
+        EventHandler<MouseEvent> moveDownFloorOtion = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                int size = floorSelector.getItems().size();
+                int index = floorSelector.getItems().indexOf(currentMap);
+                index = (index + size - 1)%size;
+                floorSelector.setValue(floorSelector.getItems().get(index));
+                screenMenu.hide();
+                nodeMenu.hide();
+            }
+        };
+        EventHandler<MouseEvent> deleteNodeOption = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 deleteNode(selectedNode);
@@ -201,12 +212,14 @@ public class MapAdminController extends DisplayController {
         EventHandler<MouseEvent> deleteRoom = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                if(activeRoom != null){
-                    map.deleteRoom(activeRoom);
-                    drawMap();
-                    screenMenu.hide();
-                    nodeMenu.hide();
-                }
+                Room room = map.getRoomFromNode(selectedNode);
+                if (room != null)
+                    map.deleteRoom(room);
+                String newName = roomName.getValue();
+                drawMap();
+                screenMenu.hide();
+                nodeMenu.hide();
+
             }
         };
         EventHandler<MouseEvent> addNodeOption = new EventHandler<MouseEvent>() {
@@ -241,13 +254,15 @@ public class MapAdminController extends DisplayController {
         ImagePattern addNodeImage = new ImagePattern(new Image("/Radial Icons/Add_Node.png"),0, 0, 50, 50, false);
         ImagePattern deleteNodeImage = new ImagePattern(new Image("/Radial Icons/Delete_Node.png"),0, 0, 50, 50, false);
         ImagePattern addConnectionImage = new ImagePattern(new Image("/Icon_PNGs/atmT.png"),0,0,50,50,false);
-        screenMenu.addOption(deleteRoomImage,Color.RED, null,null);//Add delete Room, add/change Room, delete node to this menu, delete elevator if this node is an elevator
+        ImagePattern elevatorImage = new ImagePattern(new Image("/Icon_PNGs/ElevatorT.png"),0,0,50,50,false);
+        screenMenu.addOption(deleteRoomImage,Color.RED, moveUpFloorOtion,moveUpFloorOtion);//Add delete Room, add/change Room, delete node to this menu, delete elevator if this node is an elevator
         screenMenu.addOption(addNodeImage,Color.AQUA, addNodeOption,addNodeOption);
+        screenMenu.addOption(elevatorImage, Color.GREEN,moveDownFloorOtion,moveDownFloorOtion);
         screenMenu.addOption(addConnectionImage, Color.GREEN,addConnectionOption,addConnectionOption);
 
-        nodeMenu.addOption(Color.RED, Color.RED,deleteRoom,deleteRoom);//Add add elevator, addnode, add elevator
+        nodeMenu.addOption(deleteNodeImage, Color.RED,deleteNodeOption,deleteNodeOption);//Add add elevator, addnode, add elevator
         nodeMenu.addOption(Color.ORANGE,Color.ORANGE, deleteRoom, deleteRoom);
-        nodeMenu.addOption(Color.GREEN,Color.GREEN, addChangeRoom, addChangeRoom);
+        nodeMenu.addOption(addRoomImage, Color.GREEN, addChangeRoom, addChangeRoom);
         nodeMenu.addOption(Color.BLUE,Color.BLUE, addConnectionOption,addConnectionOption);
         nodeMenu.setAutoHide(true);
         for (String floor : floorOptions) {
@@ -978,6 +993,7 @@ public class MapAdminController extends DisplayController {
 //        });
 //        contextMenu.getItems().addAll(item1, item2);
         Shape circle = new Circle(event.getX(), event.getY(), 10);
+        circle.setVisible(false);
         mapPane.getChildren().add(circle);
         if(selectedNode != null){
             nodeMenu.show(circle,event.getScreenX(), event.getScreenY());
