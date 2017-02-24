@@ -32,7 +32,6 @@ public class ApplicationController extends Application {
 
     DatabaseManager databaseManager;
 
-    // probably not needed
     DisplayController currentDisplayController;
 
     Map map ;
@@ -41,8 +40,7 @@ public class ApplicationController extends Application {
     Login login;
     Scene currentScene;
 
-    // NOTE with proxy pattern this will change to a prox image
-    HashMap<String, ProxyImage> images;
+    HashMap<String, ProxyImage> floorMaps;
     HashMap<String, ProxyImage> extraImages;
 
     boolean isLoginPage;
@@ -70,19 +68,19 @@ public class ApplicationController extends Application {
         databaseManager = new DatabaseManager("main");
         map = databaseManager.load();
 
-        images = new HashMap<>();
-        images.put("floor1", new ProxyImage("Main_Belkin_Clean/main_1clean.png"));
-        images.put("floor2", new ProxyImage("Main_Belkin_Clean/main_2clean.png"));
-        images.put("floor3", new ProxyImage("Main_Belkin_Clean/main_3clean.png"));
-        images.put("floor4", new ProxyImage("Main_Belkin_Clean/main_4clean.png"));
-        images.put("floor5", new ProxyImage("Main_Belkin_Clean/main_5clean.png"));
-        images.put("floor6", new ProxyImage("Main_Belkin_Clean/main_6clean.png"));
-        images.put("floor7", new ProxyImage("Main_Belkin_Clean/main_7clean.png"));
-        images.put("belkin1", new ProxyImage("Main_Belkin_Clean/Belkin_1clean.png"));
-        images.put("belkin2", new ProxyImage("Main_Belkin_Clean/Belkin_2clean.png"));
-        images.put("belkin3", new ProxyImage("Main_Belkin_Clean/Belkin_3clean.png"));
-        images.put("belkin4", new ProxyImage("Main_Belkin_Clean/Belkin_4clean.png"));
-        images.put("campus", new ProxyImage("Main_Belkin_Clean/campusclean.png"));
+        floorMaps = new HashMap<>();
+        floorMaps.put("floor1", new ProxyImage("Main_Belkin_Clean/main_1clean.png"));
+        floorMaps.put("floor2", new ProxyImage("Main_Belkin_Clean/main_2clean.png"));
+        floorMaps.put("floor3", new ProxyImage("Main_Belkin_Clean/main_3clean.png"));
+        floorMaps.put("floor4", new ProxyImage("Main_Belkin_Clean/main_4clean.png"));
+        floorMaps.put("floor5", new ProxyImage("Main_Belkin_Clean/main_5clean.png"));
+        floorMaps.put("floor6", new ProxyImage("Main_Belkin_Clean/main_6clean.png"));
+        floorMaps.put("floor7", new ProxyImage("Main_Belkin_Clean/main_7clean.png"));
+        floorMaps.put("belkin1", new ProxyImage("Main_Belkin_Clean/Belkin_1clean.png"));
+        floorMaps.put("belkin2", new ProxyImage("Main_Belkin_Clean/Belkin_2clean.png"));
+        floorMaps.put("belkin3", new ProxyImage("Main_Belkin_Clean/Belkin_3clean.png"));
+        floorMaps.put("belkin4", new ProxyImage("Main_Belkin_Clean/Belkin_4clean.png"));
+        floorMaps.put("campus", new ProxyImage("Main_Belkin_Clean/campusclean.png"));
 
         extraImages = new HashMap<>();
         extraImages.put("elevator", new ProxyImage("Icon_PNGs/ElevatorT.png"));
@@ -103,7 +101,7 @@ public class ApplicationController extends Application {
      * @return
      */
     public List<String> getAllFloors () {
-        return images.keySet().stream().collect(Collectors.toList());
+        return this.floorMaps.keySet().stream().collect(Collectors.toList());
     }
 
     /**
@@ -148,8 +146,8 @@ public class ApplicationController extends Application {
      * @param floor - floor name to retrieve
      * @return
      */
-    public Image getImage (String floor) {
-        ProxyImage proxyFloor = images.get(floor);
+    public Image getFloorImage(String floor) {
+        ProxyImage proxyFloor = floorMaps.get(floor);
         if (proxyFloor != null) {
             try {
                 return proxyFloor.getValue();
@@ -164,7 +162,7 @@ public class ApplicationController extends Application {
         }
     }
 
-    public Image getExtraImage (String floor) {
+    public Image getIconImage(String floor) {
         ProxyImage proxyFloor = extraImages.get(floor);
         if (proxyFloor != null) {
             try {
