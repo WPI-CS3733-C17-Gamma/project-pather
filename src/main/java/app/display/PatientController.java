@@ -524,7 +524,8 @@ public class PatientController extends DisplayController implements Initializabl
     public void drawRoomLabel (String floorName, ImageView imageView) {
         List<String> roomNames= map.getAllRooms();
         for (String roomName : roomNames) {
-            Room cur = map.getRoomFromName(roomName);
+            Room 
+cur = map.getRoomFromName(roomName);
             GraphNode loc = cur.getLocation();
             // skip rooms without locations
             if (loc == null || ! loc.getLocation().getFloor().equals(floorName)) {
