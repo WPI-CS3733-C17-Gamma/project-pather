@@ -1,5 +1,7 @@
 package app.pathfinding;
+
 import app.dataPrimitives.GraphNode;
+
 import java.util.LinkedList;
 
 public interface IPathFindingAlgorithm {

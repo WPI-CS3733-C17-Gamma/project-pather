@@ -1,18 +1,18 @@
 package app;
 
-import app.display.DirectoryAdminController;
 import app.dataPrimitives.DirectoryEntry;
 import app.dataPrimitives.Room;
 import app.datastore.Directory;
 import app.datastore.Map;
+import app.display.DirectoryAdminController;
 import junit.framework.TestCase;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.LinkedList;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class CreateEntryTest extends TestCase {
     final Logger logger = LoggerFactory.getLogger(TestCase.class);

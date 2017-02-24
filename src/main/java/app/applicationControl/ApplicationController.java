@@ -1,11 +1,14 @@
 package app.applicationControl;
 
 import app.datastore.Map;
-import app.display.*;
+import app.display.AdminController;
+import app.display.DisplayController;
+import app.display.LoginController;
+import app.display.PatientController;
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
@@ -14,6 +17,8 @@ import javafx.scene.image.Image;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -22,9 +27,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class ApplicationController extends Application {
 
@@ -41,6 +43,7 @@ public class ApplicationController extends Application {
 
     // NOTE with proxy pattern this will change to a prox image
     HashMap<String, ProxyImage> images;
+    HashMap<String, ProxyImage> extraImages;
 
     boolean isLoginPage;
 
@@ -52,7 +55,7 @@ public class ApplicationController extends Application {
     public void start(Stage primaryStage) throws Exception {
         initialize();
         this.pStage = primaryStage;
-
+        adminStage = new Stage();
         createPatientDisplay();
         primaryStage.show();
         login = new Login();
@@ -80,7 +83,9 @@ public class ApplicationController extends Application {
         images.put("belkin3", new ProxyImage("Main_Belkin_Clean/Belkin_3clean.png"));
         images.put("belkin4", new ProxyImage("Main_Belkin_Clean/Belkin_4clean.png"));
         images.put("campus", new ProxyImage("Main_Belkin_Clean/campusclean.png"));
-        images.put("elevator", new ProxyImage("Icon_PNGs/ElevatorT.png"));
+
+        extraImages = new HashMap<>();
+        extraImages.put("elevator", new ProxyImage("Icon_PNGs/ElevatorT.png"));
     }
 
     /**
@@ -159,6 +164,22 @@ public class ApplicationController extends Application {
         }
     }
 
+    public Image getExtraImage (String floor) {
+        ProxyImage proxyFloor = extraImages.get(floor);
+        if (proxyFloor != null) {
+            try {
+                return proxyFloor.getValue();
+            }
+            catch (IllegalArgumentException e){
+                e.printStackTrace();
+                return null;
+            }
+        }
+        else {
+            return null;
+        }
+    }
+
     /**
      * Create map directory admin app
      */
@@ -178,7 +199,7 @@ public class ApplicationController extends Application {
                 AdminController controller = loader.<AdminController>getController();
                 controller.init(map, this, adminStage);
                 adminStage.setTitle("Directory Admin");
-                adminStage.setScene(new Scene(root, 600, 600));
+                adminStage.setScene(new Scene(root, 800, 800));
                 adminStage.centerOnScreen();
                 adminStage.show();
 
@@ -194,7 +215,7 @@ public class ApplicationController extends Application {
      *
      */
     public void createLoginAdmin(){
-        if(adminStage != null) {
+        if(adminStage.isShowing()) {
             adminStage.toFront();
             return;
         }
@@ -207,7 +228,7 @@ public class ApplicationController extends Application {
             controller.init(map, this, adminStage);
             adminStage.setTitle("Login");
             adminStage.initOwner(pStage);
-            adminStage.setScene(new Scene(root, 350, 150));
+            adminStage.setScene(new Scene(root));
             adminStage.show();
         } catch (IOException e){
             e.printStackTrace();
@@ -219,7 +240,6 @@ public class ApplicationController extends Application {
     }
 
     public boolean login(String uname, String passwd){
-
         return login.signIn(uname, passwd);
     }
 
@@ -247,6 +267,7 @@ public class ApplicationController extends Application {
 
         save();
         adminStage.close();
+
         //createPatientDisplay();
     }
 

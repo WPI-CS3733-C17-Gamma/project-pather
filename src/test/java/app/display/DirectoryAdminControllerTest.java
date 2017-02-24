@@ -1,6 +1,5 @@
 package app.display;
 
-import app.display.DirectoryAdminController;
 import app.dataPrimitives.DirectoryEntry;
 import app.dataPrimitives.Room;
 import app.datastore.Directory;

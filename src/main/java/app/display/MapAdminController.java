@@ -30,6 +30,18 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import javafx.stage.WindowEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
+import javax.swing.plaf.basic.BasicComboBoxUI;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -50,6 +62,8 @@ public class MapAdminController extends DisplayController {
         ADD_CONNECTION, // the user is adding connections
         ADD_ELEVATOR,
         DRAG_NODE,
+        DELETE_NODE,
+        DELETE_CONNECTION
     }
 
     State currentState = State.NONE;
@@ -103,6 +117,7 @@ public class MapAdminController extends DisplayController {
         togglebuttonChainAdd.setUserData(State.CHAIN_ADD);
         togglebuttonAddElevator.setUserData(State.ADD_ELEVATOR);
 
+
         mapPane.widthProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
@@ -117,6 +132,8 @@ public class MapAdminController extends DisplayController {
                 drawMap();
             }
         });
+
+
         List<String> choices = new ArrayList<>(map.getPathingAlgorithmList());
         chooseAlgorithm.setItems(FXCollections.observableList(choices));
         chooseAlgorithm.setValue(map.getPathingAlgorithm());
@@ -149,6 +166,17 @@ public class MapAdminController extends DisplayController {
             @Override
             public void changed(ObservableValue ov, String t, String t1) {
                 setMap(t1);
+            }
+        });
+        /** Added the ability to change a room name by pressing enter on the selected combo box
+         */
+        roomName.addEventFilter(KeyEvent.KEY_PRESSED, e->{
+            if(e.getCode() == KeyCode.ENTER){
+                System.out.println(roomName.getEditor().getText());
+                roomName.setValue(roomName.getEditor().getText());
+                addRoom();
+                mapPane.requestFocus();
+                drawMap();
             }
         });
         imageviewMap.toBack();
@@ -231,6 +259,8 @@ public class MapAdminController extends DisplayController {
         floorSelector.setValue("floor3");
         drawMap();
         //------------------------------------------------------------------------------------------------------------------
+        stage.addEventFilter(KeyEvent.KEY_PRESSED, event -> handleKey(event));
+
     }
 
     /**
@@ -250,6 +280,7 @@ public class MapAdminController extends DisplayController {
             .forEach(node -> drawNode(node, imageviewMap));
         highlightSelected();
         addFloorLabel(this.currentMap);
+
     }
 
     /**
@@ -628,6 +659,7 @@ public class MapAdminController extends DisplayController {
                 selected2.setFill(Color.PURPLE);
             }
         }
+
     }
 
     /**
@@ -676,6 +708,8 @@ public class MapAdminController extends DisplayController {
             case ADD_ELEVATOR:
                 handleMouseEventAddElevator(m);
                 break;
+
+
         }
         displayRoom(selectedNode);
         drawMap();
@@ -798,7 +832,12 @@ public class MapAdminController extends DisplayController {
         if (!roomName.isFocused()) {
             switch (key.getCode()) {
                 case DELETE:
+                    changeState(State.NONE);
                     deleteSelected();
+                    break;
+                case BACK_SPACE:
+                    changeState(State.NONE);
+                    deleteConnection();
                     break;
                 case N:
                     changeState(State.ADD_NODES);

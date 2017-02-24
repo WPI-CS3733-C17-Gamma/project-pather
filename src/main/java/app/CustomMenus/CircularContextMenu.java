@@ -24,6 +24,7 @@ public class CircularContextMenu extends Popup {
     ContextMenuElement highlight = new ContextMenuElement(Color.rgb(41, 191,191),Color.rgb(41, 191,191),this,null);
     double angle;
     CentralDisplay display = new CentralDisplay(innerRadius,outerRadius);
+
     EventHandler<MouseEvent> windowMouseRelease = new EventHandler<MouseEvent>() {
         @Override
         public void handle(MouseEvent event) {
@@ -47,9 +48,6 @@ public class CircularContextMenu extends Popup {
      * Default Constructor
      */
     public CircularContextMenu(){
-        this.getScene().addEventFilter(MouseEvent.MOUSE_DRAGGED, e->{
-            System.out.println("dragged");
-        });
         highlight.background.setMouseTransparent(true);
         this.addEventHandler(MouseEvent.MOUSE_RELEASED, new EventHandler<MouseEvent>() {
             @Override
@@ -281,6 +279,8 @@ public class CircularContextMenu extends Popup {
     }
     @Override
     public void hide(){
+        getOwnerWindow().removeEventFilter(MouseEvent.MOUSE_RELEASED, windowMouseRelease);
+        getOwnerWindow().removeEventHandler(MouseEvent.MOUSE_DRAGGED, windowMouseDrag);
         super.hide();
     }
 

@@ -1,14 +1,8 @@
 package app.display;
-
 import app.CustomMenus.CircularContextMenu;
 import app.applicationControl.ApplicationController;
-import app.applicationControl.Login;
-import app.applicationControl.RealImage;
 import app.dataPrimitives.*;
 import app.pathfinding.PathNotFoundException;
-import com.sun.javafx.geom.BaseBounds;
-import com.sun.javafx.geom.transform.BaseTransform;
-import com.sun.javafx.scene.BoundsAccessor;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -25,7 +19,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.DropShadow;
-import javafx.scene.effect.Effect;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -37,13 +30,12 @@ import javafx.scene.shape.Shape;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * controls all interaction with the patient display
@@ -628,7 +620,7 @@ public class PatientController extends DisplayController implements Initializabl
             //add elevator icon if applicable
             if(node.isElevator()){
                 ImageView image = new ImageView();
-                image.setImage(applicationController.getImage("elevator"));
+                image.setImage(applicationController.getExtraImage("elevator"));
                 image.setPreserveRatio(true);
                 image.setFitWidth(20);
                 image.setFitHeight(20);
@@ -656,6 +648,7 @@ public class PatientController extends DisplayController implements Initializabl
                 labels.add(current);
             }
         }
+	drawnObjects.addAll(labels);
         return labels;
     }
 
@@ -665,8 +658,11 @@ public class PatientController extends DisplayController implements Initializabl
      */
     public void displayRoomLabels(LinkedList<Label> labels){
         for(Label label: labels){
-            anchorPane.getChildren().add(label);
-        }
+	    if(! anchorPane.getChildren().contains(label)){
+		anchorPane.getChildren().add(label);
+	    }
+
+	}
     }
 
     public void textDirection(){

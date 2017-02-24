@@ -1,7 +1,6 @@
 package app.display;
 
 import app.applicationControl.ApplicationController;
-import app.applicationControl.Login;
 import app.datastore.Map;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
