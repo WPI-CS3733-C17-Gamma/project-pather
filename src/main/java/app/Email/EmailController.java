@@ -4,12 +4,10 @@ import app.applicationControl.ApplicationController;
 import app.datastore.Map;
 import com.sun.media.jfxmedia.logging.Logger;
 
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.Transport;
+import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import java.util.Properties;
 
 /**
  * Created by saahil claypool on 2/23/2017.
@@ -20,8 +18,9 @@ public class EmailController {
     Map map;
     String username;
     String password;
-
     Session session;
+    EmailPoller poller;
+    int runs;
 
     /**
      * create new application
@@ -30,11 +29,12 @@ public class EmailController {
      * @param username
      * @param password
      */
-    public EmailController (ApplicationController applicationController, Map map, String username, String password){
+    public EmailController (ApplicationController applicationController, Map map, String username, String password, int runs){
         this.applicationController =applicationController;
         this.map = map;
         this.username = username;
         this.password = password;
+        this.runs = runs;
     }
 
     /**
@@ -43,11 +43,38 @@ public class EmailController {
      * @param map
      */
     public EmailController (ApplicationController applicationController, Map map){
-        this (applicationController, map, "projectpather@gmail.com", "ProjectPatherGamma");
+        this (applicationController, map, "projectpather@gmail.com", "ProjectPatherGamma", 30);
     }
 
-    public void start() {
 
+    /**
+     * Start the polling system
+     */
+    public void start() {
+        Properties props = new Properties();
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.port", "587");
+        Session session = Session.getInstance(props,
+            new javax.mail.Authenticator() {
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication(username, password);
+
+                }
+
+            });
+        poller = new EmailPoller(this, username, password, session);
+        poller.start();
+        System.out.println("did return");
+    }
+
+    /**
+     * interupt the child thread
+     */
+    public void stop() {
+        poller.isRunning = false;
+        poller.interrupt();
     }
 
     public boolean send (String to, String messageContents) {

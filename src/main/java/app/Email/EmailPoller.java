@@ -10,6 +10,7 @@ public class EmailPoller extends Thread{
     String password;
     Session session;
     EmailController emailController;
+    volatile boolean isRunning = true;
 
     Store store;
     Folder folder;
@@ -29,11 +30,11 @@ public class EmailPoller extends Thread{
         this.session = session;
     }
     @Override
-    public synchronized void start() {
+    public synchronized void run() {
         System.out.println("Started new thread");
         int i = 0;
         // start checking for new messages every second
-        while (i++ < 1) {
+        while ( isRunning) {
             try {
                 login();
                 Message[] new_messages = poll();
@@ -98,7 +99,7 @@ public class EmailPoller extends Thread{
      */
     public void handleMessage (Message message) throws Exception {
         MessageHandler handler = new MessageHandler(emailController, message, session);
-        handler.start();
+        handler.handleMessage();
     }
 
 

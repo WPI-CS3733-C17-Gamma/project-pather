@@ -1,5 +1,6 @@
 package app.applicationControl;
 
+import app.Email.EmailController;
 import app.datastore.Map;
 import app.display.AdminController;
 import app.display.DisplayController;
@@ -40,6 +41,7 @@ public class ApplicationController extends Application {
     Stage adminStage;
     Login login;
     Scene currentScene;
+    EmailController emailController ;
 
     // NOTE with proxy pattern this will change to a prox image
     HashMap<String, ProxyImage> images;
@@ -53,6 +55,8 @@ public class ApplicationController extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        emailController = new EmailController(this, map);
+        emailController.start();
         initialize();
         this.pStage = primaryStage;
         adminStage = new Stage();
@@ -292,6 +296,7 @@ public class ApplicationController extends Application {
     @Override
     public void stop () {
         databaseManager.write(map);
+        emailController.stop();
         logger.info("Application Closed at {}\n", Calendar.getInstance().getTime().toString());
     }
 
