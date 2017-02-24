@@ -257,10 +257,8 @@ public class PatientController extends DisplayController implements Initializabl
      */
     public void selectPatientImage(MouseEvent e){
         if (e.getSource() instanceof Button) {
-
-            imageView.setImage(applicationController.getFloorImage(currentMap));
             Button temp = (Button) e.getSource();
-	    currentMap = temp.getId();
+	        currentMap = temp.getId();
             imageView.setImage(applicationController.getFloorImage(temp.getId()));
             if (previousButton != null){
                 //return to default image color
