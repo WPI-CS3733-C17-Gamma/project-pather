@@ -24,6 +24,24 @@ public class CircularContextMenu extends Popup {
     ContextMenuElement highlight = new ContextMenuElement(Color.rgb(41, 191,191),Color.rgb(41, 191,191),this,null);
     double angle;
     CentralDisplay display = new CentralDisplay(innerRadius,outerRadius);
+    EventHandler<MouseEvent> windowMouseRelease = new EventHandler<MouseEvent>() {
+        @Override
+        public void handle(MouseEvent event) {
+            fireOption(event);
+            getOwnerWindow().removeEventFilter(MouseEvent.MOUSE_RELEASED, windowMouseRelease);
+            getOwnerWindow().removeEventHandler(MouseEvent.MOUSE_DRAGGED, windowMouseDrag);
+            event.consume();
+
+        }
+    };
+    EventHandler<MouseEvent> windowMouseDrag = new EventHandler<MouseEvent>() {
+        @Override
+        public void handle(MouseEvent event) {
+            drawHighlightDrag(event);
+            event.consume();
+
+        }
+    };
 
     /**
      * Default Constructor
@@ -162,15 +180,14 @@ public class CircularContextMenu extends Popup {
      * @param anchorY
      */
     public void show(Node nodeOwner, double anchorX, double anchorY ){
+        setMoustTransparent(false);
+
         super.show(nodeOwner, anchorX - outerRadius, anchorY - outerRadius);
-        getOwnerWindow().addEventFilter(MouseEvent.MOUSE_DRAGGED,e->{
-            drawHighlightDrag(e);
-        });
-        getOwnerWindow().addEventFilter(MouseEvent.MOUSE_RELEASED, e->{
-            fireOption(e);
-        });
+        getOwnerWindow().addEventFilter(MouseEvent.MOUSE_DRAGGED, windowMouseDrag);
+        getOwnerWindow().addEventFilter(MouseEvent.MOUSE_RELEASED, windowMouseRelease);
         super.requestFocus();
     }
+
 
     public String toString(){
         return("This menu has: " + menuElements.size() + " options.");
@@ -264,13 +281,19 @@ public class CircularContextMenu extends Popup {
     }
     @Override
     public void hide(){
-//        getOwnerWindow().addEventHandler(MouseEvent.MOUSE_DRAGGED, e->{
-//
-//        });
-//        getOwnerWindow().addEventHandler(MouseEvent.MOUSE_MOVED, e->{
-//
-//        });
         super.hide();
+    }
+
+    public void setMoustTransparent(boolean value){
+        if(value) {
+            for (ContextMenuElement element : menuElements) {
+                element.background.setMouseTransparent(true);
+            }
+        }else {
+            for (ContextMenuElement element : menuElements) {
+                element.background.setMouseTransparent(false);
+            }
+        }
     }
 }
 

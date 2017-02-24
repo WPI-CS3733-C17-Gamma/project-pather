@@ -184,6 +184,7 @@ public class MapAdminController extends DisplayController {
         EventHandler<MouseEvent> addNodeOption = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
+                System.out.println("node added by context menu" );
                 addNode(contextToGraph(contextEvent));
                 selectedNode = null;
                 drawMap();
@@ -195,7 +196,6 @@ public class MapAdminController extends DisplayController {
             @Override
             public void handle(MouseEvent event) {
                 togglebuttonAddConnections.fire();
-                drawMap();
                 screenMenu.hide();
                 nodeMenu.hide();
             }
@@ -640,7 +640,7 @@ public class MapAdminController extends DisplayController {
      */
     public void changeState (State state) {
         this.currentState = state;
-
+        System.out.println("state changed to: " + currentState);
         if (currentState != State.NONE) {
             selectedNode = null;
             secondaryNode = null;
@@ -744,7 +744,7 @@ public class MapAdminController extends DisplayController {
                 // just move the point every drag event
                 drawMap();
         }
-        screenMenu.fireEvent(e);
+//        screenMenu.fireEvent(e);
     }
 
     /**
