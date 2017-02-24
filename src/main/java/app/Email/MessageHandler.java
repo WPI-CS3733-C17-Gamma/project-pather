@@ -10,7 +10,7 @@ import javax.mail.BodyPart;
 /**
  * Created by saahil claypool on 2/23/2017.
  */
-public class MessageHandler extends Thread {
+public class MessageHandler {
     EmailController emailController;
     Message message;
     Session session;
@@ -19,17 +19,6 @@ public class MessageHandler extends Thread {
         this.emailController = eController;
         this.message = message;
         this.session = session;
-    }
-
-    @Override
-    public synchronized void run() {
-        try {
-            handleMessage();
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println(e.toString());
-            System.out.println("handle message thread failed");
-        }
     }
 
     public void handleRealContent (String content) {
