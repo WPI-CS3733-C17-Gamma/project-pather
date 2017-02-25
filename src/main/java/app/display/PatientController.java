@@ -555,22 +555,16 @@ public class PatientController extends DisplayController implements Initializabl
         }
     }
 
-    public void setMouseToHand(MouseEvent e){
-        ((Label)e.getSource()).getScene().setCursor(Cursor.HAND); //Change cursor to crosshair
-    }
-
-    public void setMouseToNormal(MouseEvent e){
-        ((Label)e.getSource()).getScene().setCursor(Cursor.DEFAULT); //Change cursor to crosshair
-    }
-
+    /**
+     * display the path to the room when clicked on the patient display map
+     * @param e
+     */
     public void goToSelectedRoom(MouseEvent e){
         if (e.getSource() instanceof Label){
             Label temp = (Label) e.getSource();
             searchBar.setText(temp.getText());
             startSearch();
             getPath(map.getKioskLocation(),map.getRoomFromName(temp.getText()).getLocation());
-//            search();
-//            System.out.println("clicked room: " + temp.getText());
         }
     }
 
@@ -821,6 +815,23 @@ public class PatientController extends DisplayController implements Initializabl
 
     public void hideOptions(){
         options.setVisible(false);
+    }
+
+
+    /**
+     * change the cursor to hand (like the one on top of buttons)
+     * @param e
+     */
+    public void setMouseToHand(MouseEvent e){
+        ((Label)e.getSource()).getScene().setCursor(Cursor.HAND);
+    }
+
+    /**
+     * set the cursor to default
+     * @param e
+     */
+    public void setMouseToNormal(MouseEvent e){
+        ((Label)e.getSource()).getScene().setCursor(Cursor.DEFAULT);
     }
 }
 
