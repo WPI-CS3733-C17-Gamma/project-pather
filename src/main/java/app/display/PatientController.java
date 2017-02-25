@@ -109,7 +109,7 @@ public class PatientController extends DisplayController implements Initializabl
      * display the image on the main patient screen
      */
     public void displayImage() {
-        Image floor = applicationController.getImage(currentMap);
+        Image floor = applicationController.getFloorImage(currentMap);
         if (displayState == state.PATIENT_DEFAULT){
             imageView.setImage(floor);
         }
@@ -257,11 +257,9 @@ public class PatientController extends DisplayController implements Initializabl
      */
     public void selectPatientImage(MouseEvent e){
         if (e.getSource() instanceof Button) {
-
-            imageView.setImage(applicationController.getImage(currentMap));
             Button temp = (Button) e.getSource();
-	    currentMap = temp.getId();
-            imageView.setImage(applicationController.getImage(temp.getId()));
+	        currentMap = temp.getId();
+            imageView.setImage(applicationController.getFloorImage(temp.getId()));
             if (previousButton != null){
                 //return to default image color
                 previousButton.setStyle("-fx-background-color: #F7F7F7");
@@ -358,7 +356,7 @@ public class PatientController extends DisplayController implements Initializabl
                 currentImageView.setFitHeight(75);
                 currentImageView.setFitWidth(133);
                 currentImageView.setOnMousePressed(e -> mapChoice(e));
-                currentImageView.setImage(applicationController.getImage(p.getFloor()));
+                currentImageView.setImage(applicationController.getFloorImage(p.getFloor()));
                 currentImageView.setId(x + "floor in list");
                 logger.debug("Current image view id: {}", currentImageView.getId());
                multiMapDisplayMenu.getChildren().add(currentImageView);
@@ -453,7 +451,7 @@ public class PatientController extends DisplayController implements Initializabl
      */
     public void displaySubPath (ImageView mapImage, SubPath subPath, boolean drawLabels,int nodeRadius, int lableFontSize) {
         GraphNode prev = null;
-        mapImage.setImage(applicationController.getImage(subPath.getFloor()));
+        mapImage.setImage(applicationController.getFloorImage(subPath.getFloor()));
         List<Shape> listToDraw = new ArrayList<>();
         Shape startPoint = new Shape() {
             @Override
@@ -622,7 +620,7 @@ cur = map.getRoomFromName(roomName);
             //add elevator icon if applicable
             if(node.isElevator()){
                 ImageView image = new ImageView();
-                image.setImage(applicationController.getExtraImage("elevator"));
+                image.setImage(applicationController.getIconImage("elevator"));
                 image.setPreserveRatio(true);
                 image.setFitWidth(20);
                 image.setFitHeight(20);

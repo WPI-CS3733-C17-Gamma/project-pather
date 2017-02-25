@@ -32,12 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-import javax.swing.plaf.basic.BasicComboBoxUI;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -61,7 +56,9 @@ public class MapAdminController extends DisplayController {
     State currentState = State.NONE;
     //    MapAdminDisplay display;
     GraphNode selectedNode;
+    List<GraphNode> highlightedNodes;
     GraphNode secondaryNode;
+    Rectangle selectionRectangle = new Rectangle();
     Room activeRoom ;
 
     // keep track of the objects that have been drawn on the screen
@@ -91,6 +88,8 @@ public class MapAdminController extends DisplayController {
 
     private GraphNode tempNode ;
     private String currentMap;
+    private double selectionPointx;
+    private double selectionPointy;
 
     /**
      *  Construct map admin controller
@@ -105,6 +104,7 @@ public class MapAdminController extends DisplayController {
         togglebuttonAddConnections.setUserData(State.ADD_CONNECTION);
         togglebuttonChainAdd.setUserData(State.CHAIN_ADD);
         togglebuttonAddElevator.setUserData(State.ADD_ELEVATOR);
+        highlightedNodes = new LinkedList<>();
 
 
         mapPane.widthProperty().addListener(new ChangeListener<Number>() {
@@ -188,7 +188,18 @@ public class MapAdminController extends DisplayController {
             .forEach(node -> drawNode(node, imageviewMap));
         highlightSelected();
         addFloorLabel(this.currentMap);
+        addSelectionRectangle();
 
+    }
+    /**
+     * draws selection rectangle
+     */
+    public void addSelectionRectangle(){
+        this.miscDrawnObjects.add(new Circle(100,100,10));
+        selectionRectangle.setFill(Color.rgb(145,228,255,0.4));
+        selectionRectangle.setMouseTransparent(true);
+        mapPane.getChildren().add(selectionRectangle);
+        this.miscDrawnObjects.add(selectionRectangle);
     }
 
     /**
@@ -390,6 +401,13 @@ public class MapAdminController extends DisplayController {
             selectedNode = null;
             drawMap();
         }
+        if(highlightedNodes.size() > 0){
+            for (GraphNode node: highlightedNodes) {
+                map.deleteNode(node);
+                drawMap();
+            }
+            highlightedNodes.clear();
+        }
     }
 
     /**
@@ -444,6 +462,21 @@ public class MapAdminController extends DisplayController {
         miscDrawnObjects.add(line);
     }
 
+    /**
+     * convert point to map coordinates
+     * @param x
+     * @param y
+     * @return FlorPoint
+     */
+    private FloorPoint pointToGraph(double x, double y, ImageView imageView) {
+        double imageWidth = imageView.getBoundsInLocal().getWidth();
+        double imageHeight = imageView.getBoundsInLocal().getHeight();
+
+        int newX = (int) (x * 1000. / imageWidth);
+        int newY = (int) (y * 1000. / imageHeight);
+
+        return new FloorPoint(newX, newY, currentMap);
+    }
     /**
      * convert to map coords
      * @param m
@@ -519,6 +552,14 @@ public class MapAdminController extends DisplayController {
     public void highlightSelected () {
 //        miscDrawnObjects.forEach(shape -> shape.setFill(Color.BLUE));
         drawnNodes.values().forEach(shape -> shape.setFill(Color.BLUE));
+        if(highlightedNodes.size() > 0){
+            for (GraphNode node:highlightedNodes) {
+                Shape selected = drawnNodes.get(node.id);
+                if (selected != null) {
+                    selected.setFill(Color.RED);
+                }
+            }
+        }
         if(selectedNode != null) {
             Shape selected1 = drawnNodes.get(selectedNode.id);
             if(selected1 != null) {
@@ -561,6 +602,9 @@ public class MapAdminController extends DisplayController {
         if (roomName.isFocused()){
             mapPane.requestFocus(); //deselects textbox if click outside
         }
+        initRectangle(m);
+        selectionPointx = m.getX();
+        selectionPointy = m.getY();
         switch (currentState){
             case NONE:
                 // Possible state changing logic goes here
@@ -620,14 +664,81 @@ public class MapAdminController extends DisplayController {
     }
 
     /**
+     * Initialises the selection rectangle on click
+     * @param e
+     */
+    private void initRectangle(MouseEvent e){
+        highlightedNodes.clear();
+        selectionRectangle.setX(e.getX() - mapPane.getTranslateX());
+        selectionRectangle.setY(e.getY() - mapPane.getTranslateY());
+    }
+
+    /**
+     * Handles rectangle drag
+     * @param e
+     */
+    private void handleRectangleDrag(MouseEvent e){
+          if((e.getX()- selectionPointx) > 0) {
+            selectionRectangle.setX(selectionPointx);
+            selectionRectangle.setWidth(e.getX() - selectionPointx);
+
+            if ((e.getY() - selectionPointy > 0)) {
+                for (Shape node: drawnNodes.values()) {
+                    if((node.getLayoutX() > selectionPointx ) && (node.getLayoutX() < (e.getX()))
+                        && (node.getLayoutY() > selectionPointy) && (node.getLayoutY() < e.getY())) {
+                        highlightedNodes.add(map.getGraphNode(pointToGraph(node.getLayoutX(), node.getLayoutY(), imageviewMap)));
+                        node.setFill(Color.RED);
+                    }
+                }
+                selectionRectangle.setY(selectionPointy);
+                selectionRectangle.setHeight(e.getY() - selectionPointy);
+            } else {
+                for (Shape node: drawnNodes.values()) {
+                    if((node.getLayoutX() > selectionPointx ) && (node.getLayoutX() < (e.getX()))
+                        && (node.getLayoutY() < selectionPointy) && (node.getLayoutY() > e.getY())) {
+                        node.setFill(Color.RED);
+                    }
+                }
+                selectionRectangle.setHeight(selectionPointy - e.getY());
+                selectionRectangle.setY(e.getY());
+            }
+        }else{
+            selectionRectangle.setX(e.getX());
+            selectionRectangle.setWidth(-(e.getX() - selectionPointx));
+            if((e.getY() - selectionPointy > 0)) {
+                for (Shape node: drawnNodes.values()) {
+                    if((node.getLayoutX() < selectionPointx ) && (node.getLayoutX() > (e.getX()))
+                        && (node.getLayoutY() > selectionPointy) && (node.getLayoutY() < e.getY())) {
+                        node.setFill(Color.RED);
+                    }
+                }
+                selectionRectangle.setY(selectionPointy);
+                selectionRectangle.setHeight(e.getY() - selectionPointy);
+            }else{
+                for (Shape node: drawnNodes.values()) {
+                    if((node.getLayoutX() < selectionPointx ) && (node.getLayoutX() > (e.getX()))
+                        && (node.getLayoutY() < selectionPointy) && (node.getLayoutY() > e.getY())) {
+                        node.setFill(Color.RED);
+                    }
+                }
+                selectionRectangle.setHeight(selectionPointy - e.getY());
+                selectionRectangle.setY(e.getY());
+            }
+        }
+    }
+    /**
      * handle drag event
      * @param e
      */
     public void handleDragEvent (MouseEvent e) {
+        handleRectangleDrag(e);
         switch (currentState) {
             case NONE:
                 if(selectedNode != null) {
                     currentState = State.DRAG_NODE;
+                }
+                else{
+
                 }
                 break;
         }
@@ -752,11 +863,24 @@ public class MapAdminController extends DisplayController {
     }
 
     /**
+     * Helper for handling rectangle release
+     */
+    private void rectangleRelease(){
+        mapPane.getChildren().remove(selectionRectangle);
+        selectionRectangle.setHeight(0);
+        selectionRectangle.setWidth(0);
+        miscDrawnObjects.remove(selectionRectangle);
+        for (GraphNode node: highlightedNodes) {
+
+        }
+    }
+    /**
      * Handle the release event
      * Each state can implement a release event
      * @param m
      */
     public void isReleased(MouseEvent m){
+        rectangleRelease();
         switch (currentState){
             case NONE:
                 break;
@@ -798,7 +922,7 @@ public class MapAdminController extends DisplayController {
      * @param loc
      */
     private void setMap(String loc){
-        Image floorImage = applicationController.getImage(loc);
+        Image floorImage = applicationController.getFloorImage(loc);
         imageviewMap.setImage(floorImage);
         currentMap = loc;
 
