@@ -23,7 +23,7 @@ public class EmailController {
     EmailPoller poller;
     int runs;
 
-    private enum phoneCompanies{
+    public enum phoneCompanies{
         ATT,            //AT&T: number@txt.att.net
         TMOBILE,        //T-Mobile: number@tmomail.net
         VERIZON,        //Verizon: number@vzwpix.com (text + photo)
@@ -159,19 +159,15 @@ public class EmailController {
     }
 
 
-    boolean sendText(double number, String message){
+    boolean sendText(double number, phoneCompanies carrier,  String message){
 
-        String email = getPhoneEmail(number);
+        String email = getPhoneEmail(carrier);
         return send(number+email, message);
 
     }
 
-    private String getPhoneEmail(double number){
-
-        phoneCompanies company = phoneCompanies.ATT;
-
-
-        return phone2Email.get(company);
+    private String getPhoneEmail(phoneCompanies carrier){
+        return phone2Email.get(carrier);
     }
 
 
