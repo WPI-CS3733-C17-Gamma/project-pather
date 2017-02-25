@@ -12,6 +12,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -108,7 +109,7 @@ public class PatientController extends DisplayController implements Initializabl
      * display the image on the main patient screen
      */
     public void displayImage() {
-        Image floor = applicationController.getImage(currentMap);
+        Image floor = applicationController.getFloorImage(currentMap);
         if (displayState == state.PATIENT_DEFAULT){
             imageView.setImage(floor);
         }
@@ -256,11 +257,9 @@ public class PatientController extends DisplayController implements Initializabl
      */
     public void selectPatientImage(MouseEvent e){
         if (e.getSource() instanceof Button) {
-
-            imageView.setImage(applicationController.getImage(currentMap));
             Button temp = (Button) e.getSource();
-	    currentMap = temp.getId();
-            imageView.setImage(applicationController.getImage(temp.getId()));
+	        currentMap = temp.getId();
+            imageView.setImage(applicationController.getFloorImage(temp.getId()));
             if (previousButton != null){
                 //return to default image color
                 previousButton.setStyle("-fx-background-color: #F7F7F7");
@@ -298,8 +297,6 @@ public class PatientController extends DisplayController implements Initializabl
         for (Label label :roomLabels){
             anchorPane.getChildren().remove(label);
         }
-
-
     }
 
     /**
@@ -357,7 +354,7 @@ public class PatientController extends DisplayController implements Initializabl
                 currentImageView.setFitHeight(75);
                 currentImageView.setFitWidth(133);
                 currentImageView.setOnMousePressed(e -> mapChoice(e));
-                currentImageView.setImage(applicationController.getImage(p.getFloor()));
+                currentImageView.setImage(applicationController.getFloorImage(p.getFloor()));
                 currentImageView.setId(x + "floor in list");
                 logger.debug("Current image view id: {}", currentImageView.getId());
                multiMapDisplayMenu.getChildren().add(currentImageView);
@@ -452,7 +449,7 @@ public class PatientController extends DisplayController implements Initializabl
      */
     public void displaySubPath (ImageView mapImage, SubPath subPath, boolean drawLabels,int nodeRadius, int lableFontSize) {
         GraphNode prev = null;
-        mapImage.setImage(applicationController.getImage(subPath.getFloor()));
+        mapImage.setImage(applicationController.getFloorImage(subPath.getFloor()));
         List<Shape> listToDraw = new ArrayList<>();
         Shape startPoint = new Shape() {
             @Override
@@ -520,6 +517,11 @@ public class PatientController extends DisplayController implements Initializabl
     }
 
 
+    /**
+     * Display labels on the patient map and clickable
+     * @param floorName
+     * @param imageView
+     */
     public void drawRoomLabel (String floorName, ImageView imageView) {
         List<String> roomNames= map.getAllRooms();
         for (String roomName : roomNames) {
@@ -535,16 +537,33 @@ public class PatientController extends DisplayController implements Initializabl
             Label label = new Label(labelName);
             label.setLayoutX(imageLoc.getX() + 3);
             label.setLayoutY(imageLoc.getY() + 3);
+            label.setOnMousePressed(e -> goToSelectedRoom(e));
+            label.setOnMouseEntered(e -> setMouseToHand(e));
+            label.setOnMouseExited(e -> setMouseToNormal(e));
             label.setFont(Font.font ("Georgia", 10));
             label.setStyle("-fx-background-color: #F0F4F5; -fx-border-color: darkblue;-fx-padding: 2;");
             Circle circ = new Circle(2, Color.BLACK);
             circ.setLayoutX(imageLoc.getX());
             circ.setLayoutY(imageLoc.getY());
+            circ.setOnMousePressed(e -> goToSelectedRoom(e));
             anchorPane.getChildren().add(circ);
             anchorPane.getChildren().add(label);
             logger.debug("Adding Label {}", labelName);
             drawnObjects.add(label);
             drawnObjects.add(circ);
+        }
+    }
+
+    /**
+     * display the path to the room when clicked on the patient display map
+     * @param e
+     */
+    public void goToSelectedRoom(MouseEvent e){
+        if (e.getSource() instanceof Label){
+            Label temp = (Label) e.getSource();
+            searchBar.setText(temp.getText());
+            startSearch();
+            getPath(map.getKioskLocation(),map.getRoomFromName(temp.getText()).getLocation());
         }
     }
 
@@ -620,7 +639,7 @@ public class PatientController extends DisplayController implements Initializabl
             //add elevator icon if applicable
             if(node.isElevator()){
                 ImageView image = new ImageView();
-                image.setImage(applicationController.getExtraImage("elevator"));
+                image.setImage(applicationController.getIconImage("elevator"));
                 image.setPreserveRatio(true);
                 image.setFitWidth(20);
                 image.setFitHeight(20);
@@ -730,8 +749,6 @@ public class PatientController extends DisplayController implements Initializabl
         logger.info("INIT PatientController");
         displayImage();
 
-         previousButton = floor1;
-
         imageView.setMouseTransparent(true);
 
         options.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -798,6 +815,23 @@ public class PatientController extends DisplayController implements Initializabl
 
     public void hideOptions(){
         options.setVisible(false);
+    }
+
+
+    /**
+     * change the cursor to hand (like the one on top of buttons)
+     * @param e
+     */
+    public void setMouseToHand(MouseEvent e){
+        ((Label)e.getSource()).getScene().setCursor(Cursor.HAND);
+    }
+
+    /**
+     * set the cursor to default
+     * @param e
+     */
+    public void setMouseToNormal(MouseEvent e){
+        ((Label)e.getSource()).getScene().setCursor(Cursor.DEFAULT);
     }
 }
 
