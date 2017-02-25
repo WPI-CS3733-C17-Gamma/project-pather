@@ -203,6 +203,9 @@ public class MapAdminController extends DisplayController {
         EventHandler<MouseEvent> deleteNodeOption = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
+                if(currentState == State.CHAIN_ADD){
+                   togglebuttonChainAdd.fire();
+                }
                 deleteNode(selectedNode);
                 drawMap();
                 screenMenu.hide();
@@ -264,6 +267,14 @@ public class MapAdminController extends DisplayController {
                 togglebuttonChainAdd.fire();
                 screenMenu.hide();
                 nodeMenu.hide();
+            }
+        };
+        EventHandler<MouseEvent> addConnectionNodeMenu = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                double x = graphToImage(selectedNode.getLocation(),imageviewMap ).getX();
+                double y = graphToImage(selectedNode.getLocation(),imageviewMap ).getY();
+                Line line = new Line(x,y, event.getX(),event.getY());
             }
         };
         ImagePattern deleteRoomImage = new ImagePattern(new Image("/Radial Icons/Delete_Room.png"), 0, 0, 50, 50, false);
@@ -826,10 +837,12 @@ public class MapAdminController extends DisplayController {
      * @param e
      */
     public void handleMouseEventChainAdd (MouseEvent e) {
-        FloorPoint graphPoint = mouseToGraph(e);
-        addNode(graphPoint);
-        if (secondaryNode != null) {
-            addConnection(secondaryNode, selectedNode);
+        if(!e.isSecondaryButtonDown()) {
+            FloorPoint graphPoint = mouseToGraph(e);
+            addNode(graphPoint);
+            if (secondaryNode != null) {
+                addConnection(secondaryNode, selectedNode);
+            }
         }
     }
 
