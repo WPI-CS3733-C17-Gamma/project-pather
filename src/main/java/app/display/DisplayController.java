@@ -58,6 +58,7 @@ public class DisplayController {
         }
         else {
             helpLabel.setVisible(true);
+            helpLabel.toFront();
         }
     }
 
