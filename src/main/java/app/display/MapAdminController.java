@@ -225,7 +225,6 @@ public class MapAdminController extends DisplayController {
         EventHandler<MouseEvent> addNodeOption = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                System.out.println("node added by context menu" );
                 addNode(contextToGraph(contextEvent));
                 selectedNode = null;
                 drawMap();
@@ -249,15 +248,33 @@ public class MapAdminController extends DisplayController {
                 nodeMenu.hide();
             }
         };
+        EventHandler<MouseEvent> addRoomOption = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                addNode(contextToGraph(contextEvent));
+                selectedNode = map.getGraphNode(mouseToGraph(event));
+                roomName.requestFocus();
+                screenMenu.hide();
+                nodeMenu.hide();
+            }
+        };
+        EventHandler<MouseEvent> chainAddOption = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                togglebuttonChainAdd.fire();
+                screenMenu.hide();
+                nodeMenu.hide();
+            }
+        };
         ImagePattern deleteRoomImage = new ImagePattern(new Image("/Radial Icons/Delete_Room.png"), 0, 0, 50, 50, false);
         ImagePattern addRoomImage = new ImagePattern(new Image("/Radial Icons/Add_Room2.png"),0, 0, 50, 50, false);
         ImagePattern addNodeImage = new ImagePattern(new Image("/Radial Icons/Add_Node.png"),0, 0, 50, 50, false);
         ImagePattern deleteNodeImage = new ImagePattern(new Image("/Radial Icons/Delete_Node.png"),0, 0, 50, 50, false);
         ImagePattern addConnectionImage = new ImagePattern(new Image("/Icon_PNGs/atmT.png"),0,0,50,50,false);
         ImagePattern elevatorImage = new ImagePattern(new Image("/Icon_PNGs/ElevatorT.png"),0,0,50,50,false);
-        screenMenu.addOption(deleteRoomImage,Color.RED, moveUpFloorOtion,moveUpFloorOtion);//Add delete Room, add/change Room, delete node to this menu, delete elevator if this node is an elevator
+        screenMenu.addOption(addRoomImage,Color.RED, addRoomOption, addRoomOption);//Add delete Room, add/change Room, delete node to this menu, delete elevator if this node is an elevator
         screenMenu.addOption(addNodeImage,Color.AQUA, addNodeOption,addNodeOption);
-        screenMenu.addOption(elevatorImage, Color.GREEN,moveDownFloorOtion,moveDownFloorOtion);
+        screenMenu.addOption(elevatorImage, Color.GREEN, chainAddOption,chainAddOption);
         screenMenu.addOption(addConnectionImage, Color.GREEN,addConnectionOption,addConnectionOption);
 
         nodeMenu.addOption(deleteNodeImage, Color.RED,deleteNodeOption,deleteNodeOption);//Add add elevator, addnode, add elevator
