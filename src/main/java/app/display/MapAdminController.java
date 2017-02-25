@@ -62,8 +62,8 @@ public class MapAdminController extends DisplayController {
 
     // keep track of the objects that have been drawn on the screen
     HashMap<Long, Shape> drawnNodes = new HashMap<>();
-    CircularContextMenu nodeMenu = new CircularContextMenu();
-    CircularContextMenu screenMenu = new CircularContextMenu();
+    CircularContextMenu nodeMenu = new CircularContextMenu(30, 60);
+    CircularContextMenu screenMenu = new CircularContextMenu(30, 60);
     List<Node> miscDrawnObjects = new ArrayList<>();
     Stage stage;
 
@@ -268,7 +268,7 @@ public class MapAdminController extends DisplayController {
         };
         ImagePattern deleteRoomImage = new ImagePattern(new Image("/Radial Icons/Delete_Room.png"), 0, 0, 50, 50, false);
         ImagePattern addRoomImage = new ImagePattern(new Image("/Radial Icons/Add_Room2.png"),0, 0, 50, 50, false);
-        ImagePattern addNodeImage = new ImagePattern(new Image("/Radial Icons/Add_Node.png"),0, 0, 50, 50, false);
+        ImagePattern addNodeImage = new ImagePattern(new Image("/Radial Icons/new_Add_Node.png"),-1, 0, 60, 60, false);
         ImagePattern deleteNodeImage = new ImagePattern(new Image("/Radial Icons/Delete_Node.png"),0, 0, 50, 50, false);
         ImagePattern addConnectionImage = new ImagePattern(new Image("/Icon_PNGs/atmT.png"),0,0,50,50,false);
         ImagePattern elevatorImage = new ImagePattern(new Image("/Icon_PNGs/ElevatorT.png"),0,0,50,50,false);
