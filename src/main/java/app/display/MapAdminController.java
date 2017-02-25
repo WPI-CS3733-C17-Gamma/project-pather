@@ -272,10 +272,10 @@ public class MapAdminController extends DisplayController {
         ImagePattern deleteNodeImage = new ImagePattern(new Image("/Radial Icons/Delete_Node.png"),0, 0, 50, 50, false);
         ImagePattern addConnectionImage = new ImagePattern(new Image("/Icon_PNGs/atmT.png"),0,0,50,50,false);
         ImagePattern elevatorImage = new ImagePattern(new Image("/Icon_PNGs/ElevatorT.png"),0,0,50,50,false);
-        screenMenu.addOption(addRoomImage,Color.RED, addRoomOption, addRoomOption);//Add delete Room, add/change Room, delete node to this menu, delete elevator if this node is an elevator
-        screenMenu.addOption(addNodeImage,Color.AQUA, addNodeOption,addNodeOption);
-        screenMenu.addOption(elevatorImage, Color.GREEN, chainAddOption,chainAddOption);
-        screenMenu.addOption(addConnectionImage, Color.GREEN,addConnectionOption,addConnectionOption);
+        screenMenu.addOption(addRoomImage,Color.rgb(42,45,56), addRoomOption, addRoomOption);//Add delete Room, add/change Room, delete node to this menu, delete elevator if this node is an elevator
+        screenMenu.addOption(addNodeImage,Color.rgb(42,45,56), addNodeOption,addNodeOption);
+        screenMenu.addOption(elevatorImage, Color.rgb(42,45,56), chainAddOption,chainAddOption);
+        screenMenu.addOption(addConnectionImage, Color.rgb(42,45,56),addConnectionOption,addConnectionOption);
 
         nodeMenu.addOption(deleteNodeImage, Color.RED,deleteNodeOption,deleteNodeOption);//Add add elevator, addnode, add elevator
         nodeMenu.addOption(Color.ORANGE,Color.ORANGE, deleteRoom, deleteRoom);
