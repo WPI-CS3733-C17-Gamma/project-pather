@@ -2,6 +2,7 @@ package app.applicationControl.email;
 
 import app.applicationControl.ApplicationController;
 import app.dataPrimitives.GraphNode;
+import app.dataPrimitives.Room;
 import app.dataPrimitives.SubPath;
 import com.sun.media.jfxmedia.logging.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,12 +54,28 @@ public class MessageHandler {
         // give them directions again
         System.out.printf("not a help request");
         if (currentState != null && ! currentState.equals("help"))  {
-            Logger.logMsg(Logger.DEBUG,"Map: " + emailController.map );
 
-            GraphNode start = emailController.map.getRoomFromName(realContent).getLocation();
-            if (start == null) {
+            GraphNode start;
+            Room closeRoom = emailController.map.getRoomFromName(realContent);
+            if (closeRoom == null) {
+                System.out.println("Close room is null --> search");
+                List<String> closeRooms = emailController.map.subStringSearchRoom(realContent);
+                for (String room : closeRooms) {
+                    System.out.println("Close room : " + room);
+                }
+                if (closeRooms.size() > 0 ){
+                    start = emailController.map.getRoomFromName(closeRooms.get(0)).getLocation();
+                }
+            }
+            if (closeRoom == null) {
+                System.out.println("Could not find the ");
                 start = emailController.map.getKioskLocation();
             }
+
+            else {
+                start = closeRoom.getLocation();
+            }
+
             GraphNode end = emailController.map.getRoomFromName(currentState).getLocation();
             List<GraphNode> path = emailController.map.getPath(start,end);
             List<String> textDirections = emailController.map.getTextualDirections(path);
@@ -160,7 +177,7 @@ public class MessageHandler {
             }
             clean += line;
         }
-        return clean;
+        return clean.replaceAll("\\s+","");
     }
 
 }
