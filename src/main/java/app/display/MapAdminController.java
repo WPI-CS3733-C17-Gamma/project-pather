@@ -819,16 +819,13 @@ public class MapAdminController extends DisplayController {
                     deleteConnection();
                     break;
                 case N:
-                    changeState(State.ADD_NODES);
+                    toggleTools.selectToggle(togglebuttonAddNode);
                     break;
                 case C:
-                    changeState(State.ADD_CONNECTION);
-                    break;
-                case E:
-                    changeState(State.ADD_ELEVATOR);
+                    toggleTools.selectToggle(togglebuttonAddConnections);
                     break;
                 case A:
-                    changeState(State.CHAIN_ADD);
+                    toggleTools.selectToggle(togglebuttonChainAdd);
                     break;
             }
         }
