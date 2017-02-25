@@ -819,22 +819,13 @@ public class MapAdminController extends DisplayController {
                     deleteConnection();
                     break;
                 case N:
-                    togglebuttonAddNode.setSelected(true);
-                    togglebuttonAddConnections.setSelected(false);
-                    togglebuttonChainAdd.setSelected(false);
-                    changeState(State.ADD_NODES);
+                    toggleTools.selectToggle(togglebuttonAddNode);
                     break;
                 case C:
-                    togglebuttonAddNode.setSelected(false);
-                    togglebuttonAddConnections.setSelected(true);
-                    togglebuttonChainAdd.setSelected(false);
-                    changeState(State.ADD_CONNECTION);
+                    toggleTools.selectToggle(togglebuttonAddConnections);
                     break;
                 case A:
-                    togglebuttonAddNode.setSelected(false);
-                    togglebuttonAddConnections.setSelected(false);
-                    togglebuttonChainAdd.setSelected(true);
-                    changeState(State.CHAIN_ADD);
+                    toggleTools.selectToggle(togglebuttonChainAdd);
                     break;
             }
         }
