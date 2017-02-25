@@ -1,11 +1,18 @@
 package app.applicationControl.email;
 
+import app.applicationControl.ApplicationController;
+import app.dataPrimitives.GraphNode;
+import app.dataPrimitives.SubPath;
 import com.sun.media.jfxmedia.logging.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.mail.BodyPart;
     import javax.mail.Message;
-    import javax.mail.Session;
-    import javax.mail.internet.MimeMultipart;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.internet.MimeMultipart;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by saahil claypool on 2/23/2017.
@@ -15,6 +22,7 @@ public class MessageHandler {
     Message message;
     Session session;
 
+    final org.slf4j.Logger logger = LoggerFactory.getLogger(MessageHandler.class);
     public MessageHandler(EmailController eController, Message message, Session session) {
         this.emailController = eController;
         this.message = message;
@@ -30,9 +38,56 @@ public class MessageHandler {
      * @throws Exception
      */
     public void handleMessage () throws Exception {
+        Logger.logMsg(Logger.DEBUG, "Handling message");
+        System.out.printf("Handling message");
         String from = message.getFrom()[0].toString();
-        Logger.logMsg(1, "From: " + from);
-        System.out.println("From: " + from);
+        String realContent = getCleanMessage();
+        String currentState = emailController.getState(from);
+        System.out.println("realContent : " + realContent);
+
+        if (realContent.toLowerCase().contains("help")) {
+            // reply
+            emailController.sendReply(message, "Hi " + from + " " + getHelp());
+            return;
+        }
+        // give them directions again
+        System.out.printf("not a help request");
+        if (currentState != null && ! currentState.equals("help"))  {
+            Logger.logMsg(Logger.DEBUG,"Map: " + emailController.map );
+
+            GraphNode start = emailController.map.getRoomFromName(realContent).getLocation();
+            if (start == null) {
+                start = emailController.map.getKioskLocation();
+            }
+            GraphNode end = emailController.map.getRoomFromName(currentState).getLocation();
+            List<GraphNode> path = emailController.map.getPath(start,end);
+            List<String> textDirections = emailController.map.getTextualDirections(path);
+            String content = getReadableDirections(textDirections);
+            emailController.sendReply(message, content);
+        }
+        // TEMP
+        else {
+            System.out.println("Adding state");
+            emailController.addState(from, "destination");
+        }
+    }
+
+    public String getReadableDirections (List<String> unreadableDirs) {
+        String content = unreadableDirs.stream().reduce("", (acu, el) -> {
+            return acu += el + "\n";
+        });
+        return content;
+    }
+
+    /**
+     * Get the help string
+     * @return
+     */
+    public String getHelp() {
+        return "Heres how to use this." ;
+    }
+
+    public String getCleanMessage () throws Exception {
         String messageContent = getTextFromMessage(message);
         // clean the garbage
         String realContent = getRealContent(messageContent);
@@ -44,10 +99,7 @@ public class MessageHandler {
         Logger.logMsg(1,"Message content : " + messageContent);
         System.out.println("end of content");
         System.out.flush();
-
-        // reply
-        emailController.sendReply(message, realContent);
-
+        return realContent;
     }
 
     /**

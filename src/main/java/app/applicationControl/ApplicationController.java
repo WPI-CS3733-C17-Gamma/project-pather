@@ -53,9 +53,9 @@ public class ApplicationController extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        initialize();
         emailController = new EmailController(this, map);
         emailController.start();
-        initialize();
         this.pStage = primaryStage;
         adminStage = new Stage();
         createPatientDisplay();

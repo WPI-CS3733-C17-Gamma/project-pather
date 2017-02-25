@@ -1,5 +1,8 @@
 package app.applicationControl.email;
 
+import app.applicationControl.ApplicationController;
+import org.slf4j.LoggerFactory;
+
 import javax.mail.*;
 
 /**
@@ -10,6 +13,7 @@ public class EmailPoller extends Thread{
     String password;
     Session session;
     EmailController emailController;
+    final org.slf4j.Logger logger = LoggerFactory.getLogger(EmailController.class);
     volatile boolean isRunning = true;
 
     Store store;
