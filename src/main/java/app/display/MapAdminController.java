@@ -954,6 +954,10 @@ public class MapAdminController extends DisplayController {
             if (secondaryNode != null) {
                 addConnection(secondaryNode, selectedNode);
             }
+        }else{
+            if (secondaryNode != null) {
+                addConnection(secondaryNode, selectedNode);
+            }
         }
     }
 
