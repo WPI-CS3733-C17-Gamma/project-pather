@@ -31,6 +31,7 @@ import javafx.stage.WindowEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -921,7 +922,7 @@ public class MapAdminController extends DisplayController {
      * @param loc
      */
     private void setMap(String loc){
-        Image floorImage = applicationController.getImage(loc);
+        Image floorImage = applicationController.getFloorImage(loc);
         imageviewMap.setImage(floorImage);
         currentMap = loc;
 
