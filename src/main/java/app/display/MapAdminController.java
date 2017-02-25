@@ -48,9 +48,7 @@ public class MapAdminController extends DisplayController {
         CHAIN_ADD, // the user is adding nodes in a chain
         ADD_CONNECTION, // the user is adding connections
         ADD_ELEVATOR,
-        DRAG_NODE,
-        DELETE_NODE,
-        DELETE_CONNECTION
+        DRAG_NODE
     }
 
     State currentState = State.NONE;
@@ -71,6 +69,13 @@ public class MapAdminController extends DisplayController {
 
     @FXML private Button buttonSave;
     @FXML private Button buttonCancel;
+
+    @FXML private Button buttonDeleteNode;
+    @FXML private Button buttonDeleteConnection;
+    @FXML private Button buttonDeleteElevator;
+    @FXML private Button buttonAddRoom;
+    @FXML private Button defaultKioskButton;
+
     @FXML private ToggleButton togglebuttonAddNode;
     @FXML private ToggleButton togglebuttonAddConnections;
     @FXML private ToggleButton togglebuttonChainAdd;
@@ -83,7 +88,7 @@ public class MapAdminController extends DisplayController {
     @FXML private MenuButton elevatorSelector;
     @FXML private ComboBox<String> floorSelector;
 
-    @FXML private Button defaultKioskButton;
+
     @FXML private ChoiceBox chooseAlgorithm;
 
     private GraphNode tempNode ;
@@ -333,6 +338,7 @@ public class MapAdminController extends DisplayController {
      * Take the text from the roomName text field
      */
     public void addRoom () {
+        unclickToggleButtons();
         String newName = roomName.getValue();
         Room existingRoom = map.getRoomFromName(newName);
         // Entered name is empty, so delete room
@@ -396,6 +402,7 @@ public class MapAdminController extends DisplayController {
      * delete the selected node
      */
     public void deleteSelected () {
+        unclickToggleButtons();
         if(selectedNode != null) {
             map.deleteNode(selectedNode);
             selectedNode = null;
@@ -414,6 +421,7 @@ public class MapAdminController extends DisplayController {
      * Delete the selected node if it is an elevator
      */
     public void deleteElevator () {
+        unclickToggleButtons();
         if (selectedNode != null ) {
             if(selectedNode.isElevator()) {
                 boolean isEl = map.deleteElevator(selectedNode);
@@ -428,6 +436,7 @@ public class MapAdminController extends DisplayController {
      * @param node
      */
     public void deleteNode(GraphNode node){
+        unclickToggleButtons();
         map.deleteNode(node);
     }
 
@@ -541,6 +550,7 @@ public class MapAdminController extends DisplayController {
      * Change the default location of the kiosk
      */
     public void setDefaultKiosk () {
+        unclickToggleButtons();
         if (activeRoom != null) {
             map.setKiosk(activeRoom.getName());
         }
@@ -857,6 +867,10 @@ public class MapAdminController extends DisplayController {
                 addConnection(secondaryNode, selectedNode);
             }
         }
+    }
+
+    public void unclickToggleButtons(){
+        toggleTools.selectToggle(null);
     }
 
     /**
