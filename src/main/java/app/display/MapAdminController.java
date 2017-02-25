@@ -32,8 +32,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-import javax.swing.plaf.basic.BasicComboBoxUI;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -798,7 +796,7 @@ public class MapAdminController extends DisplayController {
      * @param loc
      */
     private void setMap(String loc){
-        Image floorImage = applicationController.getImage(loc);
+        Image floorImage = applicationController.getFloorImage(loc);
         imageviewMap.setImage(floorImage);
         currentMap = loc;
 
