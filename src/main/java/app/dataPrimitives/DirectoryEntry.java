@@ -11,6 +11,8 @@ public class DirectoryEntry extends Ided {
 
     List<Room> location;
 
+    String icon;
+
     public DirectoryEntry(String name, String title, List<Room> location)
     {
         this.name = name;
@@ -53,6 +55,14 @@ public class DirectoryEntry extends Ided {
     }
 
     /**
+     *
+     * @return the name of the icon associated with the entry
+     */
+    public String getIcon(){
+        return this.icon;
+    }
+
+    /**
      * @param location the new location that this entry is associated with
      */
     public void addLocation(Room location){
@@ -71,6 +81,14 @@ public class DirectoryEntry extends Ided {
      */
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    /**
+     *
+     * @param icon the name of the icon in the extra image hashmap
+     */
+    public void setIcon(String icon){
+        this.icon = icon;
     }
 
     @Override

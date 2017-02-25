@@ -84,6 +84,16 @@ public class ApplicationController extends Application {
 
         extraImages = new HashMap<>();
         extraImages.put("elevator", new ProxyImage("Icon_PNGs/ElevatorT.png"));
+        extraImages.put("cafeteria", new ProxyImage("Icon_PNGs/Cafe2T.png"));
+        extraImages.put("bathroom", new ProxyImage("Icon_PNGs/BathroomT.png"));
+        extraImages.put("waitroom", new ProxyImage("Icon_PNGs/WaitRoomT.png"));
+        extraImages.put("doctor", new ProxyImage("Icon_PNGs/DoctorT.png"));
+        extraImages.put("frontdesk", new ProxyImage("Icon_PNGs/AdmittingT.png"));
+        extraImages.put("library", new ProxyImage("Icon_PNGs/LibraryT.png"));
+        extraImages.put("giftshop", new ProxyImage("Icon_PNGs/GiftShopT.png"));
+        extraImages.put("familyRoom", new ProxyImage("Icon_PNGs/FamilyT.png"));
+        extraImages.put("emergencyroom", new ProxyImage("Icon_PNGs/EmergencyT.png"));
+
     }
 
     /**
