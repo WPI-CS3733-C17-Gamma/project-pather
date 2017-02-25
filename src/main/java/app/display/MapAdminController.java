@@ -270,7 +270,7 @@ public class MapAdminController extends DisplayController {
         ImagePattern addRoomImage = new ImagePattern(new Image("/Radial Icons/new_Add_Room.png"),0, 0, 60, 60, false);
         ImagePattern addNodeImage = new ImagePattern(new Image("/Radial Icons/new_Add_Node.png"),-1, 0, 60, 60, false);
         ImagePattern deleteNodeImage = new ImagePattern(new Image("/Radial Icons/new_Delete_Node.png"),0, 0, 60, 60, false);
-        ImagePattern addConnectionImage = new ImagePattern(new Image("/Icon_PNGs/atmT.png"),0,0,60,60,false);
+        ImagePattern addConnectionImage = new ImagePattern(new Image("/Radial Icons/new_Add_Connection.png"),0,0,60,60,false);
         ImagePattern chainAddImage = new ImagePattern(new Image("Radial Icons/new_Chain_Add.png"),0,0,60,60,false);
         screenMenu.addOption(addRoomImage,Color.rgb(42,45,56), addRoomOption, addRoomOption);//Add delete Room, add/change Room, delete node to this menu, delete elevator if this node is an elevator
         screenMenu.addOption(addNodeImage,Color.rgb(42,45,56), addNodeOption,addNodeOption);
