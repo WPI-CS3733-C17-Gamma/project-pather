@@ -13,6 +13,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -297,8 +298,6 @@ public class PatientController extends DisplayController implements Initializabl
         for (Label label :roomLabels){
             anchorPane.getChildren().remove(label);
         }
-
-
     }
 
     /**
@@ -519,6 +518,11 @@ public class PatientController extends DisplayController implements Initializabl
     }
 
 
+    /**
+     * Display labels on the patient map and clickable
+     * @param floorName
+     * @param imageView
+     */
     public void drawRoomLabel (String floorName, ImageView imageView) {
         List<String> roomNames= map.getAllRooms();
         for (String roomName : roomNames) {
@@ -534,16 +538,33 @@ public class PatientController extends DisplayController implements Initializabl
             Label label = new Label(labelName);
             label.setLayoutX(imageLoc.getX() + 3);
             label.setLayoutY(imageLoc.getY() + 3);
+            label.setOnMousePressed(e -> goToSelectedRoom(e));
+            label.setOnMouseEntered(e -> setMouseToHand(e));
+            label.setOnMouseExited(e -> setMouseToNormal(e));
             label.setFont(Font.font ("Georgia", 10));
             label.setStyle("-fx-background-color: #F0F4F5; -fx-border-color: darkblue;-fx-padding: 2;");
             Circle circ = new Circle(2, Color.BLACK);
             circ.setLayoutX(imageLoc.getX());
             circ.setLayoutY(imageLoc.getY());
+            circ.setOnMousePressed(e -> goToSelectedRoom(e));
             anchorPane.getChildren().add(circ);
             anchorPane.getChildren().add(label);
             logger.debug("Adding Label {}", labelName);
             drawnObjects.add(label);
             drawnObjects.add(circ);
+        }
+    }
+
+    /**
+     * display the path to the room when clicked on the patient display map
+     * @param e
+     */
+    public void goToSelectedRoom(MouseEvent e){
+        if (e.getSource() instanceof Label){
+            Label temp = (Label) e.getSource();
+            searchBar.setText(temp.getText());
+            startSearch();
+            getPath(map.getKioskLocation(),map.getRoomFromName(temp.getText()).getLocation());
         }
     }
 
@@ -728,8 +749,6 @@ public class PatientController extends DisplayController implements Initializabl
         logger.info("INIT PatientController");
         displayImage();
 
-         previousButton = floor1;
-
         imageView.setMouseTransparent(true);
 
         options.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -796,6 +815,23 @@ public class PatientController extends DisplayController implements Initializabl
 
     public void hideOptions(){
         options.setVisible(false);
+    }
+
+
+    /**
+     * change the cursor to hand (like the one on top of buttons)
+     * @param e
+     */
+    public void setMouseToHand(MouseEvent e){
+        ((Label)e.getSource()).getScene().setCursor(Cursor.HAND);
+    }
+
+    /**
+     * set the cursor to default
+     * @param e
+     */
+    public void setMouseToNormal(MouseEvent e){
+        ((Label)e.getSource()).getScene().setCursor(Cursor.DEFAULT);
     }
 }
 
