@@ -49,11 +49,6 @@ public class EmailController {
         PAGE            //Page Plus: number@vtext.com
     }
 
-    public enum inputType {
-        PHONE,
-        EMAIL
-    }
-
     private HashMap<phoneCompanies, String> phone2Email = new HashMap<>();
 
     private void addCompanies(){
@@ -98,7 +93,7 @@ public class EmailController {
      * @param applicationController
      * @param map
      */
-    public EmailController (ApplicationController applicationController, Map map){
+     public EmailController (ApplicationController applicationController, Map map){
         this (applicationController, map, "projectpather@gmail.com", "ProjectPatherGamma", 30);
     }
 
@@ -225,7 +220,7 @@ public class EmailController {
      * @param message
      * @return
      */
-    boolean sendText(double number, phoneCompanies carrier,  String message){
+    public boolean sendText(double number, phoneCompanies carrier,  String message){
         String email = getPhoneEmail(carrier);
         return send(number+email, message);
 

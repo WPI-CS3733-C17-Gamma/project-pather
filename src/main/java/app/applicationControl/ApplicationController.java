@@ -45,9 +45,6 @@ public class ApplicationController extends Application {
     HashMap<String, ProxyImage> floorMaps;
     HashMap<String, ProxyImage> extraImages;
 
-    boolean isLoginPage;
-
-
     final Logger logger = LoggerFactory.getLogger(ApplicationController.class);
 
 
@@ -154,6 +151,7 @@ public class ApplicationController extends Application {
         ProxyImage proxyFloor = floorMaps.get(floor);
         if (proxyFloor != null) {
             try {
+                System.out.println("Hi mom!");
                 return proxyFloor.getValue();
             }
             catch (IllegalArgumentException e){
@@ -171,16 +169,14 @@ public class ApplicationController extends Application {
         if (proxyFloor != null) {
             try {
                 return proxyFloor.getValue();
-            }
-            catch (IllegalArgumentException e){
+            } catch (IllegalArgumentException e) {
                 e.printStackTrace();
                 return null;
             }
         }
-        else {
-            return null;
-        }
+        return null;
     }
+
 
     /**
      * Create map directory admin app
@@ -281,6 +277,17 @@ public class ApplicationController extends Application {
      */
     public boolean sendEmail (String to, String message) {
         return emailController.send(to, message);
+    }
+
+    /**
+     * Send a text to given number and carrier
+     * @param number
+     * @param carrier
+     * @param message
+     * @return
+     */
+    public boolean sendText (double number, EmailController.phoneCompanies carrier, String message) {
+        return emailController.sendText(number, carrier, message);
     }
 
     /**
