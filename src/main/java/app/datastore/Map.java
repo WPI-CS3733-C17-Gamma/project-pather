@@ -2,6 +2,7 @@ package app.datastore;
 
 import app.dataPrimitives.*;
 import app.pathfinding.PathNotFoundException;
+import javafx.util.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -299,9 +300,92 @@ public class Map {
         return new LinkedList<>();
     }
 
-    /** See method {@link GraphNetwork#getDirections(List)} */
-    public List<String> getTextualDirections(List<GraphNode> path) {
-        return graph.getDirections(path);
+    /**
+     * Generates a list of textual directions for the path
+     * @param path the path to get directions for
+     * @param nextFloor
+     * @return a List of string directions
+     */
+    public LinkedList<Pair<Integer, String>> getTextualDirections(List<GraphNode> path, String nextFloor) {
+        LinkedList<Pair<Integer, String>> directions = new LinkedList<>();
+
+        int nodeNum = -1;
+        for (GraphNode node : path) {
+            nodeNum++;
+            // No directions for first and last node
+            if (nodeNum == 0) {
+                continue;
+            }
+            if(nodeNum >= path.size() - 1) {
+                String currFloor = path.get(0).getLocation().getFloor();
+                // Determine what transition is happening
+                if(nextFloor != null) {
+                    if(!currFloor.contains("floor") && nextFloor.contains("floor")) {
+                        directions.add(new Pair(nodeNum, "Enter Faulkner Hospital"));
+                    }
+                    else if(!currFloor.contains("belkin") && nextFloor.contains("belkin")) {
+                        directions.add(new Pair(nodeNum, "Enter Belkin House"));
+                    }
+                    else if(nextFloor.contains("campus")) {
+                        directions.add(new Pair(nodeNum, "Exit building"));
+                    }
+                    else {
+                        String floor = nextFloor.replaceFirst("floor|belkin", "floor ");
+                        directions.add(new Pair(nodeNum, "Take elevator to " + floor));
+                    }
+                }
+                else {
+                    directions.add(new Pair(nodeNum, "Arrive at your destination"));
+                }
+                continue;
+            }
+            // Get any nearby location
+            String landmark = "";
+            // If the current node has a name, put that in the directions
+            if(getRoomFromNode(node) != null) {
+                landmark = " at " + getRoomFromNode(node).getName();
+            }
+            else {
+                double max = 35;
+                // If a nearby node has a name use that
+                for( GraphNode nearNode : node.getAdjacent()) {
+                    double distance = node.distance(nearNode);
+                    if(distance < max && getRoomFromNode(nearNode) != null) {
+                        max = distance;
+                        // If the nearby node is the node you came from
+                        if(nearNode == path.get(nodeNum - 1)) {
+                            landmark += " away from ";
+                        }
+                        if(nearNode == path.get(nodeNum + 1)) {
+                            landmark += " towards ";
+                        }
+                        else landmark += " near ";
+                        landmark += getRoomFromNode(nearNode).getName();
+                    }
+                }
+            }
+            getRoomFromNode(node);
+            // Get a direction from the angle
+            double angle = node.getAngle(path.get(nodeNum - 1), path.get(nodeNum + 1));
+            if (angle < 80) {
+                // Sharp Right
+                directions.add(new Pair(nodeNum, "Take a sharp left" + landmark));
+            } else if (angle >= 80 && angle <= 160) {
+                // Right
+                directions.add(new Pair(nodeNum, "Take a left" + landmark));
+            } else if (angle > 160 && angle < 200 && node.getAdjacent().size() > 2 ) {
+                // No directions if there is only one path option and its straight anyway
+                // Straight
+                directions.add(new Pair(nodeNum, "Continue going straight" + landmark));
+            } else if (angle >= 200 && angle <= 280) {
+                // Left
+                directions.add(new Pair(nodeNum, "Take a right" + landmark));
+            } else if (angle >= 280) {
+                // Sharp Left
+                directions.add(new Pair(nodeNum, "Take a sharp right" + landmark));
+            }
+        }
+        return directions;
     }
 
     /**
