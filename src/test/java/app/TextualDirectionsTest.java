@@ -1,11 +1,15 @@
 package app;
 
 import app.dataPrimitives.GraphNode;
-import app.datastore.GraphNetwork;
+import app.dataPrimitives.Room;
+import app.datastore.Directory;
+import app.datastore.Map;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 
@@ -21,7 +25,10 @@ public class TextualDirectionsTest {
                           new GraphNode(20, 10, ""),
                           new GraphNode(20, 20, ""),
                           new GraphNode(30, 20, "")));
-        assertEquals("[Take a right, Take a right, Take a left]",
-                     GraphNetwork.getDirections(path).toString());
+        assertEquals("[Take a right, Take a right, Take a left, Arrive at your destination]",
+            (new Map(new Directory(null, new HashMap<String, Room>()), null, null))
+                .getTextualDirections(path, null)
+                .stream().map(p -> p.getValue()).collect(Collectors.toList()).toString());
+
     }
 }

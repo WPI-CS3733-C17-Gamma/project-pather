@@ -27,14 +27,14 @@
                 </ToggleButton>
                 <ToggleButton fx:id="togglebuttonAddConnections" maxWidth="Infinity" onAction="#handleToggleTools" text="Add _Connections" toggleGroup="$toggleTools" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                 <ToggleButton fx:id="togglebuttonChainAdd" maxWidth="Infinity" onAction="#handleToggleTools" text="Chain _Add" toggleGroup="$toggleTools" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                <ComboBox fx:id="roomName" editable="true" maxWidth="Infinity" onMouseClicked="#isFocused" prefHeight="25.0" prefWidth="134.0" promptText="room name" GridPane.columnIndex="6" GridPane.rowIndex="3" />
-                <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#addRoom" text="Add or Change Room" GridPane.columnIndex="6" GridPane.rowIndex="1" />
-                <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#deleteConnection" text="Delete Connection" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#deleteSelected" text="Delete Node" GridPane.rowIndex="3" />
-                <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#deleteElevator" text="Delete Floor Change" GridPane.columnIndex="5" GridPane.rowIndex="3" />
-                <ComboBox fx:id="floorSelector" maxWidth="Infinity" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-                <Button fx:id="defaultKioskButton" disable="true" mnemonicParsing="false" onAction="#setDefaultKiosk" text="Set as Kiosk" GridPane.columnIndex="7" GridPane.rowIndex="3" />
-                <ChoiceBox fx:id="chooseAlgorithm" GridPane.columnIndex="7" GridPane.rowIndex="1" />
+                <ComboBox fx:id="roomName" editable="true" maxWidth="Infinity" onMouseClicked="#isFocused" promptText="room name" GridPane.columnIndex="4" GridPane.rowIndex="2" />
+                <Button fx:id="buttonAddRoom" maxWidth="Infinity" mnemonicParsing="false" onAction="#addRoom" text="Add or Change Room" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                <Button fx:id="buttonDeleteConnection" maxWidth="Infinity" mnemonicParsing="false" onAction="#deleteConnection" text="Delete Connection" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                <Button fx:id="buttonDeleteNode" maxWidth="Infinity" mnemonicParsing="false" onAction="#deleteSelected" text="Delete Node" GridPane.rowIndex="2" />
+                <Button fx:id="buttonDeleteElevator" maxWidth="Infinity" mnemonicParsing="false" onAction="#deleteElevator" text="Delete Elevator" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                <ComboBox fx:id="floorSelector" maxWidth="Infinity" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                <Button fx:id="defaultKioskButton" disable="true" mnemonicParsing="false" onAction="#setDefaultKiosk" text="Set as Kiosk" GridPane.columnIndex="5" GridPane.rowIndex="2" />
+                <ChoiceBox fx:id="chooseAlgorithm" GridPane.columnIndex="5" GridPane.rowIndex="1" />
                 <HBox GridPane.columnIndex="5" GridPane.rowIndex="1">
                     <children>
                         <ToggleButton fx:id="togglebuttonAddElevator" maxWidth="Infinity" onAction="#handleToggleTools" text="Add _Elevator" toggleGroup="$toggleTools" />
@@ -50,11 +50,8 @@
             <ColumnConstraints />
             <ColumnConstraints />
             <ColumnConstraints />
-            <ColumnConstraints />
-            <ColumnConstraints />
          </columnConstraints>
          <rowConstraints>
-            <RowConstraints />
             <RowConstraints />
             <RowConstraints />
             <RowConstraints />
