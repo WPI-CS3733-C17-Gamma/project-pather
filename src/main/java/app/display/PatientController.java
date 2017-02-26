@@ -26,9 +26,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Line;
-import javafx.scene.shape.Shape;
+import javafx.scene.shape.*;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -482,6 +480,7 @@ public class PatientController extends DisplayController implements Initializabl
             }
             // draw connection
             listToDraw.add(drawConnection(prev, node, mapImage));
+            listToDraw.add(drawArrowHeads(prev, node, mapImage));
             startPoint.toFront();
             endPoint.toFront();
             prev = node;
@@ -619,6 +618,30 @@ public class PatientController extends DisplayController implements Initializabl
 
         return line;
     }
+        /**
+     * draw the arrow head for line between two nodes
+     * @param nodeA
+     * @param nodeB
+     * @return
+     */
+    public Shape drawArrowHeads (GraphNode nodeA, GraphNode nodeB, ImageView imageToBeDrawnOver) {
+        FloorPoint pointA = graphPointToImage(nodeA, imageToBeDrawnOver);
+        FloorPoint pointB = graphPointToImage(nodeB, imageToBeDrawnOver);
+
+        SVGPath triangle = new SVGPath();
+        triangle.setContent("M 5 5 L 15 5 L 10 15 z");
+        double delx = pointB.getX() - pointA.getX();
+        double dely = pointB.getY() - pointA.getY();
+        triangle.setRotate(Math.toDegrees(Math.atan2(dely,delx)) - 90);
+        triangle.setFill(Color.rgb(88, 169, 196));
+        triangle.setLayoutX(pointB.getX() - imageToBeDrawnOver.getLayoutX() - 5);
+        triangle.setLayoutY(pointB.getY() - imageToBeDrawnOver.getLayoutY() - 5);
+
+        anchorPane.getChildren().add(triangle);
+
+        return triangle;
+    }
+
 
     /**
      * gets app.dataPrimitives.Room description on screen or display elevators
@@ -846,4 +869,9 @@ class Minimap{
         this.path = path;
         this. map = map;
     }
+}
+
+class ArrowedLine{
+    Line line;
+
 }
