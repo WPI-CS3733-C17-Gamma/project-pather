@@ -128,7 +128,7 @@ public class DatabaseManager {
 
                 DirectoryEntry entry = new DirectoryEntry(result.getString(3),
                                                           result.getString(2),
-                                                          locations, "Giftshop");
+                                                          locations);
                 entriesID.put(result.getInt(1), entry);
                 entries.put(result.getString(3), entry);
             }

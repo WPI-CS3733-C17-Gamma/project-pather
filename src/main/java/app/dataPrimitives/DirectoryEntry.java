@@ -17,13 +17,12 @@ public class DirectoryEntry extends Ided {
     {
         this.name = name;
         this.title = title;
-        this.location = location;
-        //someone should pipe this/thread this/etc to make it faster
         for(Room room : location){
             if (!room.getEntries().contains(this)){
                 room.addEntry(this);
             }
         }
+        this.location = location;
     }
 
     public DirectoryEntry(String name, String title, List<Room> location, String icon)
