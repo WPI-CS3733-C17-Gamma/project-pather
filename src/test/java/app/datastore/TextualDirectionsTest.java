@@ -38,14 +38,33 @@ public class TextualDirectionsTest {
 
     @Test
     public void testTextDirectionsStairs() throws Exception {
+        GraphNode g1 = new GraphNode(20, 20, "floor1", 3);
+        g1.addAdjacent(new GraphNode(20, 20, "floor2", 3));
         LinkedList<GraphNode> path = new LinkedList<GraphNode>(
             Arrays.asList(
                 new GraphNode(0, 0, "floor1"),
                 new GraphNode(10, 0, "floor1"),
                 new GraphNode(20, 10, "floor1"),
-                new GraphNode(20, 20, "floor1", 3)));
+                g1));
         System.out.println("Final Node type " + path.get(path.size()-1).getFloorTransitionType());
-        assertEquals("[Take a right, Take a right, Take stairs to floor 2]",
+        assertEquals("[Take a right, Take a right, Take the stairs to floor 2]",
+            (new Map(new Directory(null, new HashMap<String, Room>()), null, null))
+                .getTextualDirections(path, "floor2")
+                .stream().map(p -> p.getValue()).collect(Collectors.toList()).toString());
+    }
+
+    @Test
+    public void testTextDirectionsElevator() throws Exception {
+        GraphNode g1 = new GraphNode(20, 20, "floor1", 1);
+        g1.addAdjacent(new GraphNode(20, 20, "floor2", 1));
+        LinkedList<GraphNode> path = new LinkedList<GraphNode>(
+            Arrays.asList(
+                new GraphNode(0, 0, "floor1"),
+                new GraphNode(10, 0, "floor1"),
+                new GraphNode(20, 10, "floor1"),
+                g1));
+        System.out.println("Final Node type " + path.get(path.size()-1).getFloorTransitionType());
+        assertEquals("[Take a right, Take a right, Take the elevator to floor 2]",
             (new Map(new Directory(null, new HashMap<String, Room>()), null, null))
                 .getTextualDirections(path, "floor2")
                 .stream().map(p -> p.getValue()).collect(Collectors.toList()).toString());
