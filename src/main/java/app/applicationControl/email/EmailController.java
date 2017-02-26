@@ -28,6 +28,50 @@ public class EmailController {
 
     volatile HashMap <String, String > conversationState = new HashMap();
 
+    public enum phoneCompanies{
+        ATT,            //AT&T: number@txt.att.net
+        TMOBILE,        //T-Mobile: number@tmomail.net
+        VERIZON,        //Verizon: number@vzwpix.com (text + photo)
+        SPRINT,         //Sprint: number@messaging.sprintpcs.com
+        VIRGIN,         //Virgin Mobile: number@vmobl.com
+        TRAC,           //Tracfone: number@mmst5.tracfone.com
+        METRO,          //Metro PCS: number@mymetropcs.com
+        BOOST,          //Boost Mobile: number@myboostmobile.com
+        CRICKET,        //Cricket: number@mms.cricketwireless.net
+        PTEL,           //Ptel: number@ptel.com
+        REPUBLIC,       //Republic Wireless: number@text.republicwireless.com
+        GOOGLE,         //Google Fi (Project Fi): number@msg.fi.google.com
+        SUNCOM,         //Suncom: number@tms.suncom.com
+        TING,           //Ting: number@message.ting.com
+        US,             //U.S. Cellular: number@email.uscc.net
+        CONSUMER,       //Consumer Cellular: number@cingularme.com
+        CSPIRE,         //C-Spire: number@cspire1.com
+        PAGE            //Page Plus: number@vtext.com
+    }
+
+    private HashMap<phoneCompanies, String> phone2Email = new HashMap<>();
+
+    private void addCompanies(){
+        phone2Email.put(phoneCompanies.ATT, "@txt.att.net");
+        phone2Email.put(phoneCompanies.TMOBILE, "@tmomail.net");
+        phone2Email.put(phoneCompanies.VERIZON, "@vzwpix.com");
+        phone2Email.put(phoneCompanies.SPRINT, "@messaging.sprintpcs.com");
+        phone2Email.put(phoneCompanies.VIRGIN, "@vmobl.com");
+        phone2Email.put(phoneCompanies.TRAC, "@mmst5.tracfone.com");
+        phone2Email.put(phoneCompanies.METRO, "@mymetropcs.com");
+        phone2Email.put(phoneCompanies.BOOST, "@myboostmobile.com");
+        phone2Email.put(phoneCompanies.CRICKET, "@mms.cricketwireless.net");
+        phone2Email.put(phoneCompanies.PTEL, "@ptel.com");
+        phone2Email.put(phoneCompanies.REPUBLIC, "@text.republicwireless.com");
+        phone2Email.put(phoneCompanies.GOOGLE, "@msg.fi.google.com");
+        phone2Email.put(phoneCompanies.SUNCOM, "@tms.suncom.com");
+        phone2Email.put(phoneCompanies.TING, "@message.ting.com");
+        phone2Email.put(phoneCompanies.US, "@email.uscc.net");
+        phone2Email.put(phoneCompanies.CONSUMER, "@cingularme.com");
+        phone2Email.put(phoneCompanies.CSPIRE, "@cspire1.com");
+        phone2Email.put(phoneCompanies.PAGE, "@vtext.com");
+    }
+
     /**
      * create new application
      * @param applicationController
@@ -41,6 +85,7 @@ public class EmailController {
         this.username = username;
         this.password = password;
         this.runs = runs;
+        addCompanies();
     }
 
     /**
@@ -158,6 +203,20 @@ public class EmailController {
     public String getState (String person ) {
         return conversationState.get(person);
     }
+
+
+
+    boolean sendText(double number, phoneCompanies carrier,  String message){
+
+        String email = getPhoneEmail(carrier);
+        return send(number+email, message);
+
+    }
+
+    private String getPhoneEmail(phoneCompanies carrier){
+        return phone2Email.get(carrier);
+    }
+
 
 
 
