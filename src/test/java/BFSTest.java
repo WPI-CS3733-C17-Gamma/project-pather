@@ -117,7 +117,7 @@ public class BFSTest extends TestCase{
                 logger.debug("testGetPath neighbour: {}", neighbour.toString());
             }
             List<GraphNode> path2 = new LinkedList<>();
-            path2 = bfs.findPath(node1, node5);
+            path2 = bfs.findPath(node1, node5, false);
             assertTrue(path1.equals(path2));
         }
 
@@ -126,7 +126,7 @@ public class BFSTest extends TestCase{
         public void testGetPath2() throws PathNotFoundException{
             LinkedList<GraphNode> path1 = new LinkedList<GraphNode>(Arrays.asList(node51, node53, node45, node35));
             List<GraphNode> path2 = new LinkedList<>();
-            path2 = bfs.findPath(node51, node35);
+            path2 = bfs.findPath(node51, node35, false);
             for(GraphNode neighbour: path2) {
                 logger.debug("testGetPath2 neighbour: {}", neighbour.toString());
             }
@@ -139,7 +139,7 @@ public class BFSTest extends TestCase{
             List<GraphNode> path1 = new LinkedList<GraphNode>(Arrays.asList(node11, node31, node33, node34,
                 node35, node45, node55));
             List<GraphNode> path2 = new LinkedList<>();
-            path2 = bfs.findPath(node11, node55);
+            path2 = bfs.findPath(node11, node55, false);
             for(GraphNode neighbour: path2) {
                 logger.debug("testGetPath3 neighbour: {}", neighbour.toString());
             }
@@ -152,7 +152,7 @@ public class BFSTest extends TestCase{
             List<GraphNode> path1 = new ArrayList<>(Arrays.asList(node14, node22, node23, node33));
             List<GraphNode> path3 = new ArrayList<>(Arrays.asList(node14, node15, node34, node33));
             logger.debug("testGetPath4a testing path {}", path1.toString());
-            List<GraphNode> path2 = bfs.findPath(node14, node33);
+            List<GraphNode> path2 = bfs.findPath(node14, node33, false);
             for (GraphNode neighbour : path2) {
                 logger.debug("testGetPath4a neighbour: {}", neighbour.toString());
             }
@@ -163,7 +163,7 @@ public class BFSTest extends TestCase{
     public void testPathNotFoundException() {
         Throwable e = null;
         try {
-            bfs.findPath(node1, node11);
+            bfs.findPath(node1, node11, false);
         } catch (Throwable ex) {
             e = ex;
         }
@@ -173,7 +173,7 @@ public class BFSTest extends TestCase{
         @Test
         public void testStartOnSameNode()throws PathNotFoundException{
             List<GraphNode> expected = new LinkedList<>(Arrays.asList(node1));
-            List<GraphNode> result = bfs.findPath(node1, node1);
+            List<GraphNode> result = bfs.findPath(node1, node1, false);
             assertTrue(expected.equals(result));
         }
     }

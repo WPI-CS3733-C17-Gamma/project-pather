@@ -66,6 +66,7 @@ public class MapAdminController extends DisplayController {
     //For the context menu (right click menu)
     //ContextMenu contextMenu;
 
+    @FXML private ChoiceBox<String> transitionType;
     @FXML private Button buttonSave;
     @FXML private Button buttonCancel;
 
@@ -321,6 +322,36 @@ public class MapAdminController extends DisplayController {
         //------------------------------------------------------------------------------------------------------------------
         stage.addEventFilter(KeyEvent.KEY_PRESSED, event -> handleKey(event));
 
+        ArrayList transitionOptions = new ArrayList(Arrays.asList(new String[]{
+            "None",
+            "Entrance",
+            "Elevator",
+            "Stair"
+        }));
+
+        transitionType.setItems(FXCollections.observableArrayList(transitionOptions));
+        transitionType.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (selectedNode != null) {
+                    if (newValue.equals("Elevator")) {
+                        selectedNode.setFloorTransitionType(GraphNode.ELEVATOR);
+                    }
+                    else if (newValue.equals("Entrance")) {
+                        selectedNode.setFloorTransitionType(GraphNode.ENTRANCE);
+                    }
+                    else if (newValue.equals("Stair")) {
+                        selectedNode.setFloorTransitionType(GraphNode.STAIR);
+                    }
+                    else {
+                        selectedNode.setFloorTransitionType(GraphNode.NONE);
+                    }
+                }
+            }
+        });
+        transitionType.setValue("Elevator");
+
+
     }
 
     /**
@@ -394,7 +425,7 @@ public class MapAdminController extends DisplayController {
      * @param imageToDrawOver the image the point must cover
      */
     public void drawNode (GraphNode node, ImageView imageToDrawOver) {
-        if (node.isElevator()) {
+        if (node.doesCrossFloor()) {
             drawElevator(node.getLocation(), imageToDrawOver);
         }
         else {
@@ -460,7 +491,31 @@ public class MapAdminController extends DisplayController {
      * @param location
      */
     public void addElevator(FloorPoint location, List<String> floors){
-        map.addElevator(location, floors);
+        String selectedTransition = transitionType.getValue();
+        int selectedTransitionValue = GraphNode.ELEVATOR;
+        if (selectedTransition.equals("Elevator")) {
+           selectedTransitionValue = GraphNode.ELEVATOR;
+            logger.debug("Elevator selected {}", selectedTransitionValue);
+            System.out.println("Elevator selected " + selectedTransitionValue);
+        }
+        else if (selectedTransition.equals("Entrance")) {
+            selectedTransitionValue = GraphNode.ENTRANCE;
+            logger.debug("Entrance selected {}", selectedTransitionValue);
+            System.out.println("Entrance selected " + selectedTransitionValue);
+        }
+        else if (selectedTransition.equals("Stair")) {
+            selectedTransitionValue = GraphNode.STAIR;
+            logger.debug("Stair selected {}", selectedTransitionValue);
+            System.out.println("Stair selected " + selectedTransitionValue);
+        }
+        else {
+            selectedTransitionValue = GraphNode.NONE;
+            logger.debug("Stair selected {}", selectedTransitionValue);
+            System.out.println("Stair selected " + selectedTransitionValue);
+        }
+
+
+        map.addElevator(location, floors, selectedTransitionValue);
         secondaryNode = selectedNode;
         selectedNode = map.getGraphNode(location);
         drawMap();
@@ -584,7 +639,7 @@ public class MapAdminController extends DisplayController {
     public void deleteElevator () {
         unclickToggleButtons();
         if (selectedNode != null ) {
-            if(selectedNode.isElevator()) {
+            if(selectedNode.doesCrossFloor()) {
                 boolean isEl = map.deleteElevator(selectedNode);
                 selectedNode = null;
                 drawMap();
@@ -754,6 +809,22 @@ public class MapAdminController extends DisplayController {
             }
         }
         if(selectedNode != null) {
+            // set the transition type to the selected type
+            if (selectedNode.getFloorTransitionType() == GraphNode.NONE) {
+                transitionType.setValue("None");
+            }
+            else if (selectedNode.getFloorTransitionType() == GraphNode.ELEVATOR) {
+                transitionType.setValue("Elevator");
+            }
+            else if (selectedNode.getFloorTransitionType() == GraphNode.STAIR) {
+                transitionType.setValue("Stair");
+            }
+            else if (selectedNode.getFloorTransitionType() == GraphNode.ENTRANCE) {
+                transitionType.setValue("Entrance");
+            }
+
+
+            System.out.println("Selected node is : " + selectedNode.getFloorTransitionType());
             Shape selected1 = drawnNodes.get(selectedNode.id);
             if(selected1 != null) {
                 selected1.setFill(Color.RED);

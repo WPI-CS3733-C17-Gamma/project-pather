@@ -107,7 +107,7 @@ public class DFSTest extends TestCase{
         List<GraphNode> path1 = new LinkedList(Arrays.asList(node1, node3, node4, node5));
         List<GraphNode> path3 = new LinkedList(Arrays.asList(node1, node2, node3, node4, node5));
         List<GraphNode> path2 = new LinkedList<>();
-        path2 = dfs.findPath(node1, node5);
+        path2 = dfs.findPath(node1, node5, false);
         assertTrue(path1.equals(path2) || path2.equals(path3));
     }
 
@@ -115,7 +115,7 @@ public class DFSTest extends TestCase{
     @Test
     public void testGetPath2() throws PathNotFoundException{
         LinkedList<GraphNode> path1 = new LinkedList<GraphNode>(Arrays.asList(node51, node53, node45, node35));
-        List<GraphNode> path2 = dfs.findPath(node51, node35);
+        List<GraphNode> path2 = dfs.findPath(node51, node35, false);
         for(GraphNode neighbour: path2) {
             logger.debug("testGetPath2 neighbour: {}", neighbour.toString());
         }
@@ -127,7 +127,7 @@ public class DFSTest extends TestCase{
     public void testGetPath3() throws PathNotFoundException {
         List<GraphNode> path1 = new LinkedList<GraphNode>(Arrays.asList(node11, node31, node33, node34,
             node35, node45, node55));
-        List<GraphNode> path2 = dfs.findPath(node11, node55);
+        List<GraphNode> path2 = dfs.findPath(node11, node55, false);
         for(GraphNode neighbour: path2) {
             logger.debug("testGetPath3, neighbour: {}", neighbour.toString());
         }
@@ -140,7 +140,7 @@ public class DFSTest extends TestCase{
         List<GraphNode> path1 = new ArrayList<>(Arrays.asList(node14, node22, node23, node33));
         List<GraphNode> path3 = new ArrayList<>(Arrays.asList(node14, node15, node34, node33));
         logger.debug("testGetPath4a with path: {}", path1);
-        List<GraphNode> path2 = dfs.findPath(node14, node33);
+        List<GraphNode> path2 = dfs.findPath(node14, node33, false);
         for (GraphNode neighbour : path2) {
             logger.debug("testGetPath4a neighbour: {}", neighbour.toString());
         }
@@ -152,9 +152,9 @@ public class DFSTest extends TestCase{
         List<GraphNode> path1 = new ArrayList<>(Arrays.asList(node14, node22));
         List<GraphNode> path2 = new ArrayList<>(Arrays.asList(node14, node15));
         List<GraphNode> path3 = new ArrayList<>(Arrays.asList(node14, node11));
-        List<GraphNode> result1 = dfs.findPath(node14, node22);
-        List<GraphNode> result2 = dfs.findPath(node14, node15);
-        List<GraphNode> result3 = dfs.findPath(node14, node11);
+        List<GraphNode> result1 = dfs.findPath(node14, node22, false);
+        List<GraphNode> result2 = dfs.findPath(node14, node15, false);
+        List<GraphNode> result3 = dfs.findPath(node14, node11, false);
         assertTrue(path1.equals(result1));
         assertTrue(path2.equals(result2));
         assertTrue(path3.equals(result3));
@@ -164,7 +164,7 @@ public class DFSTest extends TestCase{
     public void testPathNotFoundException(){
         Throwable e = null;
         try{
-            dfs.findPath(node1, node11);
+            dfs.findPath(node1, node11, false);
         }catch (Throwable ex){
             e = ex;
         }
@@ -174,7 +174,7 @@ public class DFSTest extends TestCase{
     @Test
     public void testStartOnSameNode()throws PathNotFoundException {
         List<GraphNode> expected = new LinkedList<>(Arrays.asList(node1));
-        List<GraphNode> result = dfs.findPath(node1, node1);
+        List<GraphNode> result = dfs.findPath(node1, node1, false);
         assertTrue(expected.equals(result));
     }
 }

@@ -21,7 +21,7 @@ public class DatabaseManager {
     String connectionURL;
     Connection connection;
     public static final String[] initStatements = {
-        "create table GraphNodes (ID integer primary key, X integer, Y integer, Floor varchar(100))",
+        "create table GraphNodes (ID integer primary key, X integer, Y integer, Floor varchar(100), FloorTransitionType integer)",
         "create table Edges (ID1 integer, ID2 integer," +
             "constraint pk_e Primary key (ID1, ID2)," +
             "constraint id1_fk foreign key (ID1) references GraphNodes(ID)," +
@@ -90,7 +90,8 @@ public class DatabaseManager {
                 nodes.put(result.getInt(1),
                           new GraphNode(result.getInt(2),
                                         result.getInt(3),
-                                        result.getString(4)));
+                                        result.getString(4),
+                                        result.getInt(5)));
             }
 
             // Get all edges
@@ -163,7 +164,7 @@ public class DatabaseManager {
             HashSet<Long> addedNodes = new HashSet<Long>();
 
             PreparedStatement insertGraphNode = connection.prepareStatement(
-                "insert into GraphNodes (ID, X, Y, Floor) values (?, ?, ?, ?)");
+                "insert into GraphNodes (ID, X, Y, Floor, FloorTransitionType) values (?, ?, ?, ?, ?)");
             PreparedStatement insertEdge = connection.prepareStatement(
                 "insert into Edges (ID1, ID2) values (?, ?)");
             PreparedStatement insertRoom = connection.prepareStatement(
@@ -181,6 +182,7 @@ public class DatabaseManager {
                 insertGraphNode.setInt(2, node.getLocation().getX());
                 insertGraphNode.setInt(3, node.getLocation().getY());
                 insertGraphNode.setString(4, node.getLocation().getFloor());
+                insertGraphNode.setInt(5,node.getFloorTransitionType());
                 insertGraphNode.executeUpdate();
                 addedNodes.add(node.id);
 
