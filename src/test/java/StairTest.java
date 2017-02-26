@@ -19,6 +19,8 @@ public class StairTest extends TestCase {
     GraphNode elevator;
     GraphNode stair;
     IPathFindingAlgorithm astar = new AStar();
+    IPathFindingAlgorithm bfs = new AStar();
+    IPathFindingAlgorithm dfs = new AStar();
 
     public void setUp() {
         start = new GraphNode (0,0,"1",GraphNode.NONE) ;
@@ -42,6 +44,29 @@ public class StairTest extends TestCase {
     @Test
     public void testGetPathStairs () throws PathNotFoundException {
         List<GraphNode> path = new LinkedList(Arrays.asList(start, stair, end));
-        assertTrue(path.equals(astar.findPath(start, end, true)));
+        assertEquals(path, (astar.findPath(start, end, true)));
+    }
+
+    @Test
+    public void testGetPathNormalDFS () throws PathNotFoundException {
+        List<GraphNode> path = new LinkedList(Arrays.asList(start, elevator, end));
+        assertTrue(path.equals(dfs.findPath(start, end, false)));
+    }
+
+    @Test
+    public void testGetPathStairsDFS () throws PathNotFoundException {
+        List<GraphNode> path = new LinkedList(Arrays.asList(start, stair, end));
+        assertEquals(path, (dfs.findPath(start, end, true)));
+    }
+    @Test
+    public void testGetPathNormalBFS () throws PathNotFoundException {
+        List<GraphNode> path = new LinkedList(Arrays.asList(start, elevator, end));
+        assertTrue(path.equals(bfs.findPath(start, end, false)));
+    }
+
+    @Test
+    public void testGetPathStairsBFS () throws PathNotFoundException {
+        List<GraphNode> path = new LinkedList(Arrays.asList(start, stair, end));
+        assertEquals(path, (bfs.findPath(start, end, true)));
     }
 }

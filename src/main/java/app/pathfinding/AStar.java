@@ -4,6 +4,8 @@ import app.dataPrimitives.GraphNode;
 
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class AStar implements IPathFindingAlgorithm {
 
@@ -43,7 +45,18 @@ public class AStar implements IPathFindingAlgorithm {
         closedSet.add(current);
         current.node.getAdjacent().sort(
             (GraphNode a, GraphNode b) -> ((int)a.distance(goalNode) - (int)b.distance(goalNode)));
-        for (GraphNode gNeighbour: current.node.getAdjacent()) {
+
+        List<GraphNode> adjacent = current.node.getAdjacent();
+        if (useStairs) {
+            adjacent = adjacent.stream().filter(node -> node.getFloorTransitionType() != GraphNode.ELEVATOR).collect(Collectors.toList());
+        }
+        else {
+            adjacent = adjacent.stream().filter(node -> node.getFloorTransitionType() != GraphNode.STAIR).collect(Collectors.toList());
+        }
+
+        adjacent.sort(
+            (GraphNode a, GraphNode b) -> ((int)a.distance(goalNode) - (int)b.distance(goalNode)));
+        for (GraphNode gNeighbour: adjacent) {
             AStarNode neighbour = new AStarNode(gNeighbour);
             if (closedSet.contains(neighbour))
                 continue;

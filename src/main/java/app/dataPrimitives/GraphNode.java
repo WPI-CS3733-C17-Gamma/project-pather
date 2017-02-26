@@ -52,6 +52,7 @@ public class GraphNode extends Ided implements Comparable {
      */
     public GraphNode(FloorPoint location, int type){
         this.location = location;
+        this.floorTransitionType = type;
         this.adjacent = new LinkedList<GraphNode>();
     }
 

@@ -39,7 +39,7 @@ public class DFS implements IPathFindingAlgorithm {
         //for exception reference
         this.start = start;
         this.end = end;
-        return DFSRecursion(start, end);
+        return DFSRecursion(start, end, useStairs);
     }
 
     @Override
@@ -51,10 +51,19 @@ public class DFS implements IPathFindingAlgorithm {
      * loop through to find a path
      * @param current
      * @param end
+     * @param useStairs
      * @return
      * @throws PathNotFoundException
      */
-    private LinkedList<GraphNode> DFSRecursion(GraphNode current, GraphNode end) throws PathNotFoundException{
+    private LinkedList<GraphNode> DFSRecursion(GraphNode current, GraphNode end, boolean useStairs) throws PathNotFoundException{
+        // ignores Elevator
+        if (useStairs && current.getFloorTransitionType() == GraphNode.ELEVATOR) {
+            throw new PathNotFoundException(start, end);
+        }
+        else if (current.getFloorTransitionType() == GraphNode.STAIR) {
+            throw new PathNotFoundException(start, end);
+        }
+
         checked.add(current);
         //check if the neighbor contains the target node; if yes, end search
         if (current.getAdjacent().contains(end)){
@@ -67,7 +76,7 @@ public class DFS implements IPathFindingAlgorithm {
         for (GraphNode neighbor : current.getAdjacent()){
             if (!checked.contains(neighbor)){
                 try{
-                    LinkedList<GraphNode> result = DFSRecursion(neighbor, end);
+                    LinkedList<GraphNode> result = DFSRecursion(neighbor, end, useStairs);
                     if (!locationEqual(current, result.get(0))){
                         result.add(0, current);
                     }

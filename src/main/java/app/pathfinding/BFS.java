@@ -40,6 +40,17 @@ public class BFS implements IPathFindingAlgorithm {
         //while there are more nodes to check
         while(!todo.isEmpty()){
             current = todo.poll();
+
+            // ignore elevators if using stairs
+            if (useStairs && current.current.getFloorTransitionType() == GraphNode.ELEVATOR) {
+                continue;
+            }
+            // ignore stairs if using elevators
+            else if (current.current.getFloorTransitionType() == GraphNode.STAIR) {
+                continue;
+            }
+
+
             checked.add(current);
             //if the next level contains the target
             if (current.current.getAdjacent().contains(end)){
