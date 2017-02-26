@@ -81,7 +81,7 @@ public class ApplicationController extends Application {
         floorMaps.put("belkin2", new ProxyImage("Blue_Maps/Belkin_2_blue.png"));
         floorMaps.put("belkin3", new ProxyImage("Blue_Maps/Belkin_3_blue.png"));
         floorMaps.put("belkin4", new ProxyImage("Blue_Maps/Belkin_4_blue.png"));
-        floorMaps.put("campus", new ProxyImage("Blue_Maps/campus_blue.png"));
+        floorMaps.put("campus", new ProxyImage("Blue_Maps/new_campus_blue.png"));
 
         extraImages = new HashMap<>();
         extraImages.put("elevator", new ProxyImage("Icon_PNGs/ElevatorT.png"));
