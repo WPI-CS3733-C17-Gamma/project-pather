@@ -49,6 +49,11 @@ public class EmailController {
         PAGE            //Page Plus: number@vtext.com
     }
 
+    public enum inputType {
+        PHONE,
+        EMAIL
+    }
+
     private HashMap<phoneCompanies, String> phone2Email = new HashMap<>();
 
     private void addCompanies(){
@@ -153,6 +158,15 @@ public class EmailController {
     }
 
     /**
+     * Parse string and check for errors in email/phone
+     * @param to
+     * @return
+     */
+    private String checkInput(String to){
+       return to;
+    }
+
+    /**
      * Send direcitons to the given person
      * @param to email (email + number) of given person
      * @param directions direcitons as a list of strings to be sent for each floor
@@ -204,15 +218,24 @@ public class EmailController {
         return conversationState.get(person);
     }
 
-
-
+    /**
+     * Send text
+     * @param number
+     * @param carrier
+     * @param message
+     * @return
+     */
     boolean sendText(double number, phoneCompanies carrier,  String message){
-
         String email = getPhoneEmail(carrier);
         return send(number+email, message);
 
     }
 
+    /**
+     * Get phone number email based on carrier
+     * @param carrier
+     * @return
+     */
     private String getPhoneEmail(phoneCompanies carrier){
         return phone2Email.get(carrier);
     }
