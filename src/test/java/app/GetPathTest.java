@@ -5,6 +5,8 @@ import app.datastore.GraphNetwork;
 import app.pathfinding.PathNotFoundException;
 import junit.framework.TestCase;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -15,6 +17,7 @@ import java.util.LinkedList;
  */
 
 public class GetPathTest extends TestCase{
+    final Logger logger = LoggerFactory.getLogger(GetPathTest.class);
 
     GraphNode node1 = new GraphNode(0, 0, "");
     GraphNode node2 = new GraphNode(10, 0, "");
@@ -114,7 +117,7 @@ public class GetPathTest extends TestCase{
     public void testGetPath() throws PathNotFoundException {
         LinkedList<GraphNode> path1 = new LinkedList(Arrays.asList(node1, node3, node4, node5));
         for(GraphNode neighbour: nodes){
-            System.err.println(neighbour.toString());
+            logger.debug("testGetPath neighbour: {}", neighbour.toString());
         }
         LinkedList<GraphNode> path2 = new LinkedList<>();
         path2 = graph.getPath(node1, node5);
@@ -127,7 +130,7 @@ public class GetPathTest extends TestCase{
         LinkedList<GraphNode> path2 = new LinkedList<>();
         path2 = betterGraph.getPath(node51, node35);
         for(GraphNode neighbour: path2) {
-            System.err.println(neighbour.toString());
+            logger.debug("testGetPath2 neighbour: {}", neighbour.toString());
         }
         assertTrue(path1.equals(path2));
     }
@@ -136,13 +139,10 @@ public class GetPathTest extends TestCase{
     public void testGetPath3() throws PathNotFoundException {
         LinkedList<GraphNode> path1 = new LinkedList<GraphNode>(Arrays.asList(node11, node31, node33, node34,
                                                                    node35, node45, node55));
-//        for(app.dataPrimitives.GraphNode neighbour: betterNodes) {
-//            System.err.println(neighbour.toString());
-//        }
         LinkedList<GraphNode> path2 = new LinkedList<>();
         path2 = betterGraph.getPath(node11, node55);
         for(GraphNode neighbour: path2) {
-            System.err.println(neighbour.toString());
+            logger.debug("testGetPath3 neighbour: {}", neighbour.toString());
         }
         assertTrue(path1.equals(path2));
 
@@ -155,8 +155,7 @@ public class GetPathTest extends TestCase{
         LinkedList<GraphNode> path2 = new LinkedList<>();
         path2 = betterGraph.getPath(node14, node33);
         for (GraphNode neighbour : path2) {
-            System.err.println("testGetPath4a ");
-            System.err.println(neighbour.toString());
+            logger.debug("testGetPath4a neighbour: {}", neighbour.toString());
         }
         assertTrue(path1.equals(path2));
     }

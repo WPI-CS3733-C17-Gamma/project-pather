@@ -1,18 +1,17 @@
 package app.datastore;
 
 import app.dataPrimitives.*;
-import app.pathfinding.IPathFindingAlgorithm;
 import app.pathfinding.PathNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.HashMap;
+import java.util.*;
 
 public class Map {
+    final Logger logger = LoggerFactory.getLogger(Map.class);
+
     Directory directory;
     GraphNetwork graph;
     HashMap<String, String> settings;
@@ -72,12 +71,40 @@ public class Map {
         return directory.getRoom(node);
     }
 
+    public Set<String> getPathingAlgorithmList(){
+        return graph.getPathingAlgorithmList();
+    }
+
+    public String getPathingAlgorithm(){
+        return graph.getPathingAlgorithm();
+    }
+
+    public void changeAlgorithm(String algo){
+        graph.changeAlgorithm(algo);
+    }
     /**
      * set the kiosk name to this
      * @param name
      */
     public void setKiosk (String name) {
         setSetting("default_kiosk", name);
+    }
+
+    /**
+     * Get a list all all rooms without names
+     * @return list of room names
+     */
+    public List<String> getRoomsWithoutLocations () {
+        return directory.getRoomsWithoutLocations();
+    }
+
+    /**
+     * set the location of the given room to the given location
+     * @param roomName name of room to be changed
+     * @param location location to set the room to
+     */
+    public void setRoomLocation (String roomName, GraphNode location) {
+        directory.setRoomLocation (roomName, location);
     }
 
     /**
@@ -164,7 +191,7 @@ public class Map {
      * @param floors list of floors to connect the elevator through
      */
     public void addElevator (FloorPoint point, List<String> floors) {
-        System.out.println("In map create elevator @ : " + point);
+        logger.debug("In map create elevator @ : {}", point);
         List<GraphNode> elevators = new ArrayList<>();
         // make elevators
         for (String floor : floors) {
@@ -267,7 +294,7 @@ public class Map {
         try {
             return graph.getPath(start, end);
         } catch( PathNotFoundException e) {
-            System.err.println(e.getMessage());
+            logger.error("Got error in {} : {}", this.getClass().getSimpleName(), e.getMessage());
         }
         return new LinkedList<>();
     }

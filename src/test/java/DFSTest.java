@@ -1,9 +1,10 @@
 import app.dataPrimitives.GraphNode;
-import app.datastore.GraphNetwork;
 import app.pathfinding.DFS;
 import app.pathfinding.PathNotFoundException;
 import junit.framework.TestCase;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,6 +12,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class DFSTest extends TestCase{
+    final Logger logger = LoggerFactory.getLogger(DFSTest.class);
+
     GraphNode node1 = new GraphNode(0, 0, "");
     GraphNode node2 = new GraphNode(10, 0, "");
     GraphNode node3 = new GraphNode(20, 10, "");
@@ -114,7 +117,7 @@ public class DFSTest extends TestCase{
         LinkedList<GraphNode> path1 = new LinkedList<GraphNode>(Arrays.asList(node51, node53, node45, node35));
         List<GraphNode> path2 = dfs.findPath(node51, node35);
         for(GraphNode neighbour: path2) {
-            System.err.println(neighbour.toString());
+            logger.debug("testGetPath2 neighbour: {}", neighbour.toString());
         }
         assertTrue(path1.equals(path2));
     }
@@ -126,8 +129,7 @@ public class DFSTest extends TestCase{
             node35, node45, node55));
         List<GraphNode> path2 = dfs.findPath(node11, node55);
         for(GraphNode neighbour: path2) {
-            System.err.println("00");
-            System.err.println(neighbour.toString());
+            logger.debug("testGetPath3, neighbour: {}", neighbour.toString());
         }
         assertTrue(!path2.isEmpty());
 
@@ -137,11 +139,10 @@ public class DFSTest extends TestCase{
     public void testGetPath4a() throws PathNotFoundException {
         List<GraphNode> path1 = new ArrayList<>(Arrays.asList(node14, node22, node23, node33));
         List<GraphNode> path3 = new ArrayList<>(Arrays.asList(node14, node15, node34, node33));
-        System.err.println(path1);
+        logger.debug("testGetPath4a with path: {}", path1);
         List<GraphNode> path2 = dfs.findPath(node14, node33);
         for (GraphNode neighbour : path2) {
-            System.err.println("testGetPath4a ");
-            System.err.println(neighbour.toString());
+            logger.debug("testGetPath4a neighbour: {}", neighbour.toString());
         }
         assertTrue(path1.equals(path2) || path2.equals(path3));
     }
@@ -151,8 +152,6 @@ public class DFSTest extends TestCase{
         List<GraphNode> path1 = new ArrayList<>(Arrays.asList(node14, node22));
         List<GraphNode> path2 = new ArrayList<>(Arrays.asList(node14, node15));
         List<GraphNode> path3 = new ArrayList<>(Arrays.asList(node14, node11));
-//        List<GraphNode> path3 = new ArrayList<>(Arrays.asList(node14, node15, node34, node33));
-//        System.err.println(path1);
         List<GraphNode> result1 = dfs.findPath(node14, node22);
         List<GraphNode> result2 = dfs.findPath(node14, node15);
         List<GraphNode> result3 = dfs.findPath(node14, node11);

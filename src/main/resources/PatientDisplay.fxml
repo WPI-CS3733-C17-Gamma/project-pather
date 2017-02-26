@@ -1,23 +1,80 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.Cursor?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.InnerShadow?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
-
 <StackPane fx:id="stackPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" styleClass="background" stylesheets="@design.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
     <children>
-        <AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" styleClass="background" stylesheets="@design.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+        <AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMousePressed="#hideOptions" prefHeight="600.0" prefWidth="1000.0" styleClass="background" stylesheets="@design.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
            <children>
-              <ImageView fx:id="imageView" fitHeight="454.0" fitWidth="800.0" layoutX="100.0" layoutY="103.0" pickOnBounds="true" preserveRatio="true" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="470.0" layoutX="40.0" layoutY="115.0" stroke="#1b449c" strokeType="INSIDE" visible="false" width="920.0" />
+              <ImageView fitHeight="57.0" fitWidth="374.0" layoutX="343.0" layoutY="22.0" pickOnBounds="true" preserveRatio="true">
+                 <image>
+                    <Image url="@BWFH_logo_rgb%20(1).png" />
+                 </image>
+              </ImageView>
+              <Button fx:id="help" layoutX="825.0" layoutY="14.0" mnemonicParsing="false" onAction="#help" onKeyPressed="#help" prefHeight="50.0" prefWidth="50.0" style="-fx-background-color: none;" styleClass="helpButton" stylesheets="@design.css" />
+              <Button fx:id="adminButton" layoutX="915.0" layoutY="14.0" mnemonicParsing="false" onAction="#logIn" prefHeight="50.0" prefWidth="50.0" styleClass="adminMenuButton" stylesheets="@design.css" />
+            <Line endX="970.0" layoutX="1.0" layoutY="115.0" startX="30.0" stroke="#424556" />
+            <HBox alignment="CENTER" layoutY="130.0" prefHeight="438.0" prefWidth="1000.0">
+               <children>
+                    <ImageView fx:id="imageView" fitHeight="438.0" fitWidth="800.0" pickOnBounds="true" preserveRatio="true" />
+               </children>
+            </HBox>
+            <TabPane layoutX="662.0" layoutY="79.0" prefHeight="485.0" prefWidth="303.0" stylesheets="@design.css" tabClosingPolicy="UNAVAILABLE">
+              <tabs>
+                  <Tab text="Main">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <HBox alignment="CENTER_RIGHT" prefHeight="50.0" prefWidth="295.0">
+                                 <children>
+                                    <Button fx:id="floor1" mnemonicParsing="false" onMousePressed="#selectPatientImage" style="-fx-background-color: #898b95;" text="1" />
+                                    <Button fx:id="floor2" mnemonicParsing="false" onMousePressed="#selectPatientImage" text="2" />
+                                    <Button fx:id="floor3" mnemonicParsing="false" onMousePressed="#selectPatientImage" text="3" />
+                                    <Button fx:id="floor4" mnemonicParsing="false" onMousePressed="#selectPatientImage" text="4" />
+                                    <Button fx:id="floor5" mnemonicParsing="false" onMousePressed="#selectPatientImage" text="5" />
+                                    <Button fx:id="floor6" mnemonicParsing="false" onMousePressed="#selectPatientImage" text="6" />
+                                    <Button fx:id="floor7" mnemonicParsing="false" onMousePressed="#selectPatientImage" text="7" />
+                                 </children>
+                              </HBox>
+                           </children>
+                        </AnchorPane>
+                    </content>
+                  </Tab>
+                <Tab text="Belkin">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <HBox alignment="CENTER_RIGHT" prefHeight="50.0" prefWidth="287.0">
+                                 <children>
+                                    <Button fx:id="belkin1" mnemonicParsing="false" onMousePressed="#selectPatientImage" text="1" />
+                                    <Button fx:id="belkin2" mnemonicParsing="false" onMousePressed="#selectPatientImage" text="2" />
+                                    <Button fx:id="belkin3" mnemonicParsing="false" onMousePressed="#selectPatientImage" text="3" />
+                                    <Button fx:id="belkin4" mnemonicParsing="false" onMousePressed="#selectPatientImage" text="4" />
+                                 </children>
+                              </HBox>
+                           </children>
+                        </AnchorPane>
+                  </content>
+                </Tab>
+                <Tab fx:id="campus" text="Campus">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <Button fx:id="campus" layoutX="209.0" layoutY="7.0" mnemonicParsing="false" onMousePressed="#selectPatientImage" text="Campus" />
+                           </children>
+                        </AnchorPane>
+                  </content>
+                </Tab>
+              </tabs>
+            </TabPane>
               <Label fx:id="helpLabel" contentDisplay="CENTER" layoutX="117.0" layoutY="123.0" onKeyPressed="#help" onMouseClicked="#help" opacity="0.0" prefHeight="341.0" prefWidth="733.0" styleClass="helpBox" stylesheets="@design.css" text="Label" textAlignment="CENTER" visible="false">
                  <cursor>
                     <Cursor fx:constant="S_RESIZE" />
@@ -26,27 +83,20 @@
                     <Font size="30.0" />
                  </font>
               </Label>
-              <ImageView fitHeight="57.0" fitWidth="374.0" layoutX="343.0" layoutY="22.0" pickOnBounds="true" preserveRatio="true">
-                 <image>
-                    <Image url="@BWFH_logo_rgb%20(1).png" />
-                 </image>
-              </ImageView>
-              <Button fx:id="help" layoutX="825.0" layoutY="14.0" mnemonicParsing="false" onAction="#help" onKeyPressed="#help" prefHeight="50.0" prefWidth="50.0" styleClass="helpButton" stylesheets="@design.css" />
-              <Button fx:id="adminButton" layoutX="915.0" layoutY="14.0" mnemonicParsing="false" onAction="#logIn" prefHeight="50.0" prefWidth="50.0" styleClass="adminMenuButton" stylesheets="@design.css" />
-              <AnchorPane fx:id="searchAnchorPane" prefHeight="600.0" prefWidth="1000.0" styleClass="patientBackground" stylesheets="@design.css" visible="false">
+              <AnchorPane fx:id="searchAnchorPane" onMousePressed="#hideOptions" prefHeight="600.0" prefWidth="1000.0" styleClass="patientBackground" stylesheets="@design.css" visible="false">
                  <children>
-                    <ImageView fx:id="patientImageView" fitHeight="454.0" fitWidth="800.0" layoutX="100.0" layoutY="103.0" pickOnBounds="true" preserveRatio="true" />
-                    <Button fx:id="exitButton" layoutX="940.0" mnemonicParsing="false" onAction="#exitSearch" prefHeight="33.0" prefWidth="47.0" styleClass="exitButton" stylesheets="@design.css" text="X" />
-                     <Label fx:id="textDirectionsTextBox" alignment="TOP_LEFT" layoutX="729.0" layoutY="100.0" prefHeight="390.0" prefWidth="257.0" styleClass="textDirection" stylesheets="@design.css" text="Test Directions Please Ignore" visible="false" wrapText="true" />
-                  <Button fx:id="TextDirection" layoutX="823.0" layoutY="61.0" mnemonicParsing="false" onMousePressed="#textDirection" text="Show Text Direction" visible="false" />
+                    <ImageView fx:id="patientImageView" fitHeight="420.0" fitWidth="695.0" layoutX="166.0" layoutY="83.0" pickOnBounds="true" preserveRatio="true" />
+                     <Label fx:id="textDirectionsTextBox" alignment="TOP_LEFT" layoutX="790.0" layoutY="83.0" prefHeight="390.0" prefWidth="210.0" styleClass="textDirection" stylesheets="@design.css" text="Test Directions Please Ignore" visible="false" wrapText="true" />
+                  <Button fx:id="TextDirection" layoutX="790.0" layoutY="473.0" mnemonicParsing="false" onMousePressed="#textDirection" prefHeight="37.0" prefWidth="210.0" style="-fx-background-radius: 3px;" text="Show Text Direction" visible="false" />
                   <ImageView fitHeight="57.0" fitWidth="374.0" layoutX="343.0" layoutY="22.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@BWFH_logo_rgb%20(1).png" />
                      </image>
                   </ImageView>
+                  <Button fx:id="exitButton" layoutX="932.0" layoutY="14.0" mnemonicParsing="false" onAction="#exitSearch" styleClass="exitButton" stylesheets="@design.css" text="X" />
                  </children>
               </AnchorPane>
-              <TextField fx:id="searchBar" layoutX="24.0" layoutY="26.0" onKeyReleased="#search" onMousePressed="#startSearch" prefHeight="47.0" prefWidth="248.0" promptText="Search!" styleClass="search" stylesheets="@design.css">
+              <TextField fx:id="searchBar" layoutX="28.0" layoutY="24.0" onKeyReleased="#search" onMousePressed="#startSearch" prefHeight="47.0" prefWidth="248.0" promptText="Search!" styleClass="search" stylesheets="@design.css">
                  <font>
                     <Font size="28.0" />
                  </font>
@@ -54,13 +104,15 @@
                   <InnerShadow color="#00000052" />
                </effect>
               </TextField>
-              <ListView fx:id="options" layoutX="40.0" layoutY="73.0" prefHeight="200.0" prefWidth="212.0" visible="false">
+              <ListView fx:id="options" layoutX="28.0" layoutY="71.0" prefHeight="200.0" prefWidth="248.0" style="-fx-opacity: 85%;" visible="false">
                  <cursor>
                     <Cursor fx:constant="HAND" />
                  </cursor>
               </ListView>
-              <HBox fx:id="multiMapDisplayMenu" alignment="CENTER_LEFT" layoutX="11.0" layoutY="600.0" maxHeight="95.0" maxWidth="983.0" minHeight="95.0" minWidth="814.0" prefHeight="95.0" prefWidth="975.0" spacing="20.0" styleClass="resultMenu" stylesheets="@design.css" />
-            <Button fx:id="miniMenuButton" layoutX="926.0" layoutY="568.0" mnemonicParsing="false" onMousePressed="#menuControl" opacity="0.8" prefHeight="37.0" prefWidth="60.0" style="-fx-background-color: #B7C1C4;" text="^" visible="false" />
+              <HBox fx:id="multiMapDisplayMenu" alignment="CENTER" layoutX="1.0" layoutY="600.0" maxHeight="95.0" maxWidth="1000.0" minHeight="95.0" minWidth="1000.0" prefHeight="95.0" prefWidth="1000.0" spacing="30.0" styleClass="resultMenu" stylesheets="@design.css" AnchorPane.leftAnchor="1.0">
+               <padding>
+                  <Insets left="30.0" />
+               </padding></HBox>
            </children>
         </AnchorPane>
     </children>

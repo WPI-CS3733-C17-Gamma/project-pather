@@ -1,23 +1,39 @@
 package app.datastore;
 
-import app.pathfinding.*;
 import app.dataPrimitives.FloorPoint;
 import app.dataPrimitives.GraphNode;
+import app.pathfinding.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class GraphNetwork {
+    final Logger logger = LoggerFactory.getLogger(GraphNetwork.class);
+
     LinkedList<GraphNode> graphNodes = new LinkedList<>();
-    IPathFindingAlgorithm currentPathingAlgorithm = new AStar();
+    private HashMap<String, IPathFindingAlgorithm> pathingAlgorithm = new HashMap<>();
+    private IPathFindingAlgorithm currentPathingAlgorithm;
 
     public GraphNetwork(){
-
+        setUpPathFindingAlgorithms();
+        currentPathingAlgorithm = pathingAlgorithm.get("A*");
     }
 
     public GraphNetwork(LinkedList<GraphNode> graphNodes) {
+        setUpPathFindingAlgorithms();
+        currentPathingAlgorithm = pathingAlgorithm.get("A*");
         this.graphNodes = graphNodes;
+    }
+
+    private void setUpPathFindingAlgorithms(){
+        pathingAlgorithm.put("DFS", new DFS());
+        pathingAlgorithm.put("BFS", new BFS());
+        pathingAlgorithm.put("A*", new AStar());
     }
 
     /**
@@ -26,17 +42,16 @@ public class GraphNetwork {
      * @param algo
      */
     public void changeAlgorithm(String algo){
-        System.out.println(algo);
-        switch(algo){
-            case "DFS": currentPathingAlgorithm = new DFS();
-                            break;
-            case "BFS": currentPathingAlgorithm = new BFS();
-                            break;
-            case "AStar":
-            default:
-                currentPathingAlgorithm = new AStar();
-                break;
-        }
+        logger.info("Changing algorithm to {}", algo);
+        currentPathingAlgorithm = pathingAlgorithm.get(algo);
+    }
+
+    public Set<String> getPathingAlgorithmList(){
+        return pathingAlgorithm.keySet();
+    }
+
+    public String getPathingAlgorithm(){
+        return currentPathingAlgorithm.getName();
     }
 
     /**

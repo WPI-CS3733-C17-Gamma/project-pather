@@ -1,18 +1,21 @@
 package app;
 
-import app.display.DirectoryAdminController;
 import app.dataPrimitives.DirectoryEntry;
 import app.dataPrimitives.Room;
 import app.datastore.Directory;
 import app.datastore.Map;
+import app.display.DirectoryAdminController;
 import junit.framework.TestCase;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.LinkedList;
 
 public class CreateEntryTest extends TestCase {
+    final Logger logger = LoggerFactory.getLogger(TestCase.class);
 
     DirectoryAdminController c;
     Map m;
@@ -50,7 +53,7 @@ public class CreateEntryTest extends TestCase {
         }
         assertEquals(3, d.getEntries().size());
         for (String s : d.getEntries().keySet()){
-            System.err.println(s);
+            logger.debug("Doing something to {} in testCreateEntryDAC, in {}", s, this.getClass().getSimpleName());
         }
     }
 

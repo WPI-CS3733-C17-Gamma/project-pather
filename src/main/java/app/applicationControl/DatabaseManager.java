@@ -6,6 +6,8 @@ import app.dataPrimitives.Room;
 import app.datastore.Directory;
 import app.datastore.GraphNetwork;
 import app.datastore.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 import java.util.HashMap;
@@ -14,6 +16,8 @@ import java.util.LinkedList;
 import java.util.TreeMap;
 
 public class DatabaseManager {
+    final Logger logger = LoggerFactory.getLogger(DatabaseManager.class);
+
     String connectionURL;
     Connection connection;
     public static final String[] initStatements = {
@@ -22,7 +26,7 @@ public class DatabaseManager {
             "constraint pk_e Primary key (ID1, ID2)," +
             "constraint id1_fk foreign key (ID1) references GraphNodes(ID)," +
             "constraint id2_fk foreign key (ID2) references GraphNodes(ID))",
-        "create table Rooms (rID Integer Primary key, Name varchar(30), nID Integer," +
+        "create table Rooms (rID Integer Primary key, Name varchar(100), nID Integer," +
             "constraint fk_gn foreign key (nID) references GraphNodes(ID))",
         "create table Entries (eID Integer Primary Key, Title varchar(100), Name varchar(100))",
         "create table RoomEntryAssoc (eID integer, rID integer," +
@@ -45,11 +49,11 @@ public class DatabaseManager {
         this.connectionURL = "jdbc:derby:" + dbName + ";create=true";
         try {
             this.connection = DriverManager.getConnection(connectionURL);
-            System.out.println("Connected to database " + dbName);
+            logger.info("Connected to database {}", dbName);
         }
         catch (SQLException e) {
-            System.err.println(e.getMessage());
-            System.err.println(e.getNextException().getMessage());
+            logger.error("Got error in {} : {}", this.getClass().getSimpleName(), e.getMessage());
+            logger.error("Also got error {}", e.getNextException().getMessage());
         }
     }
 
@@ -136,7 +140,7 @@ public class DatabaseManager {
             }
         }
         catch (SQLException e) {
-            System.out.println(e.getMessage());
+            logger.error("Got error in {} : {}", this.getClass().getSimpleName(), e.getMessage());
         }
 
         Directory directory = new Directory(entries, rooms);
@@ -226,7 +230,7 @@ public class DatabaseManager {
             }
         }
         catch (SQLException e) {
-            System.out.println(e.toString() + e.getMessage());
+            logger.error("Got error in {} : {}", this.getClass().getSimpleName(), e.toString() + e.getMessage());
         }
     }
 
@@ -241,7 +245,7 @@ public class DatabaseManager {
             statement.close();
         }
         catch (SQLException e) {
-            System.err.println(e.getMessage());
+            logger.error("Got error in {} : {}", this.getClass().getSimpleName(), e.getMessage());
         }
     }
 
@@ -249,3 +253,4 @@ public class DatabaseManager {
         return connection;
     }
 }
+

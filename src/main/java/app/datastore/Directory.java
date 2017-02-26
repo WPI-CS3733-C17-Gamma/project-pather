@@ -3,16 +3,16 @@ package app.datastore;
 import app.dataPrimitives.DirectoryEntry;
 import app.dataPrimitives.GraphNode;
 import app.dataPrimitives.Room;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.Reader;
+import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class Directory {
+    final Logger logger = LoggerFactory.getLogger(Directory.class);
+
     HashMap<String, DirectoryEntry> entries;
     HashMap<String, Room> rooms;
 
@@ -72,6 +72,18 @@ public class Directory {
      */
     public List<String> getAllRooms () {
         return rooms.keySet().stream().collect(Collectors.toList());
+    }
+
+
+    /**
+     * Get a list of roomes without locations
+     * @return List of room names for each room with a null location
+     */
+    public List<String> getRoomsWithoutLocations () {
+        return rooms.values().stream()
+            .filter(room -> ! room.hasLocation())
+            .map(room -> room.getName())
+            .collect(Collectors.toList()) ;
     }
 
     /**
@@ -188,7 +200,7 @@ public class Directory {
             return getRoom(kioskName).getLocation();
         }
         catch (Exception e) {
-            System.out.println("No Kiosk");
+            logger.error("No Kiosk Found");
             return new GraphNode(0, 0, "");
         }
     }
@@ -313,5 +325,27 @@ public class Directory {
                 line = br.readLine();
             }
         }
+    }
+
+    /**
+     *
+     * @param roomName
+     * @param location
+     * @return false if the room cannot be set to the given location
+     */
+    public boolean setRoomLocation(String roomName, GraphNode location) {
+        Room roomAtNode = this.getRoom(location);
+        if (roomAtNode != null) {
+            logger.debug("Tried to set room location but there is already a room at the given node");
+            return false;
+        }
+        Room roomToBeChanged = this.getRoom(roomName);
+        if (roomToBeChanged == null) {
+            logger.debug("Tried to set room location but room with name {} was not found", roomName);
+            return false;
+        }
+
+        roomToBeChanged.setLocation(location);
+        return true;
     }
 }

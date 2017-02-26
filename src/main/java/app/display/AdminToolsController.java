@@ -1,11 +1,8 @@
 package app.display;
 
-import app.applicationControl.ApplicationController;
-import app.datastore.Map;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 
 /**
  * Created by alext on 2/20/2017.

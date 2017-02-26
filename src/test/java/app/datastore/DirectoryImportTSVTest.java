@@ -2,17 +2,13 @@ package app.datastore;
 
 import app.dataPrimitives.DirectoryEntry;
 import app.dataPrimitives.Room;
-import app.datastore.Directory;
-
-import java.io.StringReader;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedList;
-
 import junit.framework.TestCase;
 import org.junit.Test;
+
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.Arrays;
+import java.util.HashMap;
 
 public class DirectoryImportTSVTest extends TestCase {
 	@Test

@@ -1,12 +1,28 @@
 package app.dataPrimitives;
 
 import app.Ided;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Room extends Ided implements Comparable {
+    final Logger logger = LoggerFactory.getLogger(Room.class);
 
     GraphNode location;
     String name;
 
+    /**
+     * Create a room without a location
+     * @param name
+     */
+    public Room (String name) {
+        this(null, name);
+    }
+
+    /**
+     *
+     * @param location graph node attached to the room
+     * @param name : name of the room
+     */
     public Room(GraphNode location, String name){
         this.location = location;
         this.name = name;
@@ -33,7 +49,7 @@ public class Room extends Ided implements Comparable {
     public int compareTo(Object room){
         try {
             Room p = (Room) room;
-            System.out.println(p.name + "\t" + this.name);
+            logger.debug("Comparing rooms: {}\t{}", p.name, this.name);
             return(this.name.compareTo(p.name));
         }
         catch(ClassCastException e) {

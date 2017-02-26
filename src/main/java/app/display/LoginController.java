@@ -1,16 +1,11 @@
 package app.display;
 
-import app.applicationControl.ApplicationController;
-import app.applicationControl.Login;
-import app.datastore.Map;
 import javafx.fxml.FXML;
-import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.AnchorPane;
-import javafx.stage.Stage;
+import javafx.scene.layout.GridPane;
 
 /**
  * Created by alext on 2/13/2017.
@@ -20,11 +15,9 @@ public class LoginController extends DisplayController {
     @FXML private PasswordField passwordBox;
     @FXML private TextField textboxUsername;
     @FXML private Label labelWrongCreds;
-    @FXML private AnchorPane loginPage;
+    @FXML private GridPane loginPage;
     @FXML private Button loginButton;
     @FXML private Button buttonAdminTools;
-
-    private String inputPassword = "";
 
     /**
      * Checks credentials
@@ -36,7 +29,7 @@ public class LoginController extends DisplayController {
         return login(textboxUsername.getText(), passwordBox.getText());
     }
 
-    public void isSelected(){       //for auto-disapearing
+    public void isSelected(){ //for auto-disapearing
         labelWrongCreds.setVisible(false);
     }
 

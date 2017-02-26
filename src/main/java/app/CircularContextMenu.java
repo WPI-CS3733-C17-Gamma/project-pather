@@ -5,15 +5,18 @@ import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.LinkedList;
 import java.util.List;
-
 
 /**
  * Created by dominic on 2/18/17.
  */
 public class CircularContextMenu {
+    final Logger logger = LoggerFactory.getLogger(CircularContextMenu.class);
+
     int innerRadius;
     int outerRadius;
     private List<ContextMenuElement> menuElements = new LinkedList<>();
@@ -56,11 +59,11 @@ public class CircularContextMenu {
             try{
                 element.draw(currentAngle, angle, this.innerRadius, this.outerRadius);
             }catch(IllegalArgumentException e){
-                System.out.println("Angle parameters must be positive with angle > initialAngle.");
+                logger.debug("Angle parameters must be positive with angle > initialAngle."
+                + "They were CurrentAngle: {}, angle {}", currentAngle, angle);
             }
             currentAngle = currentAngle + angle;
         }
-
     }
 
     /**
@@ -78,12 +81,13 @@ public class CircularContextMenu {
             try{
                 element.draw(currentAngle, angle, this.innerRadius, this.outerRadius);
             }catch(IllegalArgumentException e){
-                System.out.println("Angle parameters must be positive");
+                logger.debug("Angle parameters must be positive with angle > initialAngle."
+                    + "They were CurrentAngle: {}, angle {}", currentAngle, angle);
             }
 
             currentAngle = currentAngle + angle;
         }
-        System.out.println(currentAngle);
+        logger.debug("Current angel: {}", currentAngle);
     }
 
     /**
@@ -102,7 +106,8 @@ public class CircularContextMenu {
                 try {
                     element.draw(currentAngle, angle, this.innerRadius, this.outerRadius);
                 } catch (IllegalArgumentException e) {
-                    System.out.println("Angle parameters must be positive with angle > initialAngle.");
+                    logger.debug("Angle parameters must be positive with angle > initialAngle."
+                        + "They were CurrentAngle: {}, angle {}", currentAngle, angle);
                 }
 
                 currentAngle = currentAngle + angle;
@@ -178,6 +183,6 @@ public class CircularContextMenu {
  */
 class InvalidPaneException extends Exception{
     InvalidPaneException(){
-        System.err.println("app.InvalidPaneException: No pane to work on");
+        super("app.InvalidPaneException: No pane to work on");
     }
 }

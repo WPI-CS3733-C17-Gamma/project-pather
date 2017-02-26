@@ -4,11 +4,15 @@ import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.SVGPath;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by dominic on 2/18/17.
  */
 public class ContextMenuElement{
+    final Logger logger = LoggerFactory.getLogger(ContextMenuElement.class);
+
     Paint icon;
     SVGPath path = new SVGPath();
     int outerRadius = 150;
@@ -22,7 +26,7 @@ public class ContextMenuElement{
     EventHandler<MouseEvent> onClickHandler = new EventHandler<MouseEvent>() { //Default Event Handler
         @Override
         public void handle(MouseEvent event) {
-            System.out.println("This button has no Event");
+            logger.debug("Clicked a button with no event");
         }
     };
 
