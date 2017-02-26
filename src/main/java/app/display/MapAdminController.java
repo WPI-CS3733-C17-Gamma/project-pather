@@ -279,22 +279,31 @@ public class MapAdminController extends DisplayController {
                 Line line = new Line(x,y, event.getX(),event.getY());
             }
         };
-        ImagePattern deleteRoomImage = new ImagePattern(new Image("/Radial Icons/new_Delete_Room.png"), 0, 0, 60, 60, false);
         ImagePattern addRoomImage = new ImagePattern(new Image("/Radial Icons/new_Add_Room.png"),0, 0, 60, 60, false);
         ImagePattern addNodeImage = new ImagePattern(new Image("/Radial Icons/new_Add_Node.png"),-1, 0, 60, 60, false);
-        ImagePattern deleteNodeImage = new ImagePattern(new Image("/Radial Icons/new_Delete_Node.png"),0, 0, 60, 60, false);
         ImagePattern addConnectionImage = new ImagePattern(new Image("/Radial Icons/new_Add_Connection.png"),0,0,60,60,false);
         ImagePattern chainAddImage = new ImagePattern(new Image("Radial Icons/new_Chain_Add.png"),0,0,60,60,false);
-        screenMenu.addOption(addRoomImage,Color.rgb(42,45,56), addRoomOption, addRoomOption);//Add delete Room, add/change Room, delete node to this menu, delete elevator if this node is an elevator
-        screenMenu.addOption(addNodeImage,Color.rgb(42,45,56), addNodeOption,addNodeOption);
-        screenMenu.addOption(chainAddImage, Color.rgb(42,45,56), chainAddOption,chainAddOption);
-        screenMenu.addOption(addConnectionImage, Color.rgb(42,45,56),addConnectionOption,addConnectionOption);
+        ImagePattern deleteRoomImageDisplay = new ImagePattern(new Image("/Radial Icons/new_Delete_Room.png"), 30, 150, 60, 60, false);
+        ImagePattern addRoomImageDisplay = new ImagePattern(new Image("/Radial Icons/new_Add_Room.png"),30, 150, 60, 60, false);
+        ImagePattern addNodeImageDisplay = new ImagePattern(new Image("/Radial Icons/new_Add_Node.png"),30, 150, 60, 60, false);
+        ImagePattern deleteNodeImageDisplay = new ImagePattern(new Image("/Radial Icons/new_Delete_Node.png"),30, 150, 60, 60, false);
+        ImagePattern addConnectionImageDisplay = new ImagePattern(new Image("/Radial Icons/new_Add_Connection.png"),30,150,60,60,false);
+        ImagePattern chainAddImageDisplay = new ImagePattern(new Image("Radial Icons/new_Chain_Add.png"),30,150,60,60,false);
+        screenMenu.addOption(addRoomImage,Color.rgb(42,45,56),addRoomImageDisplay, addRoomOption, addRoomOption);//Add delete Room, add/change Room, delete node to this menu, delete elevator if this node is an elevator
+        screenMenu.addOption(addNodeImage,Color.rgb(42,45,56), addNodeImageDisplay, addNodeOption,addNodeOption);
+        screenMenu.addOption(chainAddImage, Color.rgb(42,45,56), chainAddImageDisplay, chainAddOption,chainAddOption);
+        screenMenu.addOption(addConnectionImage, Color.rgb(42,45,56), addConnectionImageDisplay, addConnectionOption,addConnectionOption);
 
-        nodeMenu.addOption(deleteNodeImage, Color.rgb(42,45,56),deleteNodeOption,deleteNodeOption);//Add add elevator, addnode, add elevator
-        nodeMenu.addOption(deleteRoomImage,Color.rgb(42,45,56), deleteRoom, deleteRoom);
-        nodeMenu.addOption(addRoomImage, Color.rgb(42,45,56), addChangeRoom, addChangeRoom);
-        nodeMenu.addOption(addConnectionImage,Color.rgb(42,45,56), addConnectionOption,addConnectionOption);
-        nodeMenu.addOption(chainAddImage,Color.rgb(42,45,56),chainAddOption,chainAddOption);
+        ImagePattern deleteRoomImageNode = new ImagePattern(new Image("/Radial Icons/new_Delete_Room.png"), 15, 15, 60, 60, false);
+        ImagePattern addRoomImageNode = new ImagePattern(new Image("/Radial Icons/new_Add_Room.png"),-15, -28, 60, 60, false);
+        ImagePattern deleteNodeImageNode = new ImagePattern(new Image("/Radial Icons/new_Delete_Node.png"),6, -7, 60, 60, false);
+        ImagePattern addConnectionImageNode = new ImagePattern(new Image("/Radial Icons/new_Add_Connection.png"),15,-13,60,60,false);
+        ImagePattern chainAddImageNode = new ImagePattern(new Image("Radial Icons/new_Chain_Add.png"),2,2,60,60,false);
+        nodeMenu.addOption(deleteNodeImageNode, Color.rgb(42,45,56), deleteNodeImageDisplay, deleteNodeOption,deleteNodeOption);//Add add elevator, addnode, add elevator
+        nodeMenu.addOption(deleteRoomImageNode,Color.rgb(42,45,56), deleteRoomImageDisplay, deleteRoom, deleteRoom);
+        nodeMenu.addOption(addRoomImageNode, Color.rgb(42,45,56), addRoomImageDisplay, addChangeRoom, addChangeRoom);
+        nodeMenu.addOption(addConnectionImageNode,Color.rgb(42,45,56), addConnectionImageDisplay, addConnectionOption,addConnectionOption);
+        nodeMenu.addOption(chainAddImageNode,Color.rgb(42,45,56), chainAddImageDisplay, chainAddOption,chainAddOption);
         nodeMenu.setAutoHide(true);
         for (String floor : floorOptions) {
             CustomMenuItem cmi = new CustomMenuItem(new CheckBox(floor));

@@ -1,6 +1,7 @@
 package app.CustomMenus;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.SVGPath;
 
@@ -9,6 +10,7 @@ import javafx.scene.shape.SVGPath;
  */
 public class ContextMenuElement{
     Paint icon;
+    Paint displayIcon = Color.rgb(255,255,255, 0);
     SVGPath path = new SVGPath();
     SVGPath background = new SVGPath();
     double outerRadius;
@@ -28,7 +30,7 @@ public class ContextMenuElement{
     EventHandler<MouseEvent> mouseEnterHandler = new EventHandler<MouseEvent>() {
         @Override
         public void handle(MouseEvent event) {
-            centralDisplay.centralDisplay.setFill(path.getFill());
+            centralDisplay.centralDisplay.setFill(displayIcon);
             centralDisplay.centralDisplay.setOpacity(1);
         }
     };
@@ -71,7 +73,7 @@ public class ContextMenuElement{
      * @param icon
      * @param onClickHandler
      */
-    ContextMenuElement (Paint icon, Paint background, CircularContextMenu parentMenu, CentralDisplay centralDisplay,  EventHandler onClickHandler, EventHandler onDragAndReleaseHandler){
+    ContextMenuElement (Paint icon, Paint background,Paint displayIcon, CircularContextMenu parentMenu, CentralDisplay centralDisplay,  EventHandler onClickHandler, EventHandler onDragAndReleaseHandler){
         path.setMouseTransparent(true);
         this.centralDisplay = centralDisplay;
         this.parentMenu = parentMenu;
@@ -83,6 +85,7 @@ public class ContextMenuElement{
         if (onDragAndReleaseHandler != null) {
             this.background.setOnMouseReleased(onDragAndReleaseHandler);}
         this.icon = icon;
+        this.displayIcon = displayIcon;
         this.background.setFill(background);
 
     }

@@ -86,12 +86,12 @@ public class CircularContextMenu extends Popup {
      * @param clickHandler Actioned to be performe by optiion
      * @param dragAndReleaseHandler Actioned to be performe by optiion
      */
-    public void addOption(Paint icon, Paint background, EventHandler clickHandler, EventHandler dragAndReleaseHandler){
+    public void addOption(Paint icon, Paint background, Paint displayIcon, EventHandler clickHandler, EventHandler dragAndReleaseHandler){
         int size = menuElements.size();
         angle = (double)360 / (double)(size+1);
         double currentAngle = 0;
 
-        menuElements.add(new ContextMenuElement(icon, background, this, display, clickHandler, dragAndReleaseHandler));
+        menuElements.add(new ContextMenuElement(icon, background, displayIcon, this, display, clickHandler, dragAndReleaseHandler));
         getContent().clear();
 
         for(ContextMenuElement element:menuElements) {
