@@ -44,10 +44,10 @@ public class CreateEntryTest extends TestCase {
     @Test ( expected = IllegalArgumentException.class)
     public void testCreateEntryDAC(){
         assertEquals(2, d.getEntries().entrySet().size());
-        c.createEntry("g", "g", new LinkedList<>());
+        c.createEntry("g", "g", new LinkedList<>(), "");
         assertEquals(3, d.getEntries().size());
         try {
-            c.createEntry("f", "f", new LinkedList<>());
+            c.createEntry("f", "f", new LinkedList<>(), "");
         } catch (IllegalArgumentException e) {
             assertTrue(e instanceof IllegalArgumentException);
         }

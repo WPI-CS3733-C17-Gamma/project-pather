@@ -542,14 +542,28 @@ public class PatientController extends DisplayController implements Initializabl
 
             FloorPoint imageLoc = graphPointToImage(loc, imageView);
             String labelName = cur.getName();
-            Label label = new Label(labelName);
-            label.setLayoutX(imageLoc.getX() + 3);
-            label.setLayoutY(imageLoc.getY() + 3);
-            label.setOnMousePressed(e -> goToSelectedRoom(e));
-            label.setOnMouseEntered(e -> setMouseToHand(e));
-            label.setOnMouseExited(e -> setMouseToNormal(e));
-            label.setFont(Font.font ("Georgia", 10));
-            label.setStyle("-fx-background-color: #F0F4F5; -fx-border-color: darkblue;-fx-padding: 2;");
+            String curImage = "";
+            for (DirectoryEntry entry : cur.getEntries()){
+                curImage = entry.getIcon();
+            }
+            Label label = new Label();
+            if (curImage.equals("")){
+                label.setText(labelName);
+                label.setLayoutX(imageLoc.getX() + 3);
+                label.setLayoutY(imageLoc.getY() + 3);
+                label.setFont(Font.font ("Georgia", 10));
+                label.setStyle("-fx-background-color: #F0F4F5; -fx-border-color: darkblue; -fx-padding: 2;");
+            }
+            else{
+                ImageView image = new ImageView();
+                image.setImage(applicationController.getIconImage(curImage));
+                image.setPreserveRatio(true);
+                image.setFitWidth(20);
+                image.setFitHeight(20);
+                label.setGraphic(image);
+                label.setLayoutX(imageLoc.getX() + 3);
+                label.setLayoutY(imageLoc.getY() + 3);
+            }
             Circle circ = new Circle(2, Color.BLACK);
             circ.setLayoutX(imageLoc.getX());
             circ.setLayoutY(imageLoc.getY());
@@ -694,13 +708,12 @@ public class PatientController extends DisplayController implements Initializabl
      * Display labels on app.datastore.Map
      * @param labels
      */
-    public void displayRoomLabels(LinkedList<Label> labels){
-        for(Label label: labels){
-	    if(! anchorPane.getChildren().contains(label)){
-		anchorPane.getChildren().add(label);
-	    }
-
-	}
+    public void displayRoomLabels(LinkedList<Label> labels) {
+        for (Label label : labels) {
+            if (!anchorPane.getChildren().contains(label)) {
+                anchorPane.getChildren().add(label);
+            }
+        }
     }
 
     public void textDirection() {
