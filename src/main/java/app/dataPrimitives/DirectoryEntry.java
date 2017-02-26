@@ -11,13 +11,20 @@ public class DirectoryEntry extends Ided {
 
     List<Room> location;
 
-    String icon;
+    String icon = "";
 
-    public DirectoryEntry(String name, String title, List<Room> location)
+    public DirectoryEntry(String name, String title, List<Room> location, String icon)
     {
         this.name = name;
         this.title = title;
         this.location = location;
+        //someone should pipe this/thread this/etc to make it faster
+        for(Room room : location){
+            if (!room.getEntries().contains(this)){
+                room.addEntry(this);
+            }
+        }
+        this.icon = icon;
     }
 
     /**
@@ -67,6 +74,7 @@ public class DirectoryEntry extends Ided {
      */
     public void addLocation(Room location){
         this.location.add(location);
+        location.addEntry(this);
     }
 
     /**

@@ -22,10 +22,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ApplicationController extends Application {
@@ -83,17 +80,17 @@ public class ApplicationController extends Application {
         floorMaps.put("campus", new ProxyImage("Main_Belkin_Clean/campusclean.png"));
 
         extraImages = new HashMap<>();
-        extraImages.put("elevator", new ProxyImage("Icon_PNGs/ElevatorT.png"));
-        extraImages.put("cafeteria", new ProxyImage("Icon_PNGs/Cafe2T.png"));
-        extraImages.put("bathroom", new ProxyImage("Icon_PNGs/BathroomT.png"));
-        extraImages.put("waitroom", new ProxyImage("Icon_PNGs/WaitRoomT.png"));
-        extraImages.put("doctor", new ProxyImage("Icon_PNGs/DoctorT.png"));
-        extraImages.put("frontdesk", new ProxyImage("Icon_PNGs/AdmittingT.png"));
-        extraImages.put("library", new ProxyImage("Icon_PNGs/LibraryT.png"));
-        extraImages.put("giftshop", new ProxyImage("Icon_PNGs/GiftShopT.png"));
-        extraImages.put("familyRoom", new ProxyImage("Icon_PNGs/FamilyT.png"));
-        extraImages.put("emergencyroom", new ProxyImage("Icon_PNGs/EmergencyT.png"));
-
+        extraImages.put("", null);
+        extraImages.put("Elevator", new ProxyImage("Icon_PNGs/ElevatorT.png"));
+        extraImages.put("Cafeteria", new ProxyImage("Icon_PNGs/Cafe2T.png"));
+        extraImages.put("Bathroom", new ProxyImage("Icon_PNGs/BathroomT.png"));
+        extraImages.put("Waitroom", new ProxyImage("Icon_PNGs/WaitRoomT.png"));
+        extraImages.put("Doctor", new ProxyImage("Icon_PNGs/DoctorT.png"));
+        extraImages.put("Frontdesk", new ProxyImage("Icon_PNGs/AdmittingT.png"));
+        extraImages.put("Library", new ProxyImage("Icon_PNGs/LibraryT.png"));
+        extraImages.put("Giftshop", new ProxyImage("Icon_PNGs/GiftShopT.png"));
+        extraImages.put("Family Room", new ProxyImage("Icon_PNGs/FamilyT.png"));
+        extraImages.put("Emergency Room", new ProxyImage("Icon_PNGs/EmergencyT.png"));
     }
 
     /**
@@ -112,6 +109,10 @@ public class ApplicationController extends Application {
      */
     public List<String> getAllFloors () {
         return this.floorMaps.keySet().stream().collect(Collectors.toList());
+    }
+
+    public List<String> getAllIconNames(){
+        return this.extraImages.keySet().stream().collect(Collectors.toList());
     }
 
     /**
