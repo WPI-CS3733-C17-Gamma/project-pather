@@ -60,6 +60,7 @@ public class DirectoryAdminController extends DisplayController{
         logger.info("INIT DirectoryAdminController");
         helpLabel.setText("Welcome to the directory entry editor.\n You're an admin, you don't need help" );
 
+        //set up the choice box for choosing the icon
         List<String> iconOptions = applicationController.getAllIconNames();
         iconOption.setItems(FXCollections.observableList(iconOptions));
         iconOption.setValue(new Tooltip("Choose icon"));

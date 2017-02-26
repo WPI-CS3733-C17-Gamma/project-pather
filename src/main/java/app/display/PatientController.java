@@ -533,10 +533,8 @@ public class PatientController extends DisplayController implements Initializabl
             String labelName = cur.getName();
             String curImage = "";
             for (DirectoryEntry entry : cur.getEntries()){
-                System.out.println("*");
-                    curImage = entry.getIcon();
+                curImage = entry.getIcon();
             }
-            System.out.println("imagename: " + curImage);
             Label label = new Label();
             if (curImage.equals("")){
                 label.setText(labelName);
