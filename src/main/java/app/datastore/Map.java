@@ -189,14 +189,15 @@ public class Map {
      * Add an elevator at the given Point to all floors given
      * @param point x,y location
      * @param floors list of floors to connect the elevator through
+     * @param transitionType elevator or entrance or floor
      */
-    public void addElevator (FloorPoint point, List<String> floors) {
+    public void addElevator (FloorPoint point, List<String> floors, int transitionType) {
         logger.debug("In map create elevator @ : {}", point);
         List<GraphNode> elevators = new ArrayList<>();
         // make elevators
         for (String floor : floors) {
             FloorPoint currentFloor = new FloorPoint(point.getX(), point.getY(), floor);
-            GraphNode newNode = new GraphNode(currentFloor);
+            GraphNode newNode = new GraphNode(currentFloor, transitionType);
             graph.addNode(newNode);
             elevators.add(newNode);
         }
@@ -215,7 +216,7 @@ public class Map {
      * @param elevator
      */
     public boolean deleteElevator (GraphNode elevator) {
-        if (elevator.isElevator()) {
+        if (elevator.doesCrossFloor()) {
             //  copy adjacent list because it will be modified by deleting!
             List<GraphNode> copy = new ArrayList<GraphNode>();
             copy.addAll(elevator.getConnectedElevators());

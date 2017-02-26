@@ -638,7 +638,7 @@ public class PatientController extends DisplayController implements Initializabl
             int roomy;
 
             //add elevator icon if applicable
-            if(node.isElevator()){
+            if(node.doesCrossFloor()){
                 ImageView image = new ImageView();
                 image.setImage(applicationController.getIconImage("elevator"));
                 image.setPreserveRatio(true);

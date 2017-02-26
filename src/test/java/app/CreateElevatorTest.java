@@ -64,14 +64,14 @@ public class CreateElevatorTest extends TestCase {
     }
 
     @Test
-    // check if isElevator is working
+    // check if doesCrossFloor is working
     public void testIsElevator () {
         floors.add("floor3");
         floors.add("floor4");
         map.addElevator(new FloorPoint(10,12,""), floors);
         GraphNode floor3El = map.getGraphNode(new FloorPoint (10,12,"floor3"));
         GraphNode floor4E1 = map.getGraphNode(new FloorPoint (10,12,"floor4"));
-        assertTrue(floor3El.isElevator());
+        assertTrue(floor3El.doesCrossFloor());
     }
 
 

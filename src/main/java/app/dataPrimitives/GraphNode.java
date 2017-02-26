@@ -6,7 +6,12 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+
 public class GraphNode extends Ided implements Comparable {
+
+    public static final int NONE = 0, STAIR = 3, ELEVATOR = 1, ENTRANCE = 2;
+
+    private int floorTransitionType ;
 
     List<GraphNode> adjacent;
     FloorPoint location;
@@ -19,15 +24,33 @@ public class GraphNode extends Ided implements Comparable {
      * @param floor the floor name
      */
     public GraphNode(int x, int y, String floor){
-        this.location = new FloorPoint(x, y, floor);
-        adjacent = new LinkedList<GraphNode>();
+        this(x,y,floor,NONE);
+    }
+
+    /**
+     *
+     * @param x
+     * @param y
+     * @param floor
+     * @param type
+     */
+    public GraphNode(int x, int y, String floor, int type){
+        this(new FloorPoint(x,y,floor), type);
+    }
+
+    /**
+     *
+     * @param location
+     */
+    public GraphNode (FloorPoint location) {
+        this(location, NONE);
     }
 
     /**
      * construct a node with no adjacent nodes
      * @param location location for the new node
      */
-    public GraphNode(FloorPoint location){
+    public GraphNode(FloorPoint location, int type){
         this.location = location;
         this.adjacent = new LinkedList<GraphNode>();
     }
@@ -136,7 +159,7 @@ public class GraphNode extends Ided implements Comparable {
      * Return true when this node is attached to another node on a different floor
      * @return
      */
-    public boolean isElevator () {
+    public boolean doesCrossFloor() {
         boolean isElev = false;
         for (GraphNode adj : adjacent) {
             if ( ! adj.getLocation().getFloor().equals(this.getLocation().getFloor())) {
@@ -179,5 +202,26 @@ public class GraphNode extends Ided implements Comparable {
 
     public void setLocation(FloorPoint location) {
         this.location = location;
+    }
+
+    /**
+     * If this crosses floor, get the type of transition it is
+     * @return
+     */
+    public int getFloorTransitionType () {
+        if (this.doesCrossFloor()) {
+            return this.floorTransitionType;
+        }
+        else {
+            return NONE;
+        }
+    }
+
+    /**
+     * Set the floor transition type
+     * @param newType must be between 0 and 3
+     */
+    public void setFloorTransitionType (int newType) {
+        this.floorTransitionType = newType;
     }
 }

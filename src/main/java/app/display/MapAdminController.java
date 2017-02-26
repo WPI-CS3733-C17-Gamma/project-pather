@@ -69,6 +69,7 @@ public class MapAdminController extends DisplayController {
     //For the context menu (right click menu)
     //ContextMenu contextMenu;
 
+    @FXML private ChoiceBox<String> transitionType;
     @FXML private Button buttonSave;
     @FXML private Button buttonCancel;
     @FXML private ToggleButton togglebuttonAddNode;
@@ -169,6 +170,16 @@ public class MapAdminController extends DisplayController {
         drawMap();
         stage.addEventFilter(KeyEvent.KEY_PRESSED, event -> handleKey(event));
 
+        ArrayList transitionOptions = new ArrayList(Arrays.asList(new String[]{
+            "Entrance",
+            "Elevator",
+            "Stair"
+        }));
+
+        transitionType.setItems(FXCollections.observableArrayList(transitionOptions));
+        transitionType.setValue("Elevator");
+
+
     }
 
     /**
@@ -242,7 +253,7 @@ public class MapAdminController extends DisplayController {
      * @param imageToDrawOver the image the point must cover
      */
     public void drawNode (GraphNode node, ImageView imageToDrawOver) {
-        if (node.isElevator()) {
+        if (node.doesCrossFloor()) {
             drawElevator(node.getLocation(), imageToDrawOver);
         }
         else {
@@ -308,7 +319,26 @@ public class MapAdminController extends DisplayController {
      * @param location
      */
     public void addElevator(FloorPoint location, List<String> floors){
-        map.addElevator(location, floors);
+        String selectedTransition = transitionType.getValue();
+        int selectedTransitionValue = GraphNode.ELEVATOR;
+        if (selectedTransition.equals("Elevator")) {
+           selectedTransitionValue = GraphNode.ELEVATOR;
+            logger.debug("Elevator selected {}", selectedTransitionValue);
+            System.out.println("Elevator selected " + selectedTransitionValue);
+        }
+        else if (selectedTransition.equals("Entrance")) {
+            selectedTransitionValue = GraphNode.ENTRANCE;
+            logger.debug("Entrance selected {}", selectedTransitionValue);
+            System.out.println("Entrance selected " + selectedTransitionValue);
+        }
+        else if (selectedTransition.equals("Stair")) {
+            selectedTransitionValue = GraphNode.STAIR;
+            logger.debug("Stair selected {}", selectedTransitionValue);
+            System.out.println("Stair selected " + selectedTransitionValue);
+        }
+
+
+        map.addElevator(location, floors, selectedTransitionValue);
         secondaryNode = selectedNode;
         selectedNode = map.getGraphNode(location);
         drawMap();
@@ -415,7 +445,7 @@ public class MapAdminController extends DisplayController {
      */
     public void deleteElevator () {
         if (selectedNode != null ) {
-            if(selectedNode.isElevator()) {
+            if(selectedNode.doesCrossFloor()) {
                 boolean isEl = map.deleteElevator(selectedNode);
                 selectedNode = null;
                 drawMap();
