@@ -21,7 +21,7 @@ public class CircularContextMenu extends Popup {
     private List<ContextMenuElement> menuElements = new LinkedList<>();
     Group root;
     Scene scene;
-    ContextMenuElement highlight = new ContextMenuElement(Color.rgb(41, 191,191),Color.rgb(41, 191,191),this,null);
+    ContextMenuElement highlight = new ContextMenuElement(Color.rgb(232, 144,20),Color.rgb(232, 144,20),this,null);
     double angle;
     CentralDisplay display = new CentralDisplay(innerRadius,outerRadius);
 
@@ -29,9 +29,8 @@ public class CircularContextMenu extends Popup {
         @Override
         public void handle(MouseEvent event) {
             fireOption(event);
+            getOwnerWindow().removeEventFilter(MouseEvent.MOUSE_DRAGGED, windowMouseDrag);
             getOwnerWindow().removeEventFilter(MouseEvent.MOUSE_RELEASED, windowMouseRelease);
-            getOwnerWindow().removeEventHandler(MouseEvent.MOUSE_DRAGGED, windowMouseDrag);
-            event.consume();
 
         }
     };
@@ -39,7 +38,6 @@ public class CircularContextMenu extends Popup {
         @Override
         public void handle(MouseEvent event) {
             drawHighlightDrag(event);
-            event.consume();
 
         }
     };
@@ -48,22 +46,16 @@ public class CircularContextMenu extends Popup {
      * Default Constructor
      */
     public CircularContextMenu(){
-        highlight.background.setMouseTransparent(true);
-        this.addEventHandler(MouseEvent.MOUSE_RELEASED, new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                //System.out.println("Saw release");
-            }
-        });
         this.addEventHandler(MouseEvent.MOUSE_MOVED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 drawHighlightClick(event);
             }
         });
+        highlight.background.setMouseTransparent(true);
         root = new Group();
         scene = new Scene(root,outerRadius,outerRadius);
-
+        display = new CentralDisplay(innerRadius,outerRadius);
         setAutoHide(true);
     }
 
@@ -72,6 +64,12 @@ public class CircularContextMenu extends Popup {
      * @param outerRadius Outer Radius of Context Menu
      */
     public CircularContextMenu( double innerRadius, double outerRadius){
+        this.addEventHandler(MouseEvent.MOUSE_MOVED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                drawHighlightClick(event);
+            }
+        });
         highlight.background.setMouseTransparent(true);
         this.innerRadius = innerRadius;
         this.outerRadius = outerRadius;
@@ -155,7 +153,7 @@ public class CircularContextMenu extends Popup {
                 try {
                     element.draw(currentAngle, angle, this.innerRadius, this.outerRadius);
                 } catch (IllegalArgumentException e) {
-                    System.out.println("Angle parameters must be positive with angle > initialAngle.");
+                    System.out.println("Angle parameters must be positive");
                 }
 
                 currentAngle = currentAngle + angle;
@@ -198,7 +196,6 @@ public class CircularContextMenu extends Popup {
 
         double mouseAngle = calculateMouseAngle(x, y);
         mouseAngle = Math.toRadians(mouseAngle);
-        System.out.println(mouseAngle);
         for (ContextMenuElement element:menuElements) {
             double elementAngle = element.initialAngle + element.angle;
             if(dist > innerRadius) {
@@ -219,11 +216,10 @@ public class CircularContextMenu extends Popup {
         double dist = Math.sqrt(Math.pow(x,2)+Math.pow(y,2));
         double mouseAngle = calculateMouseAngle(x, y);
 
-        if(dist < outerRadius) {
-            highlight.draw(mouseAngle - angle / 2, angle, innerRadius, outerRadius);
-            if(getOwnerNode().getScene() != null)
-                super.show(getOwnerNode(), getAnchorX(), getAnchorY());
-        }
+        highlight.draw(mouseAngle - angle / 2, angle, innerRadius, outerRadius);
+        if(getOwnerNode().getScene() != null)
+            super.show(getOwnerNode(), getAnchorX(), getAnchorY());
+
         redraw();
 
     }
@@ -238,10 +234,8 @@ public class CircularContextMenu extends Popup {
         double dist = Math.sqrt(Math.pow(x,2)+Math.pow(y,2));
         double mouseAngle = calculateMouseAngle(x, y);
 
-        if(dist < outerRadius) {
-            highlight.draw(mouseAngle - angle / 2, angle, innerRadius, outerRadius);
-            super.show(getOwnerNode(), getAnchorX(), getAnchorY());
-        }
+        highlight.draw(mouseAngle - angle / 2, angle, innerRadius, outerRadius);
+        super.show(getOwnerNode(), getAnchorX(), getAnchorY());
         redraw();
 
     }
@@ -282,6 +276,7 @@ public class CircularContextMenu extends Popup {
     @Override
     public void hide(){
         super.hide();
+
     }
 
     public void setMouseTransparent(boolean value){
