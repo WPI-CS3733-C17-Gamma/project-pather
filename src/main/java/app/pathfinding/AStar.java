@@ -13,10 +13,11 @@ public class AStar implements IPathFindingAlgorithm {
      * Finds the shortest path using the A* path finding algorithm
      * @param startNode
      * @param goalNode
+     * @param useStairs true if stairs are to be forced
      * @return
      * @throws PathNotFoundException
      */
-    public LinkedList<GraphNode> findPath(GraphNode startNode, GraphNode goalNode) throws PathNotFoundException {
+    public LinkedList<GraphNode> findPath(GraphNode startNode, GraphNode goalNode, boolean useStairs) throws PathNotFoundException {
     AStarNode start = new AStarNode(startNode);
     AStarNode goal = new AStarNode(goalNode);
     LinkedList<AStarNode> openSet = new LinkedList<>();

@@ -271,8 +271,8 @@ public class Map {
      * @return
      * @throws PathNotFoundException
      */
-    public List<SubPath> getPathByFloor(GraphNode start, GraphNode end) throws PathNotFoundException {
-        List<GraphNode> fullPath = graph.getPath(start, end);
+    public List<SubPath> getPathByFloor(GraphNode start, GraphNode end, boolean useStairs) throws PathNotFoundException {
+        List<GraphNode> fullPath = graph.getPath(start, end, useStairs);
         if(fullPath.isEmpty()) {
             return new ArrayList<>();
         }
@@ -291,9 +291,9 @@ public class Map {
     }
 
     /** See method {@Link app.datastore.GraphNetwork#getPath(startNode, goalNode)} */
-    public List<GraphNode> getPath(GraphNode start, GraphNode end){
+    public List<GraphNode> getPath(GraphNode start, GraphNode end, boolean useStairs){
         try {
-            return graph.getPath(start, end);
+            return graph.getPath(start, end,useStairs);
         } catch( PathNotFoundException e) {
             logger.error("Got error in {} : {}", this.getClass().getSimpleName(), e.getMessage());
         }

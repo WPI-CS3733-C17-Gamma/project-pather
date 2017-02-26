@@ -21,11 +21,12 @@ public class DFS implements IPathFindingAlgorithm {
      * finds a path from the start and the end node using depth first search algorithm
      * @param start
      * @param end
+     * @param useStairs
      * @return
      * @throws PathNotFoundException
      */
     @Override
-    public LinkedList<GraphNode> findPath(GraphNode start, GraphNode end) throws PathNotFoundException {
+    public LinkedList<GraphNode> findPath(GraphNode start, GraphNode end, boolean useStairs) throws PathNotFoundException {
         //initialize variables
         checked = new ArrayList<>();
         path = new LinkedList<>();

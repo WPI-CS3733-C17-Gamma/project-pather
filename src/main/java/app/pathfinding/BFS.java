@@ -19,11 +19,12 @@ public class BFS implements IPathFindingAlgorithm {
      * finds a path from the start and the end node using breath first search algorithm
      * @param start
      * @param end
+     * @param useStairs
      * @return
      * @throws PathNotFoundException
      */
     @Override
-    public LinkedList<GraphNode> findPath(GraphNode start, GraphNode end) throws PathNotFoundException {
+    public LinkedList<GraphNode> findPath(GraphNode start, GraphNode end, boolean useStairs) throws PathNotFoundException {
         todo = new LinkedList<>();
         checked = new ArrayList<>();
         path = new LinkedList<>();

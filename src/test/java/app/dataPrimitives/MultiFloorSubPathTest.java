@@ -48,7 +48,7 @@ public class MultiFloorSubPathTest extends TestCase{
         ArrayList<SubPath> expSubPath = new ArrayList<>();
         expSubPath.add(expected);
 
-        assertEquals("Sub path should be one floor" , expSubPath, map.getPathByFloor(A1,A2) );
+        assertEquals("Sub path should be one floor" , expSubPath, map.getPathByFloor(A1,A2, false) );
 
     }
 
@@ -65,7 +65,7 @@ public class MultiFloorSubPathTest extends TestCase{
         expSubPath.add(expected1);
         expSubPath.add(expected2);
 
-        assertEquals("Sub path should be one floor" , expSubPath, map.getPathByFloor(A1,B1) );
+        assertEquals("Sub path should be one floor" , expSubPath, map.getPathByFloor(A1,B1, false) );
     }
     @Test
     // Test case assumes a star is searching in reverse order
@@ -83,11 +83,11 @@ public class MultiFloorSubPathTest extends TestCase{
         expSubPath.add(expected1);
         expSubPath.add(expected2);
 
-        assertEquals("Sub path should be one floor" , expSubPath, map.getPathByFloor(A1,A3) );
+        assertEquals("Sub path should be one floor" , expSubPath, map.getPathByFloor(A1,A3, false) );
     }
 
     @Test (expected = PathNotFoundException.class)
     public void testNoPath () {
-        map.getPath(A1, new GraphNode (1,1,""));
+        map.getPath(A1, new GraphNode (1,1,""), false);
     }
 }

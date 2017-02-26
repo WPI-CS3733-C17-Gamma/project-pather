@@ -224,7 +224,7 @@ public class PatientController extends DisplayController implements Initializabl
                 logger.debug("Found desired graph node at: {}",
                     locs.get(0).getLocation().toString());
                 displayResults(new LinkedList<>());
-                getPath(map.getKioskLocation(), locs.get(0).getLocation());
+                getPath(map.getKioskLocation(), locs.get(0).getLocation(), false);
                 return locs.get(0).getLocation();
             }
             // too many options, redisplay options
@@ -241,7 +241,8 @@ public class PatientController extends DisplayController implements Initializabl
             if (room != null) {
                 logger.debug("FOUND ROOM! : " + room);
                 displayResults(new LinkedList<>());
-                getPath(map.getKioskLocation(), room.getLocation());
+		// TODO
+                getPath(map.getKioskLocation(), room.getLocation(), false);
                 return room.getLocation();
             }
             else {
@@ -335,14 +336,15 @@ public class PatientController extends DisplayController implements Initializabl
      * get paths across multiple floor and display different resulted floors on the search interface (the large ImageView and the hBox)
      * @param start the starting location
      * @param end the ending location
+     * @param useStairs true if the stairs are to be forced into use
      */
-    public void getPath (GraphNode start, GraphNode end) {
+    public void getPath (GraphNode start, GraphNode end, boolean useStairs) {
         minimaps = new LinkedList<>();
         if (start == null || end == null) {
             logger.error("Cannot path, start or end is null!");
         }
         try {
-            currentPath = map.getPathByFloor(start, end);
+            currentPath = map.getPathByFloor(start, end, useStairs);
             TextDirection.setVisible(true);
             clearDisplay();
             displaySubPath(patientImageView, currentPath.get(0), true,10, 20);
@@ -564,7 +566,8 @@ public class PatientController extends DisplayController implements Initializabl
             Label temp = (Label) e.getSource();
             searchBar.setText(temp.getText());
             startSearch();
-            getPath(map.getKioskLocation(),map.getRoomFromName(temp.getText()).getLocation());
+	    // TODO make use stairs
+            getPath(map.getKioskLocation(),map.getRoomFromName(temp.getText()).getLocation(), false);
         }
     }
 
