@@ -26,7 +26,7 @@ public class LoginController extends DisplayController {
      * false if credentials are incorrect
      */
     private boolean getCredentials(){
-        return true;//login(textboxUsername.getText(), passwordBox.getText());
+        return login(textboxUsername.getText(), passwordBox.getText());
     }
 
     public void isSelected(){ //for auto-disapearing
