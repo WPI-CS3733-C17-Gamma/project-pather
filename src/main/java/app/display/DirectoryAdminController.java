@@ -97,9 +97,10 @@ public class DirectoryAdminController extends DisplayController{
      * @throws IllegalArgumentException if an entry could not be found*/
     public void selectEntry(String entryName) throws IllegalArgumentException {
         activeDirectoryEntry = map.getEntry(entryName);
-        if( activeDirectoryEntry == null ) {
-            throw new IllegalArgumentException();
-        }
+        //this thingy throws an error every time an entry is saved
+//        if( activeDirectoryEntry == null ) {
+//            throw new IllegalArgumentException();
+//        }
         displayEntry(activeDirectoryEntry);
         return;
     }
