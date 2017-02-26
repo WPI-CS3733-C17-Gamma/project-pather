@@ -1,6 +1,5 @@
 package app.display;
-
-import app.CircularContextMenu;
+import app.CustomMenus.CircularContextMenu;
 import app.applicationControl.ApplicationController;
 import app.dataPrimitives.*;
 import app.pathfinding.PathNotFoundException;
@@ -731,6 +730,7 @@ public class PatientController extends DisplayController implements Initializabl
         currentTextDirections = textDirections;
         return;
     }
+
 
     public void logIn () {
         applicationController.createLoginAdmin();
