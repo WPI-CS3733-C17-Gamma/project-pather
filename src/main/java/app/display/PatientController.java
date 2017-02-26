@@ -677,7 +677,7 @@ public class PatientController extends DisplayController implements Initializabl
                 current.setLayoutX(roomx);
                 current.setLayoutY(roomy);
                 current.setBorder(new Border(new BorderStroke(Color.BLACK,BorderStrokeStyle.SOLID,new CornerRadii(4),BorderWidths.DEFAULT)));
-                current.setBackground(new Background(new BackgroundFill(Color.rgb(124,231,247), new CornerRadii(4),
+                current.setBackground(new Background(new BackgroundFill(Color.rgb(66,64,86), new CornerRadii(2),
                     new Insets(0.0,0.0,0.0,0.0))));
                 current.setMouseTransparent(true);
                 labels.add(current);
