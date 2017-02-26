@@ -40,7 +40,7 @@
         </VBox>
     </left>
     <center>
-        <VBox fx:id="entryEditor" alignment="CENTER" fillWidth="false" maxWidth="350.0" spacing="5.0" BorderPane.alignment="TOP_LEFT">
+        <VBox fx:id="entryEditor" alignment="CENTER" fillWidth="false" maxWidth="350.0" spacing="5.0" visible="false" BorderPane.alignment="TOP_LEFT">
             <children>
                 <GridPane prefHeight="202.0" prefWidth="300.0" vgap="5.0">
                     <columnConstraints>

@@ -243,6 +243,7 @@ public class DirectoryAdminController extends DisplayController{
         DirectoryEntry newEntry = new DirectoryEntry(name, title, rooms, icon);
 
         if( map.getEntry(name) != null ) {
+            System.out.println("equal?" + map.getEntry(name).equals(newEntry));
             if( map.getEntry(name).equals(newEntry) ) {
                 throw new IllegalArgumentException("Tried to save entry that would be a duplicate of one"
                     + " already in the directory");
