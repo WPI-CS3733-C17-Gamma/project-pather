@@ -546,8 +546,9 @@ public class PatientController extends DisplayController implements Initializabl
             label.setOnMousePressed(e -> goToSelectedRoom(e));
             label.setOnMouseEntered(e -> setMouseToHand(e));
             label.setOnMouseExited(e -> setMouseToNormal(e));
-            label.setFont(Font.font ("Georgia", 10));
-            label.setStyle("-fx-background-color: #F0F4F5; -fx-border-color: darkblue;-fx-padding: 2;");
+            label.setFont(Font.font ("Calibri", 10));
+            label.setStyle("-fx-background-color: #424556; -fx-border-color: #424556; -fx-padding: 2; -fx-border-radius: 1 1 1 1");
+            label.setTextFill(Color.rgb(211,211,211));
             Circle circ = new Circle(2, Color.BLACK);
             circ.setLayoutX(imageLoc.getX());
             circ.setLayoutY(imageLoc.getY());
@@ -676,9 +677,10 @@ public class PatientController extends DisplayController implements Initializabl
                 current.setText(room.getName());
                 current.setLayoutX(roomx);
                 current.setLayoutY(roomy);
-                current.setBorder(new Border(new BorderStroke(Color.BLACK,BorderStrokeStyle.SOLID,new CornerRadii(4),BorderWidths.DEFAULT)));
+                current.setBorder(new Border(new BorderStroke(Color.rgb(66,64,86),BorderStrokeStyle.SOLID,new CornerRadii(4),BorderWidths.DEFAULT)));
                 current.setBackground(new Background(new BackgroundFill(Color.rgb(66,64,86), new CornerRadii(2),
                     new Insets(0.0,0.0,0.0,0.0))));
+                current.setTextFill(Color.rgb(211,211,211));
                 current.setMouseTransparent(true);
                 labels.add(current);
             }
