@@ -29,7 +29,7 @@ public class CreateElevatorTest extends TestCase {
     @Test
     // Adding elevator to no floor should result in no elevators
     public void testAddElevatorNoFloor () {
-        map.addElevator(new FloorPoint(10,12,"floor3"), new ArrayList<>());
+        map.addElevator(new FloorPoint(10,12,"floor3"), new ArrayList<>(), GraphNode.ELEVATOR);
         GraphNode floor3El = map.getGraphNode(new FloorPoint (10,12,"floor3"));
         assertEquals(floor3El, null);
     }
@@ -37,7 +37,7 @@ public class CreateElevatorTest extends TestCase {
     // Adding elevator to no floor should result in no elevators
     public void testAddElevatorOneFloor() {
         floors.add("floor3");
-        map.addElevator(new FloorPoint(10,12,""), floors);
+        map.addElevator(new FloorPoint(10,12,""), floors, GraphNode.ELEVATOR);
         GraphNode floor3El = map.getGraphNode(new FloorPoint (10,12,"floor3"));
 
         GraphNode expected = new GraphNode (10,12,"floor3");
@@ -50,7 +50,7 @@ public class CreateElevatorTest extends TestCase {
     public void testAddElevatorTwoFloor() {
         floors.add("floor3");
         floors.add("floor4");
-        map.addElevator(new FloorPoint(10,12,""), floors);
+        map.addElevator(new FloorPoint(10,12,""), floors, GraphNode.ELEVATOR);
         GraphNode floor3El = map.getGraphNode(new FloorPoint (10,12,"floor3"));
         GraphNode floor4E1 = map.getGraphNode(new FloorPoint (10,12,"floor4"));
 
@@ -64,14 +64,14 @@ public class CreateElevatorTest extends TestCase {
     }
 
     @Test
-    // check if isElevator is working
+    // check if doesCrossFloor is working
     public void testIsElevator () {
         floors.add("floor3");
         floors.add("floor4");
-        map.addElevator(new FloorPoint(10,12,""), floors);
+        map.addElevator(new FloorPoint(10,12,""), floors, GraphNode.ELEVATOR);
         GraphNode floor3El = map.getGraphNode(new FloorPoint (10,12,"floor3"));
         GraphNode floor4E1 = map.getGraphNode(new FloorPoint (10,12,"floor4"));
-        assertTrue(floor3El.isElevator());
+        assertTrue(floor3El.doesCrossFloor());
     }
 
 
@@ -79,7 +79,7 @@ public class CreateElevatorTest extends TestCase {
     public void testGetAdjacentElevators () {
         floors.add("floor3");
         floors.add("floor4");
-        map.addElevator(new FloorPoint(10,12,""), floors);
+        map.addElevator(new FloorPoint(10,12,""), floors, GraphNode.ELEVATOR);
         GraphNode floor3El = map.getGraphNode(new FloorPoint (10,12,"floor3"));
         GraphNode floor4E1 = map.getGraphNode(new FloorPoint (10,12,"floor4"));
 
@@ -95,7 +95,7 @@ public class CreateElevatorTest extends TestCase {
         map.setDirectory(new Directory(new HashMap<>(), new HashMap<>()));
         floors.add("floor3");
         floors.add("floor4");
-        map.addElevator(new FloorPoint(10,12,""), floors);
+        map.addElevator(new FloorPoint(10,12,""), floors, GraphNode.ELEVATOR);
 
         // delete the elevator on floor three
         map.deleteElevator(map.getGraphNode(new FloorPoint(10,12,"floor3")));

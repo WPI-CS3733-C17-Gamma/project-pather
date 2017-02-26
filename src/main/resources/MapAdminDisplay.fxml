@@ -35,12 +35,13 @@
                 <ComboBox fx:id="floorSelector" maxWidth="Infinity" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                 <Button fx:id="defaultKioskButton" disable="true" mnemonicParsing="false" onAction="#setDefaultKiosk" text="Set as Kiosk" GridPane.columnIndex="5" GridPane.rowIndex="2" />
                 <ChoiceBox fx:id="chooseAlgorithm" GridPane.columnIndex="5" GridPane.rowIndex="1" />
-                <HBox GridPane.columnIndex="3" GridPane.rowIndex="1">
+                <HBox GridPane.columnIndex="5" GridPane.rowIndex="1">
                     <children>
                         <ToggleButton fx:id="togglebuttonAddElevator" maxWidth="Infinity" onAction="#handleToggleTools" text="Add _Elevator" toggleGroup="$toggleTools" />
                         <MenuButton fx:id="elevatorSelector" maxWidth="Infinity" />
                     </children>
                 </HBox>
+            <ChoiceBox fx:id="transitionType" prefHeight="25.0" prefWidth="95.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
             </children>
          <columnConstraints>
             <ColumnConstraints />

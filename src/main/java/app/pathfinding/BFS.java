@@ -19,11 +19,12 @@ public class BFS implements IPathFindingAlgorithm {
      * finds a path from the start and the end node using breath first search algorithm
      * @param start
      * @param end
+     * @param useStairs
      * @return
      * @throws PathNotFoundException
      */
     @Override
-    public LinkedList<GraphNode> findPath(GraphNode start, GraphNode end) throws PathNotFoundException {
+    public LinkedList<GraphNode> findPath(GraphNode start, GraphNode end, boolean useStairs) throws PathNotFoundException {
         todo = new LinkedList<>();
         checked = new ArrayList<>();
         path = new LinkedList<>();
@@ -39,6 +40,17 @@ public class BFS implements IPathFindingAlgorithm {
         //while there are more nodes to check
         while(!todo.isEmpty()){
             current = todo.poll();
+
+            // ignore elevators if using stairs
+            if (useStairs && current.current.getFloorTransitionType() == GraphNode.ELEVATOR) {
+                continue;
+            }
+            // ignore stairs if using elevators
+            else if (current.current.getFloorTransitionType() == GraphNode.STAIR) {
+                continue;
+            }
+
+
             checked.add(current);
             //if the next level contains the target
             if (current.current.getAdjacent().contains(end)){
