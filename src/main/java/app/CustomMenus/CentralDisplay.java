@@ -17,7 +17,7 @@ public class CentralDisplay {
 
         centralDisplayBackground.setContent("M" + (-outerRadius) + " " + (-outerRadius - innerRadius) + " a " + innerRadius + " " + innerRadius +
             " 0 1 0 0.00001 0 z");
-        centralDisplayBackground.setFill(Color.rgb(211,211,211,0.5));
+        centralDisplayBackground.setFill(Color.rgb(211,211,211,0.7));
         centralDisplayBackground.setVisible(true);
         centralDisplayBackground.setMouseTransparent(false);
     }
