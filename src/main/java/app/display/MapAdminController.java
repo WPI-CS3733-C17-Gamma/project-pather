@@ -323,6 +323,7 @@ public class MapAdminController extends DisplayController {
         stage.addEventFilter(KeyEvent.KEY_PRESSED, event -> handleKey(event));
 
         ArrayList transitionOptions = new ArrayList(Arrays.asList(new String[]{
+            "None",
             "Entrance",
             "Elevator",
             "Stair"
@@ -504,6 +505,11 @@ public class MapAdminController extends DisplayController {
         }
         else if (selectedTransition.equals("Stair")) {
             selectedTransitionValue = GraphNode.STAIR;
+            logger.debug("Stair selected {}", selectedTransitionValue);
+            System.out.println("Stair selected " + selectedTransitionValue);
+        }
+        else {
+            selectedTransitionValue = GraphNode.NONE;
             logger.debug("Stair selected {}", selectedTransitionValue);
             System.out.println("Stair selected " + selectedTransitionValue);
         }
