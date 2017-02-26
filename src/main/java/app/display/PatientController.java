@@ -12,6 +12,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -346,7 +347,7 @@ public class PatientController extends DisplayController implements Initializabl
             currentPath = map.getPathByFloor(start, end);
             TextDirection.setVisible(true);
             clearDisplay();
-            displaySubPath(patientImageView, currentPath.get(0), true,10, 20);
+            displaySubPath(patientImageView, currentPath.get(0), true,10, 1,20);
             currentSubPath = 0;
             for (int x = 0; x <currentPath.size(); x++){
                 SubPath p = currentPath.get(x);
@@ -384,7 +385,7 @@ public class PatientController extends DisplayController implements Initializabl
             currentSubPath = (int) iv.getId().charAt(0) - 48;
             SubPath path = currentPath.get(currentSubPath);//ascii conversion
             clearDisplay();
-            displaySubPath(patientImageView, path, true,10, 20);
+            displaySubPath(patientImageView, path, true,10, 1,20);
             displayMinipaths();
             iv.setEffect(new DropShadow());
             if (displayState == state.DISPLAYING_TEXT_DIRECTION){
@@ -451,7 +452,7 @@ public class PatientController extends DisplayController implements Initializabl
      * @param mapImage
      * @param subPath subpath to be drawn
      */
-    public void displaySubPath (ImageView mapImage, SubPath subPath, boolean drawLabels,int nodeRadius, int lableFontSize) {
+    public void displaySubPath (ImageView mapImage, SubPath subPath, boolean drawLabels,int nodeRadius, int arrowSize, int lableFontSize) {
         GraphNode prev = null;
         mapImage.setImage(applicationController.getFloorImage(subPath.getFloor()));
         List<Shape> listToDraw = new ArrayList<>();
@@ -485,7 +486,7 @@ public class PatientController extends DisplayController implements Initializabl
             }
             // draw connection
             listToDraw.add(drawConnection(prev, node, mapImage));
-            listToDraw.add(drawArrowHeads(prev, node, mapImage));
+            listToDraw.add(drawArrowHeads(prev, node, arrowSize, mapImage));
             startPoint.toFront();
             endPoint.toFront();
             prev = node;
@@ -633,24 +634,35 @@ public class PatientController extends DisplayController implements Initializabl
 
         return line;
     }
-        /**
+    /**
      * draw the arrow head for line between two nodes
      * @param nodeA
      * @param nodeB
-     * @return
+     * @return arrow head to be drawn
      */
-    public Shape drawArrowHeads (GraphNode nodeA, GraphNode nodeB, ImageView imageToBeDrawnOver) {
+    public Shape drawArrowHeads (GraphNode nodeA, GraphNode nodeB, int arrowSize, ImageView imageToBeDrawnOver) {
         FloorPoint pointA = graphPointToImage(nodeA, imageToBeDrawnOver);
         FloorPoint pointB = graphPointToImage(nodeB, imageToBeDrawnOver);
 
-        SVGPath triangle = new SVGPath();
-        triangle.setContent("M 5 5 L 15 5 L 10 15 z");
+        Polygon triangle = new Polygon();
+
         double delx = pointB.getX() - pointA.getX();
         double dely = pointB.getY() - pointA.getY();
-        triangle.setRotate(Math.toDegrees(Math.atan2(dely,delx)) - 90);
+
+        double angle = Math.toDegrees(Math.atan2(delx, dely));
+
+        double dist = Math.sqrt(Math.pow(delx,2) + Math.pow(dely, 2))/2;
+
+        Point2D point1 = new Point2D(7*arrowSize*Math.cos(arrowSize*Math.toRadians(angle)) - dist*arrowSize*Math.sin(arrowSize*Math.toRadians(angle)), -7*arrowSize*Math.sin(arrowSize*Math.toRadians(angle)) - dist*arrowSize*Math.cos(arrowSize*Math.toRadians(angle)));
+        Point2D point2 = new Point2D(-7*arrowSize*Math.cos(arrowSize*Math.toRadians(angle)) - dist*arrowSize*Math.sin(arrowSize*Math.toRadians(angle)), 7*arrowSize*Math.sin(arrowSize*Math.toRadians(angle)) - dist*arrowSize*Math.cos(arrowSize*Math.toRadians(angle)));
+        Point2D point3 = new Point2D(10*arrowSize*Math.sin(arrowSize*Math.toRadians(angle)) - dist*arrowSize*Math.sin(arrowSize*Math.toRadians(angle)), 10*arrowSize*Math.cos(arrowSize*Math.toRadians(angle)) - dist*arrowSize*Math.cos(arrowSize*Math.toRadians(angle)));
+
+
+        triangle.getPoints().addAll(new Double [] {point3.getX(), point3.getY(), point2.getX(), point2.getY(), point1.getX(), point1.getY()});
+        triangle.setLayoutX(pointB.getX());
+        triangle.setLayoutY(pointB.getY());
         triangle.setFill(Color.rgb(88, 169, 196));
-        triangle.setLayoutX(pointB.getX() - 10);
-        triangle.setLayoutY(pointB.getY() - 10);
+        //triangle.setRotate(angle);
 
         anchorPane.getChildren().add(triangle);
 
@@ -837,7 +849,7 @@ public class PatientController extends DisplayController implements Initializabl
      */
     public void displayMinipaths(){
         for(Minimap minimap: minimaps){
-            displaySubPath(minimap.map, minimap.path, false,3, 10);
+            displaySubPath(minimap.map, minimap.path, false,3, 0, 10);
         }
     }
 
@@ -847,7 +859,7 @@ public class PatientController extends DisplayController implements Initializabl
     public void hideMinipaths() {
         if (currentPath != null) {
             clearDisplay();
-            displaySubPath(patientImageView, currentPath.get(currentSubPath), true, 10, 20);
+            displaySubPath(patientImageView, currentPath.get(currentSubPath), true, 10, 0,20);
         }
     }
 
@@ -886,7 +898,3 @@ class Minimap{
     }
 }
 
-class ArrowedLine{
-    Line line;
-
-}
