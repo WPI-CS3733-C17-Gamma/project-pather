@@ -28,6 +28,7 @@ public class Login {
         if (!requiredSignin) {
             return true;
         }
+
         try {
             if (passwordStorage.get(uname).equals(password)) {
                 return true;
