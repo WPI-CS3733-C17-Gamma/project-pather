@@ -1,14 +1,20 @@
 package app.dataPrimitives;
 
 import app.Ided;
+import app.datastore.Directory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class Room extends Ided implements Comparable {
     final Logger logger = LoggerFactory.getLogger(Room.class);
 
     GraphNode location;
     String name;
+
+    List<DirectoryEntry> entries = new LinkedList<>();
 
     /**
      * Create a room without a location
@@ -38,6 +44,14 @@ public class Room extends Ided implements Comparable {
 
     public boolean hasLocation() {
         return location != null;
+    }
+
+    public void addEntry(DirectoryEntry entry){
+        entries.add(entry);
+    }
+
+    public List<DirectoryEntry> getEntries(){
+        return this.entries;
     }
 
     /**

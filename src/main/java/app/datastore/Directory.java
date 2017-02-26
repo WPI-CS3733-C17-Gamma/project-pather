@@ -320,7 +320,7 @@ public class Directory {
                     entryRooms.add(room);
                 }
                 // TODO: handle existing entries
-                addEntry(new DirectoryEntry(name, title, entryRooms));
+                addEntry(new DirectoryEntry(name, title, entryRooms, ""));
 
                 line = br.readLine();
             }

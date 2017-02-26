@@ -23,10 +23,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ApplicationController extends Application {
@@ -70,21 +67,31 @@ public class ApplicationController extends Application {
         map = databaseManager.load();
 
         floorMaps = new HashMap<>();
-        floorMaps.put("floor1", new ProxyImage("Main_Belkin_Clean/main_1clean.png"));
-        floorMaps.put("floor2", new ProxyImage("Main_Belkin_Clean/main_2clean.png"));
-        floorMaps.put("floor3", new ProxyImage("Main_Belkin_Clean/main_3clean.png"));
-        floorMaps.put("floor4", new ProxyImage("Main_Belkin_Clean/main_4clean.png"));
-        floorMaps.put("floor5", new ProxyImage("Main_Belkin_Clean/main_5clean.png"));
-        floorMaps.put("floor6", new ProxyImage("Main_Belkin_Clean/main_6clean.png"));
-        floorMaps.put("floor7", new ProxyImage("Main_Belkin_Clean/main_7clean.png"));
-        floorMaps.put("belkin1", new ProxyImage("Main_Belkin_Clean/Belkin_1clean.png"));
-        floorMaps.put("belkin2", new ProxyImage("Main_Belkin_Clean/Belkin_2clean.png"));
-        floorMaps.put("belkin3", new ProxyImage("Main_Belkin_Clean/Belkin_3clean.png"));
-        floorMaps.put("belkin4", new ProxyImage("Main_Belkin_Clean/Belkin_4clean.png"));
-        floorMaps.put("campus", new ProxyImage("Main_Belkin_Clean/campusclean.png"));
+        floorMaps.put("floor1", new ProxyImage("Blue_Maps/main_1_blue.png"));
+        floorMaps.put("floor2", new ProxyImage("Blue_Maps/main_2_blue.png"));
+        floorMaps.put("floor3", new ProxyImage("Blue_Maps/main_3_blue.png"));
+        floorMaps.put("floor4", new ProxyImage("Blue_Maps/main_4_blue.png"));
+        floorMaps.put("floor5", new ProxyImage("Blue_Maps/main_5_blue.png"));
+        floorMaps.put("floor6", new ProxyImage("Blue_Maps/main_6_blue.png"));
+        floorMaps.put("floor7", new ProxyImage("Blue_Maps/main_7_blue.png"));
+        floorMaps.put("belkin1", new ProxyImage("Blue_Maps/Belkin_1_blue_temp.png"));
+        floorMaps.put("belkin2", new ProxyImage("Blue_Maps/Belkin_2_blue.png"));
+        floorMaps.put("belkin3", new ProxyImage("Blue_Maps/Belkin_3_blue.png"));
+        floorMaps.put("belkin4", new ProxyImage("Blue_Maps/Belkin_4_blue.png"));
+        floorMaps.put("campus", new ProxyImage("Blue_Maps/campus_blue.png"));
 
         extraImages = new HashMap<>();
-        extraImages.put("elevator", new ProxyImage("Icon_PNGs/ElevatorT.png"));
+        extraImages.put("", null);
+        extraImages.put("Elevator", new ProxyImage("Icon_PNGs/ElevatorT.png"));
+        extraImages.put("Cafeteria", new ProxyImage("Icon_PNGs/Cafe2T.png"));
+        extraImages.put("Bathroom", new ProxyImage("Icon_PNGs/BathroomT.png"));
+        extraImages.put("Waitroom", new ProxyImage("Icon_PNGs/WaitRoomT.png"));
+        extraImages.put("Doctor", new ProxyImage("Icon_PNGs/DoctorT.png"));
+        extraImages.put("Frontdesk", new ProxyImage("Icon_PNGs/AdmittingT.png"));
+        extraImages.put("Library", new ProxyImage("Icon_PNGs/LibraryT.png"));
+        extraImages.put("Giftshop", new ProxyImage("Icon_PNGs/GiftShopT.png"));
+        extraImages.put("Family Room", new ProxyImage("Icon_PNGs/FamilyT.png"));
+        extraImages.put("Emergency Room", new ProxyImage("Icon_PNGs/EmergencyT.png"));
     }
 
     /**
@@ -103,6 +110,10 @@ public class ApplicationController extends Application {
      */
     public List<String> getAllFloors () {
         return this.floorMaps.keySet().stream().collect(Collectors.toList());
+    }
+
+    public List<String> getAllIconNames(){
+        return this.extraImages.keySet().stream().collect(Collectors.toList());
     }
 
     /**
