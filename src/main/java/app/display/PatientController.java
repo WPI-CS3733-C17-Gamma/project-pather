@@ -591,7 +591,7 @@ public class PatientController extends DisplayController implements Initializabl
      * @param localPoint
      */
     public Shape drawEndPoint (FloorPoint localPoint, int radius) {
-        return drawPoint(localPoint, Color.RED, 10);
+        return drawPoint(localPoint, Color.RED, radius);
     }
 
     /**
