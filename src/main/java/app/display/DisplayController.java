@@ -1,15 +1,20 @@
 package app.display;
 
 import app.applicationControl.ApplicationController;
+import app.dataPrimitives.FloorPoint;
+import app.dataPrimitives.GraphNode;
 import app.datastore.Map;
 import javafx.fxml.FXML;
+import javafx.scene.Parent;
 import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class DisplayController {
-    final Logger logger = LoggerFactory.getLogger(DisplayController.class);
+    private static final Logger logger = LoggerFactory.getLogger(DisplayController.class);
 
     @FXML Label helpLabel;
 
@@ -58,6 +63,7 @@ public class DisplayController {
         }
         else {
             helpLabel.setVisible(true);
+            helpLabel.toFront();
         }
     }
 
@@ -72,5 +78,26 @@ public class DisplayController {
 
     void hideStage(Stage stage){
         stage.hide();
+    }
+        /**
+     * convert the graph 1000 * 1000 coordinate to the size of the image view
+     * The point must be added to the direct parent of the image view for this to work
+     * OR all points must be added ot the scene
+     * @param node
+     * @param imageToBeDrawnOver image the the coordinate must be scaled to
+     * @return
+     */
+
+    static FloorPoint graphPointToImage (GraphNode node, ImageView imageToBeDrawnOver) {
+        Parent currentParent = imageToBeDrawnOver.getParent();
+
+        double imageWidth = imageToBeDrawnOver.getBoundsInLocal().getWidth();
+        double imageHeight = imageToBeDrawnOver.getBoundsInLocal().getHeight();
+
+        int newX = (int)(node.getLocation().getX() * imageWidth / 1000.);
+        int newY = (int)(node.getLocation().getY() * imageHeight / 1000.);
+        logger.debug("Image width : {}, Image Height : {}", imageWidth, imageHeight);
+
+        return new FloorPoint(newX, newY, node.getLocation().getFloor());
     }
 }

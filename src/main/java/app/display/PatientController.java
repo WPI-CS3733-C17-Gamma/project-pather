@@ -1,6 +1,5 @@
 package app.display;
-
-import app.CircularContextMenu;
+import app.CustomMenus.CircularContextMenu;
 import app.applicationControl.ApplicationController;
 import app.dataPrimitives.*;
 import app.pathfinding.PathNotFoundException;
@@ -10,6 +9,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
@@ -22,6 +22,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,13 +48,18 @@ public class PatientController extends DisplayController {
     @FXML private ComboBox<String> searchBar;
     @FXML private HBox multiMapDisplayMenu;
     @FXML private ImageView imageView;
-    @FXML private Label textDirectionsTextBox;
     @FXML private Pane imagePane;
     @FXML private ToggleGroup floorPicker;
     @FXML private TabPane sidebar;
 
+    @FXML private ListView<String> textDirectionsListView;
+
     private List<SubPath> currentPath;
     private int currentSubPath;
+
+    private LinkedList<Pair<Integer, String>> currentTextDirections;
+    private Shape drawnTextShape;
+
     private LinkedList<Label> roomLabels = new LinkedList<>();
     private LinkedList<Minimap> minimaps = new LinkedList<>();
 
@@ -166,7 +172,7 @@ public class PatientController extends DisplayController {
             else if (locs.size() == 1) {
                 logger.debug("Found desired graph node at: {}",
                     locs.get(0).getLocation().toString());
-                getPath(map.getKioskLocation(), locs.get(0).getLocation());
+                getPath(map.getKioskLocation(), locs.get(0).getLocation(), false);
                 //Select text directions pane
                 sidebar.getSelectionModel().select(1);
                 resetSearch(option);
@@ -185,7 +191,7 @@ public class PatientController extends DisplayController {
             Room room =  map.getRoomFromName(option);
             if (room != null) {
                 logger.debug("FOUND ROOM! : " + room);
-                getPath(map.getKioskLocation(), room.getLocation());
+                getPath(map.getKioskLocation(), room.getLocation(), false);
                 //Select text directions pane
                 sidebar.getSelectionModel().select(1);
                 resetSearch(option);
@@ -217,7 +223,6 @@ public class PatientController extends DisplayController {
     public void clearSearchDisplay(){
         hideMinipaths();//hide the hBox thingy
         multiMapDisplayMenu.getChildren().clear();//clear the hBox menu thingy
-        textDirectionsTextBox.setVisible(false);
         clearDisplay();
     }
 
@@ -240,7 +245,7 @@ public class PatientController extends DisplayController {
      */
     public void setFloor(String floor) {
         currentMap = floor;
-        imageView.setImage(applicationController.getImage(currentMap));
+        imageView.setImage(applicationController.getFloorImage(currentMap));
         clearDisplay();
         drawRoomLabels();
     }
@@ -269,8 +274,9 @@ public class PatientController extends DisplayController {
      * get paths across multiple floor and display different resulted floors on the search interface (the large ImageView and the hBox)
      * @param start the starting location
      * @param end the ending location
+     * @param useStairs true if the stairs are to be forced into use
      */
-    public void getPath (GraphNode start, GraphNode end) {
+    public void getPath (GraphNode start, GraphNode end, boolean useStairs) {
         hideMinipaths();
         displayState = state.PATIENT_SEARCH;
         minimaps = new LinkedList<>();
@@ -278,7 +284,7 @@ public class PatientController extends DisplayController {
             logger.error("Cannot path, start or end is null!");
         }
         try {
-            currentPath = map.getPathByFloor(start, end);
+            currentPath = map.getPathByFloor(start, end, useStairs);
             changeSubpath(0); // show first subPath
             for (int x = 0; x <currentPath.size(); x++){
                 SubPath p = currentPath.get(x);
@@ -288,9 +294,9 @@ public class PatientController extends DisplayController {
                 currentImageView.setPreserveRatio(true);
                 currentImageView.setFitHeight(75);
                 currentImageView.setFitWidth(133);
-                currentImageView.setImage(applicationController.getImage(p.getFloor()));
-                pane.setOnMousePressed(e -> mapChoice(e));
-                pane.setId(x + "floor in list");
+                currentImageView.setOnMousePressed(e -> mapChoice(e));
+                currentImageView.setImage(applicationController.getFloorImage(p.getFloor()));
+                currentImageView.setId(x + "floor in list");
                 logger.debug("Current image view id: {}", currentImageView.getId());
                 pane.getChildren().add(currentImageView);
                multiMapDisplayMenu.getChildren().add(pane);
@@ -320,6 +326,7 @@ public class PatientController extends DisplayController {
      * @param id the subPath to change to
      */
     private void changeSubpath(int id) {
+        textDirectionsListView.getSelectionModel().select(null);
         currentSubPath = id;
         SubPath path = currentPath.get(currentSubPath);
         clearDisplay();
@@ -344,7 +351,7 @@ public class PatientController extends DisplayController {
                                 SubPath subPath, boolean drawLabels,
                                 int nodeRadius, int labelFontSize) {
         GraphNode prev = null;
-        image.setImage(applicationController.getImage(subPath.getFloor()));
+        image.setImage(applicationController.getFloorImage(subPath.getFloor()));
         List<Shape> listToDraw = new ArrayList<>();
         Shape startPoint = new Circle();
         Shape endPoint = new Circle();
@@ -437,9 +444,9 @@ public class PatientController extends DisplayController {
             int roomy;
 
             //add elevator icon if applicable
-            if(node.isElevator()){
+            if(node.doesCrossFloor()){
                 ImageView image = new ImageView();
-                image.setImage(applicationController.getExtraImage("elevator"));
+                image.setImage(applicationController.getIconImage("elevator"));
                 image.setPreserveRatio(true);
                 image.setFitWidth(20);
                 image.setFitHeight(20);
@@ -561,31 +568,13 @@ public class PatientController extends DisplayController {
      * @param nextFloor the next floor to be pathed to, can be null
      */
     public void setTextDirections(List<GraphNode> path, String nextFloor) {
-        List<String> directions = map.getTextualDirections(path);
-        String dir = "";
-        for(String line : directions) {
-            dir += (line + "\n");
-        }
-        String currFloor = path.get(0).getLocation().getFloor();
-        if(nextFloor != null) {
-            if(!currFloor.contains("floor") && nextFloor.contains("floor")) {
-                dir += "Enter Faulkner Hospital";
-            }
-            else if(!currFloor.contains("belkin") && nextFloor.contains("belkin")) {
-                dir += "Enter Belkin House";
-            }
-            else if(nextFloor.contains("campus")) {
-                dir += "Exit building";
-            }
-            else {
-                String floor = nextFloor.replaceFirst("floor|belkin", "floor ");
-                dir += "Take elevator to " + floor;
-            }
-        }
-
-        textDirectionsTextBox.setText(dir);
+        LinkedList<Pair<Integer, String>> textDirections = map.getTextualDirections(path, nextFloor);
+        List<String> directions = textDirections.stream().map(p -> p.getValue()).collect(Collectors.toList());
+        textDirectionsListView.setItems(FXCollections.observableList(directions));
+        currentTextDirections = textDirections;
         return;
     }
+
 
     public void logIn () {
         applicationController.createLoginAdmin();
@@ -623,6 +612,24 @@ public class PatientController extends DisplayController {
                 Platform.runLater(() -> select(new_val));
         });
 
+        //When the text directions box is clicked
+        textDirectionsListView.getSelectionModel().selectedIndexProperty().addListener(
+            (observable, oldValue, newValue) -> {
+                logger.debug("Selected {} in text directions", newValue);
+                if(newValue != null
+                    && (int) newValue >= 0
+                    && (int) newValue < currentTextDirections.size()) {
+
+                    if (drawnTextShape != null) {
+                        imagePane.getChildren().remove(drawnTextShape);
+                    }
+                    GraphNode node = currentPath.get(currentSubPath).getPath().get(
+                        currentTextDirections.get((int) newValue).getKey());
+                    drawnTextShape = drawPoint(imagePane, graphPointToImage(node, imageView), 5, Color.BLUE);
+                }
+            }
+        );
+
         imagePane.widthProperty().addListener((observable, oldValue, newValue) -> {
             imageView.setFitWidth(imagePane.widthProperty().doubleValue());
             updateSize();
@@ -644,6 +651,23 @@ public class PatientController extends DisplayController {
                           "\n\nTo get started, start typing into the search bar. " +
                           "\n Then, select the option you would like to get a path to." +
                           "\n\nTo close this menu, click on this");
+    }
+
+
+    /**
+     * change the cursor to hand (like the one on top of buttons)
+     * @param e
+     */
+    public void setMouseToHand(MouseEvent e){
+        ((Label)e.getSource()).getScene().setCursor(Cursor.HAND);
+    }
+
+    /**
+     * set the cursor to default
+     * @param e
+     */
+    public void setMouseToNormal(MouseEvent e){
+        ((Label)e.getSource()).getScene().setCursor(Cursor.DEFAULT);
     }
 }
 

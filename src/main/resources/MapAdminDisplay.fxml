@@ -1,9 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+
 <BorderPane onKeyPressed="#handleKey" style="-fx-background-color: #d4e3ed;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.display.MapAdminController">
     <top>
         <GridPane hgap="5.0" vgap="5.0" BorderPane.alignment="TOP_CENTER">
@@ -16,20 +28,34 @@
                 <ToggleButton fx:id="togglebuttonAddConnections" maxWidth="Infinity" onAction="#handleToggleTools" text="Add _Connections" toggleGroup="$toggleTools" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                 <ToggleButton fx:id="togglebuttonChainAdd" maxWidth="Infinity" onAction="#handleToggleTools" text="Chain _Add" toggleGroup="$toggleTools" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                 <ComboBox fx:id="roomName" editable="true" maxWidth="Infinity" onMouseClicked="#isFocused" promptText="room name" GridPane.columnIndex="4" GridPane.rowIndex="2" />
-                <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#addRoom" text="Add or Change Room" GridPane.columnIndex="4" GridPane.rowIndex="1" />
-                <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#deleteConnection" text="Delete Connection" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#deleteSelected" text="Delete Node" GridPane.rowIndex="2" />
-                <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#deleteElevator" text="Delete Elevator" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                <Button fx:id="buttonAddRoom" maxWidth="Infinity" mnemonicParsing="false" onAction="#addRoom" text="Add or Change Room" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                <Button fx:id="buttonDeleteConnection" maxWidth="Infinity" mnemonicParsing="false" onAction="#deleteConnection" text="Delete Connection" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                <Button fx:id="buttonDeleteNode" maxWidth="Infinity" mnemonicParsing="false" onAction="#deleteSelected" text="Delete Node" GridPane.rowIndex="2" />
+                <Button fx:id="buttonDeleteElevator" maxWidth="Infinity" mnemonicParsing="false" onAction="#deleteElevator" text="Delete Elevator" GridPane.columnIndex="3" GridPane.rowIndex="2" />
                 <ComboBox fx:id="floorSelector" maxWidth="Infinity" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                 <Button fx:id="defaultKioskButton" disable="true" mnemonicParsing="false" onAction="#setDefaultKiosk" text="Set as Kiosk" GridPane.columnIndex="5" GridPane.rowIndex="2" />
                 <ChoiceBox fx:id="chooseAlgorithm" GridPane.columnIndex="5" GridPane.rowIndex="1" />
-                <HBox GridPane.columnIndex="3" GridPane.rowIndex="1">
+                <HBox GridPane.columnIndex="5" GridPane.rowIndex="1">
                     <children>
                         <ToggleButton fx:id="togglebuttonAddElevator" maxWidth="Infinity" onAction="#handleToggleTools" text="Add _Elevator" toggleGroup="$toggleTools" />
                         <MenuButton fx:id="elevatorSelector" maxWidth="Infinity" />
                     </children>
                 </HBox>
+            <ChoiceBox fx:id="transitionType" prefHeight="25.0" prefWidth="95.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
             </children>
+         <columnConstraints>
+            <ColumnConstraints />
+            <ColumnConstraints />
+            <ColumnConstraints />
+            <ColumnConstraints />
+            <ColumnConstraints />
+            <ColumnConstraints />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+         </rowConstraints>
         </GridPane>
     </top>
     <center>

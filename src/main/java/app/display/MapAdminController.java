@@ -1,5 +1,6 @@
 package app.display;
 
+import app.CustomMenus.CircularContextMenu;
 import app.applicationControl.ApplicationController;
 import app.dataPrimitives.FloorPoint;
 import app.dataPrimitives.GraphNode;
@@ -8,7 +9,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -21,25 +21,17 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-
-import javax.swing.plaf.basic.BasicComboBoxUI;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
-
 
 public class MapAdminController extends DisplayController {
     final Logger logger = LoggerFactory.getLogger(MapAdminController.class);
@@ -53,27 +45,37 @@ public class MapAdminController extends DisplayController {
         CHAIN_ADD, // the user is adding nodes in a chain
         ADD_CONNECTION, // the user is adding connections
         ADD_ELEVATOR,
-        DRAG_NODE,
-        DELETE_NODE,
-        DELETE_CONNECTION
+        DRAG_NODE
     }
 
     State currentState = State.NONE;
     //    MapAdminDisplay display;
     GraphNode selectedNode;
+    List<GraphNode> highlightedNodes;
     GraphNode secondaryNode;
+    Rectangle selectionRectangle = new Rectangle();
     Room activeRoom ;
 
     // keep track of the objects that have been drawn on the screen
     HashMap<Long, Shape> drawnNodes = new HashMap<>();
+    CircularContextMenu nodeMenu = new CircularContextMenu(30, 60);
+    CircularContextMenu screenMenu = new CircularContextMenu(30, 60);
     List<Node> miscDrawnObjects = new ArrayList<>();
     Stage stage;
 
     //For the context menu (right click menu)
     //ContextMenu contextMenu;
 
+    @FXML private ChoiceBox<String> transitionType;
     @FXML private Button buttonSave;
     @FXML private Button buttonCancel;
+
+    @FXML private Button buttonDeleteNode;
+    @FXML private Button buttonDeleteConnection;
+    @FXML private Button buttonDeleteElevator;
+    @FXML private Button buttonAddRoom;
+    @FXML private Button defaultKioskButton;
+
     @FXML private ToggleButton togglebuttonAddNode;
     @FXML private ToggleButton togglebuttonAddConnections;
     @FXML private ToggleButton togglebuttonChainAdd;
@@ -86,11 +88,14 @@ public class MapAdminController extends DisplayController {
     @FXML private MenuButton elevatorSelector;
     @FXML private ComboBox<String> floorSelector;
 
-    @FXML private Button defaultKioskButton;
+
     @FXML private ChoiceBox chooseAlgorithm;
 
     private GraphNode tempNode ;
     private String currentMap;
+    private ContextMenuEvent contextEvent;
+    private double selectionPointx;
+    private double selectionPointy;
 
     /**
      *  Construct map admin controller
@@ -105,6 +110,7 @@ public class MapAdminController extends DisplayController {
         togglebuttonAddConnections.setUserData(State.ADD_CONNECTION);
         togglebuttonChainAdd.setUserData(State.CHAIN_ADD);
         togglebuttonAddElevator.setUserData(State.ADD_ELEVATOR);
+        highlightedNodes = new LinkedList<>();
 
 
         mapPane.widthProperty().addListener(new ChangeListener<Number>() {
@@ -136,6 +142,17 @@ public class MapAdminController extends DisplayController {
                 }
             }
         );
+        /**
+         * Added the ability to change a room name by pressing enter on the selected combo box
+         */
+        roomName.addEventFilter(KeyEvent.KEY_PRESSED, e->{
+            if(e.getCode() == KeyCode.ENTER){
+                roomName.setValue(roomName.getEditor().getText());
+                addRoom();
+                mapPane.requestFocus();
+                drawMap();
+            }
+        });
 
         List<String> floorOptions = applicationController.getAllFloors();
         Collections.sort(floorOptions);
@@ -159,6 +176,141 @@ public class MapAdminController extends DisplayController {
         });
         imageviewMap.toBack();
 
+
+        setMap("floor3");
+        /*TODO Add onclick event handlers for circular menus. screenMenu is for options when you click on the screen.
+        TODO nodeMenu is for rightclicking on a node
+        */
+        //---------------------------------------------------------------------------------------------------------------
+        //Setup Contest Menu here
+
+        EventHandler<MouseEvent> moveUpFloorOtion = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                int size = floorSelector.getItems().size();
+                int index = floorSelector.getItems().indexOf(currentMap);
+                index = (index + 1)%size;
+                floorSelector.setValue(floorSelector.getItems().get(index));
+                screenMenu.hide();
+                nodeMenu.hide();
+            }
+        };
+        EventHandler<MouseEvent> moveDownFloorOtion = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                int size = floorSelector.getItems().size();
+                int index = floorSelector.getItems().indexOf(currentMap);
+                index = (index + size - 1)%size;
+                floorSelector.setValue(floorSelector.getItems().get(index));
+                screenMenu.hide();
+                nodeMenu.hide();
+            }
+        };
+        EventHandler<MouseEvent> deleteNodeOption = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if(currentState == State.CHAIN_ADD){
+                   togglebuttonChainAdd.fire();
+                }
+                deleteNode(selectedNode);
+                drawMap();
+                screenMenu.hide();
+                nodeMenu.hide();
+            }
+        };
+        EventHandler<MouseEvent> deleteRoom = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                Room room = map.getRoomFromNode(selectedNode);
+                if (room != null)
+                    map.deleteRoom(room);
+                String newName = roomName.getValue();
+                drawMap();
+                screenMenu.hide();
+                nodeMenu.hide();
+
+            }
+        };
+        EventHandler<MouseEvent> addNodeOption = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                addNode(contextToGraph(contextEvent));
+                selectedNode = null;
+                drawMap();
+                screenMenu.hide();
+                nodeMenu.hide();
+            }
+        };
+        EventHandler<MouseEvent> addConnectionOption = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                togglebuttonAddConnections.fire();
+                screenMenu.hide();
+                nodeMenu.hide();
+            }
+        };
+        EventHandler<MouseEvent> addChangeRoom = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                roomName.requestFocus();
+                screenMenu.hide();
+                nodeMenu.hide();
+            }
+        };
+        EventHandler<MouseEvent> addRoomOption = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+
+                addNode(contextToGraph(contextEvent));
+                roomName.requestFocus();
+                screenMenu.hide();
+                nodeMenu.hide();
+            }
+        };
+        EventHandler<MouseEvent> chainAddOption = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                GraphNode tempNode = selectedNode;
+                togglebuttonChainAdd.fire();
+                selectedNode = tempNode;
+                screenMenu.hide();
+                nodeMenu.hide();
+            }
+        };
+        EventHandler<MouseEvent> addConnectionNodeMenu = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                double x = graphToImage(selectedNode.getLocation(),imageviewMap ).getX();
+                double y = graphToImage(selectedNode.getLocation(),imageviewMap ).getY();
+                Line line = new Line(x,y, event.getX(),event.getY());
+            }
+        };
+        ImagePattern addRoomImage = new ImagePattern(new Image("/Radial Icons/new_Add_Room.png"),0, 0, 60, 60, false);
+        ImagePattern addNodeImage = new ImagePattern(new Image("/Radial Icons/new_Add_Node.png"),-1, 0, 60, 60, false);
+        ImagePattern addConnectionImage = new ImagePattern(new Image("/Radial Icons/new_Add_Connection.png"),0,0,60,60,false);
+        ImagePattern chainAddImage = new ImagePattern(new Image("Radial Icons/new_Chain_Add.png"),0,0,60,60,false);
+        ImagePattern deleteRoomImageDisplay = new ImagePattern(new Image("/Radial Icons/new_Delete_Room.png"), 30, 150, 60, 60, false);
+        ImagePattern addRoomImageDisplay = new ImagePattern(new Image("/Radial Icons/new_Add_Room.png"),30, 150, 60, 60, false);
+        ImagePattern addNodeImageDisplay = new ImagePattern(new Image("/Radial Icons/new_Add_Node.png"),30, 150, 60, 60, false);
+        ImagePattern deleteNodeImageDisplay = new ImagePattern(new Image("/Radial Icons/new_Delete_Node.png"),30, 150, 60, 60, false);
+        ImagePattern addConnectionImageDisplay = new ImagePattern(new Image("/Radial Icons/new_Add_Connection.png"),30,150,60,60,false);
+        ImagePattern chainAddImageDisplay = new ImagePattern(new Image("Radial Icons/new_Chain_Add.png"),30,150,60,60,false);
+        screenMenu.addOption(addRoomImage,Color.rgb(42,45,56),addRoomImageDisplay, addRoomOption, addRoomOption);//Add delete Room, add/change Room, delete node to this menu, delete elevator if this node is an elevator
+        screenMenu.addOption(addNodeImage,Color.rgb(42,45,56), addNodeImageDisplay, addNodeOption,addNodeOption);
+        screenMenu.addOption(chainAddImage, Color.rgb(42,45,56), chainAddImageDisplay, chainAddOption,chainAddOption);
+        screenMenu.addOption(addConnectionImage, Color.rgb(42,45,56), addConnectionImageDisplay, addConnectionOption,addConnectionOption);
+
+        ImagePattern deleteRoomImageNode = new ImagePattern(new Image("/Radial Icons/new_Delete_Room.png"), 15, 15, 60, 60, false);
+        ImagePattern addRoomImageNode = new ImagePattern(new Image("/Radial Icons/new_Add_Room.png"),-15, -28, 60, 60, false);
+        ImagePattern deleteNodeImageNode = new ImagePattern(new Image("/Radial Icons/new_Delete_Node.png"),6, -7, 60, 60, false);
+        ImagePattern addConnectionImageNode = new ImagePattern(new Image("/Radial Icons/new_Add_Connection.png"),15,-13,60,60,false);
+        ImagePattern chainAddImageNode = new ImagePattern(new Image("Radial Icons/new_Chain_Add.png"),2,2,60,60,false);
+        nodeMenu.addOption(deleteNodeImageNode, Color.rgb(42,45,56), deleteNodeImageDisplay, deleteNodeOption,deleteNodeOption);//Add add elevator, addnode, add elevator
+        nodeMenu.addOption(deleteRoomImageNode,Color.rgb(42,45,56), deleteRoomImageDisplay, deleteRoom, deleteRoom);
+        nodeMenu.addOption(addRoomImageNode, Color.rgb(42,45,56), addRoomImageDisplay, addChangeRoom, addChangeRoom);
+        nodeMenu.addOption(addConnectionImageNode,Color.rgb(42,45,56), addConnectionImageDisplay, addConnectionOption,addConnectionOption);
+        nodeMenu.addOption(chainAddImageNode,Color.rgb(42,45,56), chainAddImageDisplay, chainAddOption,chainAddOption);
+        nodeMenu.setAutoHide(true);
         for (String floor : floorOptions) {
             CustomMenuItem cmi = new CustomMenuItem(new CheckBox(floor));
             cmi.setHideOnClick(false);
@@ -167,7 +319,38 @@ public class MapAdminController extends DisplayController {
 
         floorSelector.setValue("floor3");
         drawMap();
+        //------------------------------------------------------------------------------------------------------------------
         stage.addEventFilter(KeyEvent.KEY_PRESSED, event -> handleKey(event));
+
+        ArrayList transitionOptions = new ArrayList(Arrays.asList(new String[]{
+            "None",
+            "Entrance",
+            "Elevator",
+            "Stair"
+        }));
+
+        transitionType.setItems(FXCollections.observableArrayList(transitionOptions));
+        transitionType.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (selectedNode != null) {
+                    if (newValue.equals("Elevator")) {
+                        selectedNode.setFloorTransitionType(GraphNode.ELEVATOR);
+                    }
+                    else if (newValue.equals("Entrance")) {
+                        selectedNode.setFloorTransitionType(GraphNode.ENTRANCE);
+                    }
+                    else if (newValue.equals("Stair")) {
+                        selectedNode.setFloorTransitionType(GraphNode.STAIR);
+                    }
+                    else {
+                        selectedNode.setFloorTransitionType(GraphNode.NONE);
+                    }
+                }
+            }
+        });
+        transitionType.setValue("Elevator");
+
 
     }
 
@@ -188,7 +371,18 @@ public class MapAdminController extends DisplayController {
             .forEach(node -> drawNode(node, imageviewMap));
         highlightSelected();
         addFloorLabel(this.currentMap);
+        addSelectionRectangle();
 
+    }
+    /**
+     * draws selection rectangle
+     */
+    public void addSelectionRectangle(){
+        this.miscDrawnObjects.add(new Circle(100,100,10));
+        selectionRectangle.setFill(Color.rgb(145,228,255,0.4));
+        selectionRectangle.setMouseTransparent(true);
+        mapPane.getChildren().add(selectionRectangle);
+        this.miscDrawnObjects.add(selectionRectangle);
     }
 
     /**
@@ -231,7 +425,7 @@ public class MapAdminController extends DisplayController {
      * @param imageToDrawOver the image the point must cover
      */
     public void drawNode (GraphNode node, ImageView imageToDrawOver) {
-        if (node.isElevator()) {
+        if (node.doesCrossFloor()) {
             drawElevator(node.getLocation(), imageToDrawOver);
         }
         else {
@@ -239,7 +433,7 @@ public class MapAdminController extends DisplayController {
 
             Room nodeRoom = map.getRoomFromNode(node);
             if (nodeRoom != null) {
-                logger.info("Drawing room {}", nodeRoom.toString());
+                logger.info("Drawing room {}", nodeRoom.getName());
                 addRoomLabel(nodeRoom);
             }
 
@@ -297,7 +491,31 @@ public class MapAdminController extends DisplayController {
      * @param location
      */
     public void addElevator(FloorPoint location, List<String> floors){
-        map.addElevator(location, floors);
+        String selectedTransition = transitionType.getValue();
+        int selectedTransitionValue = GraphNode.ELEVATOR;
+        if (selectedTransition.equals("Elevator")) {
+           selectedTransitionValue = GraphNode.ELEVATOR;
+            logger.debug("Elevator selected {}", selectedTransitionValue);
+            System.out.println("Elevator selected " + selectedTransitionValue);
+        }
+        else if (selectedTransition.equals("Entrance")) {
+            selectedTransitionValue = GraphNode.ENTRANCE;
+            logger.debug("Entrance selected {}", selectedTransitionValue);
+            System.out.println("Entrance selected " + selectedTransitionValue);
+        }
+        else if (selectedTransition.equals("Stair")) {
+            selectedTransitionValue = GraphNode.STAIR;
+            logger.debug("Stair selected {}", selectedTransitionValue);
+            System.out.println("Stair selected " + selectedTransitionValue);
+        }
+        else {
+            selectedTransitionValue = GraphNode.NONE;
+            logger.debug("Stair selected {}", selectedTransitionValue);
+            System.out.println("Stair selected " + selectedTransitionValue);
+        }
+
+
+        map.addElevator(location, floors, selectedTransitionValue);
         secondaryNode = selectedNode;
         selectedNode = map.getGraphNode(location);
         drawMap();
@@ -316,12 +534,27 @@ public class MapAdminController extends DisplayController {
         }
         return tempNode;
     }
+    /**
+     *
+     * @return
+     */
+    public GraphNode nearbyNodeContext (ContextMenuEvent n) {
+
+        FloorPoint graphPoint = contextToGraph(n);
+
+        tempNode = map.getGraphNode(graphPoint);
+        if (tempNode != null && tempNode.getLocation().distance(graphPoint) > 20 ){
+            tempNode = null;
+        }
+        return tempNode;
+    }
 
     /**
      * Add a room to the map.
      * Take the text from the roomName text field
      */
     public void addRoom () {
+        unclickToggleButtons();
         String newName = roomName.getValue();
         Room existingRoom = map.getRoomFromName(newName);
         // Entered name is empty, so delete room
@@ -348,7 +581,7 @@ public class MapAdminController extends DisplayController {
         // add a new room
         else {
             map.addRoom(new Room(selectedNode, newName));
-        }
+        };
     }
 
     /**
@@ -385,10 +618,18 @@ public class MapAdminController extends DisplayController {
      * delete the selected node
      */
     public void deleteSelected () {
+        unclickToggleButtons();
         if(selectedNode != null) {
             map.deleteNode(selectedNode);
             selectedNode = null;
             drawMap();
+        }
+        if(highlightedNodes.size() > 0){
+            for (GraphNode node: highlightedNodes) {
+                map.deleteNode(node);
+                drawMap();
+            }
+            highlightedNodes.clear();
         }
     }
 
@@ -396,8 +637,9 @@ public class MapAdminController extends DisplayController {
      * Delete the selected node if it is an elevator
      */
     public void deleteElevator () {
+        unclickToggleButtons();
         if (selectedNode != null ) {
-            if(selectedNode.isElevator()) {
+            if(selectedNode.doesCrossFloor()) {
                 boolean isEl = map.deleteElevator(selectedNode);
                 selectedNode = null;
                 drawMap();
@@ -410,6 +652,7 @@ public class MapAdminController extends DisplayController {
      * @param node
      */
     public void deleteNode(GraphNode node){
+        unclickToggleButtons();
         map.deleteNode(node);
     }
 
@@ -445,11 +688,48 @@ public class MapAdminController extends DisplayController {
     }
 
     /**
+     * convert point to map coordinates
+     * @param x
+     * @param y
+     * @return FlorPoint
+     */
+    private FloorPoint pointToGraph(double x, double y, ImageView imageView) {
+        double imageWidth = imageView.getBoundsInLocal().getWidth();
+        double imageHeight = imageView.getBoundsInLocal().getHeight();
+
+        int newX = (int) (x * 1000. / imageWidth);
+        int newY = (int) (y * 1000. / imageHeight);
+
+        return new FloorPoint(newX, newY, currentMap);
+    }
+    /**
      * convert to map coords
      * @param m
      * @return
      */
     private FloorPoint mouseToGraph(MouseEvent m){
+        Node producer = null;
+        // Find the container for the image
+        if (m.getSource() instanceof Node) {
+            producer = (Node) m.getSource();
+        }
+        else {
+            return null;
+        }
+        double imageWidth = producer.getBoundsInLocal().getWidth();
+        double imageHeight = producer.getBoundsInLocal().getHeight();
+
+        int newX = (int) ( m.getX()  * 1000. / imageWidth );
+        int newY = (int) ( m.getY() * 1000. / imageHeight);
+
+        return new FloorPoint(newX, newY, currentMap);
+    }
+    /**
+     * convert to map coords
+     * @param m
+     * @return
+     */
+    private FloorPoint contextToGraph(ContextMenuEvent m){
         Node producer = null;
         // Find the container for the image
         if (m.getSource() instanceof Node) {
@@ -508,6 +788,7 @@ public class MapAdminController extends DisplayController {
      * Change the default location of the kiosk
      */
     public void setDefaultKiosk () {
+        unclickToggleButtons();
         if (activeRoom != null) {
             map.setKiosk(activeRoom.getName());
         }
@@ -519,7 +800,31 @@ public class MapAdminController extends DisplayController {
     public void highlightSelected () {
 //        miscDrawnObjects.forEach(shape -> shape.setFill(Color.BLUE));
         drawnNodes.values().forEach(shape -> shape.setFill(Color.BLUE));
+        if(highlightedNodes.size() > 0){
+            for (GraphNode node:highlightedNodes) {
+                Shape selected = drawnNodes.get(node.id);
+                if (selected != null) {
+                    selected.setFill(Color.RED);
+                }
+            }
+        }
         if(selectedNode != null) {
+            // set the transition type to the selected type
+            if (selectedNode.getFloorTransitionType() == GraphNode.NONE) {
+                transitionType.setValue("None");
+            }
+            else if (selectedNode.getFloorTransitionType() == GraphNode.ELEVATOR) {
+                transitionType.setValue("Elevator");
+            }
+            else if (selectedNode.getFloorTransitionType() == GraphNode.STAIR) {
+                transitionType.setValue("Stair");
+            }
+            else if (selectedNode.getFloorTransitionType() == GraphNode.ENTRANCE) {
+                transitionType.setValue("Entrance");
+            }
+
+
+            System.out.println("Selected node is : " + selectedNode.getFloorTransitionType());
             Shape selected1 = drawnNodes.get(selectedNode.id);
             if(selected1 != null) {
                 selected1.setFill(Color.RED);
@@ -544,7 +849,7 @@ public class MapAdminController extends DisplayController {
      */
     public void changeState (State state) {
         this.currentState = state;
-
+        System.out.println("state changed to: " + currentState);
         if (currentState != State.NONE) {
             selectedNode = null;
             secondaryNode = null;
@@ -558,9 +863,14 @@ public class MapAdminController extends DisplayController {
      * @param m
      */
     public void isPressed(MouseEvent m) {
+        screenMenu.hide();
+        nodeMenu.hide();
         if (roomName.isFocused()){
             mapPane.requestFocus(); //deselects textbox if click outside
         }
+        initRectangle(m);
+        selectionPointx = m.getX();
+        selectionPointy = m.getY();
         switch (currentState){
             case NONE:
                 // Possible state changing logic goes here
@@ -620,33 +930,102 @@ public class MapAdminController extends DisplayController {
     }
 
     /**
+     * Initialises the selection rectangle on click
+     * @param e
+     */
+    private void initRectangle(MouseEvent e){
+        highlightedNodes.clear();
+        selectionRectangle.setX(e.getX() - mapPane.getTranslateX());
+        selectionRectangle.setY(e.getY() - mapPane.getTranslateY());
+    }
+
+    /**
+     * Handles rectangle drag
+     * @param e
+     */
+    private void handleRectangleDrag(MouseEvent e){
+          if((e.getX()- selectionPointx) > 0) {
+            selectionRectangle.setX(selectionPointx);
+            selectionRectangle.setWidth(e.getX() - selectionPointx);
+
+            if ((e.getY() - selectionPointy > 0)) {
+                for (Shape node: drawnNodes.values()) {
+                    if((node.getLayoutX() > selectionPointx ) && (node.getLayoutX() < (e.getX()))
+                        && (node.getLayoutY() > selectionPointy) && (node.getLayoutY() < e.getY())) {
+                        highlightedNodes.add(map.getGraphNode(pointToGraph(node.getLayoutX(), node.getLayoutY(), imageviewMap)));
+                        node.setFill(Color.RED);
+                    }
+                }
+                selectionRectangle.setY(selectionPointy);
+                selectionRectangle.setHeight(e.getY() - selectionPointy);
+            } else {
+                for (Shape node: drawnNodes.values()) {
+                    if((node.getLayoutX() > selectionPointx ) && (node.getLayoutX() < (e.getX()))
+                        && (node.getLayoutY() < selectionPointy) && (node.getLayoutY() > e.getY())) {
+                        node.setFill(Color.RED);
+                    }
+                }
+                selectionRectangle.setHeight(selectionPointy - e.getY());
+                selectionRectangle.setY(e.getY());
+            }
+        }else{
+            selectionRectangle.setX(e.getX());
+            selectionRectangle.setWidth(-(e.getX() - selectionPointx));
+            if((e.getY() - selectionPointy > 0)) {
+                for (Shape node: drawnNodes.values()) {
+                    if((node.getLayoutX() < selectionPointx ) && (node.getLayoutX() > (e.getX()))
+                        && (node.getLayoutY() > selectionPointy) && (node.getLayoutY() < e.getY())) {
+                        node.setFill(Color.RED);
+                    }
+                }
+                selectionRectangle.setY(selectionPointy);
+                selectionRectangle.setHeight(e.getY() - selectionPointy);
+            }else{
+                for (Shape node: drawnNodes.values()) {
+                    if((node.getLayoutX() < selectionPointx ) && (node.getLayoutX() > (e.getX()))
+                        && (node.getLayoutY() < selectionPointy) && (node.getLayoutY() > e.getY())) {
+                        node.setFill(Color.RED);
+                    }
+                }
+                selectionRectangle.setHeight(selectionPointy - e.getY());
+                selectionRectangle.setY(e.getY());
+            }
+        }
+    }
+    /**
      * handle drag event
      * @param e
      */
     public void handleDragEvent (MouseEvent e) {
         switch (currentState) {
             case NONE:
-                if(selectedNode != null) {
+                if ((selectedNode != null) && e.isPrimaryButtonDown()) {
                     currentState = State.DRAG_NODE;
+                }else {
+                    if(e.isPrimaryButtonDown()) {
+                        handleRectangleDrag(e);
+                    }
                 }
                 break;
-        }
+            case DRAG_NODE:
+                // convert from image --> graph --> anchor pane and draw circle there
+                FloorPoint mousePoint = mouseToGraph(e);
+                FloorPoint imagePoint = graphToImage(mousePoint, imageviewMap);
 
-        // convert from image --> gapph --> anchor pane and draw circle there
-        FloorPoint mousePoint = mouseToGraph(e);
-        FloorPoint imagePoint = graphToImage(mousePoint, imageviewMap);
 
-        // Do not  points that would fall outside of the map
-        if(mousePoint.getX() > 999 || mousePoint.getX() < 1 ||
-            mousePoint.getY() > 999 || mousePoint.getY() < 1) {
-            return ;
-        }
+                // Do not  points that would fall outside of the map
+                if (mousePoint.getX() > 999 || mousePoint.getX() < 1 ||
+                    mousePoint.getY() > 999 || mousePoint.getY() < 1) {
+                    return;
+                }
 
-        if(selectedNode != null) {
-            selectedNode.setLocation(mouseToGraph(e));
+                if (selectedNode != null) {
+                    selectedNode.setLocation(mouseToGraph(e));
+                }
+                // just move the point every drag event
+                drawMap();
         }
-        // just move the point every drag event
-        drawMap();
+//        screenMenu.fireEvent(e);
     }
 
     /**
@@ -662,10 +1041,16 @@ public class MapAdminController extends DisplayController {
      * @param e
      */
     public void handleMouseEventChainAdd (MouseEvent e) {
-        FloorPoint graphPoint = mouseToGraph(e);
-        addNode(graphPoint);
-        if (secondaryNode != null) {
-            addConnection(secondaryNode, selectedNode);
+        if(!e.isSecondaryButtonDown()) {
+            FloorPoint graphPoint = mouseToGraph(e);
+            addNode(graphPoint);
+            if (secondaryNode != null) {
+                addConnection(secondaryNode, selectedNode);
+            }
+        }else{
+            if (secondaryNode != null) {
+                addConnection(secondaryNode, selectedNode);
+            }
         }
     }
 
@@ -708,16 +1093,13 @@ public class MapAdminController extends DisplayController {
                     deleteConnection();
                     break;
                 case N:
-                    changeState(State.ADD_NODES);
+                    toggleTools.selectToggle(togglebuttonAddNode);
                     break;
                 case C:
-                    changeState(State.ADD_CONNECTION);
-                    break;
-                case E:
-                    changeState(State.ADD_ELEVATOR);
+                    toggleTools.selectToggle(togglebuttonAddConnections);
                     break;
                 case A:
-                    changeState(State.CHAIN_ADD);
+                    toggleTools.selectToggle(togglebuttonChainAdd);
                     break;
             }
         }
@@ -751,12 +1133,29 @@ public class MapAdminController extends DisplayController {
         }
     }
 
+    public void unclickToggleButtons(){
+        toggleTools.selectToggle(null);
+    }
+
+    /**
+     * Helper for handling rectangle release
+     */
+    private void rectangleRelease(){
+        mapPane.getChildren().remove(selectionRectangle);
+        selectionRectangle.setHeight(0);
+        selectionRectangle.setWidth(0);
+        miscDrawnObjects.remove(selectionRectangle);
+        for (GraphNode node: highlightedNodes) {
+
+        }
+    }
     /**
      * Handle the release event
      * Each state can implement a release event
      * @param m
      */
     public void isReleased(MouseEvent m){
+        rectangleRelease();
         switch (currentState){
             case NONE:
                 break;
@@ -798,7 +1197,7 @@ public class MapAdminController extends DisplayController {
      * @param loc
      */
     private void setMap(String loc){
-        Image floorImage = applicationController.getImage(loc);
+        Image floorImage = applicationController.getFloorImage(loc);
         imageviewMap.setImage(floorImage);
         currentMap = loc;
 
@@ -816,41 +1215,44 @@ public class MapAdminController extends DisplayController {
         drawMap();
     }
 
-    /**
-     * Opens ContextMenu
-     */
+
     public void showContextMenu(ContextMenuEvent event){
+        contextEvent = event;
+        selectedNode = nearbyNodeContext(contextEvent);
 
-        ContextMenu contextMenu = new ContextMenu();
-
-        contextMenu.setOnShowing(new EventHandler<WindowEvent>() {
-            public void handle(WindowEvent e) {
-            }
-        });
-        contextMenu.setOnShown(new EventHandler<WindowEvent>() {
-            public void handle(WindowEvent e) {
-            }
-        });
-
-        MenuItem item1 = new MenuItem("About");
-        item1.setStyle("MapAdminContextMenu");
-        item1.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent e) {
-            }
-        });
-        MenuItem item2 = new MenuItem("Preferences");
-        item2.setStyle("fx-background-image: red");
-        item2.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent e) {
-            }
-        });
-        contextMenu.getItems().addAll(item1, item2);
+//        ContextMenu contextMenu = new ContextMenu();
+//
+//        contextMenu.setOnShowing(new EventHandler<WindowEvent>() {
+//            public void handle(WindowEvent e) {
+//            }
+//        });
+//        contextMenu.setOnShown(new EventHandler<WindowEvent>() {
+//            public void handle(WindowEvent e) {
+//            }
+//        });
+//
+//        MenuItem item1 = new MenuItem("About");
+//        item1.setStyle("MapAdminContextMenu");
+//        item1.setOnAction(new EventHandler<ActionEvent>() {
+//            public void handle(ActionEvent e) {
+//            }
+//        });
+//        MenuItem item2 = new MenuItem("Preferences");
+//        item2.setStyle("fx-background-image: red");
+//        item2.setOnAction(new EventHandler<ActionEvent>() {
+//            public void handle(ActionEvent e) {
+//            }
+//        });
+//        contextMenu.getItems().addAll(item1, item2);
         Shape circle = new Circle(event.getX(), event.getY(), 10);
+        circle.setVisible(false);
         mapPane.getChildren().add(circle);
-        contextMenu.setId("MapAdminContextMenu");
-        contextMenu.show(circle, event.getScreenX(), event.getScreenY());
-        contextMenu.setStyle("-fx-shape:Circle ");
-        contextMenu.setStyle("fx-background-image: red");
+        if(selectedNode != null){
+            nodeMenu.show(circle,event.getScreenX(), event.getScreenY());
+        }else{
+            screenMenu.show(circle, event.getScreenX(), event.getScreenY());
+        }
+
     }
 }
 
