@@ -106,6 +106,7 @@ public class CircularContextMenu extends Popup {
 
             currentAngle = currentAngle + angle;
         }
+        getContent().add(display.centralDisplayBackground);
         getContent().add(display.centralDisplay);
     }
 
