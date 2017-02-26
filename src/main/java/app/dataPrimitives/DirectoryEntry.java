@@ -124,7 +124,8 @@ public class DirectoryEntry extends Ided {
         DirectoryEntry rhs = (DirectoryEntry) obj;
         return this.name.equals(rhs.name) &&
             this.title.equals(rhs.title) &&
-            this.location.equals(rhs.location);
+            this.location.equals(rhs.location)&&
+            this.icon.equals(rhs.icon);
     }
 
     public void setLocation(List<Room> location) {

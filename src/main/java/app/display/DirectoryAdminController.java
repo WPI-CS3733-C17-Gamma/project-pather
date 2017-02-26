@@ -73,7 +73,7 @@ public class DirectoryAdminController extends DisplayController{
         listEntries.getSelectionModel().selectedItemProperty().addListener(
             (ov, old_val, new_val) -> selectEntry(new_val));
 
-        // add change handler for the dropdown list of poossible locations
+        // add change handler for the dropdown list of possible locations
         entryRoomOptions.getSelectionModel().selectedItemProperty().addListener(
             (ov, old_val, new_val) -> entryAddRoom(new_val));
 
@@ -210,7 +210,6 @@ public class DirectoryAdminController extends DisplayController{
             .collect(Collectors.toList());
 
         String icon = (String)iconOption.getValue();
-        System.out.println("icon name: " + icon);
 
         try {
             saveEntry(name,title,rooms, icon);
