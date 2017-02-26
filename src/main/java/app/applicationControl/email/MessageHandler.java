@@ -4,7 +4,9 @@ import app.applicationControl.ApplicationController;
 import app.dataPrimitives.GraphNode;
 import app.dataPrimitives.Room;
 import app.dataPrimitives.SubPath;
+import com.sun.corba.se.impl.orbutil.graph.Graph;
 import com.sun.media.jfxmedia.logging.Logger;
+import javafx.util.Pair;
 import org.slf4j.LoggerFactory;
 
 import javax.mail.BodyPart;
@@ -13,7 +15,9 @@ import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.internet.MimeMultipart;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by saahil claypool on 2/23/2017.
@@ -35,6 +39,14 @@ public class MessageHandler {
     }
 
     /**
+     * Used for parsing help directions
+     * @param input
+     */
+    private void searchforLoctation (String input){
+
+    }
+
+    /**
      *  handle a given message
      * @throws Exception
      */
@@ -45,11 +57,16 @@ public class MessageHandler {
         String realContent = getCleanMessage();
         String currentState = emailController.getState(from);
         System.out.println("realContent : " + realContent);
+        String clientInput = realContent.toLowerCase();
 
-        if (realContent.toLowerCase().contains("help")) {
+        if (clientInput.contains("help")) {
             // reply
-            emailController.sendReply(message, "Hi " + from + " " + getHelp());
+            emailController.sendReply(message, "Hi, " + getHelp());
             return;
+        } else if (clientInput.contains("directions from")){
+            searchforLoctation(realContent);
+
+
         }
         // give them directions again
         System.out.printf("not a help request");
@@ -77,16 +94,23 @@ public class MessageHandler {
             }
 
             GraphNode end = emailController.map.getRoomFromName(currentState).getLocation();
-            List<GraphNode> path = emailController.map.getPath(start,end);
-            List<String> textDirections = emailController.map.getTextualDirections(path);
-            String content = getReadableDirections(textDirections);
-            emailController.sendReply(message, content);
+            emailController.sendReply(message, getDirections(start, end));
         }
         // TEMP
         else {
             System.out.println("Adding state");
             emailController.addState(from, "destination");
         }
+    }
+
+    private String getDirections(GraphNode start, GraphNode end){
+        List <GraphNode> path = emailController.map.getPath(start, end);
+        LinkedList<Pair<Integer, String>> textDirections = emailController.map.getTextualDirections
+            (path, end.getLocation().getFloor());
+        List<String> directions = textDirections.stream().map(p -> {
+            return p.getValue();
+        }).collect(Collectors.toList());
+        return getReadableDirections(directions);
     }
 
     public String getReadableDirections (List<String> unreadableDirs) {
@@ -101,7 +125,8 @@ public class MessageHandler {
      * @return
      */
     public String getHelp() {
-        return "Heres how to use this." ;
+        return "If you would like directions, please say " +
+            "'Directions from [location] to [location]'.";
     }
 
     public String getCleanMessage () throws Exception {
