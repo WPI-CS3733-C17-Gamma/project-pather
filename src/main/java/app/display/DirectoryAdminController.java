@@ -65,15 +65,6 @@ public class DirectoryAdminController extends DisplayController{
         iconOption.setItems(FXCollections.observableList(iconOptions));
         iconOption.setValue(new Tooltip("Choose icon"));
 
-//        iconOption.getSelectionModel().selectedIndexProperty().addListener(
-//            new ChangeListener<Number>() {
-//                @Override
-//                public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-//                    iconName = iconOptions.get((int) newValue);
-//                }
-//            }
-//        );
-
         // get both entries
         List<String> entryList = map.getAllEntries();
         entryList.sort(String::compareTo);
@@ -117,7 +108,7 @@ public class DirectoryAdminController extends DisplayController{
      * create a empty entry for the display
      */
     public void createEntry() {
-        activeDirectoryEntry = new DirectoryEntry("", "", new LinkedList<Room>(), "");
+        activeDirectoryEntry = new DirectoryEntry("", "", new LinkedList<Room>());
         displayEntry(activeDirectoryEntry);
     }
 

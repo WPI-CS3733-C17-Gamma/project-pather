@@ -20,6 +20,7 @@ import javafx.stage.WindowEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -306,7 +307,7 @@ public class ApplicationController extends Application {
 
     public static void main (String[] args) {
         Date date = Calendar.getInstance().getTime();
-        SimpleDateFormat f1 = new SimpleDateFormat("EEE-dd 'at' hh-mm");
+        SimpleDateFormat f1 = new SimpleDateFormat("dd-EEE 'at' hh-mm");
         System.setProperty("logname", f1.format(date));
         launch(args);
     }
