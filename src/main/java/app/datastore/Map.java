@@ -156,10 +156,6 @@ public class Map {
         Room roomAtNode = directory.getRoom(node);
         return directory.deleteRoom(roomAtNode);
     }
-//
-//    public List<DirectoryEntry> getEntryFromRoom(Room room){
-//
-//    }
 
     /**
      * Change the name of an existing room.
