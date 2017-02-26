@@ -634,8 +634,8 @@ public class PatientController extends DisplayController implements Initializabl
         double dely = pointB.getY() - pointA.getY();
         triangle.setRotate(Math.toDegrees(Math.atan2(dely,delx)) - 90);
         triangle.setFill(Color.rgb(88, 169, 196));
-        triangle.setLayoutX(pointB.getX() - imageToBeDrawnOver.getLayoutX() - 5);
-        triangle.setLayoutY(pointB.getY() - imageToBeDrawnOver.getLayoutY() - 5);
+        triangle.setLayoutX(pointB.getX() - 10);
+        triangle.setLayoutY(pointB.getY() - 10);
 
         anchorPane.getChildren().add(triangle);
 
