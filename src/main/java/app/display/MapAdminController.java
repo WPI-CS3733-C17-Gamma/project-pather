@@ -250,7 +250,7 @@ public class MapAdminController extends DisplayController {
 
             Room nodeRoom = map.getRoomFromNode(node);
             if (nodeRoom != null) {
-                logger.info("Drawing room {}", nodeRoom.toString());
+                logger.info("Drawing room {}", nodeRoom.getName());
                 addRoomLabel(nodeRoom);
             }
 
