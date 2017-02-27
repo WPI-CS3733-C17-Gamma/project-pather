@@ -69,6 +69,8 @@ public class PatientController extends DisplayController {
 
     private String currentMap;
 
+    private boolean togStairs;
+
     CircularContextMenu menu = new CircularContextMenu();
 
     /**
@@ -704,6 +706,11 @@ public class PatientController extends DisplayController {
      */
     public void setMouseToNormal(MouseEvent e){
         ((Label)e.getSource()).getScene().setCursor(Cursor.DEFAULT);
+    }
+
+    public boolean toggleStairs(MouseEvent e) {
+        togStairs = !togStairs;
+        return togStairs;
     }
 }
 
