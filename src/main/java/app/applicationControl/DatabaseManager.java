@@ -127,8 +127,6 @@ public class DatabaseManager {
                     locations.add(roomsID.get(roomAssoc.getInt(1)));
                 }
 
-                System.out.println("Name : " + result.getString(3) + "  Icon : " + result.getString(4) );
-
                 DirectoryEntry entry = new DirectoryEntry(result.getString(3),
                                                           result.getString(2),
                                                           locations,

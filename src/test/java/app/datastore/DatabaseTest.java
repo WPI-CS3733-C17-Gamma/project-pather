@@ -105,9 +105,9 @@ public class DatabaseTest extends TestCase{
     @Test
     public void testEntriesLoad() {
         String[] statements =
-            {"insert into GraphNodes (ID, X, Y, Floor) values (1, 4, 2, 'bob1')",
+            {"insert into GraphNodes (ID, X, Y, Floor, FloorTransitionType) values (1, 4, 2, 'bob1', 0)",
              "insert into Rooms (rID, name, nID) values (1, 'derFs Office', 1)",
-             "insert into Entries (eID, name, title) values (1, 'the land of derF', 'office')",
+             "insert into Entries (eID, name, title, Icon) values (1, 'the land of derF', 'office', '')",
              "insert into RoomEntryAssoc (eID, rID) values (1, 1)"};
         execStatements(statements);
 

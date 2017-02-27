@@ -112,12 +112,9 @@ public class Directory {
      * @return True normally, false if would replaced an object
      */
     public boolean addEntry(DirectoryEntry entry){
-        System.out.println("Adding entry to directory!"); 
         if( entries.containsKey(entry.getName()) ) {
-            System.out.println("Entries contains this"); 
             return false;
         }
-        System.out.println("Entries doesn't contain this"); 
         return ( entries.put(entry.getName(), entry) == null );
     }
 

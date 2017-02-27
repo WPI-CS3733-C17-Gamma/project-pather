@@ -97,7 +97,7 @@ public class DirectoryAdminController extends DisplayController{
         activeDirectoryEntry = map.getEntry(entryName);
         //this thingy throws an error every time an entry is saved
         if( activeDirectoryEntry == null ) {
-            return; 
+            return;
             //throw new IllegalArgumentException();
         }
         displayEntry(activeDirectoryEntry);
@@ -264,7 +264,6 @@ public class DirectoryAdminController extends DisplayController{
      * @param activeEntry
      */
     public void displayEntry (DirectoryEntry activeEntry) {
-        System.out.println("Displaying entry : " + activeEntry); 
         entryEditor.setVisible(true);
         entryName.setText(activeEntry.getName());
         entryTitle.setText(activeEntry.getTitle());
@@ -276,6 +275,9 @@ public class DirectoryAdminController extends DisplayController{
             .collect(Collectors.toList());
         // FXCollections takes a normal list of strings and makes it viewable
         ObservableList<String> roomNames = FXCollections.observableList(locsAsString);
+
+        iconOption.setAccessibleText(activeEntry.getIcon());
+
         entryCurrentLocations.setItems(roomNames);
     }
 

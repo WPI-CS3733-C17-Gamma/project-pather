@@ -167,7 +167,6 @@ public class MapAdminController extends DisplayController {
          */
         roomName.addEventFilter(KeyEvent.KEY_PRESSED, e->{
             if(e.getCode() == KeyCode.ENTER){
-                System.out.println(roomName.getEditor().getText());
                 roomName.setValue(roomName.getEditor().getText());
                 addRoom();
                 mapPane.requestFocus();
