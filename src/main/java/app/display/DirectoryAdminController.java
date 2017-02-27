@@ -276,7 +276,7 @@ public class DirectoryAdminController extends DisplayController{
         // FXCollections takes a normal list of strings and makes it viewable
         ObservableList<String> roomNames = FXCollections.observableList(locsAsString);
 
-        iconOption.setAccessibleText(activeEntry.getIcon());
+        iconOption.getSelectionModel().select(activeEntry.getIcon());
 
         entryCurrentLocations.setItems(roomNames);
     }
