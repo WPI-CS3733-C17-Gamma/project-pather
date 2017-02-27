@@ -514,7 +514,6 @@ public class MapAdminController extends DisplayController {
             System.out.println("Stair selected " + selectedTransitionValue);
         }
 
-
         map.addElevator(location, floors, selectedTransitionValue);
         secondaryNode = selectedNode;
         selectedNode = map.getGraphNode(location);
