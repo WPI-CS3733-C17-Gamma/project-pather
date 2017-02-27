@@ -137,6 +137,18 @@ public class ApplicationController extends Application {
             currentScene =  new Scene(root, 1000, 600);
             //pStage.setFullScreen(true);
             pStage.setScene(currentScene);
+            currentScene.widthProperty().addListener(new ChangeListener<Number>() {
+                @Override public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneWidth, Number newSceneWidth) {
+                    logger.debug("Scaling {} Width: {}", this.getClass().getSimpleName(),newSceneWidth);
+                    controller.scaleWidth(oldSceneWidth, newSceneWidth);
+                }
+            });
+            currentScene.heightProperty().addListener(new ChangeListener<Number>() {
+                @Override public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneHeight, Number newSceneHeight) {
+                    controller.scaleHeight(oldSceneHeight, newSceneHeight);
+                    logger.debug("Scaling {} Height: {}", this.getClass().getSimpleName(),newSceneHeight);
+                }
+            });
             pStage.setFullScreen(true);
         }
         catch (Exception e){

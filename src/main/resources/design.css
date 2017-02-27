@@ -1,36 +1,15 @@
 .button{
 	-fx-text-fill: black;
 	-fx-background-color: #F7F7F7;
+	-fx-border: 1px solid black; 
 	/*-fx-border-left: 1px solid black; */
 	-fx-font-size: 16px;
 	/*-fx-box-shadow: 10px 10px 5px #888888;*/
+	-fx-min-width: 30px;
+	-fx-min-height: 30px;
 	/*-fx-background-radius: 1000px;*/
 }
 /*1b449c*/
-
-.floorButtons > ToggleButton {
-	-fx-text-fill: black;
-	-fx-background-color: #ccc;
-	-fx-font-size: 16px;
-}
-
-.floorButtons > ToggleButton:selected {
-	-fx-text-fill: white;
-	-fx-background-color: #777;
-	-fx-font-size: 16px;
-}
-
-.floorButtons {
-	-fx-spacing: 5px;
-}
-
-.hiddenTabs {
-	-fx-tab-max-height: 0;
-}
-
-.hiddenTabs > .tab-header-area {
-    visibility: hidden;
-}
 
 .background{
 	-fx-background-color: white;
@@ -61,7 +40,7 @@
 }
 
 .tab{
-	/*-fx-tab-min-width: 90px;*/
+	/*-fx-tab-min-width: 90px;*/	
 	/*-fx-text-fill: red;*/
 	-fx-background-color: #424556;
 	-fx-font-size: 16px;
@@ -70,8 +49,8 @@
 	-fx-color: red;
 }
 
-.tab:selected
-{
+ .tab:selected
+ {
 	-fx-padding: 5px 10px;
 	-fx-background-color: #e89014;
 	-fx-border: none;
@@ -93,6 +72,8 @@
 	-fx-border-radius: 5px;
 	-fx-background-radius: 5px;
 	-fx-background-color:#cccccc;
+	-fx-scale-x: 1;
+	-fx-scale-y: 1;
 }
 
 .adminMenuButton{
@@ -139,7 +120,7 @@
 }
 
 .centerImage{
-	-fx-background-position: center;
+	-fx-background-position: center; 
 }
 
 .line{

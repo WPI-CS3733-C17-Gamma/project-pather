@@ -14,7 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class DisplayController {
-    private static final Logger logger = LoggerFactory.getLogger(DisplayController.class);
+    final Logger logger = LoggerFactory.getLogger(DisplayController.class);
 
     @FXML Label helpLabel;
 
@@ -87,15 +87,24 @@ public class DisplayController {
      * @param imageToBeDrawnOver image the the coordinate must be scaled to
      * @return
      */
-
-    static FloorPoint graphPointToImage (GraphNode node, ImageView imageToBeDrawnOver) {
+    FloorPoint graphPointToImage (GraphNode node, ImageView imageToBeDrawnOver) {
         Parent currentParent = imageToBeDrawnOver.getParent();
 
         double imageWidth = imageToBeDrawnOver.getBoundsInLocal().getWidth();
         double imageHeight = imageToBeDrawnOver.getBoundsInLocal().getHeight();
+        double offsetX = imageToBeDrawnOver.getLayoutX();
+        double offsetY = imageToBeDrawnOver.getLayoutY();
 
-        int newX = (int)(node.getLocation().getX() * imageWidth / 1000.);
-        int newY = (int)(node.getLocation().getY() * imageHeight / 1000.);
+        while(!(currentParent instanceof AnchorPane)){
+            offsetX += currentParent.getLayoutX();
+            offsetY += currentParent.getLayoutY();
+            currentParent = currentParent.getParent();
+        }
+
+        logger.debug("Offsets: off x {}, off y {}", offsetX, offsetY);
+
+        int newX = (int)(node.getLocation().getX() * imageWidth / 1000. + offsetX );
+        int newY = (int)(node.getLocation().getY() * imageHeight / 1000. + offsetY );
         logger.debug("Image width : {}, Image Height : {}", imageWidth, imageHeight);
 
         return new FloorPoint(newX, newY, node.getLocation().getFloor());
