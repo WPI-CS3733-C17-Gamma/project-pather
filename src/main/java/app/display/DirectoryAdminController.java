@@ -93,12 +93,13 @@ public class DirectoryAdminController extends DisplayController{
     /** See the method {@link Map#getEntry(String)}
      * Side Effect: Sets activeDirectoryEntry to the entry that is found
      * @throws IllegalArgumentException if an entry could not be found*/
-    public void selectEntry(String entryName) throws IllegalArgumentException {
+    public void selectEntry(String entryName) {//  throws IllegalArgumentException {
         activeDirectoryEntry = map.getEntry(entryName);
         //this thingy throws an error every time an entry is saved
-//        if( activeDirectoryEntry == null ) {
-//            throw new IllegalArgumentException();
-//        }
+        if( activeDirectoryEntry == null ) {
+            return; 
+            //throw new IllegalArgumentException();
+        }
         displayEntry(activeDirectoryEntry);
         return;
     }
@@ -263,6 +264,7 @@ public class DirectoryAdminController extends DisplayController{
      * @param activeEntry
      */
     public void displayEntry (DirectoryEntry activeEntry) {
+        System.out.println("Displaying entry : " + activeEntry); 
         entryEditor.setVisible(true);
         entryName.setText(activeEntry.getName());
         entryTitle.setText(activeEntry.getTitle());
