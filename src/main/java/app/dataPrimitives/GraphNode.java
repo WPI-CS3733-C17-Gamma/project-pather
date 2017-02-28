@@ -9,7 +9,7 @@ import java.util.List;
 
 public class GraphNode extends Ided implements Comparable {
 
-    public static final int NONE = 0, STAIR = 3, ELEVATOR = 1, ENTRANCE = 2;
+    public static final int NONE = 0, ELEVATOR = 1, ENTRANCE = 2, STAIR = 3;
 
     private int floorTransitionType ;
 
