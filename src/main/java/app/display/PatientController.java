@@ -340,6 +340,7 @@ public class PatientController extends DisplayController implements Initializabl
      * @param useStairs true if the stairs are to be forced into use
      */
     public void getPath (GraphNode start, GraphNode end, boolean useStairs) {
+        useStairs = togStairs.isSelected();
         minimaps = new LinkedList<>();
         if (start == null || end == null) {
             logger.error("Cannot path, start or end is null!");
