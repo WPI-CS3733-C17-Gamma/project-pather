@@ -95,6 +95,8 @@ public class PatientController extends DisplayController implements Initializabl
 
     private Button previousButton;
 
+    PatientMemento memento; 
+
     /**
      *
      * @param map
@@ -109,18 +111,18 @@ public class PatientController extends DisplayController implements Initializabl
         this.currentMap = currentMap;
 
         displayState = state.PATIENT_DEFAULT;
+	/* Memento Pattern */
         // add event filter
         EventHandler passAllEventsToTimer = new EventHandler() {
             @Override
             public void handle(Event event) {
-                System.out.println("Passing event to timer...");
                 IdleTimer timer = IdleTimer.getInstance();
                 timer.resetTimer();
             }
         };
-
         this.stage.addEventFilter(MouseEvent.ANY, passAllEventsToTimer);
         this.stage.addEventFilter(KeyEvent.ANY, passAllEventsToTimer);
+	this.memento = new PatientMemento(currentMap); 
     }
 
     /**
@@ -931,6 +933,11 @@ public class PatientController extends DisplayController implements Initializabl
     // revert to previous state
     public void revertState () {
         System.out.println("Reverting State");
+	exitSearch(); 
+	currentMap = memento.floor; 
+	displayImage(); 
+	refreshDisplay(); 
+
     }
 
 
