@@ -546,31 +546,33 @@ public class PatientController extends DisplayController implements Initializabl
             for (DirectoryEntry entry : cur.getEntries()){
                 curImage = entry.getIcon();
             }
-            Label label = new Label();
-            if (curImage.equals("")){
-                label.setText(labelName);
-                label.setLayoutX(imageLoc.getX() + 3);
-                label.setLayoutY(imageLoc.getY() + 3);
-                label.setFont(Font.font ("Georgia", 10));
-                label.setStyle("-fx-background-color: #F0F4F5; -fx-border-color: darkblue; -fx-padding: 2;");
-            }
-            else{
+            Label label = new Label(labelName);
+            label.setLayoutX(imageLoc.getX() + 3);
+            label.setLayoutY(imageLoc.getY() + 3);
+            label.setFont(Font.font ("Georgia", 10));
+            label.setStyle("-fx-background-color: #F0F4F5; -fx-border-color: darkblue; -fx-padding: 2;");
+            label.setOnMousePressed((e) -> goToSelectedRoom(e, labelName));
+            label.setOnMouseEntered(e -> setMouseToHand(e));
+            label.setOnMouseExited(e -> setMouseToNormal(e));
+            if (!curImage.equals("")){
                 ImageView image = new ImageView();
                 image.setImage(applicationController.getIconImage(curImage));
                 image.setPreserveRatio(true);
                 image.setFitWidth(20);
                 image.setFitHeight(20);
-                label.setGraphic(image);
-                label.setLayoutX(imageLoc.getX() + 3);
-                label.setLayoutY(imageLoc.getY() + 3);
+                Label iconLabel = new Label();
+                iconLabel.setGraphic(image);
+                iconLabel.setLayoutX(imageLoc.getX() + 3);
+                iconLabel.setLayoutY(imageLoc.getY() - 20);
+                iconLabel.setOnMousePressed((e) -> goToSelectedRoom(e, labelName));
+                iconLabel.setOnMouseEntered(e -> setMouseToHand(e));
+                iconLabel.setOnMouseExited(e -> setMouseToNormal(e));
+                anchorPane.getChildren().add(iconLabel);
+                drawnObjects.add(iconLabel);
             }
-            label.setOnMousePressed(e -> goToSelectedRoom(e));
-            label.setOnMouseEntered(e -> setMouseToHand(e));
-            label.setOnMouseExited(e -> setMouseToNormal(e));
             Circle circ = new Circle(2, Color.BLACK);
             circ.setLayoutX(imageLoc.getX());
             circ.setLayoutY(imageLoc.getY());
-            circ.setOnMousePressed(e -> goToSelectedRoom(e));
             anchorPane.getChildren().add(circ);
             anchorPane.getChildren().add(label);
             logger.debug("Adding Label {}", labelName);
@@ -583,13 +585,12 @@ public class PatientController extends DisplayController implements Initializabl
      * display the path to the room when clicked on the patient display map
      * @param e
      */
-    public void goToSelectedRoom(MouseEvent e){
+    public void goToSelectedRoom(MouseEvent e, String roomname){
         if (e.getSource() instanceof Label){
-            Label temp = (Label) e.getSource();
-            searchBar.setText(temp.getText());
+            searchBar.setText(roomname);
             startSearch();
 	    // TODO make use stairs
-            getPath(map.getKioskLocation(),map.getRoomFromName(temp.getText()).getLocation(), false);
+            getPath(map.getKioskLocation(),map.getRoomFromName(roomname).getLocation(), false);
         }
     }
 
