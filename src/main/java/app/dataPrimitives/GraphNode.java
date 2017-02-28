@@ -224,10 +224,13 @@ public class GraphNode extends Ided implements Comparable {
      */
     public void setFloorTransitionType (int newType) {
 
+        if (newType == this.floorTransitionType) {
+            return;
+        }
         int oldType = this.floorTransitionType;
         this.floorTransitionType = newType;
         for (GraphNode node : getAdjacent()) {
-            if (node.getLocation().getFloor().equals(this.getLocation().getFloor()) &&
+            if ( ! node.getLocation().getFloor().equals(this.getLocation().getFloor()) &&
                 node.floorTransitionType == oldType) {
                 node.setFloorTransitionType(newType);
             }
