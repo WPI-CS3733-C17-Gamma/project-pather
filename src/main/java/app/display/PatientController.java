@@ -17,10 +17,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -77,6 +74,7 @@ public class PatientController extends DisplayController implements Initializabl
     @FXML private Button login;
     @FXML private Button TextDirection;
     @FXML private Button floor1;
+    @FXML private ToggleButton togStairs;
     private List<SubPath> currentPath;
     private int currentSubPath;
 
@@ -844,6 +842,8 @@ public class PatientController extends DisplayController implements Initializabl
                 }
             }
         );
+        togStairs.selectedProperty().addListener((observable, oldValue, newValue) -> );
+
         // the image view should be the bottom pane so circles can be drawn over it
         imageView.toBack();
 //        imageView.setPreserveRatio(false);

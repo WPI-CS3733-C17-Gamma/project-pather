@@ -123,7 +123,7 @@
                <padding>
                   <Insets left="30.0" />
                </padding></HBox>
-            <ToggleButton alignment="BOTTOM_RIGHT" layoutX="878.0" layoutY="564.0" mnemonicParsing="false" text="Stairs" />
+            <ToggleButton fx:id="togStairs" alignment="BOTTOM_RIGHT" layoutX="878.0" layoutY="564.0" mnemonicParsing="false" text="Stairs" />
            </children>
         </AnchorPane>
     </children>
