@@ -278,7 +278,7 @@ public class PatientController extends DisplayController implements Initializabl
     }
 
     /**
-     * refresh the display 
+     * refresh the display
      */
     public void refreshDisplay () {
             clearDisplay();
@@ -564,6 +564,9 @@ public class PatientController extends DisplayController implements Initializabl
                 label.setLayoutX(imageLoc.getX() + 3);
                 label.setLayoutY(imageLoc.getY() + 3);
             }
+            label.setOnMousePressed(e -> goToSelectedRoom(e));
+            label.setOnMouseEntered(e -> setMouseToHand(e));
+            label.setOnMouseExited(e -> setMouseToNormal(e));
             Circle circ = new Circle(2, Color.BLACK);
             circ.setLayoutX(imageLoc.getX());
             circ.setLayoutY(imageLoc.getY());
