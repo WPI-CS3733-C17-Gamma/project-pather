@@ -106,7 +106,7 @@ public class ContextMenuElement{
 //            throw new IllegalArgumentException();
 //        }
 
-        this.angle = angle*Math.PI/180.0;
+        this.angle = angle*Math.PI/180.0 + 0.1;
         this.initialAngle = initialAngle*Math.PI/180.0;
 
     //Calculate x and y coordinates of points used for drawing SVG path

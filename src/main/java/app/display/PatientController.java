@@ -77,6 +77,18 @@ public class PatientController extends DisplayController implements Initializabl
     @FXML private Button login;
     @FXML private Button TextDirection;
     @FXML private Button floor1;
+
+    //Colors for patient Display
+    //------------------------------------------------------------------------------------------------------------------
+    private Color lightGrey = Color.rgb(211, 211, 211);
+    private Color darkBlue = Color.rgb(42, 45 , 56);
+    private Color orange = Color.rgb(232,144,20);
+
+
+
+
+    //------------------------------------------------------------------------------------------------------------------
+
     private List<SubPath> currentPath;
     private int currentSubPath;
 
@@ -552,8 +564,12 @@ public class PatientController extends DisplayController implements Initializabl
                 label.setText(labelName);
                 label.setLayoutX(imageLoc.getX() + 3);
                 label.setLayoutY(imageLoc.getY() + 3);
-                label.setFont(Font.font ("Georgia", 10));
-                label.setStyle("-fx-background-color: #F0F4F5; -fx-border-color: darkblue; -fx-padding: 2;");
+                label.setOnMousePressed(e -> goToSelectedRoom(e));
+                label.setOnMouseEntered(e -> setMouseToHand(e));
+                label.setOnMouseExited(e -> setMouseToNormal(e));
+                label.setFont(Font.font ("Calibri", 10));
+                label.setStyle("-fx-background-color: #424556; -fx-border-color: #424556; -fx-padding: 2; -fx-border-radius: 1 1 1 1");
+                label.setTextFill(lightGrey);
             }
             else{
                 ImageView image = new ImageView();
@@ -649,7 +665,7 @@ public class PatientController extends DisplayController implements Initializabl
         Line line = new Line(pointA.getX(), pointA.getY(), pointB.getX(), pointB.getY());
         line.setStrokeWidth(4);
         line.setMouseTransparent(true);
-        line.setStroke(Color.rgb(88, 169, 196));
+        line.setStroke(darkBlue);
 
         anchorPane.getChildren().add(line);
 
@@ -682,7 +698,7 @@ public class PatientController extends DisplayController implements Initializabl
         triangle.getPoints().addAll(new Double [] {point3.getX(), point3.getY(), point2.getX(), point2.getY(), point1.getX(), point1.getY()});
         triangle.setLayoutX(pointB.getX());
         triangle.setLayoutY(pointB.getY());
-        triangle.setFill(Color.rgb(88, 169, 196));
+        triangle.setFill(darkBlue);
 
         anchorPane.getChildren().add(triangle);
 
@@ -730,9 +746,12 @@ public class PatientController extends DisplayController implements Initializabl
                 current.setText(room.getName());
                 current.setLayoutX(roomx);
                 current.setLayoutY(roomy);
-                current.setBorder(new Border(new BorderStroke(Color.BLACK,BorderStrokeStyle.SOLID,new CornerRadii(4),BorderWidths.DEFAULT)));
-                current.setBackground(new Background(new BackgroundFill(Color.rgb(124,231,247), new CornerRadii(4),
+                current.setBorder(new Border(new BorderStroke(Color.rgb(66,64,86),BorderStrokeStyle.SOLID,new CornerRadii(1),BorderWidths.DEFAULT)));
+                current.setBackground(new Background(new BackgroundFill(Color.rgb(66,64,86), new CornerRadii(1),
                     new Insets(0.0,0.0,0.0,0.0))));
+                current.setFont(Font.font ("Calibri", 10));
+                current.setStyle("-fx-background-color: #424556; -fx-border-color: #424556; -fx-padding: 2; -fx-border-radius: 1 1 1 1");
+                current.setTextFill(lightGrey);
                 current.setMouseTransparent(true);
                 labels.add(current);
             }
@@ -750,24 +769,6 @@ public class PatientController extends DisplayController implements Initializabl
     }
 
 
-
-
-    /**
-     * given an image view and a subpath, draw a floor label
-     * @param drawPane
-     * @param subPath
-     * @param labelFontSize
-     */
-    public void drawFloorLabel(Pane drawPane, SubPath subPath, int labelFontSize){
-        Label label = new Label(subPath.getFloor());
-        label.setFont(Font.font ("Georgia", labelFontSize));
-        FloorPoint temp = graphPointToImage(new GraphNode(50, 30, "one"), imageView);
-        label.setLayoutX(temp.getX());
-        label.setLayoutY(temp.getY());
-        label.setTextFill(Color.rgb(27, 68, 156));
-        drawPane.getChildren().add(label);
-        this.drawnObjects.add(label);
-    }
 
     /**
      * Display labels on app.datastore.Map
