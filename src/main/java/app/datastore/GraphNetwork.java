@@ -58,11 +58,12 @@ public class GraphNetwork {
      * returns a path from the startNode to the goalNode
      * @param startNode
      * @param goalNode
+     * @param useStairs
      * @return
      * @throws PathNotFoundException
      */
-    public LinkedList<GraphNode> getPath(GraphNode startNode, GraphNode goalNode) throws PathNotFoundException {
-        return currentPathingAlgorithm.findPath(startNode, goalNode);
+    public LinkedList<GraphNode> getPath(GraphNode startNode, GraphNode goalNode, boolean useStairs) throws PathNotFoundException {
+        return currentPathingAlgorithm.findPath(startNode, goalNode, useStairs);
     }
 
     /**

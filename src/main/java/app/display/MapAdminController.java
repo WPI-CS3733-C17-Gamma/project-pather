@@ -66,6 +66,7 @@ public class MapAdminController extends DisplayController {
     //For the context menu (right click menu)
     //ContextMenu contextMenu;
 
+    @FXML private ChoiceBox<String> transitionType;
     @FXML private Button buttonSave;
     @FXML private Button buttonCancel;
 
@@ -166,7 +167,6 @@ public class MapAdminController extends DisplayController {
          */
         roomName.addEventFilter(KeyEvent.KEY_PRESSED, e->{
             if(e.getCode() == KeyCode.ENTER){
-                System.out.println(roomName.getEditor().getText());
                 roomName.setValue(roomName.getEditor().getText());
                 addRoom();
                 mapPane.requestFocus();
@@ -287,23 +287,23 @@ public class MapAdminController extends DisplayController {
         ImagePattern addRoomImage = new ImagePattern(new Image("/Radial Icons/new_Add_Room.png"),0, 0, 60, 60, false);
         ImagePattern addNodeImage = new ImagePattern(new Image("/Radial Icons/new_Add_Node.png"),-1, 0, 60, 60, false);
         ImagePattern addConnectionImage = new ImagePattern(new Image("/Radial Icons/new_Add_Connection.png"),0,0,60,60,false);
-        ImagePattern chainAddImage = new ImagePattern(new Image("Radial Icons/new_Chain_Add.png"),0,0,60,60,false);
-        ImagePattern deleteRoomImageDisplay = new ImagePattern(new Image("/Radial Icons/new_Delete_Room.png"), 30, 150, 60, 60, false);
-        ImagePattern addRoomImageDisplay = new ImagePattern(new Image("/Radial Icons/new_Add_Room.png"),30, 150, 60, 60, false);
-        ImagePattern addNodeImageDisplay = new ImagePattern(new Image("/Radial Icons/new_Add_Node.png"),30, 150, 60, 60, false);
-        ImagePattern deleteNodeImageDisplay = new ImagePattern(new Image("/Radial Icons/new_Delete_Node.png"),30, 150, 60, 60, false);
-        ImagePattern addConnectionImageDisplay = new ImagePattern(new Image("/Radial Icons/new_Add_Connection.png"),30,150,60,60,false);
-        ImagePattern chainAddImageDisplay = new ImagePattern(new Image("Radial Icons/new_Chain_Add.png"),30,150,60,60,false);
+        ImagePattern chainAddImage = new ImagePattern(new Image("Radial Icons/new_Chain_Add_Right.png"),0,0,60,60,false);
+        ImagePattern deleteRoomImageDisplay = new ImagePattern(new Image("/Radial Icons/dark_delete_room.png"), 30, 150, 60, 60, false);
+        ImagePattern addRoomImageDisplay = new ImagePattern(new Image("/Radial Icons/dark_add_room.png"),30, 150, 60, 60, false);
+        ImagePattern addNodeImageDisplay = new ImagePattern(new Image("/Radial Icons/dark_add_node.png"),30, 150, 60, 60, false);
+        ImagePattern deleteNodeImageDisplay = new ImagePattern(new Image("/Radial Icons/dark_delete_node.png"),30, 150, 60, 60, false);
+        ImagePattern addConnectionImageDisplay = new ImagePattern(new Image("/Radial Icons/dark_add_connection.png"),30,150,60,60,false);
+        ImagePattern chainAddImageDisplay = new ImagePattern(new Image("Radial Icons/dark_chain_add_right.png"),30,150,60,60,false);
         screenMenu.addOption(addRoomImage,Color.rgb(42,45,56),addRoomImageDisplay, addRoomOption, addRoomOption);//Add delete Room, add/change Room, delete node to this menu, delete elevator if this node is an elevator
         screenMenu.addOption(addNodeImage,Color.rgb(42,45,56), addNodeImageDisplay, addNodeOption,addNodeOption);
-        screenMenu.addOption(chainAddImage, Color.rgb(42,45,56), chainAddImageDisplay, chainAddOption,chainAddOption);
         screenMenu.addOption(addConnectionImage, Color.rgb(42,45,56), addConnectionImageDisplay, addConnectionOption,addConnectionOption);
+        screenMenu.addOption(chainAddImage, Color.rgb(42,45,56), chainAddImageDisplay, chainAddOption,chainAddOption);
 
         ImagePattern deleteRoomImageNode = new ImagePattern(new Image("/Radial Icons/new_Delete_Room.png"), 15, 15, 60, 60, false);
         ImagePattern addRoomImageNode = new ImagePattern(new Image("/Radial Icons/new_Add_Room.png"),-15, -28, 60, 60, false);
         ImagePattern deleteNodeImageNode = new ImagePattern(new Image("/Radial Icons/new_Delete_Node.png"),6, -7, 60, 60, false);
         ImagePattern addConnectionImageNode = new ImagePattern(new Image("/Radial Icons/new_Add_Connection.png"),15,-13,60,60,false);
-        ImagePattern chainAddImageNode = new ImagePattern(new Image("Radial Icons/new_Chain_Add.png"),2,2,60,60,false);
+        ImagePattern chainAddImageNode = new ImagePattern(new Image("Radial Icons/new_Chain_Add_Right.png"),2,2,60,60,false);
         nodeMenu.addOption(deleteNodeImageNode, Color.rgb(42,45,56), deleteNodeImageDisplay, deleteNodeOption,deleteNodeOption);//Add add elevator, addnode, add elevator
         nodeMenu.addOption(deleteRoomImageNode,Color.rgb(42,45,56), deleteRoomImageDisplay, deleteRoom, deleteRoom);
         nodeMenu.addOption(addRoomImageNode, Color.rgb(42,45,56), addRoomImageDisplay, addChangeRoom, addChangeRoom);
@@ -320,6 +320,36 @@ public class MapAdminController extends DisplayController {
         drawMap();
         //------------------------------------------------------------------------------------------------------------------
         stage.addEventFilter(KeyEvent.KEY_PRESSED, event -> handleKey(event));
+
+        ArrayList transitionOptions = new ArrayList(Arrays.asList(new String[]{
+            "None",
+            "Entrance",
+            "Elevator",
+            "Stair"
+        }));
+
+        transitionType.setItems(FXCollections.observableArrayList(transitionOptions));
+        transitionType.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (selectedNode != null) {
+                    if (newValue.equals("Elevator")) {
+                        selectedNode.setFloorTransitionType(GraphNode.ELEVATOR);
+                    }
+                    else if (newValue.equals("Entrance")) {
+                        selectedNode.setFloorTransitionType(GraphNode.ENTRANCE);
+                    }
+                    else if (newValue.equals("Stair")) {
+                        selectedNode.setFloorTransitionType(GraphNode.STAIR);
+                    }
+                    else {
+                        selectedNode.setFloorTransitionType(GraphNode.NONE);
+                    }
+                }
+            }
+        });
+        transitionType.setValue("Elevator");
+
 
     }
 
@@ -394,7 +424,7 @@ public class MapAdminController extends DisplayController {
      * @param imageToDrawOver the image the point must cover
      */
     public void drawNode (GraphNode node, ImageView imageToDrawOver) {
-        if (node.isElevator()) {
+        if (node.doesCrossFloor()) {
             drawElevator(node.getLocation(), imageToDrawOver);
         }
         else {
@@ -460,7 +490,30 @@ public class MapAdminController extends DisplayController {
      * @param location
      */
     public void addElevator(FloorPoint location, List<String> floors){
-        map.addElevator(location, floors);
+        String selectedTransition = transitionType.getValue();
+        int selectedTransitionValue = GraphNode.ELEVATOR;
+        if (selectedTransition.equals("Elevator")) {
+           selectedTransitionValue = GraphNode.ELEVATOR;
+            logger.debug("Elevator selected {}", selectedTransitionValue);
+            System.out.println("Elevator selected " + selectedTransitionValue);
+        }
+        else if (selectedTransition.equals("Entrance")) {
+            selectedTransitionValue = GraphNode.ENTRANCE;
+            logger.debug("Entrance selected {}", selectedTransitionValue);
+            System.out.println("Entrance selected " + selectedTransitionValue);
+        }
+        else if (selectedTransition.equals("Stair")) {
+            selectedTransitionValue = GraphNode.STAIR;
+            logger.debug("Stair selected {}", selectedTransitionValue);
+            System.out.println("Stair selected " + selectedTransitionValue);
+        }
+        else {
+            selectedTransitionValue = GraphNode.NONE;
+            logger.debug("Stair selected {}", selectedTransitionValue);
+            System.out.println("Stair selected " + selectedTransitionValue);
+        }
+
+        map.addElevator(location, floors, selectedTransitionValue);
         secondaryNode = selectedNode;
         selectedNode = map.getGraphNode(location);
         drawMap();
@@ -584,7 +637,7 @@ public class MapAdminController extends DisplayController {
     public void deleteElevator () {
         unclickToggleButtons();
         if (selectedNode != null ) {
-            if(selectedNode.isElevator()) {
+            if(selectedNode.doesCrossFloor()) {
                 boolean isEl = map.deleteElevator(selectedNode);
                 selectedNode = null;
                 drawMap();
@@ -754,6 +807,22 @@ public class MapAdminController extends DisplayController {
             }
         }
         if(selectedNode != null) {
+            // set the transition type to the selected type
+            if (selectedNode.getFloorTransitionType() == GraphNode.NONE) {
+                transitionType.setValue("None");
+            }
+            else if (selectedNode.getFloorTransitionType() == GraphNode.ELEVATOR) {
+                transitionType.setValue("Elevator");
+            }
+            else if (selectedNode.getFloorTransitionType() == GraphNode.STAIR) {
+                transitionType.setValue("Stair");
+            }
+            else if (selectedNode.getFloorTransitionType() == GraphNode.ENTRANCE) {
+                transitionType.setValue("Entrance");
+            }
+
+
+            System.out.println("Selected node is : " + selectedNode.getFloorTransitionType());
             Shape selected1 = drawnNodes.get(selectedNode.id);
             if(selected1 != null) {
                 selected1.setFill(Color.RED);

@@ -24,10 +24,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ApplicationController extends Application {
@@ -47,6 +44,7 @@ public class ApplicationController extends Application {
     HashMap<String, ProxyImage> extraImages;
 
     final Logger logger = LoggerFactory.getLogger(ApplicationController.class);
+    PatientController patientController;
 
 
     @Override
@@ -71,21 +69,35 @@ public class ApplicationController extends Application {
         map = databaseManager.load();
 
         floorMaps = new HashMap<>();
-        floorMaps.put("floor1", new ProxyImage("Main_Belkin_Clean/main_1clean.png"));
-        floorMaps.put("floor2", new ProxyImage("Main_Belkin_Clean/main_2clean.png"));
-        floorMaps.put("floor3", new ProxyImage("Main_Belkin_Clean/main_3clean.png"));
-        floorMaps.put("floor4", new ProxyImage("Main_Belkin_Clean/main_4clean.png"));
-        floorMaps.put("floor5", new ProxyImage("Main_Belkin_Clean/main_5clean.png"));
-        floorMaps.put("floor6", new ProxyImage("Main_Belkin_Clean/main_6clean.png"));
-        floorMaps.put("floor7", new ProxyImage("Main_Belkin_Clean/main_7clean.png"));
-        floorMaps.put("belkin1", new ProxyImage("Main_Belkin_Clean/Belkin_1clean.png"));
-        floorMaps.put("belkin2", new ProxyImage("Main_Belkin_Clean/Belkin_2clean.png"));
-        floorMaps.put("belkin3", new ProxyImage("Main_Belkin_Clean/Belkin_3clean.png"));
-        floorMaps.put("belkin4", new ProxyImage("Main_Belkin_Clean/Belkin_4clean.png"));
-        floorMaps.put("campus", new ProxyImage("Main_Belkin_Clean/campusclean.png"));
+        floorMaps.put("floor1", new ProxyImage("Saina's New Blue Maps/main_1_blue.png"));
+        floorMaps.put("floor2", new ProxyImage("Saina's New Blue Maps/main_2_blue.png"));
+        floorMaps.put("floor3", new ProxyImage("Saina's New Blue Maps/main_3_blue.png"));
+        floorMaps.put("floor4", new ProxyImage("Saina's New Blue Maps/main_4_blue.png"));
+        floorMaps.put("floor5", new ProxyImage("Saina's New Blue Maps/main_5_blue.png"));
+        floorMaps.put("floor6", new ProxyImage("Saina's New Blue Maps/main_6_blue.png"));
+        floorMaps.put("floor7", new ProxyImage("Saina's New Blue Maps/main_7_blue.png"));
+        floorMaps.put("belkin1", new ProxyImage("Saina's New Blue Maps/Belkin_1_blue_temp.png"));
+        floorMaps.put("belkin2", new ProxyImage("Saina's New Blue Maps/Belkin_2_blue.png"));
+        floorMaps.put("belkin3", new ProxyImage("Saina's New Blue Maps/Belkin_3_blue.png"));
+        floorMaps.put("belkin4", new ProxyImage("Saina's New Blue Maps/Belkin_4_blue.png"));
+        floorMaps.put("campus", new ProxyImage("Saina's New Blue Maps/campus_blue.png"));
 
         extraImages = new HashMap<>();
-        extraImages.put("elevator", new ProxyImage("Icon_PNGs/ElevatorT.png"));
+        extraImages.put("", null);
+        extraImages.put("Elevator", new ProxyImage("Icon_PNGs/newElevator.png"));
+        extraImages.put("Cafe", new ProxyImage("Icon_PNGs/Cafe2T.png"));
+        extraImages.put("Bathroom", new ProxyImage("Icon_PNGs/BathroomT.png"));
+        extraImages.put("Waitroom", new ProxyImage("Icon_PNGs/WaitRoomT.png"));
+        extraImages.put("Doctor", new ProxyImage("Icon_PNGs/DoctorT.png"));
+        extraImages.put("Frontdesk", new ProxyImage("Icon_PNGs/AdmittingT.png"));
+        extraImages.put("Library", new ProxyImage("Icon_PNGs/LibraryT.png"));
+        extraImages.put("Giftshop", new ProxyImage("Icon_PNGs/GiftShopT.png"));
+        extraImages.put("Family Room", new ProxyImage("Icon_PNGs/FamilyT.png"));
+        extraImages.put("Emergency Room", new ProxyImage("Icon_PNGs/EmergencyT.png"));
+        extraImages.put("Starbucks", new ProxyImage("Icon_PNGs/Starbucks.png"));
+        extraImages.put("Stairs", new ProxyImage("Icon_PNGs/Stairs.png"));
+        extraImages.put("Entrance", new ProxyImage("Icon_PNGs/Entrance.png"));
+        extraImages.put("Cafeteria", new ProxyImage("Icon_PNGs/CafeteriaT.png"));
     }
 
     /**
@@ -106,6 +118,10 @@ public class ApplicationController extends Application {
         return this.floorMaps.keySet().stream().collect(Collectors.toList());
     }
 
+    public List<String> getAllIconNames(){
+        return this.extraImages.keySet().stream().collect(Collectors.toList());
+    }
+
     /**
      * load the patient display into the frame
      */
@@ -115,9 +131,9 @@ public class ApplicationController extends Application {
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/PatientDisplay.fxml"));
-            PatientController controller = new PatientController();
-            controller.init(map, this, pStage, "floor3");
-            loader.setController(controller);
+            patientController = new PatientController();
+            patientController.init(map, this, pStage, "floor3");
+            loader.setController(patientController);
             Parent root = loader.load();
             pStage.setTitle("PatientDisplay");
             currentScene =  new Scene(root, 1000, 600);
@@ -126,12 +142,12 @@ public class ApplicationController extends Application {
             currentScene.widthProperty().addListener(new ChangeListener<Number>() {
                 @Override public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneWidth, Number newSceneWidth) {
                     logger.debug("Scaling {} Width: {}", this.getClass().getSimpleName(),newSceneWidth);
-                    controller.scaleWidth(oldSceneWidth, newSceneWidth);
+                    patientController.scaleWidth(oldSceneWidth, newSceneWidth);
                 }
             });
             currentScene.heightProperty().addListener(new ChangeListener<Number>() {
                 @Override public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneHeight, Number newSceneHeight) {
-                    controller.scaleHeight(oldSceneHeight, newSceneHeight);
+                    patientController.scaleHeight(oldSceneHeight, newSceneHeight);
                     logger.debug("Scaling {} Height: {}", this.getClass().getSimpleName(),newSceneHeight);
                 }
             });
@@ -266,6 +282,7 @@ public class ApplicationController extends Application {
 
         save();
         adminStage.close();
+        patientController.refreshDisplay();
 
         //createPatientDisplay();
     }

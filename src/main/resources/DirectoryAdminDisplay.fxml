@@ -1,9 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+
 <BorderPane style="-fx-background-color: #d4e3ed;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.display.DirectoryAdminController">
     <bottom>
         <ToolBar style="-fx-background-color: #d4e3ed;">
@@ -30,36 +40,39 @@
         </VBox>
     </left>
     <center>
-        <VBox fx:id="entryEditor" alignment="CENTER" fillWidth="false" maxWidth="350.0" spacing="5.0" visible="false" BorderPane.alignment="TOP_LEFT">
+        <VBox fx:id="entryEditor" alignment="CENTER" fillWidth="false" maxWidth="350.0" prefHeight="199.0" prefWidth="350.0" spacing="5.0" BorderPane.alignment="TOP_LEFT">
             <children>
-                <GridPane prefWidth="300.0" vgap="5.0">
+                <GridPane minHeight="-Infinity" prefHeight="282.0" prefWidth="298.0" vgap="5.0">
                     <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="144.0" minWidth="10.0" prefWidth="109.0" />
                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="223.0" minWidth="10.0" prefWidth="191.0" />
                     </columnConstraints>
                     <rowConstraints>
                         <RowConstraints vgrow="SOMETIMES" />
-                        <RowConstraints vgrow="SOMETIMES" />
-                        <RowConstraints vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="-Infinity" prefHeight="90.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="37.0" minHeight="31.0" prefHeight="31.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="49.0" minHeight="26.0" prefHeight="36.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="85.0" minHeight="-Infinity" prefHeight="44.0" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="138.0" minHeight="10.0" prefHeight="131.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                     <children>
                         <Label text="Name:" />
                         <TextField fx:id="entryName" promptText="Name" GridPane.columnIndex="1" />
                         <Label text="Title:" GridPane.rowIndex="1" />
                         <TextField fx:id="entryTitle" prefWidth="202.0" promptText="Title" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <Label text="Locations:" GridPane.rowIndex="2" />
-                        <TextField fx:id="entryRoomSearch" onKeyReleased="#filterRooms" prefHeight="25.0" prefWidth="122.0" promptText="search location" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                        <ListView fx:id="entryRoomOptions" opacity="0.9" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <Label text="Locations:" GridPane.rowIndex="3" />
+                        <TextField fx:id="entryRoomSearch" onKeyReleased="#filterRooms" prefHeight="29.0" prefWidth="191.0" promptText="search location" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <ListView fx:id="entryRoomOptions" minHeight="-Infinity" minWidth="-Infinity" opacity="0.9" prefHeight="61.0" prefWidth="191.0" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                  <Label text="Icon: " GridPane.rowIndex="2" />
+                  <ChoiceBox fx:id="iconOption" prefHeight="44.0" prefWidth="191.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                     </children>
                 </GridPane>
-                <ListView fx:id="entryCurrentLocations" minHeight="60.0" prefHeight="200.0" prefWidth="300.0" />
+                <ListView fx:id="entryCurrentLocations" minHeight="60.0" prefHeight="104.0" prefWidth="300.0" />
                 <Button fx:id="entryDeleteRoom" mnemonicParsing="false" onAction="#entryDeleteSelectedRoom" style="-fx-background-color: pink;" text="Delete Location" />
                 <ToolBar style="-fx-background-color: #d4e3ed;">
                     <items>
                         <Button mnemonicParsing="false" onAction="#saveEntry" onMouseClicked="#saveEntry" text="Save" />
                         <Button mnemonicParsing="false" onAction="#entryCancel" text="Cancel" />
-                        <Button fx:id="entryDeleteEntry" mnemonicParsing="false" onAction="#entryDeleteSelectedEntry" style="-fx-background-color: pink;" text="Delete Entry" />
+                        <Button fx:id="entryDeleteEntry" mnemonicParsing="false" onAction="#entryDeleteSelectedEntry" prefHeight="25.0" prefWidth="101.0" style="-fx-background-color: pink;" text="Delete Entry" />
                     </items>
                 </ToolBar>
                 <Label fx:id="helpLabel" onMouseClicked="#help" prefHeight="418.0" prefWidth="363.0" visible="false" />

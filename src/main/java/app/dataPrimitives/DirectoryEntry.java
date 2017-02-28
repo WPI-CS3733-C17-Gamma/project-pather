@@ -11,11 +11,32 @@ public class DirectoryEntry extends Ided {
 
     List<Room> location;
 
+    String icon = "";
+
     public DirectoryEntry(String name, String title, List<Room> location)
     {
         this.name = name;
         this.title = title;
+        for(Room room : location){
+            if (!room.getEntries().contains(this)){
+                room.addEntry(this);
+            }
+        }
         this.location = location;
+    }
+
+    public DirectoryEntry(String name, String title, List<Room> location, String icon)
+    {
+        this.name = name;
+        this.title = title;
+        this.location = location;
+        //someone should pipe this/thread this/etc to make it faster
+        for(Room room : location){
+            if (!room.getEntries().contains(this)){
+                room.addEntry(this);
+            }
+        }
+        this.icon = icon;
     }
 
     /**
@@ -53,10 +74,19 @@ public class DirectoryEntry extends Ided {
     }
 
     /**
+     *
+     * @return the name of the icon associated with the entry
+     */
+    public String getIcon(){
+        return this.icon;
+    }
+
+    /**
      * @param location the new location that this entry is associated with
      */
     public void addLocation(Room location){
         this.location.add(location);
+        location.addEntry(this);
     }
 
     /**
@@ -73,6 +103,14 @@ public class DirectoryEntry extends Ided {
         this.title = title;
     }
 
+    /**
+     *
+     * @param icon the name of the icon in the extra image hashmap
+     */
+    public void setIcon(String icon){
+        this.icon = icon;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof DirectoryEntry)) {
@@ -85,7 +123,8 @@ public class DirectoryEntry extends Ided {
         DirectoryEntry rhs = (DirectoryEntry) obj;
         return this.name.equals(rhs.name) &&
             this.title.equals(rhs.title) &&
-            this.location.equals(rhs.location);
+            this.location.equals(rhs.location)&&
+            this.icon.equals(rhs.icon);
     }
 
     public void setLocation(List<Room> location) {

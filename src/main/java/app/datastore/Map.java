@@ -190,14 +190,15 @@ public class Map {
      * Add an elevator at the given Point to all floors given
      * @param point x,y location
      * @param floors list of floors to connect the elevator through
+     * @param transitionType elevator or entrance or floor
      */
-    public void addElevator (FloorPoint point, List<String> floors) {
+    public void addElevator (FloorPoint point, List<String> floors, int transitionType) {
         logger.debug("In map create elevator @ : {}", point);
         List<GraphNode> elevators = new ArrayList<>();
         // make elevators
         for (String floor : floors) {
             FloorPoint currentFloor = new FloorPoint(point.getX(), point.getY(), floor);
-            GraphNode newNode = new GraphNode(currentFloor);
+            GraphNode newNode = new GraphNode(currentFloor, transitionType);
             graph.addNode(newNode);
             elevators.add(newNode);
         }
@@ -216,7 +217,7 @@ public class Map {
      * @param elevator
      */
     public boolean deleteElevator (GraphNode elevator) {
-        if (elevator.isElevator()) {
+        if (elevator.doesCrossFloor()) {
             //  copy adjacent list because it will be modified by deleting!
             List<GraphNode> copy = new ArrayList<GraphNode>();
             copy.addAll(elevator.getConnectedElevators());
@@ -271,8 +272,8 @@ public class Map {
      * @return
      * @throws PathNotFoundException
      */
-    public List<SubPath> getPathByFloor(GraphNode start, GraphNode end) throws PathNotFoundException {
-        List<GraphNode> fullPath = graph.getPath(start, end);
+    public List<SubPath> getPathByFloor(GraphNode start, GraphNode end, boolean useStairs) throws PathNotFoundException {
+        List<GraphNode> fullPath = graph.getPath(start, end, useStairs);
         if(fullPath.isEmpty()) {
             return new ArrayList<>();
         }
@@ -291,9 +292,9 @@ public class Map {
     }
 
     /** See method {@Link app.datastore.GraphNetwork#getPath(startNode, goalNode)} */
-    public List<GraphNode> getPath(GraphNode start, GraphNode end){
+    public List<GraphNode> getPath(GraphNode start, GraphNode end, boolean useStairs){
         try {
-            return graph.getPath(start, end);
+            return graph.getPath(start, end,useStairs);
         } catch( PathNotFoundException e) {
             logger.error("Got error in {} : {}", this.getClass().getSimpleName(), e.getMessage());
         }
@@ -312,28 +313,40 @@ public class Map {
         int nodeNum = -1;
         for (GraphNode node : path) {
             nodeNum++;
-            // No directions for first and last node
-            if (nodeNum == 0) {
+            // No directions for first node
+            if (nodeNum == 0 || nodeNum > path.size() - 1 ) {
                 continue;
             }
-            if(nodeNum >= path.size() - 1) {
+            if(nodeNum == path.size() - 1) {
                 String currFloor = path.get(0).getLocation().getFloor();
                 // Determine what transition is happening
                 if(nextFloor != null) {
+                    // If your going to faulkner but not already in faulkner
                     if(!currFloor.contains("floor") && nextFloor.contains("floor")) {
                         directions.add(new Pair(nodeNum, "Enter Faulkner Hospital"));
                     }
+                    // If you are going to belkin but not coming from it
                     else if(!currFloor.contains("belkin") && nextFloor.contains("belkin")) {
                         directions.add(new Pair(nodeNum, "Enter Belkin House"));
                     }
+                    // If you are going to the campus you must be leaving a building
                     else if(nextFloor.contains("campus")) {
                         directions.add(new Pair(nodeNum, "Exit building"));
                     }
+                    // Else you are going to a building from the same building
                     else {
                         String floor = nextFloor.replaceFirst("floor|belkin", "floor ");
-                        directions.add(new Pair(nodeNum, "Take elevator to " + floor));
+                        logger.debug("Checking floor transition type: {}", node.getFloorTransitionType());
+                        // If its an elevator or a stairs
+                        if(node.getFloorTransitionType() == 1) {
+                            directions.add(new Pair(nodeNum, "Take the elevator to " + floor));
+                        }
+                        else if(node.getFloorTransitionType() == 3) {
+                            directions.add(new Pair(nodeNum, "Take the stairs to " + floor));
+                        }
                     }
                 }
+                // If there is no transition then you are at the end of your path
                 else {
                     directions.add(new Pair(nodeNum, "Arrive at your destination"));
                 }

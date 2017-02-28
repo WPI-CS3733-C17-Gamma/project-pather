@@ -120,7 +120,7 @@ public class GetPathTest extends TestCase{
             logger.debug("testGetPath neighbour: {}", neighbour.toString());
         }
         LinkedList<GraphNode> path2 = new LinkedList<>();
-        path2 = graph.getPath(node1, node5);
+        path2 = graph.getPath(node1, node5, false);
         assertTrue(path1.equals(path2));
     }
 
@@ -128,7 +128,7 @@ public class GetPathTest extends TestCase{
     public void testGetPath2() throws PathNotFoundException {
         LinkedList<GraphNode> path1 = new LinkedList<GraphNode>(Arrays.asList(node51, node53, node45, node35));
         LinkedList<GraphNode> path2 = new LinkedList<>();
-        path2 = betterGraph.getPath(node51, node35);
+        path2 = betterGraph.getPath(node51, node35, false);
         for(GraphNode neighbour: path2) {
             logger.debug("testGetPath2 neighbour: {}", neighbour.toString());
         }
@@ -140,7 +140,7 @@ public class GetPathTest extends TestCase{
         LinkedList<GraphNode> path1 = new LinkedList<GraphNode>(Arrays.asList(node11, node31, node33, node34,
                                                                    node35, node45, node55));
         LinkedList<GraphNode> path2 = new LinkedList<>();
-        path2 = betterGraph.getPath(node11, node55);
+        path2 = betterGraph.getPath(node11, node55, false);
         for(GraphNode neighbour: path2) {
             logger.debug("testGetPath3 neighbour: {}", neighbour.toString());
         }
@@ -153,7 +153,7 @@ public class GetPathTest extends TestCase{
     public void testGetPath4a() throws PathNotFoundException {
         LinkedList<GraphNode> path1 = new LinkedList(Arrays.asList(node14, node22, node23, node33));
         LinkedList<GraphNode> path2 = new LinkedList<>();
-        path2 = betterGraph.getPath(node14, node33);
+        path2 = betterGraph.getPath(node14, node33, false);
         for (GraphNode neighbour : path2) {
             logger.debug("testGetPath4a neighbour: {}", neighbour.toString());
         }
@@ -164,7 +164,7 @@ public class GetPathTest extends TestCase{
     public void testPathNotFoundException(){
         Throwable e = null;
         try{
-            graph.getPath(node1, node11);
+            graph.getPath(node1, node11, false);
         }catch (Throwable ex){
             e = ex;
         }

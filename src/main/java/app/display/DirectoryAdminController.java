@@ -5,12 +5,12 @@ import app.dataPrimitives.DirectoryEntry;
 import app.dataPrimitives.GraphNode;
 import app.dataPrimitives.Room;
 import app.datastore.Map;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -39,6 +40,7 @@ public class DirectoryAdminController extends DisplayController{
     @FXML ListView<String> entryRoomOptions;
     @FXML Button entryDeleteRoom;
     @FXML ListView<String> entryCurrentLocations;
+    @FXML ChoiceBox iconOption;
 
     /** Cruddy Constructor for tests */
     public DirectoryAdminController (Map map,
@@ -56,6 +58,11 @@ public class DirectoryAdminController extends DisplayController{
         logger.info("INIT DirectoryAdminController");
         helpLabel.setText("Welcome to the directory entry editor.\n You're an admin, you don't need help" );
 
+        //set up the choice box for choosing the icon
+        List<String> iconOptions = applicationController.getAllIconNames();
+        iconOption.setItems(FXCollections.observableList(iconOptions));
+        iconOption.setValue(new Tooltip("Choose icon"));
+
         // get both entries
         List<String> entryList = map.getAllEntries();
         entryList.sort(String::compareTo);
@@ -64,7 +71,7 @@ public class DirectoryAdminController extends DisplayController{
         listEntries.getSelectionModel().selectedItemProperty().addListener(
             (ov, old_val, new_val) -> selectEntry(new_val));
 
-        // add change handler for the dropdown list of poossible locations
+        // add change handler for the dropdown list of possible locations
         entryRoomOptions.getSelectionModel().selectedItemProperty().addListener(
             (ov, old_val, new_val) -> entryAddRoom(new_val));
 
@@ -86,10 +93,12 @@ public class DirectoryAdminController extends DisplayController{
     /** See the method {@link Map#getEntry(String)}
      * Side Effect: Sets activeDirectoryEntry to the entry that is found
      * @throws IllegalArgumentException if an entry could not be found*/
-    public void selectEntry(String entryName) throws IllegalArgumentException {
+    public void selectEntry(String entryName) {//  throws IllegalArgumentException {
         activeDirectoryEntry = map.getEntry(entryName);
+        //this thingy throws an error every time an entry is saved
         if( activeDirectoryEntry == null ) {
-            throw new IllegalArgumentException();
+            return;
+            //throw new IllegalArgumentException();
         }
         displayEntry(activeDirectoryEntry);
         return;
@@ -125,8 +134,8 @@ public class DirectoryAdminController extends DisplayController{
      * @param room List of room the entry is associated with
      * @throws IllegalArgumentException if there new entry would be a duplicate
      */
-    public void createEntry(String name, String title, List<Room> room) throws IllegalArgumentException {
-        DirectoryEntry newEntry = new DirectoryEntry(name, title, room);
+    public void createEntry(String name, String title, List<Room> room, String icon) throws IllegalArgumentException {
+        DirectoryEntry newEntry = new DirectoryEntry(name, title, room, icon);
 
         if( !map.addEntry(newEntry) ) {
             throw new IllegalArgumentException("Tried to save entry that would be a duplicate of one"
@@ -200,8 +209,10 @@ public class DirectoryAdminController extends DisplayController{
             .map(roomName -> map.getRoomFromName(roomName))
             .collect(Collectors.toList());
 
+        String icon = (String)iconOption.getValue();
+
         try {
-            saveEntry(name,title,rooms);
+            saveEntry(name,title,rooms, icon);
         }
         catch (IllegalArgumentException arg) {
             logger.error("Got error in {} : {}", this.getClass().getSimpleName(), arg.toString());
@@ -223,13 +234,13 @@ public class DirectoryAdminController extends DisplayController{
      * @throws IllegalStateException if entry is not selected
      * @throws IllegalArgumentException if key already exits
      */
-    public void saveEntry(String name, String title, List<Room> rooms) throws IllegalStateException, IllegalArgumentException{
+    public void saveEntry(String name, String title, List<Room> rooms, String icon) throws IllegalStateException, IllegalArgumentException{
         if( activeDirectoryEntry == null ) {
             throw new IllegalStateException("Tried to save entry when none was selected\n"
                 + "Please make sure 'activeDirectoryEntry in app.display.DirectoryAdminController is not null");
         }
 
-        DirectoryEntry newEntry = new DirectoryEntry(name, title, rooms);
+        DirectoryEntry newEntry = new DirectoryEntry(name, title, rooms, icon);
 
         if( map.getEntry(name) != null ) {
             if( map.getEntry(name).equals(newEntry) ) {
@@ -256,6 +267,7 @@ public class DirectoryAdminController extends DisplayController{
         entryEditor.setVisible(true);
         entryName.setText(activeEntry.getName());
         entryTitle.setText(activeEntry.getTitle());
+        iconOption.setValue(activeEntry.getIcon());
         List<Room> locs = activeEntry.getLocation();
         List<String> locsAsString = locs
             .stream()
@@ -263,6 +275,9 @@ public class DirectoryAdminController extends DisplayController{
             .collect(Collectors.toList());
         // FXCollections takes a normal list of strings and makes it viewable
         ObservableList<String> roomNames = FXCollections.observableList(locsAsString);
+
+        iconOption.getSelectionModel().select(activeEntry.getIcon());
+
         entryCurrentLocations.setItems(roomNames);
     }
 
