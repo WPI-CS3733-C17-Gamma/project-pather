@@ -585,12 +585,18 @@ public class PatientController extends DisplayController implements Initializabl
      * @param e
      */
     public void goToSelectedRoom(MouseEvent e){
-        if (e.getSource() instanceof Label){
-            Label temp = (Label) e.getSource();
-            searchBar.setText(temp.getText());
-            startSearch();
-	    // TODO make use stairs
-            getPath(map.getKioskLocation(),map.getRoomFromName(temp.getText()).getLocation(), false);
+        try {
+            if (e.getSource() instanceof Label){
+                Label temp = (Label) e.getSource();
+                searchBar.setText(temp.getText());
+                startSearch();
+                // TODO make use stairs
+                // NOTE! you cannot click on icons yet
+                getPath(map.getKioskLocation(),map.getRoomFromName(temp.getText()).getLocation(), false);
+            }
+        }
+        catch (Exception ex) {
+            System.out.println("You cannot click on icons yet. TODO");
         }
     }
 
