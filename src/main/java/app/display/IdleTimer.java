@@ -6,9 +6,6 @@ import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.util.Duration;
 
-/**
- * Created by saahil claypool on 2/27/2017.
- */
 public class IdleTimer {
 
     private double time;
@@ -37,11 +34,18 @@ public class IdleTimer {
         System.out.println("Timer Started");
     }
 
+    /**
+      @param patientController controller that this timer will talk to 
+    */
     public void setPatientController (PatientController patientController) {
         System.out.println("Patient controller is " + patientController);
         this.patientController = patientController;
     }
 
+    /**
+       keep constructor private
+       creates a timer with a default time of 10 seconds
+     */
     private IdleTimer () {
         this.time = 10000;
         this.timer = new Timeline(new KeyFrame (Duration.millis(time)));
