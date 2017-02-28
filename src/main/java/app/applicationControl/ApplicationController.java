@@ -1,10 +1,7 @@
 package app.applicationControl;
 
 import app.datastore.Map;
-import app.display.AdminController;
-import app.display.DisplayController;
-import app.display.LoginController;
-import app.display.PatientController;
+import app.display.*;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -45,7 +42,7 @@ public class ApplicationController extends Application {
 
 
     final Logger logger = LoggerFactory.getLogger(ApplicationController.class);
-    PatientController patientController; 
+    PatientController patientController;
 
 
     @Override
@@ -56,6 +53,11 @@ public class ApplicationController extends Application {
         createPatientDisplay();
         primaryStage.show();
         login = new Login();
+
+        // start timer
+        IdleTimer timer = IdleTimer.getInstance();
+        timer.setPatientController(patientController);
+        timer.resetTimer();
     }
 
     /**
@@ -282,7 +284,7 @@ public class ApplicationController extends Application {
 
         save();
         adminStage.close();
-        patientController.refreshDisplay(); 
+        patientController.refreshDisplay();
 
         //createPatientDisplay();
     }

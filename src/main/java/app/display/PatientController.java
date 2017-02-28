@@ -9,6 +9,7 @@ import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -24,6 +25,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -107,6 +109,18 @@ public class PatientController extends DisplayController implements Initializabl
         this.currentMap = currentMap;
 
         displayState = state.PATIENT_DEFAULT;
+        // add event filter
+        EventHandler passAllEventsToTimer = new EventHandler() {
+            @Override
+            public void handle(Event event) {
+                System.out.println("Passing event to timer...");
+                IdleTimer timer = IdleTimer.getInstance();
+                timer.resetTimer();
+            }
+        };
+
+        this.stage.addEventFilter(MouseEvent.ANY, passAllEventsToTimer);
+        this.stage.addEventFilter(KeyEvent.ANY, passAllEventsToTimer);
     }
 
     /**
@@ -912,6 +926,11 @@ public class PatientController extends DisplayController implements Initializabl
 
     public void hideOptions(){
         options.setVisible(false);
+    }
+
+    // revert to previous state
+    public void revertState () {
+        System.out.println("Reverting State");
     }
 
 
