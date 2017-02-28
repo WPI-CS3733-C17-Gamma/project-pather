@@ -764,27 +764,7 @@ public class PatientController extends DisplayController implements Initializabl
     public void initializeMinimaps(){
         displayMinipaths();
     }
-
-
-<<<<<<< HEAD
-    /**
-     * given an image view and a subpath, draw a floor label
-     * @param drawPane
-     * @param subPath
-     * @param labelFontSize
-     */
-    public void drawFloorLabel(Pane drawPane, SubPath subPath, int labelFontSize){
-        Label label = new Label(subPath.getFloor());
-        label.setFont(Font.font ("Georgia", labelFontSize));
-        FloorPoint temp = graphPointToImage(new GraphNode(50, 30, "one"), imageView);
-        label.setLayoutX(temp.getX());
-        label.setLayoutY(temp.getY());
-        label.setTextFill(Color.rgb(27, 68, 156));
-        drawPane.getChildren().add(label);
-        this.drawnObjects.add(label);
-    }
-=======
->>>>>>> origin/master
+    
 
     /**
      * Display labels on app.datastore.Map
