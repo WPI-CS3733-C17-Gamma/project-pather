@@ -278,6 +278,14 @@ public class PatientController extends DisplayController implements Initializabl
     }
 
     /**
+     * refresh the display 
+     */
+    public void refreshDisplay () {
+            clearDisplay();
+            drawRoomLabel(currentMap, imageView);
+    }
+
+    /**
      * remove search result
      */
     public void clearSearchDisplay(){
