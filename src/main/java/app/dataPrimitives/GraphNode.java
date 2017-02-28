@@ -223,12 +223,15 @@ public class GraphNode extends Ided implements Comparable {
      * @param newType must be between 0 and 3
      */
     public void setFloorTransitionType (int newType) {
+
+        int oldType = this.floorTransitionType;
         this.floorTransitionType = newType;
-        // get all adjacent elevator things and make them have the same type
         for (GraphNode node : getAdjacent()) {
-            if (node.getFloorTransitionType() != NONE) {
+            if (node.getLocation().getFloor().equals(this.getLocation().getFloor()) &&
+                node.floorTransitionType == oldType) {
                 node.setFloorTransitionType(newType);
             }
         }
+        // get all adjacent elevator things and make them have the same type
     }
 }
