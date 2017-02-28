@@ -45,6 +45,7 @@ public class ApplicationController extends Application {
 
 
     final Logger logger = LoggerFactory.getLogger(ApplicationController.class);
+    PatientController patientController;
 
 
     @Override
@@ -82,8 +83,8 @@ public class ApplicationController extends Application {
 
         extraImages = new HashMap<>();
         extraImages.put("", null);
-        extraImages.put("Elevator", new ProxyImage("Icon_PNGs/ElevatorT.png"));
-        extraImages.put("Cafeteria", new ProxyImage("Icon_PNGs/Cafe2T.png"));
+        extraImages.put("Elevator", new ProxyImage("Icon_PNGs/newElevator.png"));
+        extraImages.put("Cafe", new ProxyImage("Icon_PNGs/Cafe2T.png"));
         extraImages.put("Bathroom", new ProxyImage("Icon_PNGs/BathroomT.png"));
         extraImages.put("Waitroom", new ProxyImage("Icon_PNGs/WaitRoomT.png"));
         extraImages.put("Doctor", new ProxyImage("Icon_PNGs/DoctorT.png"));
@@ -92,6 +93,10 @@ public class ApplicationController extends Application {
         extraImages.put("Giftshop", new ProxyImage("Icon_PNGs/GiftShopT.png"));
         extraImages.put("Family Room", new ProxyImage("Icon_PNGs/FamilyT.png"));
         extraImages.put("Emergency Room", new ProxyImage("Icon_PNGs/EmergencyT.png"));
+        extraImages.put("Starbucks", new ProxyImage("Icon_PNGs/Starbucks.png"));
+        extraImages.put("Stairs", new ProxyImage("Icon_PNGs/Stairs.png"));
+        extraImages.put("Entrance", new ProxyImage("Icon_PNGs/Entrance.png"));
+        extraImages.put("Cafeteria", new ProxyImage("Icon_PNGs/CafeteriaT.png"));
     }
 
     /**
@@ -125,9 +130,9 @@ public class ApplicationController extends Application {
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/PatientDisplay.fxml"));
-            PatientController controller = new PatientController();
-            controller.init(map, this, pStage, "floor3");
-            loader.setController(controller);
+            patientController = new PatientController();
+            patientController.init(map, this, pStage, "floor3");
+            loader.setController(patientController);
             Parent root = loader.load();
             pStage.setTitle("PatientDisplay");
             currentScene =  new Scene(root, 1000, 600);
@@ -136,12 +141,12 @@ public class ApplicationController extends Application {
             currentScene.widthProperty().addListener(new ChangeListener<Number>() {
                 @Override public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneWidth, Number newSceneWidth) {
                     logger.debug("Scaling {} Width: {}", this.getClass().getSimpleName(),newSceneWidth);
-                    controller.scaleWidth(oldSceneWidth, newSceneWidth);
+                    patientController.scaleWidth(oldSceneWidth, newSceneWidth);
                 }
             });
             currentScene.heightProperty().addListener(new ChangeListener<Number>() {
                 @Override public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneHeight, Number newSceneHeight) {
-                    controller.scaleHeight(oldSceneHeight, newSceneHeight);
+                    patientController.scaleHeight(oldSceneHeight, newSceneHeight);
                     logger.debug("Scaling {} Height: {}", this.getClass().getSimpleName(),newSceneHeight);
                 }
             });
@@ -277,6 +282,7 @@ public class ApplicationController extends Application {
 
         save();
         adminStage.close();
+        patientController.refreshDisplay();
 
         //createPatientDisplay();
     }

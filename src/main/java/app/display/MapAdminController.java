@@ -167,7 +167,6 @@ public class MapAdminController extends DisplayController {
          */
         roomName.addEventFilter(KeyEvent.KEY_PRESSED, e->{
             if(e.getCode() == KeyCode.ENTER){
-                System.out.println(roomName.getEditor().getText());
                 roomName.setValue(roomName.getEditor().getText());
                 addRoom();
                 mapPane.requestFocus();
@@ -513,7 +512,6 @@ public class MapAdminController extends DisplayController {
             logger.debug("Stair selected {}", selectedTransitionValue);
             System.out.println("Stair selected " + selectedTransitionValue);
         }
-
 
         map.addElevator(location, floors, selectedTransitionValue);
         secondaryNode = selectedNode;

@@ -1,4 +1,5 @@
 package app.display;
+
 import app.CustomMenus.CircularContextMenu;
 import app.applicationControl.ApplicationController;
 import app.dataPrimitives.*;
@@ -12,6 +13,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -25,9 +27,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Line;
-import javafx.scene.shape.Shape;
+import javafx.scene.shape.*;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -278,6 +278,14 @@ public class PatientController extends DisplayController implements Initializabl
     }
 
     /**
+     * refresh the display
+     */
+    public void refreshDisplay () {
+            clearDisplay();
+            drawRoomLabel(currentMap, imageView);
+    }
+
+    /**
      * remove search result
      */
     public void clearSearchDisplay(){
@@ -350,7 +358,7 @@ public class PatientController extends DisplayController implements Initializabl
             currentPath = map.getPathByFloor(start, end, useStairs);
             TextDirection.setVisible(true);
             clearDisplay();
-            displaySubPath(patientImageView, currentPath.get(0), true,10, 20);
+            displaySubPath(patientImageView, currentPath.get(0), true,10, 1,20);
             currentSubPath = 0;
             for (int x = 0; x <currentPath.size(); x++){
                 SubPath p = currentPath.get(x);
@@ -388,7 +396,7 @@ public class PatientController extends DisplayController implements Initializabl
             currentSubPath = (int) iv.getId().charAt(0) - 48;
             SubPath path = currentPath.get(currentSubPath);//ascii conversion
             clearDisplay();
-            displaySubPath(patientImageView, path, true,10, 20);
+            displaySubPath(patientImageView, path, true,10,1, 20);
             displayMinipaths();
             iv.setEffect(new DropShadow());
             if (displayState == state.DISPLAYING_TEXT_DIRECTION){
@@ -441,21 +449,13 @@ public class PatientController extends DisplayController implements Initializabl
     }
 
     /**
-     * Initialises the minimaps after animation
-     */
-    public void initializeMinimaps(){
-        displayMinipaths();
-        minimaps.get(currentSubPath).map.setEffect(new DropShadow());
-    }
-
-    /**
      * Display the given sub path over the given image view
      * Addds all the drawn objects to a list of drawn objects
      * Changes the image view to the image of the floor the sub path covers
      * @param mapImage
      * @param subPath subpath to be drawn
      */
-    public void displaySubPath (ImageView mapImage, SubPath subPath, boolean drawLabels,int nodeRadius, int lableFontSize) {
+    public void displaySubPath (ImageView mapImage, SubPath subPath, boolean drawLabels,int nodeRadius, double arrowHeadSize, int lableFontSize) {
         GraphNode prev = null;
         mapImage.setImage(applicationController.getFloorImage(subPath.getFloor()));
         List<Shape> listToDraw = new ArrayList<>();
@@ -489,6 +489,7 @@ public class PatientController extends DisplayController implements Initializabl
             }
             // draw connection
             listToDraw.add(drawConnection(prev, node, mapImage));
+            listToDraw.add(drawArrowHeads(prev,node,mapImage,arrowHeadSize));
             startPoint.toFront();
             endPoint.toFront();
             prev = node;
@@ -542,15 +543,35 @@ public class PatientController extends DisplayController implements Initializabl
 
             FloorPoint imageLoc = graphPointToImage(loc, imageView);
             String labelName = cur.getName();
-            Label label = new Label(labelName);
-            label.setLayoutX(imageLoc.getX() + 3);
-            label.setLayoutY(imageLoc.getY() + 3);
+            String curImage = "";
+            for (DirectoryEntry entry : cur.getEntries()){
+                curImage = entry.getIcon();
+            }
+            Label label = new Label();
+            if (curImage.equals("")){
+                label.setText(labelName);
+                label.setLayoutX(imageLoc.getX() + 3);
+                label.setLayoutY(imageLoc.getY() + 3);
+                label.setOnMousePressed(e -> goToSelectedRoom(e));
+                label.setOnMouseEntered(e -> setMouseToHand(e));
+                label.setOnMouseExited(e -> setMouseToNormal(e));
+                label.setFont(Font.font ("Calibri", 10));
+                label.setStyle("-fx-background-color: #424556; -fx-border-color: #424556; -fx-padding: 2; -fx-border-radius: 1 1 1 1");
+                label.setTextFill(Color.rgb(211,211,211));
+            }
+            else{
+                ImageView image = new ImageView();
+                image.setImage(applicationController.getIconImage(curImage));
+                image.setPreserveRatio(true);
+                image.setFitWidth(20);
+                image.setFitHeight(20);
+                label.setGraphic(image);
+                label.setLayoutX(imageLoc.getX() + 3);
+                label.setLayoutY(imageLoc.getY() + 3);
+            }
             label.setOnMousePressed(e -> goToSelectedRoom(e));
             label.setOnMouseEntered(e -> setMouseToHand(e));
             label.setOnMouseExited(e -> setMouseToNormal(e));
-            label.setFont(Font.font ("Calibri", 10));
-            label.setStyle("-fx-background-color: #424556; -fx-border-color: #424556; -fx-padding: 2; -fx-border-radius: 1 1 1 1");
-            label.setTextFill(Color.rgb(211,211,211));
             Circle circ = new Circle(2, Color.BLACK);
             circ.setLayoutX(imageLoc.getX());
             circ.setLayoutY(imageLoc.getY());
@@ -638,6 +659,39 @@ public class PatientController extends DisplayController implements Initializabl
 
         return line;
     }
+        /**
+     * draw the arrow head for line between two nodes
+     * @param nodeA
+     * @param nodeB
+     * @return arrow head to be drawn
+     */
+    public Shape drawArrowHeads (GraphNode nodeA, GraphNode nodeB, ImageView imageView, double arrowSize) {
+        FloorPoint pointA = graphPointToImage(nodeA, imageView);
+        FloorPoint pointB = graphPointToImage(nodeB, imageView);
+
+        Polygon triangle = new Polygon();
+
+        double delx = pointB.getX() - pointA.getX();
+        double dely = pointB.getY() - pointA.getY();
+
+        double angle = Math.toDegrees(Math.atan2(delx, dely));
+
+        double dist = Math.sqrt(Math.pow(delx,2) + Math.pow(dely, 2))/2;
+
+        Point2D point1 = new Point2D(7*arrowSize*Math.cos(arrowSize*Math.toRadians(angle)) - dist*arrowSize*Math.sin(arrowSize*Math.toRadians(angle)), -7*arrowSize*Math.sin(arrowSize*Math.toRadians(angle)) - dist*arrowSize*Math.cos(arrowSize*Math.toRadians(angle)));
+        Point2D point2 = new Point2D(-7*arrowSize*Math.cos(arrowSize*Math.toRadians(angle)) - dist*arrowSize*Math.sin(arrowSize*Math.toRadians(angle)), 7*arrowSize*Math.sin(arrowSize*Math.toRadians(angle)) - dist*arrowSize*Math.cos(arrowSize*Math.toRadians(angle)));
+        Point2D point3 = new Point2D(10*arrowSize*Math.sin(arrowSize*Math.toRadians(angle)) - dist*arrowSize*Math.sin(arrowSize*Math.toRadians(angle)), 10*arrowSize*Math.cos(arrowSize*Math.toRadians(angle)) - dist*arrowSize*Math.cos(arrowSize*Math.toRadians(angle)));
+
+
+        triangle.getPoints().addAll(new Double [] {point3.getX(), point3.getY(), point2.getX(), point2.getY(), point1.getX(), point1.getY()});
+        triangle.setLayoutX(pointB.getX());
+        triangle.setLayoutY(pointB.getY());
+        triangle.setFill(Color.rgb(88, 169, 196));
+
+        anchorPane.getChildren().add(triangle);
+
+        return triangle;
+    }
 
     /**
      * gets app.dataPrimitives.Room description on screen or display elevators
@@ -689,7 +743,35 @@ public class PatientController extends DisplayController implements Initializabl
             }
         }
 	drawnObjects.addAll(labels);
-        return labels;
+    return labels;
+    }
+
+
+    /**
+     * Initialises the minimaps after animation
+     */
+    public void initializeMinimaps(){
+        displayMinipaths();
+    }
+
+
+
+
+    /**
+     * given an image view and a subpath, draw a floor label
+     * @param drawPane
+     * @param subPath
+     * @param labelFontSize
+     */
+    public void drawFloorLabel(Pane drawPane, SubPath subPath, int labelFontSize){
+        Label label = new Label(subPath.getFloor());
+        label.setFont(Font.font ("Georgia", labelFontSize));
+        FloorPoint temp = graphPointToImage(new GraphNode(50, 30, "one"), imageView);
+        label.setLayoutX(temp.getX());
+        label.setLayoutY(temp.getY());
+        label.setTextFill(Color.rgb(27, 68, 156));
+        drawPane.getChildren().add(label);
+        this.drawnObjects.add(label);
     }
 
     /**
@@ -775,6 +857,7 @@ public class PatientController extends DisplayController implements Initializabl
                     GraphNode node = currentPath.get(currentSubPath).getPath().get(
                         currentTextDirections.get((int) newValue).getKey());
                     drawnTextShape = drawPoint(graphPointToImage(node, patientImageView), Color.BLUE, 5);
+                    drawnObjects.add(drawnTextShape);
                 }
             }
         );
@@ -818,7 +901,7 @@ public class PatientController extends DisplayController implements Initializabl
      */
     public void displayMinipaths(){
         for(Minimap minimap: minimaps){
-            displaySubPath(minimap.map, minimap.path, false,3, 10);
+            displaySubPath(minimap.map, minimap.path, false,3,0, 10);
         }
     }
 
@@ -828,7 +911,7 @@ public class PatientController extends DisplayController implements Initializabl
     public void hideMinipaths() {
         if (currentPath != null) {
             clearDisplay();
-            displaySubPath(patientImageView, currentPath.get(currentSubPath), true, 10, 20);
+            displaySubPath(patientImageView, currentPath.get(currentSubPath), true, 10,0, 20);
         }
     }
 
