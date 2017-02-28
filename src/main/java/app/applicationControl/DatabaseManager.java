@@ -130,8 +130,7 @@ public class DatabaseManager {
                 DirectoryEntry entry = new DirectoryEntry(result.getString(3),
                                                           result.getString(2),
                                                           locations,
-                    "Cafeteria");
-                                                          //result.getString(4));
+                                                          result.getString(4));
                 entriesID.put(result.getInt(1), entry);
                 entries.put(result.getString(3), entry);
             }

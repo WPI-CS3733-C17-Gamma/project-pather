@@ -544,7 +544,9 @@ public class PatientController extends DisplayController implements Initializabl
             String labelName = cur.getName();
             String curImage = "";
             for (DirectoryEntry entry : cur.getEntries()){
-                curImage = entry.getIcon();
+                if (entry.getIcon() != ""){
+                    curImage = entry.getIcon();
+                }
             }
             Label label = new Label(labelName);
             label.setLayoutX(imageLoc.getX() + 3);
@@ -563,7 +565,7 @@ public class PatientController extends DisplayController implements Initializabl
                 Label iconLabel = new Label();
                 iconLabel.setGraphic(image);
                 iconLabel.setLayoutX(imageLoc.getX() + 3);
-                iconLabel.setLayoutY(imageLoc.getY() - 20);
+                iconLabel.setLayoutY(imageLoc.getY() - 21);
                 iconLabel.setOnMousePressed((e) -> goToSelectedRoom(e, labelName));
                 iconLabel.setOnMouseEntered(e -> setMouseToHand(e));
                 iconLabel.setOnMouseExited(e -> setMouseToNormal(e));
@@ -678,7 +680,6 @@ public class PatientController extends DisplayController implements Initializabl
         Point2D point2 = new Point2D(-7*arrowSize*Math.cos(arrowSize*Math.toRadians(angle)) - dist*arrowSize*Math.sin(arrowSize*Math.toRadians(angle)), 7*arrowSize*Math.sin(arrowSize*Math.toRadians(angle)) - dist*arrowSize*Math.cos(arrowSize*Math.toRadians(angle)));
         Point2D point3 = new Point2D(10*arrowSize*Math.sin(arrowSize*Math.toRadians(angle)) - dist*arrowSize*Math.sin(arrowSize*Math.toRadians(angle)), 10*arrowSize*Math.cos(arrowSize*Math.toRadians(angle)) - dist*arrowSize*Math.cos(arrowSize*Math.toRadians(angle)));
 
-
         triangle.getPoints().addAll(new Double [] {point3.getX(), point3.getY(), point2.getX(), point2.getY(), point1.getX(), point1.getY()});
         triangle.setLayoutX(pointB.getX());
         triangle.setLayoutY(pointB.getY());
@@ -741,15 +742,12 @@ public class PatientController extends DisplayController implements Initializabl
     return labels;
     }
 
-
     /**
      * Initialises the minimaps after animation
      */
     public void initializeMinimaps(){
         displayMinipaths();
     }
-
-
 
 
     /**

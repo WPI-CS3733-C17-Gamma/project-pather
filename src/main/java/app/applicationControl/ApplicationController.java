@@ -45,7 +45,7 @@ public class ApplicationController extends Application {
 
 
     final Logger logger = LoggerFactory.getLogger(ApplicationController.class);
-    PatientController patientController; 
+    PatientController patientController;
 
 
     @Override
@@ -85,9 +85,8 @@ public class ApplicationController extends Application {
         extraImages.put("", null);
         extraImages.put("Elevator", new ProxyImage("Icon_PNGs/newElevator.png"));
         extraImages.put("Cafe", new ProxyImage("Icon_PNGs/Cafe2T.png"));
-        extraImages.put("Bathroom", new ProxyImage("Icon_PNGs/BathroomT.png"));
+        extraImages.put("Restroom", new ProxyImage("Icon_PNGs/BathroomT.png"));
         extraImages.put("Waitroom", new ProxyImage("Icon_PNGs/WaitRoomT.png"));
-        extraImages.put("Doctor", new ProxyImage("Icon_PNGs/DoctorT.png"));
         extraImages.put("Frontdesk", new ProxyImage("Icon_PNGs/AdmittingT.png"));
         extraImages.put("Library", new ProxyImage("Icon_PNGs/LibraryT.png"));
         extraImages.put("Giftshop", new ProxyImage("Icon_PNGs/GiftShopT.png"));
@@ -97,6 +96,7 @@ public class ApplicationController extends Application {
         extraImages.put("Stairs", new ProxyImage("Icon_PNGs/Stairs.png"));
         extraImages.put("Entrance", new ProxyImage("Icon_PNGs/Entrance.png"));
         extraImages.put("Cafeteria", new ProxyImage("Icon_PNGs/CafeteriaT.png"));
+        extraImages.put("Chapel", new ProxyImage("Icon_PNGs/Chapel2T.png"));
     }
 
     /**
@@ -282,9 +282,16 @@ public class ApplicationController extends Application {
 
         save();
         adminStage.close();
-        patientController.refreshDisplay(); 
+        patientController.refreshDisplay();
 
         //createPatientDisplay();
+    }
+
+    /**
+     *
+     */
+    public void refreshPatientController(){
+        patientController.refreshDisplay();
     }
 
     /**
