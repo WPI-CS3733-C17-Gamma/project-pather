@@ -566,9 +566,11 @@ public class PatientController extends DisplayController implements Initializabl
             label.setLayoutY(imageLoc.getY() + 3);
             label.setFont(Font.font ("Georgia", 10));
             label.setStyle("-fx-background-color: #F0F4F5; -fx-border-color: darkblue; -fx-padding: 2;");
+            //set the labels clickable
             label.setOnMousePressed((e) -> goToSelectedRoom(e, labelName));
             label.setOnMouseEntered(e -> setMouseToHand(e));
             label.setOnMouseExited(e -> setMouseToNormal(e));
+            //if the room has a directory associated with it that contains an icon
             if (!curImage.equals("")){
                 ImageView image = new ImageView();
                 image.setImage(applicationController.getIconImage(curImage));
@@ -642,7 +644,12 @@ public class PatientController extends DisplayController implements Initializabl
     }
 
 
-
+    /**
+     * draw the name of the nodes that the subpath goes through
+     * @param subPath
+     * @param lableFontSize
+     * @return
+     */
     private Label drawFloorLabel(SubPath subPath, int lableFontSize){
         Label label = new Label(subPath.getFloor());
         label.setFont(Font.font ("Verdana", lableFontSize));
@@ -764,7 +771,7 @@ public class PatientController extends DisplayController implements Initializabl
     public void initializeMinimaps(){
         displayMinipaths();
     }
-    
+
 
     /**
      * Display labels on app.datastore.Map
