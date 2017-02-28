@@ -68,18 +68,18 @@ public class ApplicationController extends Application {
         map = databaseManager.load();
 
         floorMaps = new HashMap<>();
-        floorMaps.put("floor1", new ProxyImage("Blue_Maps/main_1_blue.png"));
-        floorMaps.put("floor2", new ProxyImage("Blue_Maps/main_2_blue.png"));
-        floorMaps.put("floor3", new ProxyImage("Blue_Maps/main_3_blue.png"));
-        floorMaps.put("floor4", new ProxyImage("Blue_Maps/main_4_blue.png"));
-        floorMaps.put("floor5", new ProxyImage("Blue_Maps/main_5_blue.png"));
-        floorMaps.put("floor6", new ProxyImage("Blue_Maps/main_6_blue.png"));
-        floorMaps.put("floor7", new ProxyImage("Blue_Maps/main_7_blue.png"));
-        floorMaps.put("belkin1", new ProxyImage("Blue_Maps/Belkin_1_blue_temp.png"));
-        floorMaps.put("belkin2", new ProxyImage("Blue_Maps/Belkin_2_blue.png"));
-        floorMaps.put("belkin3", new ProxyImage("Blue_Maps/Belkin_3_blue.png"));
-        floorMaps.put("belkin4", new ProxyImage("Blue_Maps/Belkin_4_blue.png"));
-        floorMaps.put("campus", new ProxyImage("Blue_Maps/new_campus_blue.png"));
+        floorMaps.put("floor1", new ProxyImage("Saina's New Blue Maps/main_1_blue.png"));
+        floorMaps.put("floor2", new ProxyImage("Saina's New Blue Maps/main_2_blue.png"));
+        floorMaps.put("floor3", new ProxyImage("Saina's New Blue Maps/main_3_blue.png"));
+        floorMaps.put("floor4", new ProxyImage("Saina's New Blue Maps/main_4_blue.png"));
+        floorMaps.put("floor5", new ProxyImage("Saina's New Blue Maps/main_5_blue.png"));
+        floorMaps.put("floor6", new ProxyImage("Saina's New Blue Maps/main_6_blue.png"));
+        floorMaps.put("floor7", new ProxyImage("Saina's New Blue Maps/main_7_blue.png"));
+        floorMaps.put("belkin1", new ProxyImage("Saina's New Blue Maps/Belkin_1_blue_temp.png"));
+        floorMaps.put("belkin2", new ProxyImage("Saina's New Blue Maps/Belkin_2_blue.png"));
+        floorMaps.put("belkin3", new ProxyImage("Saina's New Blue Maps/Belkin_3_blue.png"));
+        floorMaps.put("belkin4", new ProxyImage("Saina's New Blue Maps/Belkin_4_blue.png"));
+        floorMaps.put("campus", new ProxyImage("Saina's New Blue Maps/campus_blue.png"));
 
         extraImages = new HashMap<>();
         extraImages.put("", null);

@@ -77,6 +77,18 @@ public class PatientController extends DisplayController implements Initializabl
     @FXML private Button login;
     @FXML private Button TextDirection;
     @FXML private Button floor1;
+
+    //Colors for patient Display
+    //------------------------------------------------------------------------------------------------------------------
+    private Color lightGrey = Color.rgb(211, 211, 211);
+    private Color darkBlue = Color.rgb(42, 45 , 56);
+    private Color orange = Color.rgb(232,144,20);
+
+
+
+
+    //------------------------------------------------------------------------------------------------------------------
+
     private List<SubPath> currentPath;
     private int currentSubPath;
 
@@ -358,7 +370,7 @@ public class PatientController extends DisplayController implements Initializabl
             currentPath = map.getPathByFloor(start, end, useStairs);
             TextDirection.setVisible(true);
             clearDisplay();
-            displaySubPath(patientImageView, currentPath.get(0), true,10, 20);
+            displaySubPath(patientImageView, currentPath.get(0), true,10, 1,20);
             currentSubPath = 0;
             for (int x = 0; x <currentPath.size(); x++){
                 SubPath p = currentPath.get(x);
@@ -396,7 +408,7 @@ public class PatientController extends DisplayController implements Initializabl
             currentSubPath = (int) iv.getId().charAt(0) - 48;
             SubPath path = currentPath.get(currentSubPath);//ascii conversion
             clearDisplay();
-            displaySubPath(patientImageView, path, true,10, 20);
+            displaySubPath(patientImageView, path, true,10,1, 20);
             displayMinipaths();
             iv.setEffect(new DropShadow());
             if (displayState == state.DISPLAYING_TEXT_DIRECTION){
@@ -455,7 +467,7 @@ public class PatientController extends DisplayController implements Initializabl
      * @param mapImage
      * @param subPath subpath to be drawn
      */
-    public void displaySubPath (ImageView mapImage, SubPath subPath, boolean drawLabels,int nodeRadius, int lableFontSize) {
+    public void displaySubPath (ImageView mapImage, SubPath subPath, boolean drawLabels,int nodeRadius, double arrowHeadSize, int lableFontSize) {
         GraphNode prev = null;
         mapImage.setImage(applicationController.getFloorImage(subPath.getFloor()));
         List<Shape> listToDraw = new ArrayList<>();
@@ -489,6 +501,7 @@ public class PatientController extends DisplayController implements Initializabl
             }
             // draw connection
             listToDraw.add(drawConnection(prev, node, mapImage));
+            listToDraw.add(drawArrowHeads(prev,node,mapImage,arrowHeadSize));
             startPoint.toFront();
             endPoint.toFront();
             prev = node;
@@ -651,7 +664,7 @@ public class PatientController extends DisplayController implements Initializabl
         Line line = new Line(pointA.getX(), pointA.getY(), pointB.getX(), pointB.getY());
         line.setStrokeWidth(4);
         line.setMouseTransparent(true);
-        line.setStroke(Color.rgb(88, 169, 196));
+        line.setStroke(darkBlue);
 
         anchorPane.getChildren().add(line);
 
@@ -663,7 +676,7 @@ public class PatientController extends DisplayController implements Initializabl
      * @param nodeB
      * @return arrow head to be drawn
      */
-    public Shape drawArrowHeads (Pane pane, ImageView imageView, GraphNode nodeA, GraphNode nodeB, double arrowSize) {
+    public Shape drawArrowHeads (GraphNode nodeA, GraphNode nodeB, ImageView imageView, double arrowSize) {
         FloorPoint pointA = graphPointToImage(nodeA, imageView);
         FloorPoint pointB = graphPointToImage(nodeB, imageView);
 
@@ -683,9 +696,9 @@ public class PatientController extends DisplayController implements Initializabl
         triangle.getPoints().addAll(new Double [] {point3.getX(), point3.getY(), point2.getX(), point2.getY(), point1.getX(), point1.getY()});
         triangle.setLayoutX(pointB.getX());
         triangle.setLayoutY(pointB.getY());
-        triangle.setFill(Color.rgb(88, 169, 196));
+        triangle.setFill(darkBlue);
 
-        pane.getChildren().add(triangle);
+        anchorPane.getChildren().add(triangle);
 
         return triangle;
     }
@@ -731,9 +744,12 @@ public class PatientController extends DisplayController implements Initializabl
                 current.setText(room.getName());
                 current.setLayoutX(roomx);
                 current.setLayoutY(roomy);
-                current.setBorder(new Border(new BorderStroke(Color.BLACK,BorderStrokeStyle.SOLID,new CornerRadii(4),BorderWidths.DEFAULT)));
-                current.setBackground(new Background(new BackgroundFill(Color.rgb(124,231,247), new CornerRadii(4),
+                current.setBorder(new Border(new BorderStroke(Color.rgb(66,64,86),BorderStrokeStyle.SOLID,new CornerRadii(1),BorderWidths.DEFAULT)));
+                current.setBackground(new Background(new BackgroundFill(Color.rgb(66,64,86), new CornerRadii(1),
                     new Insets(0.0,0.0,0.0,0.0))));
+                current.setFont(Font.font ("Calibri", 10));
+                current.setStyle("-fx-background-color: #424556; -fx-border-color: #424556; -fx-padding: 2; -fx-border-radius: 1 1 1 1");
+                current.setTextFill(lightGrey);
                 current.setMouseTransparent(true);
                 labels.add(current);
             }
@@ -750,6 +766,7 @@ public class PatientController extends DisplayController implements Initializabl
     }
 
 
+<<<<<<< HEAD
     /**
      * given an image view and a subpath, draw a floor label
      * @param drawPane
@@ -766,6 +783,8 @@ public class PatientController extends DisplayController implements Initializabl
         drawPane.getChildren().add(label);
         this.drawnObjects.add(label);
     }
+=======
+>>>>>>> origin/master
 
     /**
      * Display labels on app.datastore.Map
@@ -894,7 +913,7 @@ public class PatientController extends DisplayController implements Initializabl
      */
     public void displayMinipaths(){
         for(Minimap minimap: minimaps){
-            displaySubPath(minimap.map, minimap.path, false,3, 10);
+            displaySubPath(minimap.map, minimap.path, false,3,0, 10);
         }
     }
 
@@ -904,7 +923,7 @@ public class PatientController extends DisplayController implements Initializabl
     public void hideMinipaths() {
         if (currentPath != null) {
             clearDisplay();
-            displaySubPath(patientImageView, currentPath.get(currentSubPath), true, 10, 20);
+            displaySubPath(patientImageView, currentPath.get(currentSubPath), true, 10,0, 20);
         }
     }
 
