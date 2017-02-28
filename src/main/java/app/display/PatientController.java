@@ -843,7 +843,6 @@ public class PatientController extends DisplayController implements Initializabl
                 }
             }
         );
-        togStairs.selectedProperty().addListener((observable, oldValue, newValue) -> );
 
         // the image view should be the bottom pane so circles can be drawn over it
         imageView.toBack();
