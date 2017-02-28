@@ -632,7 +632,7 @@ public class PatientController extends DisplayController implements Initializabl
         Line line = new Line(pointA.getX(), pointA.getY(), pointB.getX(), pointB.getY());
         line.setStrokeWidth(4);
         line.setMouseTransparent(true);
-        line.setStroke(Color.rgb(88, 169, 196));
+        line.setStroke(Color.rgb(42, 45, 56));
 
         anchorPane.getChildren().add(line);
 
