@@ -36,8 +36,8 @@ public class IdleTimer {
     }
 
     /**
-      @param patientController controller that this timer will talk to 
-    */
+     * @param patientController controller that this timer will talk to
+     */
     public void setPatientController (PatientController patientController) {
         System.out.println("Patient controller is " + patientController);
         this.patientController = patientController;
@@ -61,6 +61,7 @@ public class IdleTimer {
             return instance;
         }
     }
+
     /**
      * get the instance of the IdleTimer
      * @return
@@ -68,8 +69,4 @@ public class IdleTimer {
     public static IdleTimer getInstance() {
         return SingletonHelper.getInstance();
     }
-
-
-
-
 }
