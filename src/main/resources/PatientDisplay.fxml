@@ -46,7 +46,7 @@
                            <children>
                               <HBox alignment="CENTER_RIGHT" prefHeight="50.0" prefWidth="295.0">
                                  <children>
-                                    <Button fx:id="floor1" mnemonicParsing="false" onMousePressed="#selectPatientImage" style="-fx-background-color: #898b95;" text="1" />
+                                    <Button fx:id="floor1" mnemonicParsing="false" onMousePressed="#selectPatientImage" text="1" />
                                     <Button fx:id="floor2" mnemonicParsing="false" onMousePressed="#selectPatientImage" text="2" />
                                     <Button fx:id="floor3" mnemonicParsing="false" onMousePressed="#selectPatientImage" text="3" />
                                     <Button fx:id="floor4" mnemonicParsing="false" onMousePressed="#selectPatientImage" text="4" />
