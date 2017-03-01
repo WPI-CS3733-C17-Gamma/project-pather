@@ -19,7 +19,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<StackPane fx:id="stackPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" styleClass="background" stylesheets="@design.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<StackPane fx:id="stackPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" styleClass="background" stylesheets="@design.css" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMousePressed="#hideOptions" prefHeight="600.0" prefWidth="1000.0" styleClass="background" stylesheets="@design.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
            <children>
@@ -106,7 +106,7 @@
                   <ListView fx:id="textDirectionsListView" layoutX="792.0" layoutY="83.0" prefHeight="379.0" prefWidth="200.0" styleClass="textDirection" stylesheets="@design.css" />
                  </children>
               </AnchorPane>
-              <TextField fx:id="searchBar" layoutX="28.0" layoutY="24.0" onKeyReleased="#search" onMousePressed="#startSearch" prefHeight="47.0" prefWidth="248.0" promptText="Search!" styleClass="search" stylesheets="@design.css">
+              <TextField fx:id="searchBar" layoutX="28.0" layoutY="24.0" onKeyReleased="#search" onMousePressed="#startSearch" prefHeight="47.0" prefWidth="224.0" promptText="Search!" styleClass="search" stylesheets="@design.css">
                  <font>
                     <Font size="28.0" />
                  </font>
@@ -123,7 +123,10 @@
                <padding>
                   <Insets left="30.0" />
                </padding></HBox>
-            <ToggleButton fx:id="togStairs" alignment="BOTTOM_RIGHT" layoutX="878.0" layoutY="564.0" mnemonicParsing="false" text="Stairs" />
+            <ToggleButton fx:id="togStairs" alignment="TOP_LEFT" layoutX="256.0" layoutY="24.0" mnemonicParsing="false" prefHeight="47.0" prefWidth="80.0" text="Stairs &#10;or &#10;Elevator?" visible="false">
+               <font>
+                  <Font name="System Italic" size="10.0" />
+               </font></ToggleButton>
            </children>
         </AnchorPane>
     </children>

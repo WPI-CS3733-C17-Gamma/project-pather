@@ -849,12 +849,6 @@ public class PatientController extends DisplayController implements Initializabl
             "\n\nTo get started, start typing into the search bar. " +
             "\n Then, select the option you would like to get a path to." +
             "\n\nTo close this menu, click on this");
-        if(!togStairs.isSelected()) {
-            togStairs.setText("No Stairs");
-        }
-        else {
-            togStairs.setText("Take Stairs");
-        }
 
         drawRoomLabel(currentMap, imageView);
     }
