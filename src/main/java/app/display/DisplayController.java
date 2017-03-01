@@ -4,20 +4,16 @@ import app.applicationControl.ApplicationController;
 import app.dataPrimitives.FloorPoint;
 import app.dataPrimitives.GraphNode;
 import app.datastore.Map;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class DisplayController {
-    double dragdelx = 0;
-    double dragdely = 0;
     final Logger logger = LoggerFactory.getLogger(DisplayController.class);
 
     @FXML Label helpLabel;
@@ -32,17 +28,6 @@ public class DisplayController {
         this.map = map;
         this.applicationController = applicationController;
         this.stage = stage;
-        stage.addEventHandler(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
-                @Override public void handle(MouseEvent mouseEvent) {
-                    // record a delta distance for the drag and drop operation.
-                    dragdelx = stage.getX() - mouseEvent.getScreenX();
-                    dragdely = stage.getY() - mouseEvent.getScreenY();
-                }
-            });
-        stage.addEventHandler(MouseEvent.MOUSE_DRAGGED, e->{
-                stage.setX(e.getScreenX() + dragdelx);
-                stage.setY(e.getScreenY() + dragdely);
-            });
     }
 
     void update(){

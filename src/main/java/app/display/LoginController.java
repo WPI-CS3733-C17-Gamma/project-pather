@@ -19,7 +19,8 @@ public class LoginController extends DisplayController {
     @FXML private Button loginButton;
     @FXML private Button buttonAdminTools;
     @FXML private Button exitButton;
-
+    public static double dragdelx = 0;
+    public static double dragdely = 0;
     /**
      * Checks credentials
      * @return

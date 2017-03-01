@@ -14,6 +14,7 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -248,6 +249,17 @@ public class ApplicationController extends Application {
             adminStage.initOwner(pStage);
             adminStage.setScene(new Scene(root));
             adminStage.initStyle(StageStyle.UNDECORATED);
+            adminStage.addEventHandler(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
+                @Override public void handle(MouseEvent mouseEvent) {
+                    // record a delta distance for the drag and drop operation.
+                    LoginController.dragdelx = adminStage.getX() - mouseEvent.getScreenX();
+                    LoginController.dragdely = adminStage.getY() - mouseEvent.getScreenY();
+                }
+            });
+            adminStage.addEventHandler(MouseEvent.MOUSE_DRAGGED, e->{
+                adminStage.setX(e.getScreenX() + LoginController.dragdelx);
+                adminStage.setY(e.getScreenY() + LoginController.dragdely);
+            });
             adminStage.show();
         } catch (IOException e){
             e.printStackTrace();
