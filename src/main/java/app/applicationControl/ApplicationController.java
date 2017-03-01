@@ -16,14 +16,17 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class ApplicationController extends Application {
@@ -244,6 +247,7 @@ public class ApplicationController extends Application {
             adminStage.setTitle("Login");
             adminStage.initOwner(pStage);
             adminStage.setScene(new Scene(root));
+            adminStage.initStyle(StageStyle.UNDECORATED);
             adminStage.show();
         } catch (IOException e){
             e.printStackTrace();
