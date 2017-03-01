@@ -16,32 +16,32 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<BorderPane onKeyPressed="#handleKey" style="-fx-background-color: #d4e3ed;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.display.MapAdminController">
+<BorderPane onKeyPressed="#handleKey" stylesheets="@mapAdminDisplay.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.display.MapAdminController">
     <top>
-        <GridPane hgap="5.0" vgap="5.0" BorderPane.alignment="TOP_CENTER">
+        <GridPane id="toolsPane" hgap="5.0" vgap="5.0" BorderPane.alignment="TOP_CENTER">
             <children>
-                <ToggleButton fx:id="togglebuttonAddNode" maxWidth="Infinity" onAction="#handleToggleTools" text="Add _Node" GridPane.rowIndex="1">
+                <ToggleButton fx:id="togglebuttonAddNode" onAction="#handleToggleTools" text="Add _Node" GridPane.rowIndex="1">
                     <toggleGroup>
                         <ToggleGroup fx:id="toggleTools" />
                     </toggleGroup>
                 </ToggleButton>
-                <ToggleButton fx:id="togglebuttonAddConnections" maxWidth="Infinity" onAction="#handleToggleTools" text="Add _Connections" toggleGroup="$toggleTools" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                <ToggleButton fx:id="togglebuttonChainAdd" maxWidth="Infinity" onAction="#handleToggleTools" text="Chain _Add" toggleGroup="$toggleTools" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                <ComboBox fx:id="roomName" editable="true" maxWidth="Infinity" onMouseClicked="#isFocused" promptText="room name" GridPane.columnIndex="4" GridPane.rowIndex="2" />
-                <Button fx:id="buttonAddRoom" maxWidth="Infinity" mnemonicParsing="false" onAction="#addRoom" text="Add or Change Room" GridPane.columnIndex="4" GridPane.rowIndex="1" />
-                <Button fx:id="buttonDeleteConnection" maxWidth="Infinity" mnemonicParsing="false" onAction="#deleteConnection" text="Delete Connection" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                <Button fx:id="buttonDeleteNode" maxWidth="Infinity" mnemonicParsing="false" onAction="#deleteSelected" text="Delete Node" GridPane.rowIndex="2" />
-                <Button fx:id="buttonDeleteElevator" maxWidth="Infinity" mnemonicParsing="false" onAction="#deleteElevator" text="Delete Elevator" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-                <ComboBox fx:id="floorSelector" maxWidth="Infinity" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-                <Button fx:id="defaultKioskButton" disable="true" mnemonicParsing="false" onAction="#setDefaultKiosk" text="Set as Kiosk" GridPane.columnIndex="5" GridPane.rowIndex="2" />
-                <ChoiceBox fx:id="chooseAlgorithm" GridPane.columnIndex="5" GridPane.rowIndex="1" />
-                <HBox GridPane.columnIndex="5" GridPane.rowIndex="1">
+                <ToggleButton fx:id="togglebuttonAddConnections" onAction="#handleToggleTools" text="Add _Connections" toggleGroup="$toggleTools" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                <ToggleButton fx:id="togglebuttonChainAdd" onAction="#handleToggleTools" text="Chain _Add" toggleGroup="$toggleTools" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                <Button fx:id="buttonAddRoom" disable="true" mnemonicParsing="false" onAction="#addRoom" text="Set Room" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+            <ChoiceBox fx:id="transitionType" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+                <HBox GridPane.columnIndex="4" GridPane.rowIndex="1">
                     <children>
-                        <ToggleButton fx:id="togglebuttonAddElevator" maxWidth="Infinity" onAction="#handleToggleTools" text="Add _Elevator" toggleGroup="$toggleTools" />
-                        <MenuButton fx:id="elevatorSelector" maxWidth="Infinity" />
+                        <ToggleButton fx:id="togglebuttonAddElevator" onAction="#handleToggleTools" text="Add _Elevator" toggleGroup="$toggleTools" />
+                        <MenuButton fx:id="elevatorSelector" />
                     </children>
                 </HBox>
-            <ChoiceBox fx:id="transitionType" prefHeight="25.0" prefWidth="95.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                <ChoiceBox fx:id="chooseAlgorithm" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                <Button fx:id="buttonDeleteNode" disable="true" mnemonicParsing="false" onAction="#deleteSelected" text="Delete Node" GridPane.rowIndex="2" />
+                <Button fx:id="buttonDeleteConnection" disable="true" mnemonicParsing="false" onAction="#deleteConnection" text="Delete Connection" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                <ComboBox fx:id="floorSelector" promptText="Floor:" GridPane.columnIndex="6" GridPane.rowIndex="2" />
+                <Button fx:id="buttonDeleteElevator" disable="true" mnemonicParsing="false" onAction="#deleteElevator" text="Delete Elevator" GridPane.columnIndex="4" GridPane.rowIndex="2" />
+                <ComboBox fx:id="roomName" disable="true" editable="true" onMouseClicked="#isFocused" promptText="room name" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                <Button fx:id="defaultKioskButton" disable="true" mnemonicParsing="false" onAction="#setDefaultKiosk" text="Set as Kiosk" GridPane.columnIndex="5" GridPane.rowIndex="2" />
             </children>
          <columnConstraints>
             <ColumnConstraints />
@@ -51,10 +51,8 @@
             <ColumnConstraints />
             <ColumnConstraints />
             <ColumnConstraints />
-            <ColumnConstraints />
          </columnConstraints>
          <rowConstraints>
-            <RowConstraints />
             <RowConstraints />
             <RowConstraints />
             <RowConstraints />
@@ -72,7 +70,7 @@
         </Pane>
     </center>
     <bottom>
-        <ToolBar prefHeight="40.0" prefWidth="200.0">
+        <ToolBar>
             <items>
                 <Button mnemonicParsing="false" onAction="#undo" text="Undo" />
                 <Button mnemonicParsing="false" onAction="#preview" text="Preview" />
