@@ -2,6 +2,7 @@ package app.display;
 
 import app.CustomMenus.CircularContextMenu;
 import app.applicationControl.ApplicationController;
+import app.applicationControl.email.*;
 import app.dataPrimitives.*;
 import app.pathfinding.PathNotFoundException;
 import javafx.animation.KeyFrame;
@@ -38,6 +39,8 @@ import org.slf4j.LoggerFactory;
 import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static app.applicationControl.email.EmailController.phoneCompanies.*;
 
 /**
  * controls all interaction with the patient display
@@ -111,6 +114,13 @@ public class PatientController extends DisplayController implements Initializabl
     CircularContextMenu menu = new CircularContextMenu();
 
     private Button previousButton;
+
+    //------------------------------------------------------------------------------------------------------------------
+    //For Texting/Email
+
+    EmailController.phoneCompanies carrierPicked = EMAIL;
+
+    //------------------------------------------------------------------------------------------------------------------
 
     /**
      *
@@ -615,7 +625,7 @@ public class PatientController extends DisplayController implements Initializabl
     public void drawRoomLabel (String floorName, ImageView imageView) {
         List<String> roomNames= map.getAllRooms();
         for (String roomName : roomNames) {
-            Room 
+            Room
 cur = map.getRoomFromName(roomName);
             GraphNode loc = cur.getLocation();
             // skip rooms without locations
@@ -874,6 +884,7 @@ cur = map.getRoomFromName(roomName);
         }
     }
 
+    private List<String> directions;
     /**
      * Function to get textual directions and print it on screen
      * @param path the path to be converted to text
@@ -882,7 +893,7 @@ cur = map.getRoomFromName(roomName);
     public void displayTextDirections(List<GraphNode> path, String nextFloor) {
         textDirectionsListView.setVisible(true);
         LinkedList<Pair<Integer, String>> textDirections = map.getTextualDirections(path, nextFloor);
-        List<String> directions = textDirections.stream().map(p -> p.getValue()).collect(Collectors.toList());
+        directions = textDirections.stream().map(p -> p.getValue()).collect(Collectors.toList());
         textDirectionsListView.setItems(FXCollections.observableList(directions));
         currentTextDirections = textDirections;
         return;
@@ -967,16 +978,19 @@ cur = map.getRoomFromName(roomName);
                       System.out.println("AT&T");
                       providersList.setVisible(false);
                       selectPhoneOrEmail.setValue("AT&T");
+                      carrierPicked = ATT;
                       break;
                   case 1: //SPRINT
                       System.out.println("SPRINT");
                       providersList.setVisible(false);
                       selectPhoneOrEmail.setValue("SPRINT");
+                      carrierPicked = SPRINT;
                       break;
                   case 2: //Verizon
                       System.out.println("VERIZON");
                       providersList.setVisible(false);
                       selectPhoneOrEmail.setValue("VERIZON");
+                      carrierPicked = VERIZON;
                       break;
               }
 
@@ -989,9 +1003,31 @@ cur = map.getRoomFromName(roomName);
             }
         );
         sendTextButton.setOnAction(e->{
-            System.out.println("Send message");
+            if (carrierPicked.equals(EMAIL)){
+
+            } else {
+                //sendText(Double.parseDouble(phoneOrEmail.getText()), carrierPicked);
+                sendText("5593016222", carrierPicked);
+                System.out.println("Send message");
+            }
+
+
         });
     }
+
+    private void sendEmail(
+
+
+    ){
+
+    }
+
+    private void sendText(String number, EmailController.phoneCompanies carrier){
+        String destination = "";
+        List<String> dir =  currentTextDirections.stream().map(p -> p.getValue()).collect(Collectors.toList());
+        applicationController.sendText(number, carrier, dir, destination);       //number, carrier, directions, destination
+    }
+
 
     /**
      * Resizes Window's Width

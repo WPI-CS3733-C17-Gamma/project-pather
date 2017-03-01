@@ -46,7 +46,8 @@ public class EmailController {
         US,             //U.S. Cellular: number@email.uscc.net
         CONSUMER,       //Consumer Cellular: number@cingularme.com
         CSPIRE,         //C-Spire: number@cspire1.com
-        PAGE            //Page Plus: number@vtext.com
+        PAGE,           //Page Plus: number@vtext.com
+        EMAIL           //default decision
     }
 
     private HashMap<phoneCompanies, String> phone2Email = new HashMap<>();
@@ -148,6 +149,7 @@ public class EmailController {
         }
         catch (Exception e) {
             Logger.logMsg(0,e.toString());
+            e.printStackTrace();
             return false;
         }
     }
@@ -177,7 +179,7 @@ public class EmailController {
         return send(to, content);
     }
 
-    public boolean sendTextDirections (double number, phoneCompanies carrier,
+    public boolean sendTextDirections (String number, phoneCompanies carrier,
             List<String> dir,String Destination ) {
         return sendDirections(number + getPhoneEmail(carrier), dir, Destination);
     }

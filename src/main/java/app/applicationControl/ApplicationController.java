@@ -308,9 +308,8 @@ public class ApplicationController extends Application {
      * @param destination
      * @return
      */
-    public boolean sendText (double number, EmailController.phoneCompanies carrier,
+    public boolean sendText (String number, EmailController.phoneCompanies carrier,
                              List<String> directions, String destination) {
-
 
         return emailController.sendTextDirections(number, carrier, directions, destination);
     }
