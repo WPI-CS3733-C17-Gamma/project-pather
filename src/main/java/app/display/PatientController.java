@@ -9,6 +9,7 @@ import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -21,6 +22,7 @@ import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -107,6 +109,9 @@ public class PatientController extends DisplayController implements Initializabl
     CircularContextMenu menu = new CircularContextMenu();
 
     private Button previousButton;
+    String defaultFloor;
+
+    PatientMemento memento;
 
     /**
      *
@@ -120,8 +125,29 @@ public class PatientController extends DisplayController implements Initializabl
                 String currentMap){
         super.init(map,applicationController, stage);
         this.currentMap = currentMap;
+        defaultFloor = currentMap;
 
         displayState = state.PATIENT_DEFAULT;
+        /* Memento Pattern */
+        // add event filter
+        EventHandler passAllEventsToTimer = new EventHandler() {
+                @Override
+                public void handle(Event event) {
+                    IdleTimer timer = IdleTimer.getInstance();
+                    GraphNode kioskLoc = map.getKioskLocation();
+                    String floorname;
+                    if (kioskLoc != null) {
+                        floorname = kioskLoc.getLocation().getFloor();
+                    }
+                    else {
+                        floorname = defaultFloor;
+                    }
+                    timer.resetTimer(new PatientMemento(floorname));
+            }
+            };
+        this.stage.addEventFilter(MouseEvent.ANY, passAllEventsToTimer);
+        this.stage.addEventFilter(KeyEvent.ANY, passAllEventsToTimer);
+        this.memento = new PatientMemento(currentMap);
     }
 
     /**
@@ -981,10 +1007,10 @@ public class PatientController extends DisplayController implements Initializabl
     }
 
     // revert to previous state
-    public void revertState () {
+    public void revertState (PatientMemento memento) {
         System.out.println("Reverting State");
         exitSearch();
-        // currentMap = memento.floor;
+        currentMap = memento.floor;
         displayImage();
         refreshDisplay();
         creditsPane.setVisible(false);
