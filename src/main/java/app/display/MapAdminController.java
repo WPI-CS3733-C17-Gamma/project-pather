@@ -615,6 +615,9 @@ public class MapAdminController extends DisplayController {
      */
     public void deleteSelected () {
         unclickToggleButtons();
+        for (GraphNode node:highlightedNodes) {//delete highlighted nodes
+            map.deleteNode(node);
+        }
         if(selectedNode != null) {
             map.deleteNode(selectedNode);
             resetSelection();
@@ -626,6 +629,9 @@ public class MapAdminController extends DisplayController {
                 drawMap();
             }
             highlightedNodes.clear();
+        }
+        if(highlightedNodes.size() == 0 || selectedNode == null){
+            buttonDeleteNode.setDisable(true);
         }
     }
 
@@ -1016,6 +1022,9 @@ public class MapAdminController extends DisplayController {
                 selectionRectangle.setHeight(selectionPointy - e.getY());
                 selectionRectangle.setY(e.getY());
             }
+        }
+        if(highlightedNodes.size() > 0){
+              buttonDeleteNode.setDisable(false);
         }
     }
     /**
