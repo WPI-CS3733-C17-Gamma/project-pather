@@ -140,10 +140,8 @@ public class PatientController extends DisplayController implements Initializabl
     public void startSearch(){
         clearDisplay();
         if (this.displayState == state.PATIENT_DEFAULT){//switch state
-            mapTabs.setVisible(false);
             imageView.setImage(imageView.getImage());
             this.displayState = state.PATIENT_SEARCH;
-            this.textDirectionsListView.setVisible(true);
             displayImage();
         }
     }
@@ -156,11 +154,10 @@ public class PatientController extends DisplayController implements Initializabl
         if (this.displayState == state.PATIENT_SEARCH || this.displayState == state.DISPLAYING_TEXT_DIRECTION ){//switch state
             hideMultiMapAnimation();
             hideMapAnimation();
-            mapTabs.setVisible(true);
             this.displayState = state.PATIENT_DEFAULT;
             clearSearchDisplay();
             displayImage();//display the original image
-            this.textDirectionsListView.setVisible(false);
+
             drawRoomLabel(currentMap, imageView);
         }
     }
@@ -190,6 +187,8 @@ public class PatientController extends DisplayController implements Initializabl
             timeline.getKeyFrames().add(kf);
             timeline.play();
             displayState  = s;
+            TextDirection.setVisible(true);
+            mapTabs.setVisible(false);
         }
     }
 
@@ -212,6 +211,9 @@ public class PatientController extends DisplayController implements Initializabl
             timeline.getKeyFrames().add(kf);
             timeline.play();
             displayState = s;
+            mapTabs.setVisible(true);
+            textDirectionsListView.setVisible(false);
+            TextDirection.setVisible(false);
         }
     }
     /**
@@ -357,10 +359,9 @@ public class PatientController extends DisplayController implements Initializabl
      * remove search result
      */
     public void clearSearchDisplay(){
-        TextDirection.setVisible(false);
         hideMultiMapAnimation();//hide the hBox thingy
+        hideMapAnimation();
         multiMapDisplayMenu.getChildren().clear();//clear the hBox menu thingy
-        textDirectionsListView.setVisible(false);
         clearDisplay();
     }
 
@@ -423,7 +424,6 @@ public class PatientController extends DisplayController implements Initializabl
         }
         try {
             currentPath = map.getPathByFloor(start, end, togStairs.isSelected());
-            TextDirection.setVisible(true);
             clearDisplay();
             //displaySubPath(imageView, currentPath.get(0), true,10, 1,20);
             currentSubPath = 0;
