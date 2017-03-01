@@ -16,7 +16,12 @@ public class IdleTimer {
 
 
     public void setTime (double time) {
-        this.time = time;
+        if (time >= 1000) {
+            this.time = time;
+        }
+        else {
+            this.time = 1000;
+        }
     }
 
     public double getTime() {

@@ -91,6 +91,8 @@ public class MapAdminController extends DisplayController {
 
     @FXML private ChoiceBox chooseAlgorithm;
 
+    @FXML private TextField idleTime;
+
     private GraphNode tempNode ;
     private String currentMap;
     private ContextMenuEvent contextEvent;
@@ -173,6 +175,17 @@ public class MapAdminController extends DisplayController {
                 drawMap();
             }
         });
+
+        idleTime.setText(map.getSetting("idleTime"));
+        idleTime.textProperty().addListener(
+            (observableValue, old_val, new_val) -> {
+                // Don't allow typing non-number characters
+                if (!new_val.matches("[.\\d]*")) {
+                    idleTime.setText(new_val.replaceAll("[^.\\d]", ""));
+                }
+                map.setSetting("idleTime", new_val);
+        });
+
         imageviewMap.toBack();
 
 
