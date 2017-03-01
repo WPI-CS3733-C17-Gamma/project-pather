@@ -17,17 +17,17 @@ import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.*;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
+import javafx.scene.shape.Polygon;
+import javafx.scene.shape.Shape;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -63,20 +63,23 @@ public class PatientController extends DisplayController implements Initializabl
     @FXML private ImageView imageView;
     @FXML private ListView<String> textDirectionsListView;
     @FXML private AnchorPane anchorPane;
+    @FXML private TabPane mapTabs;
 
     @FXML private AnchorPane searchAnchorPane;
     @FXML private Button help;
-    @FXML private ImageView patientImageView;
     @FXML private Button exitButton;
     @FXML private HBox multiMapDisplayMenu;
+    @FXML private HBox mapHbox;
     @FXML private Button adminButton;
     @FXML private Button directoryAdminButton;
     @FXML private Button mapAdminButton;
-    @FXML private AnchorPane adminPane;
     @FXML private Button patientDisplayButton;
     @FXML private Button login;
     @FXML private Button TextDirection;
     @FXML private Button floor1;
+    @FXML private Line line;
+    @FXML private ImageView logo;
+    @FXML private ToggleButton togStairs;
 
     //Colors for patient Display
     //------------------------------------------------------------------------------------------------------------------
@@ -137,9 +140,10 @@ public class PatientController extends DisplayController implements Initializabl
     public void startSearch(){
         clearDisplay();
         if (this.displayState == state.PATIENT_DEFAULT){//switch state
-            searchAnchorPane.setVisible(true);
-            patientImageView.setImage(imageView.getImage());
+            mapTabs.setVisible(false);
+            imageView.setImage(imageView.getImage());
             this.displayState = state.PATIENT_SEARCH;
+            this.textDirectionsListView.setVisible(true);
             displayImage();
         }
     }
@@ -151,15 +155,67 @@ public class PatientController extends DisplayController implements Initializabl
         logger.debug("Exiting search in {}", this.getClass().getSimpleName());
         if (this.displayState == state.PATIENT_SEARCH || this.displayState == state.DISPLAYING_TEXT_DIRECTION ){//switch state
             hideMultiMapAnimation();
-            searchAnchorPane.setVisible(false);
+            hideMapAnimation();
+            mapTabs.setVisible(true);
             this.displayState = state.PATIENT_DEFAULT;
             clearSearchDisplay();
             displayImage();//display the original image
+            this.textDirectionsListView.setVisible(false);
             drawRoomLabel(currentMap, imageView);
         }
     }
 
     /**
+     * Initalises the Map
+     */
+    public void initializeMap(){
+         displaySubPath(imageView, currentPath.get(0), true,10, 1,20);
+    }
+    /**
+     * show the HBox from the bottom
+     */
+    public void showMapAnimation(){
+        if(displayState == state.PATIENT_SEARCH || displayState == state.DISPLAYING_TEXT_DIRECTION){
+            state s = displayState;
+            displayState = state.SHOWING_MENU;
+            final Timeline timeline = new Timeline();
+            timeline.setCycleCount(1);
+            timeline.setAutoReverse(true);
+            timeline.setOnFinished(e -> initializeMap());
+
+            line.setVisible(false);
+            logo.setVisible(false);
+            final KeyValue kv = new KeyValue(mapHbox.layoutYProperty(), 70);
+            final KeyFrame kf = new KeyFrame(Duration.millis(300), kv);
+            timeline.getKeyFrames().add(kf);
+            timeline.play();
+            displayState  = s;
+        }
+    }
+
+    /**
+     * hide the HBox to the bottom
+     */
+    public void hideMapAnimation(){
+        if(displayState == state.PATIENT_SEARCH || displayState == state.DISPLAYING_TEXT_DIRECTION){
+            state s = displayState;
+            hideMinipaths();
+            final Timeline timeline = new Timeline();
+            timeline.setCycleCount(1);
+            timeline.setAutoReverse(true);
+
+            line.setVisible(true);
+            logo.setVisible(true);
+            timeline.setOnFinished(e->refreshDisplay());
+            final KeyValue kv = new KeyValue(mapHbox.layoutYProperty(), 130);
+            final KeyFrame kf = new KeyFrame(Duration.millis(100), kv);
+            timeline.getKeyFrames().add(kf);
+            timeline.play();
+            displayState = s;
+        }
+    }
+    /**
+     *
      * perform search; get text from the textfield
      */
     public void search () {
@@ -230,7 +286,7 @@ public class PatientController extends DisplayController implements Initializabl
             logger.debug("Found Entry!");
             List<Room> locs = entry.getLocation();
 
-            // if no location, should (probably) throw error
+            // if no location, should (probably) throwerror
             if(locs.isEmpty()) {
                 return null;
             }
@@ -239,7 +295,7 @@ public class PatientController extends DisplayController implements Initializabl
                 logger.debug("Found desired graph node at: {}",
                     locs.get(0).getLocation().toString());
                 displayResults(new LinkedList<>());
-                getPath(map.getKioskLocation(), locs.get(0).getLocation(), false);
+                getPath(map.getKioskLocation(), locs.get(0).getLocation());
                 return locs.get(0).getLocation();
             }
             // too many options, redisplay options
@@ -257,7 +313,7 @@ public class PatientController extends DisplayController implements Initializabl
                 logger.debug("FOUND ROOM! : " + room);
                 displayResults(new LinkedList<>());
 		// TODO
-                getPath(map.getKioskLocation(), room.getLocation(), false);
+                getPath(map.getKioskLocation(), room.getLocation());
                 return room.getLocation();
             }
             else {
@@ -312,7 +368,7 @@ public class PatientController extends DisplayController implements Initializabl
      * Remove all the points and labels that have been drawn on the map
      */
     public void clearDisplay () {
-        patientImageView.setImage(imageView.getImage());
+        imageView.setImage(imageView.getImage());
         if(drawnObjects == null) {
             return;
         }
@@ -359,18 +415,17 @@ public class PatientController extends DisplayController implements Initializabl
      * get paths across multiple floor and display different resulted floors on the search interface (the large ImageView and the hBox)
      * @param start the starting location
      * @param end the ending location
-     * @param useStairs true if the stairs are to be forced into use
      */
-    public void getPath (GraphNode start, GraphNode end, boolean useStairs) {
+    public void getPath (GraphNode start, GraphNode end) {
         minimaps = new LinkedList<>();
         if (start == null || end == null) {
             logger.error("Cannot path, start or end is null!");
         }
         try {
-            currentPath = map.getPathByFloor(start, end, useStairs);
+            currentPath = map.getPathByFloor(start, end, togStairs.isSelected());
             TextDirection.setVisible(true);
             clearDisplay();
-            displaySubPath(patientImageView, currentPath.get(0), true,10, 1,20);
+            //displaySubPath(imageView, currentPath.get(0), true,10, 1,20);
             currentSubPath = 0;
             for (int x = 0; x <currentPath.size(); x++){
                 SubPath p = currentPath.get(x);
@@ -387,6 +442,7 @@ public class PatientController extends DisplayController implements Initializabl
                minimaps.add(new Minimap(currentImageView,p));
             }
             showMultiMapAnimation();
+            showMapAnimation();
         } catch (PathNotFoundException e) {
             logger.error("No path can be drawn");
         }
@@ -408,7 +464,7 @@ public class PatientController extends DisplayController implements Initializabl
             currentSubPath = (int) iv.getId().charAt(0) - 48;
             SubPath path = currentPath.get(currentSubPath);//ascii conversion
             clearDisplay();
-            displaySubPath(patientImageView, path, true,10,1, 20);
+            displaySubPath(imageView, path, true,10,1, 20);
             displayMinipaths();
             iv.setEffect(new DropShadow());
             if (displayState == state.DISPLAYING_TEXT_DIRECTION){
@@ -609,7 +665,7 @@ public class PatientController extends DisplayController implements Initializabl
             searchBar.setText(roomname);
             startSearch();
 	    // TODO make use stairs
-            getPath(map.getKioskLocation(),map.getRoomFromName(roomname).getLocation(), false);
+            getPath(map.getKioskLocation(),map.getRoomFromName(roomname).getLocation());
         }
     }
 
@@ -738,7 +794,7 @@ public class PatientController extends DisplayController implements Initializabl
                 image.setFitHeight(20);
                 current.setGraphic(image);
                 logger.debug("node to get image: {}", node);
-                point = graphPointToImage(node, patientImageView);
+                point = graphPointToImage(node, imageView);
                 roomx = point.getX() - 30;
                 roomy = point.getY() - 5;
                 current.setLayoutX(roomx);
@@ -746,7 +802,7 @@ public class PatientController extends DisplayController implements Initializabl
                 labels.add(current);
             }
             if(room != null) {
-                point = graphPointToImage(room.getLocation(), patientImageView);
+                point = graphPointToImage(room.getLocation(), imageView);
                 roomx = point.getX() + 5;
                 roomy = point.getY();
 
@@ -788,6 +844,7 @@ public class PatientController extends DisplayController implements Initializabl
     }
 
     public void textDirection() {
+        System.out.println("fire");
         if (textDirectionsListView.isVisible()){
             displayState = state.PATIENT_SEARCH;
             textDirectionsListView.setVisible(false);
@@ -857,11 +914,12 @@ public class PatientController extends DisplayController implements Initializabl
                     }
                     GraphNode node = currentPath.get(currentSubPath).getPath().get(
                         currentTextDirections.get((int) newValue).getKey());
-                    drawnTextShape = drawPoint(graphPointToImage(node, patientImageView), Color.BLUE, 5);
+                    drawnTextShape = drawPoint(graphPointToImage(node, imageView), Color.BLUE, 5);
                     drawnObjects.add(drawnTextShape);
                 }
             }
         );
+
         // the image view should be the bottom pane so circles can be drawn over it
         imageView.toBack();
 //        imageView.setPreserveRatio(false);
@@ -912,7 +970,7 @@ public class PatientController extends DisplayController implements Initializabl
     public void hideMinipaths() {
         if (currentPath != null) {
             clearDisplay();
-            displaySubPath(patientImageView, currentPath.get(currentSubPath), true, 10,0, 20);
+            displaySubPath(imageView, currentPath.get(currentSubPath), true, 10,0, 20);
         }
     }
 
