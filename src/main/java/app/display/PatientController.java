@@ -570,6 +570,9 @@ public class PatientController extends DisplayController implements Initializabl
             label.setOnMousePressed((e) -> goToSelectedRoom(e, labelName));
             label.setOnMouseEntered(e -> setMouseToHand(e));
             label.setOnMouseExited(e -> setMouseToNormal(e));
+            anchorPane.getChildren().add(label);
+            logger.debug("Adding Label {}", labelName);
+            drawnObjects.add(label);
             //if the room has a directory associated with it that contains an icon
             if (!curImage.equals("")){
                 ImageView image = new ImageView();
@@ -579,22 +582,21 @@ public class PatientController extends DisplayController implements Initializabl
                 image.setFitHeight(20);
                 Label iconLabel = new Label();
                 iconLabel.setGraphic(image);
-                iconLabel.setLayoutX(imageLoc.getX() + 3);
-                iconLabel.setLayoutY(imageLoc.getY() - 21);
+                iconLabel.setLayoutX(imageLoc.getX() - 10);
+                iconLabel.setLayoutY(imageLoc.getY() - 10);
                 iconLabel.setOnMousePressed((e) -> goToSelectedRoom(e, labelName));
                 iconLabel.setOnMouseEntered(e -> setMouseToHand(e));
                 iconLabel.setOnMouseExited(e -> setMouseToNormal(e));
                 anchorPane.getChildren().add(iconLabel);
                 drawnObjects.add(iconLabel);
             }
-            Circle circ = new Circle(2, Color.BLACK);
-            circ.setLayoutX(imageLoc.getX());
-            circ.setLayoutY(imageLoc.getY());
-            anchorPane.getChildren().add(circ);
-            anchorPane.getChildren().add(label);
-            logger.debug("Adding Label {}", labelName);
-            drawnObjects.add(label);
-            drawnObjects.add(circ);
+            else{
+                Circle circ = new Circle(2, Color.BLACK);
+                circ.setLayoutX(imageLoc.getX());
+                circ.setLayoutY(imageLoc.getY());
+                anchorPane.getChildren().add(circ);
+                drawnObjects.add(circ);
+            }
         }
     }
 
