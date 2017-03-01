@@ -450,6 +450,7 @@ public class PatientController extends DisplayController implements Initializabl
         minimaps = new LinkedList<>();
         if (start == null || end == null) {
             logger.error("Cannot path, start or end is null!");
+            return;
         }
         try {
             currentPath = map.getPathByFloor(start, end, togStairs.isSelected());
