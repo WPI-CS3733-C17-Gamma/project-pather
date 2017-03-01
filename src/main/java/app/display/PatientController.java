@@ -634,15 +634,9 @@ public class PatientController extends DisplayController implements Initializabl
             anchorPane.getChildren().add(label);
             logger.debug("Adding Label {}", labelName);
             drawnObjects.add(label);
-            if (kiosk == roomName){
+
+            if (kiosk.equals(roomName)){
                 curImage = "Star";
-                Label here = new Label("You are here");
-                here.setLayoutX(imageLoc.getX() - 50);
-                here.setLayoutY(imageLoc.getY() - 30 );
-                here.setFont(Font.font ("Georgia", 15));
-                here.setStyle("-fx-background-color: #F0F4F5; -fx-border-color: darkblue; -fx-padding: 2;");
-                anchorPane.getChildren().add(here);
-                drawnObjects.add(here);
             }
             //if the room has a directory associated with it that contains an icon
             if (!curImage.equals("")){
@@ -905,6 +899,7 @@ public class PatientController extends DisplayController implements Initializabl
     public void initialize(URL location, ResourceBundle resources) {
         logger.info("INIT PatientController");
         displayImage();
+//        displayPatientMap(String floorname, Button currentButton)
 
         imageView.setMouseTransparent(true);
 

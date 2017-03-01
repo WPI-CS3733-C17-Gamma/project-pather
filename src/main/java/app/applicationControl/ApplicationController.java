@@ -132,7 +132,8 @@ public class ApplicationController extends Application {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/PatientDisplay.fxml"));
             patientController = new PatientController();
-            patientController.init(map, this, pStage, "floor3");
+            String currentFloor = map.getRoomFromName(map.getKiosk()).getLocation().getLocation().getFloor();
+            patientController.init(map, this, pStage, currentFloor);
             loader.setController(patientController);
             Parent root = loader.load();
             pStage.setTitle("PatientDisplay");
