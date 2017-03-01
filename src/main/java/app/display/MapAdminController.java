@@ -679,7 +679,7 @@ public class MapAdminController extends DisplayController {
 
         // it is okay for line to use hard set layout x and y because this doesn't need to change
         Line line = new Line(imagePoint1.getX(), imagePoint1.getY(), imagePoint2.getX(), imagePoint2.getY());
-        line.setFill(Color.BLACK);
+        line.setStroke(Color.rgb(204,62,64));
         line.setMouseTransparent(true);
         mapPane.getChildren().add(line);
         miscDrawnObjects.add(line);
@@ -797,7 +797,7 @@ public class MapAdminController extends DisplayController {
      */
     public void highlightSelected () {
 //        miscDrawnObjects.forEach(shape -> shape.setFill(Color.BLUE));
-        drawnNodes.values().forEach(shape -> shape.setFill(Color.BLUE));
+        drawnNodes.values().forEach(shape -> shape.setFill(Color.rgb(0,60,60)));
         if(highlightedNodes.size() > 0){
             for (GraphNode node:highlightedNodes) {
                 Shape selected = drawnNodes.get(node.id);
