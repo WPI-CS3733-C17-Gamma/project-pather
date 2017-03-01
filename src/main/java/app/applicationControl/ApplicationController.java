@@ -57,7 +57,6 @@ public class ApplicationController extends Application {
         // start timer
         IdleTimer timer = IdleTimer.getInstance();
         timer.setPatientController(patientController);
-        timer.resetTimer();
     }
 
     /**

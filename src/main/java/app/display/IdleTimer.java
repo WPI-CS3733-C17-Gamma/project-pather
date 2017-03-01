@@ -14,6 +14,7 @@ public class IdleTimer {
 
     Timeline timer;
 
+
     public void setTime (double time) {
         this.time = time;
     }
@@ -23,12 +24,12 @@ public class IdleTimer {
     }
 
     // start the timer running
-    public void resetTimer () {
+    public void resetTimer (PatientMemento memento) {
         timer.stop();
         timer = new Timeline(new KeyFrame (Duration.millis(time)));
         timer.setOnFinished((ActionEvent e) -> {
             System.out.println("timer ended");
-            patientController.revertState();
+            patientController.revertState(memento);
         });
         timer.play();
         System.out.println("Timer Started");

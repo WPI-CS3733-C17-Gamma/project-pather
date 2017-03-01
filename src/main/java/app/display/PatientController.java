@@ -94,6 +94,7 @@ public class PatientController extends DisplayController implements Initializabl
     CircularContextMenu menu = new CircularContextMenu();
 
     private Button previousButton;
+    String defaultFloor; 
 
     PatientMemento memento; 
 
@@ -109,6 +110,7 @@ public class PatientController extends DisplayController implements Initializabl
                 String currentMap){
         super.init(map,applicationController, stage);
         this.currentMap = currentMap;
+	defaultFloor = currentMap; 
 
         displayState = state.PATIENT_DEFAULT;
 	/* Memento Pattern */
@@ -117,7 +119,16 @@ public class PatientController extends DisplayController implements Initializabl
             @Override
             public void handle(Event event) {
                 IdleTimer timer = IdleTimer.getInstance();
-                timer.resetTimer();
+		GraphNode kioskLoc = map.getKioskLocation(); 
+		String floorname; 
+		if (kioskLoc != null) {
+		    floorname = kioskLoc.getLocation().getFloor(); 
+		}
+		else {
+		    floorname = defaultFloor; 
+		}
+		    
+                timer.resetTimer(new PatientMemento(floorname));
             }
         };
         this.stage.addEventFilter(MouseEvent.ANY, passAllEventsToTimer);
@@ -931,7 +942,7 @@ public class PatientController extends DisplayController implements Initializabl
     }
 
     // revert to previous state
-    public void revertState () {
+    public void revertState (PatientMemento memento) {
         System.out.println("Reverting State");
 	exitSearch(); 
 	currentMap = memento.floor; 
