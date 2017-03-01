@@ -1,10 +1,7 @@
 package app.applicationControl;
 
 import app.datastore.Map;
-import app.display.AdminController;
-import app.display.DisplayController;
-import app.display.LoginController;
-import app.display.PatientController;
+import app.display.*;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -60,6 +57,10 @@ public class ApplicationController extends Application {
         createPatientDisplay();
         primaryStage.show();
         login = new Login();
+
+        // start timer
+        IdleTimer timer = IdleTimer.getInstance();
+        timer.setPatientController(patientController);
     }
 
     /**
