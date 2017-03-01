@@ -29,7 +29,7 @@ public class TextualDirectionsTest {
                           new GraphNode(20, 10, ""),
                           new GraphNode(20, 20, ""),
                           new GraphNode(30, 20, "")));
-        assertEquals("[Take a right, Take a right, Take a left, Arrive at your destination]",
+        assertEquals("[Starting from an unknown location, Take a right, Take a right, Take a left, Arrive at your destination]",
             (new Map(new Directory(null, new HashMap<String, Room>()), null, null))
                 .getTextualDirections(path, null)
                 .stream().map(p -> p.getValue()).collect(Collectors.toList()).toString());
@@ -47,7 +47,7 @@ public class TextualDirectionsTest {
                 new GraphNode(20, 10, "floor1"),
                 g1));
         System.out.println("Final Node type " + path.get(path.size()-1).getFloorTransitionType());
-        assertEquals("[Take a right, Take a right, Take the stairs to floor 2]",
+        assertEquals("[Starting from an unknown location, Take a right, Take a right, Take the stairs to floor 2]",
             (new Map(new Directory(null, new HashMap<String, Room>()), null, null))
                 .getTextualDirections(path, "floor2")
                 .stream().map(p -> p.getValue()).collect(Collectors.toList()).toString());
@@ -55,16 +55,17 @@ public class TextualDirectionsTest {
 
     @Test
     public void testTextDirectionsElevator() throws Exception {
+        GraphNode start = new GraphNode(0, 0, "floor1");
         GraphNode g1 = new GraphNode(20, 20, "floor1", 1);
         g1.addAdjacent(new GraphNode(20, 20, "floor2", 1));
         LinkedList<GraphNode> path = new LinkedList<GraphNode>(
             Arrays.asList(
-                new GraphNode(0, 0, "floor1"),
+                start,
                 new GraphNode(10, 0, "floor1"),
                 new GraphNode(20, 10, "floor1"),
                 g1));
         System.out.println("Final Node type " + path.get(path.size()-1).getFloorTransitionType());
-        assertEquals("[Take a right, Take a right, Take the elevator to floor 2]",
+        assertEquals("[Starting from an unknown location, Take a right, Take a right, Take the elevator to floor 2]",
             (new Map(new Directory(null, new HashMap<String, Room>()), null, null))
                 .getTextualDirections(path, "floor2")
                 .stream().map(p -> p.getValue()).collect(Collectors.toList()).toString());

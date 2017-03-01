@@ -1,7 +1,7 @@
 .button{
 	-fx-text-fill: black;
 	-fx-background-color: #F7F7F7;
-	-fx-border: 1px solid black; 
+	-fx-border: 1px solid black;
 	/*-fx-border-left: 1px solid black; */
 	-fx-font-size: 16px;
 	/*-fx-box-shadow: 10px 10px 5px #888888;*/
@@ -40,7 +40,7 @@
 }
 
 .tab{
-	/*-fx-tab-min-width: 90px;*/	
+	/*-fx-tab-min-width: 90px;*/
 	/*-fx-text-fill: red;*/
 	-fx-background-color: #424556;
 	-fx-font-size: 16px;
@@ -99,7 +99,7 @@
 	-fx-text-fill: #424556;
 	/*-fx-Font: "Britannic Bold";*/
 	-fx-background-color: #F3EFE7;
-	-fx-font-size: 30px;
+	-fx-font-size: 20px;
 	-fx-font-weight: bold;
 }
 
@@ -109,18 +109,17 @@
 	/*-fx-background-radius: 3px;*/
 }
 
-.textDirection{
-	-fx-padding: 5px;
-	-fx-background-radius: 3px;
-	-fx-background-color: #FAFAFA;
-	-fx-opacity: 75%;
-	-fx-text-fill: #424556;
-	-fx-font-size: 16px;
-	-fx-font-weight: bold;
+.textDirection {
+    -fx-padding: 5px;
+    -fx-background-radius: 3px;
+    -fx-background-color: #FAFAFA;
+    -fx-opacity: 85%;
+    -fx-text-fill: #424556;
+    -fx-font-size: 11px;
 }
 
 .centerImage{
-	-fx-background-position: center; 
+	-fx-background-position: center;
 }
 
 .line{
