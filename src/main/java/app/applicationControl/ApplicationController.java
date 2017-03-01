@@ -2,10 +2,7 @@ package app.applicationControl;
 
 import app.applicationControl.email.EmailController;
 import app.datastore.Map;
-import app.display.AdminController;
-import app.display.DisplayController;
-import app.display.LoginController;
-import app.display.PatientController;
+import app.display.*;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -15,16 +12,20 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class ApplicationController extends Application {
@@ -57,6 +58,10 @@ public class ApplicationController extends Application {
         createPatientDisplay();
         primaryStage.show();
         login = new Login();
+
+        // start timer
+        IdleTimer timer = IdleTimer.getInstance();
+        timer.setPatientController(patientController);
     }
 
     /**
@@ -244,6 +249,18 @@ public class ApplicationController extends Application {
             adminStage.setTitle("Login");
             adminStage.initOwner(pStage);
             adminStage.setScene(new Scene(root));
+            adminStage.initStyle(StageStyle.UNDECORATED);
+            adminStage.addEventHandler(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
+                @Override public void handle(MouseEvent mouseEvent) {
+                    // record a delta distance for the drag and drop operation.
+                    LoginController.dragdelx = adminStage.getX() - mouseEvent.getScreenX();
+                    LoginController.dragdely = adminStage.getY() - mouseEvent.getScreenY();
+                }
+            });
+            adminStage.addEventHandler(MouseEvent.MOUSE_DRAGGED, e->{
+                adminStage.setX(e.getScreenX() + LoginController.dragdelx);
+                adminStage.setY(e.getScreenY() + LoginController.dragdely);
+            });
             adminStage.show();
         } catch (IOException e){
             e.printStackTrace();

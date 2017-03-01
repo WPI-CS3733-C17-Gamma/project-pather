@@ -18,7 +18,9 @@ public class LoginController extends DisplayController {
     @FXML private GridPane loginPage;
     @FXML private Button loginButton;
     @FXML private Button buttonAdminTools;
-
+    @FXML private Button exitButton;
+    public static double dragdelx = 0;
+    public static double dragdely = 0;
     /**
      * Checks credentials
      * @return
@@ -45,5 +47,12 @@ public class LoginController extends DisplayController {
             passwordBox.clear();
             labelWrongCreds.setVisible(true);
         }
+    }
+
+    /**
+     * Exits the Login window
+     */
+    public void exit(){
+        stage.close();
     }
 }

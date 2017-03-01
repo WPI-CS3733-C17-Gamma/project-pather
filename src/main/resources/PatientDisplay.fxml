@@ -8,14 +8,19 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.effect.InnerShadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
@@ -31,8 +36,9 @@
                     <Image url="@BWFH_logo_rgb%20(1).png" />
                  </image>
               </ImageView>
-              <Button fx:id="help" layoutX="825.0" layoutY="15.0" mnemonicParsing="false" onAction="#help" onKeyPressed="#help" prefHeight="50.0" prefWidth="50.0" style="-fx-background-color: none;" styleClass="helpButton" stylesheets="@design.css" />
-              <Button fx:id="adminButton" layoutX="915.0" layoutY="15.0" mnemonicParsing="false" onAction="#logIn" prefHeight="50.0" prefWidth="50.0" styleClass="adminMenuButton" stylesheets="@design.css" />
+
+              <Button fx:id="help" layoutX="825.0" layoutY="14.0" mnemonicParsing="false" onAction="#showCredits" onKeyPressed="#help" prefHeight="50.0" prefWidth="50.0" style="-fx-background-color: none;" styleClass="helpButton" stylesheets="@design.css" />
+              <Button fx:id="adminButton" layoutX="915.0" layoutY="14.0" mnemonicParsing="false" onAction="#logIn" prefHeight="50.0" prefWidth="50.0" styleClass="adminMenuButton" stylesheets="@design.css" />
             <Line fx:id="line" endX="970.0" layoutX="1.0" layoutY="115.0" startX="30.0" stroke="#424556" />
             <HBox fx:id="mapHbox" alignment="CENTER" layoutX="0.1" layoutY="130.0" prefHeight="438.0" prefWidth="1000.0">
                <children>
@@ -121,5 +127,41 @@
             <Button fx:id="sendTextButton" layoutX="773.0" layoutY="24.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="36.0" style="-fx-font-size: 12;" text="OK" visible="false" />
            </children>
         </AnchorPane>
+      <VBox visible="false" fx:id="creditsPane" alignment="CENTER" fillWidth="false" spacing="5.0" style="-fx-background-color: white;">
+         <children>
+            <ImageView fitHeight="57.0" fitWidth="374.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@BWFH_logo_rgb%20(1).png" />
+               </image>
+            </ImageView>
+            <Line endX="970.0" endY="100.0" startX="30.0" startY="100.0" stroke="#424556" />
+            <TextArea editable="false" focusTraversable="false" prefWidth="555.0" style="-fx-border-color: white; -fx-background-color: white;" text="Created By: Team Gamma, &#10;WPI Computer Science Department, CS3733 Software Engineering, &#10;Prof. Wilson Wong &#10;Coached by Mathew LeMay&#10;&#10;&#10;Special thanks to Andrew Shin and Bringham and Women's Faulkner Hospital for &#10;providing us the time and resources for this project.&#10;" />
+            <GridPane hgap="10.0" vgap="3.0">
+               <children>
+                  <Label text="Lead Software Engineer" GridPane.rowIndex="1" />
+                  <Label text="Assistant Lead Software Engineer" GridPane.rowIndex="2" />
+                  <Label text="Scrum Master" GridPane.rowIndex="3" />
+                  <Label text="Product Manager" GridPane.rowIndex="5" />
+                  <Label text="Test Engineer" GridPane.rowIndex="4" />
+                  <Label text="Software Engineer" GridPane.rowIndex="7" />
+                  <Label text="Software Engineer" GridPane.rowIndex="8" />
+                  <Label text="Software Engineer" GridPane.rowIndex="9" />
+                  <Label text="Software Engineer" GridPane.rowIndex="10" />
+                  <Label text="Saahil Claypool" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Label text="Alex Tacescu" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <Label text="Saina Rezvani" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <Label text="Lingrui Zhong" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                  <Label text="Documentation Analyst" GridPane.rowIndex="6" />
+                  <Label text="Shivangi Pandey" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                  <Label text="Anabella Isaro" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                  <Label text="Dominic Chang" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                  <Label text="Isaac Woods" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+                  <Label text="Adam Goldsmith" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+                  <Label text="Jon Andrews" GridPane.columnIndex="1" GridPane.rowIndex="10" />
+               </children>
+            </GridPane>
+            <Button mnemonicParsing="false" onAction="#exitCredits" text="Exit" />
+         </children>
+      </VBox>
     </children>
 </StackPane>

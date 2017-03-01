@@ -10,6 +10,7 @@ import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -22,6 +23,7 @@ import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -48,7 +50,7 @@ import static app.applicationControl.email.EmailController.phoneCompanies.*;
 public class PatientController extends DisplayController implements Initializable {
     final Logger logger = LoggerFactory.getLogger(PatientController.class);
 
-   //what type/state of display the Patient Display is currently displaying
+    //what type/state of display the Patient Display is currently displaying
     private enum state{
         PATIENT_DEFAULT,
         PATIENT_SEARCH,
@@ -87,7 +89,7 @@ public class PatientController extends DisplayController implements Initializabl
     @FXML private ImageView logo;
     @FXML private ToggleButton togStairs;
     @FXML private ListView providersList;
-
+    @FXML private VBox creditsPane;
     //Colors for patient Display
     //------------------------------------------------------------------------------------------------------------------
     private Color lightGrey = Color.rgb(211, 211, 211);
@@ -114,6 +116,9 @@ public class PatientController extends DisplayController implements Initializabl
     CircularContextMenu menu = new CircularContextMenu();
 
     private Button previousButton;
+    String defaultFloor;
+
+    PatientMemento memento;
 
     //------------------------------------------------------------------------------------------------------------------
     //For Texting/Email
@@ -134,9 +139,32 @@ public class PatientController extends DisplayController implements Initializabl
                 String currentMap){
         super.init(map,applicationController, stage);
         this.currentMap = currentMap;
+        defaultFloor = currentMap;
 
         displayState = state.PATIENT_DEFAULT;
-
+        /* Memento Pattern */
+        // add event filter
+        EventHandler passAllEventsToTimer = new EventHandler() {
+                @Override
+                public void handle(Event event) {
+                    IdleTimer timer = IdleTimer.getInstance();
+                    if (map.getSetting("idleTime") != null) {
+                        timer.setTime(Double.parseDouble(map.getSetting("idleTime")));
+                    }
+                    GraphNode kioskLoc = map.getKioskLocation();
+                    String floorname;
+                    if (kioskLoc != null) {
+                        floorname = kioskLoc.getLocation().getFloor();
+                    }
+                    else {
+                        floorname = defaultFloor;
+                    }
+                    timer.resetTimer(new PatientMemento(floorname));
+            }
+            };
+        this.stage.addEventFilter(MouseEvent.ANY, passAllEventsToTimer);
+        this.stage.addEventFilter(KeyEvent.ANY, passAllEventsToTimer);
+        this.memento = new PatientMemento(currentMap);
     }
 
 
@@ -156,7 +184,6 @@ public class PatientController extends DisplayController implements Initializabl
     public void startSearch(){
         clearDisplay();
         if (this.displayState == state.PATIENT_DEFAULT){//switch state
-
             imageView.setImage(imageView.getImage());
             this.displayState = state.PATIENT_SEARCH;
             displayImage();
@@ -178,7 +205,7 @@ public class PatientController extends DisplayController implements Initializabl
             this.displayState = state.PATIENT_DEFAULT;
             clearSearchDisplay();
             displayImage();//display the original image
-            this.textDirectionsListView.setVisible(false);
+
             drawRoomLabel(currentMap, imageView);
         }
     }
@@ -208,6 +235,8 @@ public class PatientController extends DisplayController implements Initializabl
             timeline.getKeyFrames().add(kf);
             timeline.play();
             displayState  = s;
+            TextDirection.setVisible(true);
+            mapTabs.setVisible(false);
         }
     }
 
@@ -230,6 +259,9 @@ public class PatientController extends DisplayController implements Initializabl
             timeline.getKeyFrames().add(kf);
             timeline.play();
             displayState = s;
+            mapTabs.setVisible(true);
+            textDirectionsListView.setVisible(false);
+            TextDirection.setVisible(false);
         }
     }
     /**
@@ -375,10 +407,9 @@ public class PatientController extends DisplayController implements Initializabl
      * remove search result
      */
     public void clearSearchDisplay(){
-        TextDirection.setVisible(false);
         hideMultiMapAnimation();//hide the hBox thingy
+        hideMapAnimation();
         multiMapDisplayMenu.getChildren().clear();//clear the hBox menu thingy
-        textDirectionsListView.setVisible(false);
         clearDisplay();
     }
 
@@ -438,10 +469,10 @@ public class PatientController extends DisplayController implements Initializabl
         minimaps = new LinkedList<>();
         if (start == null || end == null) {
             logger.error("Cannot path, start or end is null!");
+            return;
         }
         try {
             currentPath = map.getPathByFloor(start, end, togStairs.isSelected());
-            TextDirection.setVisible(true);
             clearDisplay();
             //displaySubPath(imageView, currentPath.get(0), true,10, 1,20);
             currentSubPath = 0;
@@ -489,7 +520,7 @@ public class PatientController extends DisplayController implements Initializabl
             clearDisplay();
             displaySubPath(imageView, path, true,10,1, 20);
             displayMinipaths();
-            iv.setEffect(new DropShadow());
+            iv.setEffect(new DropShadow(30, Color.rgb(42, 57, 86)));
             if (displayState == state.DISPLAYING_TEXT_DIRECTION){
                 String nextFloor = null;
                 if(currentPath.size() > currentSubPath+1) {
@@ -688,7 +719,7 @@ cur = map.getRoomFromName(roomName);
         if (e.getSource() instanceof Label){
             searchBar.setText(roomname);
             startSearch();
-	    // TODO make use stairs
+            // TODO make use stairs
             getPath(map.getKioskLocation(),map.getRoomFromName(roomname).getLocation());
         }
     }
@@ -843,8 +874,8 @@ cur = map.getRoomFromName(roomName);
                 labels.add(current);
             }
         }
-	drawnObjects.addAll(labels);
-    return labels;
+        drawnObjects.addAll(labels);
+        return labels;
     }
 
     /**
@@ -852,6 +883,7 @@ cur = map.getRoomFromName(roomName);
      */
     public void initializeMinimaps(){
         displayMinipaths();
+        minimaps.get(0).map.setEffect(new DropShadow(30, Color.rgb(42, 57, 86)));
     }
 
 
@@ -951,6 +983,7 @@ cur = map.getRoomFromName(roomName);
             "\n\nTo get started, start typing into the search bar. " +
             "\n Then, selectPhoneOrEmail the option you would like to get a path to." +
             "\n\nTo close this menu, click on this");
+
 
         drawRoomLabel(currentMap, imageView);
 
@@ -1077,6 +1110,27 @@ cur = map.getRoomFromName(roomName);
         providersList.setVisible(false);
     }
 
+    // revert to previous state
+    public void revertState (PatientMemento memento) {
+        logger.info("Reverting State");
+        exitSearch();
+        currentMap = memento.floor;
+        displayImage();
+        refreshDisplay();
+        creditsPane.setVisible(false);
+    }
+
+    public void exitCredits() {
+        displayImage();
+        creditsPane.setVisible(false);
+        anchorPane.setVisible(true);
+    }
+
+
+    public void showCredits() {
+        anchorPane.setVisible(false);
+        creditsPane.setVisible(true);
+    }
 
     /**
      * change the cursor to hand (like the one on top of buttons)
