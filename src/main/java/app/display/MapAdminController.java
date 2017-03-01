@@ -933,8 +933,9 @@ public class MapAdminController extends DisplayController {
         buttonDeleteNode.setDisable(false);
         roomName.setDisable(false);
         buttonAddRoom.setDisable(false);
+
         buttonDeleteConnection.setDisable(
-            secondaryNode == null ||
+            secondaryNode == null || selectedNode == null ||
             !selectedNode.getAdjacent().contains(secondaryNode));
         buttonDeleteElevator.setDisable(selectedNode == null ||
                                         !selectedNode.doesCrossFloor());
@@ -1244,6 +1245,7 @@ public class MapAdminController extends DisplayController {
     public void showContextMenu(ContextMenuEvent event){
         contextEvent = event;
         selectNode(nearbyNodeContext(contextEvent));
+
 
 //        ContextMenu contextMenu = new ContextMenu();
 //
