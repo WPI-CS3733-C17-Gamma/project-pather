@@ -64,6 +64,8 @@ public class PatientController extends DisplayController implements Initializabl
     @FXML private ListView<String> textDirectionsListView;
     @FXML private AnchorPane anchorPane;
     @FXML private TabPane mapTabs;
+    @FXML private ChoiceBox selectPhoneOrEmail;
+    @FXML private TextField phoneOrEmail;
 
     @FXML private AnchorPane searchAnchorPane;
     @FXML private Button help;
@@ -77,9 +79,11 @@ public class PatientController extends DisplayController implements Initializabl
     @FXML private Button login;
     @FXML private Button TextDirection;
     @FXML private Button floor1;
+    @FXML private Button sendTextButton;
     @FXML private Line line;
     @FXML private ImageView logo;
     @FXML private ToggleButton togStairs;
+    @FXML private ListView providersList;
 
     //Colors for patient Display
     //------------------------------------------------------------------------------------------------------------------
@@ -122,7 +126,9 @@ public class PatientController extends DisplayController implements Initializabl
         this.currentMap = currentMap;
 
         displayState = state.PATIENT_DEFAULT;
+
     }
+
 
     /**
      * display the image on the main patient screen
@@ -140,10 +146,9 @@ public class PatientController extends DisplayController implements Initializabl
     public void startSearch(){
         clearDisplay();
         if (this.displayState == state.PATIENT_DEFAULT){//switch state
-            mapTabs.setVisible(false);
+
             imageView.setImage(imageView.getImage());
             this.displayState = state.PATIENT_SEARCH;
-            this.textDirectionsListView.setVisible(true);
             displayImage();
         }
     }
@@ -156,6 +161,9 @@ public class PatientController extends DisplayController implements Initializabl
         if (this.displayState == state.PATIENT_SEARCH || this.displayState == state.DISPLAYING_TEXT_DIRECTION ){//switch state
             hideMultiMapAnimation();
             hideMapAnimation();
+            selectPhoneOrEmail.setVisible(false);
+            sendTextButton.setVisible(false);
+            phoneOrEmail.setVisible(false);
             mapTabs.setVisible(true);
             this.displayState = state.PATIENT_DEFAULT;
             clearSearchDisplay();
@@ -273,7 +281,7 @@ public class PatientController extends DisplayController implements Initializabl
     }
 
     /**
-     * select the clicked option
+     * selectPhoneOrEmail the clicked option
      * @param option
      * @return
      */
@@ -443,6 +451,11 @@ public class PatientController extends DisplayController implements Initializabl
             }
             showMultiMapAnimation();
             showMapAnimation();
+            this.textDirectionsListView.setVisible(true);
+            mapTabs.setVisible(false);
+            selectPhoneOrEmail.setVisible(true);
+            sendTextButton.setVisible(true);
+            phoneOrEmail.setVisible(true);
         } catch (PathNotFoundException e) {
             logger.error("No path can be drawn");
         }
@@ -845,7 +858,6 @@ cur = map.getRoomFromName(roomName);
     }
 
     public void textDirection() {
-        System.out.println("fire");
         if (textDirectionsListView.isVisible()){
             displayState = state.PATIENT_SEARCH;
             textDirectionsListView.setVisible(false);
@@ -926,10 +938,59 @@ cur = map.getRoomFromName(roomName);
 //        imageView.setPreserveRatio(false);
         helpLabel.setText("Hello! Thanks for using project-pather." +
             "\n\nTo get started, start typing into the search bar. " +
-            "\n Then, select the option you would like to get a path to." +
+            "\n Then, selectPhoneOrEmail the option you would like to get a path to." +
             "\n\nTo close this menu, click on this");
 
         drawRoomLabel(currentMap, imageView);
+
+        String options[] = {"Email", "Phone"};
+        selectPhoneOrEmail.setItems(FXCollections.observableList(Arrays.asList(options)));
+        selectPhoneOrEmail.setOnMouseClicked(e->{
+            selectPhoneOrEmail.setValue(null);
+            providersList.setVisible(false);
+        });
+        selectPhoneOrEmail.getSelectionModel().selectedIndexProperty().addListener(
+            (e, a ,b)->{
+                if(b.intValue() == 1){
+                    providersList.setVisible(true);
+                }else{
+                    selectPhoneOrEmail.setValue("EMAIL");//TODO do email stuff here
+                }
+            }
+        );
+        String providers[] = {"AT&T", "SPRINT", "VERIZON"};
+        providersList.setItems(FXCollections.observableList(Arrays.asList(providers)));
+        providersList.getSelectionModel().selectedIndexProperty().addListener(
+            (e, a, b)->{
+              switch (b.intValue()) {//TODO add interaction with text directions
+                  case 0: //AT&T
+                      System.out.println("AT&T");
+                      providersList.setVisible(false);
+                      selectPhoneOrEmail.setValue("AT&T");
+                      break;
+                  case 1: //SPRINT
+                      System.out.println("SPRINT");
+                      providersList.setVisible(false);
+                      selectPhoneOrEmail.setValue("SPRINT");
+                      break;
+                  case 2: //Verizon
+                      System.out.println("VERIZON");
+                      providersList.setVisible(false);
+                      selectPhoneOrEmail.setValue("VERIZON");
+                      break;
+              }
+
+
+            }
+        );
+        phoneOrEmail.setOnAction(//TODO send Text here
+            e->{
+                System.out.println("Send message");
+            }
+        );
+        sendTextButton.setOnAction(e->{
+            System.out.println("Send message");
+        });
     }
 
     /**
@@ -977,6 +1038,7 @@ cur = map.getRoomFromName(roomName);
 
     public void hideOptions(){
         options.setVisible(false);
+        providersList.setVisible(false);
     }
 
 
