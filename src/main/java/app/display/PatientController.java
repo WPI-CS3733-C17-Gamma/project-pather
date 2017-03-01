@@ -45,7 +45,7 @@ import java.util.stream.Collectors;
 public class PatientController extends DisplayController implements Initializable {
     final Logger logger = LoggerFactory.getLogger(PatientController.class);
 
-   //what type/state of display the Patient Display is currently displaying
+    //what type/state of display the Patient Display is currently displaying
     private enum state{
         PATIENT_DEFAULT,
         PATIENT_SEARCH,
@@ -80,7 +80,7 @@ public class PatientController extends DisplayController implements Initializabl
     @FXML private Line line;
     @FXML private ImageView logo;
     @FXML private ToggleButton togStairs;
-
+    @FXML private VBox creditsPane;
     //Colors for patient Display
     //------------------------------------------------------------------------------------------------------------------
     private Color lightGrey = Color.rgb(211, 211, 211);
@@ -664,7 +664,7 @@ public class PatientController extends DisplayController implements Initializabl
         if (e.getSource() instanceof Label){
             searchBar.setText(roomname);
             startSearch();
-	    // TODO make use stairs
+            // TODO make use stairs
             getPath(map.getKioskLocation(),map.getRoomFromName(roomname).getLocation());
         }
     }
@@ -819,8 +819,8 @@ public class PatientController extends DisplayController implements Initializabl
                 labels.add(current);
             }
         }
-	drawnObjects.addAll(labels);
-    return labels;
+        drawnObjects.addAll(labels);
+        return labels;
     }
 
     /**
@@ -929,6 +929,7 @@ public class PatientController extends DisplayController implements Initializabl
             "\n Then, select the option you would like to get a path to." +
             "\n\nTo close this menu, click on this");
 
+
         drawRoomLabel(currentMap, imageView);
     }
 
@@ -979,6 +980,27 @@ public class PatientController extends DisplayController implements Initializabl
         options.setVisible(false);
     }
 
+    // revert to previous state
+    public void revertState () {
+        System.out.println("Reverting State");
+        exitSearch();
+        // currentMap = memento.floor;
+        displayImage();
+        refreshDisplay();
+        creditsPane.setVisible(false);
+    }
+
+    public void exitCredits() {
+        displayImage();
+        creditsPane.setVisible(false);
+        anchorPane.setVisible(true);
+    }
+
+
+    public void showCredits() {
+        anchorPane.setVisible(false);
+        creditsPane.setVisible(true);
+    }
 
     /**
      * change the cursor to hand (like the one on top of buttons)
