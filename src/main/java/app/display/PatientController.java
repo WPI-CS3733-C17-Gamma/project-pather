@@ -134,6 +134,9 @@ public class PatientController extends DisplayController implements Initializabl
                 @Override
                 public void handle(Event event) {
                     IdleTimer timer = IdleTimer.getInstance();
+                    if (map.getSetting("idleTime") != null) {
+                        timer.setTime(Double.parseDouble(map.getSetting("idleTime")));
+                    }
                     GraphNode kioskLoc = map.getKioskLocation();
                     String floorname;
                     if (kioskLoc != null) {
@@ -447,6 +450,7 @@ public class PatientController extends DisplayController implements Initializabl
         minimaps = new LinkedList<>();
         if (start == null || end == null) {
             logger.error("Cannot path, start or end is null!");
+            return;
         }
         try {
             currentPath = map.getPathByFloor(start, end, togStairs.isSelected());
@@ -1008,7 +1012,7 @@ public class PatientController extends DisplayController implements Initializabl
 
     // revert to previous state
     public void revertState (PatientMemento memento) {
-        System.out.println("Reverting State");
+        logger.info("Reverting State");
         exitSearch();
         currentMap = memento.floor;
         displayImage();
