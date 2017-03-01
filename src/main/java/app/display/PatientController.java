@@ -466,7 +466,7 @@ public class PatientController extends DisplayController implements Initializabl
             clearDisplay();
             displaySubPath(imageView, path, true,10,1, 20);
             displayMinipaths();
-            iv.setEffect(new DropShadow());
+            iv.setEffect(new DropShadow(30, Color.rgb(42, 57, 86)));
             if (displayState == state.DISPLAYING_TEXT_DIRECTION){
                 String nextFloor = null;
                 if(currentPath.size() > currentSubPath+1) {
@@ -828,6 +828,7 @@ public class PatientController extends DisplayController implements Initializabl
      */
     public void initializeMinimaps(){
         displayMinipaths();
+        minimaps.get(0).map.setEffect(new DropShadow(30, Color.rgb(42, 57, 86)));
     }
 
 
