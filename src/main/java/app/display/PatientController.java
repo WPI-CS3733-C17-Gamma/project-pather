@@ -17,10 +17,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -77,6 +74,7 @@ public class PatientController extends DisplayController implements Initializabl
     @FXML private Button login;
     @FXML private Button TextDirection;
     @FXML private Button floor1;
+    @FXML private ToggleButton togStairs;
 
     //Colors for patient Display
     //------------------------------------------------------------------------------------------------------------------
@@ -239,7 +237,7 @@ public class PatientController extends DisplayController implements Initializabl
                 logger.debug("Found desired graph node at: {}",
                     locs.get(0).getLocation().toString());
                 displayResults(new LinkedList<>());
-                getPath(map.getKioskLocation(), locs.get(0).getLocation(), false);
+                getPath(map.getKioskLocation(), locs.get(0).getLocation());
                 return locs.get(0).getLocation();
             }
             // too many options, redisplay options
@@ -257,7 +255,7 @@ public class PatientController extends DisplayController implements Initializabl
                 logger.debug("FOUND ROOM! : " + room);
                 displayResults(new LinkedList<>());
 		// TODO
-                getPath(map.getKioskLocation(), room.getLocation(), false);
+                getPath(map.getKioskLocation(), room.getLocation());
                 return room.getLocation();
             }
             else {
@@ -359,15 +357,14 @@ public class PatientController extends DisplayController implements Initializabl
      * get paths across multiple floor and display different resulted floors on the search interface (the large ImageView and the hBox)
      * @param start the starting location
      * @param end the ending location
-     * @param useStairs true if the stairs are to be forced into use
      */
-    public void getPath (GraphNode start, GraphNode end, boolean useStairs) {
+    public void getPath (GraphNode start, GraphNode end) {
         minimaps = new LinkedList<>();
         if (start == null || end == null) {
             logger.error("Cannot path, start or end is null!");
         }
         try {
-            currentPath = map.getPathByFloor(start, end, useStairs);
+            currentPath = map.getPathByFloor(start, end, togStairs.isSelected());
             TextDirection.setVisible(true);
             clearDisplay();
             displaySubPath(patientImageView, currentPath.get(0), true,10, 1,20);
@@ -607,7 +604,7 @@ public class PatientController extends DisplayController implements Initializabl
             searchBar.setText(roomname);
             startSearch();
 	    // TODO make use stairs
-            getPath(map.getKioskLocation(),map.getRoomFromName(roomname).getLocation(), false);
+            getPath(map.getKioskLocation(),map.getRoomFromName(roomname).getLocation());
         }
     }
 
@@ -860,6 +857,7 @@ public class PatientController extends DisplayController implements Initializabl
                 }
             }
         );
+
         // the image view should be the bottom pane so circles can be drawn over it
         imageView.toBack();
 //        imageView.setPreserveRatio(false);
