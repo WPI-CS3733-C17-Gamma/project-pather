@@ -45,7 +45,7 @@ import java.util.stream.Collectors;
 public class PatientController extends DisplayController implements Initializable {
     final Logger logger = LoggerFactory.getLogger(PatientController.class);
 
-   //what type/state of display the Patient Display is currently displaying
+    //what type/state of display the Patient Display is currently displaying
     private enum state{
         PATIENT_DEFAULT,
         PATIENT_SEARCH,
@@ -664,7 +664,7 @@ public class PatientController extends DisplayController implements Initializabl
         if (e.getSource() instanceof Label){
             searchBar.setText(roomname);
             startSearch();
-	    // TODO make use stairs
+            // TODO make use stairs
             getPath(map.getKioskLocation(),map.getRoomFromName(roomname).getLocation());
         }
     }
@@ -819,8 +819,8 @@ public class PatientController extends DisplayController implements Initializabl
                 labels.add(current);
             }
         }
-	drawnObjects.addAll(labels);
-    return labels;
+        drawnObjects.addAll(labels);
+        return labels;
     }
 
     /**
@@ -979,27 +979,26 @@ public class PatientController extends DisplayController implements Initializabl
         options.setVisible(false);
     }
 
-       // revert to previous state
+    // revert to previous state
     public void revertState () {
-	System.out.println("Reverting State");
-	exitSearch(); 
-	// currentMap = memento.floor; 
-	displayImage(); 
-	refreshDisplay(); 
-	creditsPane.setVisible(false); 
+        System.out.println("Reverting State");
+        exitSearch();
+        // currentMap = memento.floor;
+        displayImage();
+        refreshDisplay();
+        creditsPane.setVisible(false);
     }
 
-    
     public void exitCredits() {
-	displayImage(); 
-	creditsPane.setVisible(false); 
-	anchorPane.setVisible(true); 
+        displayImage();
+        creditsPane.setVisible(false);
+        anchorPane.setVisible(true);
     }
 
 
     public void showCredits() {
-	anchorPane.setVisible(false);
-	creditsPane.setVisible(true); 
+        anchorPane.setVisible(false);
+        creditsPane.setVisible(true);
     }
 
     /**
