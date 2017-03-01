@@ -177,6 +177,11 @@ public class EmailController {
         return send(to, content);
     }
 
+    public boolean sendTextDirections (double number, phoneCompanies carrier,
+            List<String> dir,String Destination ) {
+        return sendDirections(number + getPhoneEmail(carrier), dir, Destination);
+    }
+
 
     /**
        @param message message to reply to
@@ -231,7 +236,7 @@ public class EmailController {
      * @param carrier
      * @return
      */
-    private String getPhoneEmail(phoneCompanies carrier){
+    public String getPhoneEmail(phoneCompanies carrier){
         return phone2Email.get(carrier);
     }
 

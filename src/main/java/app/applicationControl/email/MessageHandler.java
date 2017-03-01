@@ -4,7 +4,6 @@ import app.applicationControl.ApplicationController;
 import app.dataPrimitives.GraphNode;
 import app.dataPrimitives.Room;
 import app.dataPrimitives.SubPath;
-import com.sun.corba.se.impl.orbutil.graph.Graph;
 import com.sun.media.jfxmedia.logging.Logger;
 import javafx.util.Pair;
 import org.slf4j.LoggerFactory;
@@ -66,7 +65,6 @@ public class MessageHandler {
         } else if (clientInput.contains("directions from")){
             searchforLoctation(realContent);
 
-
         }
         // give them directions again
         System.out.printf("not a help request");
@@ -94,7 +92,7 @@ public class MessageHandler {
             }
 
             GraphNode end = emailController.map.getRoomFromName(currentState).getLocation();
-            emailController.sendReply(message, getDirections(start, end));
+            emailController.sendReply(message, getDirections(start, end, false)); //change this to use or not use stairs
         }
         // TEMP
         else {
@@ -103,8 +101,8 @@ public class MessageHandler {
         }
     }
 
-    private String getDirections(GraphNode start, GraphNode end){
-        List <GraphNode> path = emailController.map.getPath(start, end);
+    private String getDirections(GraphNode start, GraphNode end, boolean useStairs){
+        List <GraphNode> path = emailController.map.getPath(start, end, useStairs);
         LinkedList<Pair<Integer, String>> textDirections = emailController.map.getTextualDirections
             (path, end.getLocation().getFloor());
         List<String> directions = textDirections.stream().map(p -> {

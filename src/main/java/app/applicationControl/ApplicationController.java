@@ -287,14 +287,11 @@ public class ApplicationController extends Application {
         //createPatientDisplay();
     }
 
-    /**
-     * Send an email to the given email address
-     * @param to email address of recipient
-     * @param message contents you want the user to recieve
-     * @return
-     */
-    public boolean sendEmail (String to, String message) {
-        return emailController.send(to, message);
+
+
+    public boolean sendEmail (String to, List<String> directions, String destination) {
+
+        return emailController.sendDirections(to, directions, destination);
     }
 
     /**
@@ -304,9 +301,13 @@ public class ApplicationController extends Application {
      * @param message
      * @return
      */
-    public boolean sendText (double number, EmailController.phoneCompanies carrier, String message) {
+    public boolean sendText (double number, EmailController.phoneCompanies carrier,
+                             List<String> directions, String Destination) {
+
+
         return emailController.sendText(number, carrier, message);
     }
+
 
     /**
      * get the current java fx scene
