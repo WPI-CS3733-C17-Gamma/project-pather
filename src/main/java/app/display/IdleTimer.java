@@ -6,7 +6,11 @@ import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.util.Duration;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class IdleTimer {
+    final Logger logger = LoggerFactory.getLogger(IdleTimer.class);
 
     private double time;
 
@@ -33,18 +37,16 @@ public class IdleTimer {
         timer.stop();
         timer = new Timeline(new KeyFrame (Duration.millis(time)));
         timer.setOnFinished((ActionEvent e) -> {
-            System.out.println("timer ended");
+            logger.info("timer ended");
             patientController.revertState(memento);
         });
         timer.play();
-        System.out.println("Timer Started");
     }
 
     /**
      * @param patientController controller that this timer will talk to
      */
     public void setPatientController (PatientController patientController) {
-        System.out.println("Patient controller is " + patientController);
         this.patientController = patientController;
     }
 

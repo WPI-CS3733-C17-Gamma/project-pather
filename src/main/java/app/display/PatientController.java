@@ -1012,7 +1012,7 @@ public class PatientController extends DisplayController implements Initializabl
 
     // revert to previous state
     public void revertState (PatientMemento memento) {
-        System.out.println("Reverting State");
+        logger.info("Reverting State");
         exitSearch();
         currentMap = memento.floor;
         displayImage();
