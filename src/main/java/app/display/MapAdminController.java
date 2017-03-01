@@ -234,7 +234,7 @@ public class MapAdminController extends DisplayController {
             @Override
             public void handle(MouseEvent event) {
                 addNode(contextToGraph(contextEvent));
-                selectedNode = null;
+                resetSelection();
                 drawMap();
                 screenMenu.hide();
                 nodeMenu.hide();
@@ -480,8 +480,7 @@ public class MapAdminController extends DisplayController {
     public void addNode(FloorPoint location){
         GraphNode newNode = new GraphNode(location);
         map.addNode(newNode);
-        secondaryNode = selectedNode;
-        selectedNode = newNode;
+        selectNode(newNode);
         drawMap();
     }
 
@@ -514,8 +513,7 @@ public class MapAdminController extends DisplayController {
         }
 
         map.addElevator(location, floors, selectedTransitionValue);
-        secondaryNode = selectedNode;
-        selectedNode = map.getGraphNode(location);
+        selectNode(map.getGraphNode(location));
         drawMap();
     }
 
@@ -619,7 +617,7 @@ public class MapAdminController extends DisplayController {
         unclickToggleButtons();
         if(selectedNode != null) {
             map.deleteNode(selectedNode);
-            selectedNode = null;
+            resetSelection();
             drawMap();
         }
         if(highlightedNodes.size() > 0){
@@ -639,7 +637,7 @@ public class MapAdminController extends DisplayController {
         if (selectedNode != null ) {
             if(selectedNode.doesCrossFloor()) {
                 boolean isEl = map.deleteElevator(selectedNode);
-                selectedNode = null;
+                resetSelection();
                 drawMap();
             }
         }
@@ -778,7 +776,6 @@ public class MapAdminController extends DisplayController {
         else {
             roomName.setValue("");
             activeRoom = null;
-            defaultKioskButton.setDisable(true);
         }
     }
 
@@ -849,8 +846,7 @@ public class MapAdminController extends DisplayController {
         this.currentState = state;
         System.out.println("state changed to: " + currentState);
         if (currentState != State.NONE) {
-            selectedNode = null;
-            secondaryNode = null;
+            resetSelection();
         }
 
         drawMap();
@@ -919,12 +915,44 @@ public class MapAdminController extends DisplayController {
     public void handleMouseEventDefault (MouseEvent e) {
         GraphNode nearby = nearbyNode(e);
         if (nearby != null) {
-            secondaryNode = selectedNode;
-            selectedNode = nearby;
+            selectNode(nearby);
         }
         else {
-            selectedNode = null;
+            resetSelection();
         }
+    }
+
+    /**
+     * Select a node and update disabled buttons
+     * @param node the node that has been selected
+     */
+    public void selectNode(GraphNode node) {
+        secondaryNode = selectedNode;
+        selectedNode = node;
+
+        buttonDeleteNode.setDisable(false);
+        roomName.setDisable(false);
+        buttonAddRoom.setDisable(false);
+        buttonDeleteConnection.setDisable(
+            secondaryNode == null ||
+            !selectedNode.getAdjacent().contains(secondaryNode));
+        buttonDeleteElevator.setDisable(selectedNode == null ||
+                                        !selectedNode.doesCrossFloor());
+    }
+
+    /**
+     * Clears the selected nodes and disables buttons
+     */
+    public void resetSelection() {
+        selectedNode = null;
+        secondaryNode = null;
+
+        defaultKioskButton.setDisable(true);
+        buttonDeleteNode.setDisable(true);
+        roomName.setDisable(true);
+        buttonAddRoom.setDisable(true);
+        buttonDeleteConnection.setDisable(true);
+        buttonDeleteElevator.setDisable(true);
     }
 
     /**
@@ -1112,7 +1140,7 @@ public class MapAdminController extends DisplayController {
             FloorPoint graphPoint = mouseToGraph(e);
             addNode(graphPoint);
         } else {
-            selectedNode = nearbyNode(e);
+            selectNode(nearbyNode(e));
         }
     }
 
@@ -1124,7 +1152,7 @@ public class MapAdminController extends DisplayController {
         GraphNode nearby = nearbyNode(e);
         if (nearby != null) {
             secondaryNode = selectedNode;
-            selectedNode = nearby;
+            selectNode(nearby);
             if (selectedNode != null && nearby != null) {
                 addConnection(secondaryNode, selectedNode);
             }
@@ -1185,8 +1213,7 @@ public class MapAdminController extends DisplayController {
     public void undo () {
         super.undo();
         activeRoom = null;
-        selectedNode = null;
-        secondaryNode = null;
+        resetSelection();
         drawMap();
     }
 
@@ -1216,7 +1243,7 @@ public class MapAdminController extends DisplayController {
 
     public void showContextMenu(ContextMenuEvent event){
         contextEvent = event;
-        selectedNode = nearbyNodeContext(contextEvent);
+        selectNode(nearbyNodeContext(contextEvent));
 
 //        ContextMenu contextMenu = new ContextMenu();
 //

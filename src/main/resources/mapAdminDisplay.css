@@ -1,0 +1,11 @@
+#toolsPane > * {
+	-fx-max-width: Infinity;
+}
+
+ToolBar {
+	-fx-background-color: none;
+}
+
+.root {
+	-fx-background-color: #d4e3ed;
+}
