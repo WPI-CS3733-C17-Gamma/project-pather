@@ -1,16 +1,23 @@
 package app.applicationControl.email;
 
 import app.applicationControl.ApplicationController;
+import app.dataPrimitives.GraphNode;
+import app.dataPrimitives.SubPath;
 import app.datastore.Map;
+import app.pathfinding.PathNotFoundException;
 import com.sun.media.jfxmedia.logging.Logger;
+import javafx.collections.FXCollections;
+import javafx.util.Pair;
 import org.slf4j.LoggerFactory;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 /**
  * Created by saahil claypool on 2/23/2017.
@@ -108,7 +115,7 @@ public class EmailController {
         props.put("mail.smtp.starttls.enable", "true");
         props.put("mail.smtp.host", "smtp.gmail.com");
         props.put("mail.smtp.port", "587");
-        Session session = Session.getInstance(props,
+        session = Session.getInstance(props,
             new javax.mail.Authenticator() {
                 protected PasswordAuthentication getPasswordAuthentication() {
                     return new PasswordAuthentication(username, password);
@@ -117,7 +124,7 @@ public class EmailController {
 
             });
         poller = new EmailPoller(this, username, password, session);
-        poller.start();
+        //poller.start();
         System.out.println("did return");
     }
 
@@ -163,25 +170,49 @@ public class EmailController {
        return to;
     }
 
-    /**
-     * Send direcitons to the given person
-     * @param to email (email + number) of given person
-     * @param directions direcitons as a list of strings to be sent for each floor
-     * @param destination destination as a string
-     * @return
-     */
-    public boolean sendDirections (String to, List<String> directions, String destination) {
-        String content = directions.stream().reduce("", (acummulator, element) -> {
-            acummulator += element + "\n";
-            return acummulator;
-        });
-        addState(to, destination);
-        return send(to, content);
+
+    public boolean sendDirections (String to, GraphNode start, GraphNode end, boolean useStairs) {
+        return send(to, getDirections(start, end, useStairs));
     }
 
     public boolean sendTextDirections (String number, phoneCompanies carrier,
-            List<String> dir,String Destination ) {
-        return sendDirections(number + getPhoneEmail(carrier), dir, Destination);
+                                       GraphNode start, GraphNode end, boolean useStairs) {
+        return sendDirections(number + getPhoneEmail(carrier), start, end, useStairs);
+    }
+
+    List<String> directions;
+
+    private String getDirections(GraphNode start, GraphNode end, boolean useStairs){
+        List <GraphNode> path = map.getPath(start, end, useStairs);
+        List<SubPath> currentPath;
+        try {
+            currentPath = map.getPathByFloor(start, end, useStairs);
+            int currentSubPath = 0;
+            SubPath subPath;
+            String nextFloor = null;
+            for (int i = 0; i < path.size()-1; i++) {
+                nextFloor = path.get(i+1).getLocation().getFloor();
+                displayTextDirections(path, nextFloor);
+            }
+            System.out.println(path.size());
+        }catch (PathNotFoundException e){
+            e.printStackTrace();
+        }
+
+        return getReadableDirections(directions);
+    }
+
+    public void displayTextDirections(List<GraphNode> path, String nextFloor) {
+        LinkedList<Pair<Integer, String>> textDirections = map.getTextualDirections(path, nextFloor);
+        directions = textDirections.stream().map(p -> p.getValue()).collect(Collectors.toList());
+        return;
+    }
+
+    public String getReadableDirections (List<String> unreadableDirs) {
+        String content = unreadableDirs.stream().reduce("", (acu, el) -> {
+            return acu += el + "\n";
+        });
+        return content;
     }
 
 

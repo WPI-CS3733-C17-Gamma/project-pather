@@ -124,6 +124,9 @@ public class PatientController extends DisplayController implements Initializabl
     //For Texting/Email
 
     EmailController.phoneCompanies carrierPicked = EMAIL;
+    GraphNode lastStart;
+    GraphNode lastEnd;
+    boolean lastUseStairs;
 
     //------------------------------------------------------------------------------------------------------------------
 
@@ -362,7 +365,6 @@ public class PatientController extends DisplayController implements Initializabl
             if (room != null) {
                 logger.debug("FOUND ROOM! : " + room);
                 displayResults(new LinkedList<>());
-		// TODO
                 getPath(map.getKioskLocation(), room.getLocation());
                 return room.getLocation();
             }
@@ -466,13 +468,17 @@ public class PatientController extends DisplayController implements Initializabl
      * @param end the ending location
      */
     public void getPath (GraphNode start, GraphNode end) {
+        lastStart = start;
+        lastEnd = end;
+        lastUseStairs = togStairs.isSelected();
         minimaps = new LinkedList<>();
         if (start == null || end == null) {
             logger.error("Cannot path, start or end is null!");
             return;
         }
         try {
-            currentPath = map.getPathByFloor(start, end, togStairs.isSelected());
+            currentPath = map.getPathByFloor(start, end, lastUseStairs);
+            TextDirection.setVisible(true);
             clearDisplay();
             //displaySubPath(imageView, currentPath.get(0), true,10, 1,20);
             currentSubPath = 0;
@@ -492,7 +498,7 @@ public class PatientController extends DisplayController implements Initializabl
             }
             showMultiMapAnimation();
             showMapAnimation();
-            this.textDirectionsListView.setVisible(true);
+            textDirectionsListView.setVisible(true);
             mapTabs.setVisible(false);
             selectPhoneOrEmail.setVisible(true);
             sendTextButton.setVisible(true);
@@ -904,8 +910,7 @@ cur = map.getRoomFromName(roomName);
             displayState = state.PATIENT_SEARCH;
             textDirectionsListView.setVisible(false);
             TextDirection.setText("Show Text Direction");
-        }
-        else {
+        }else {
             displayState = state.DISPLAYING_TEXT_DIRECTION;
             TextDirection.setText("Hide Text Direction");
             String nextFloor = null;
@@ -998,7 +1003,8 @@ cur = map.getRoomFromName(roomName);
                 if(b.intValue() == 1){
                     providersList.setVisible(true);
                 }else{
-                    selectPhoneOrEmail.setValue("EMAIL");//TODO do email stuff here
+                    selectPhoneOrEmail.setValue("EMAIL");
+                    sendEmail(phoneOrEmail.getText());
                 }
             }
         );
@@ -1030,17 +1036,17 @@ cur = map.getRoomFromName(roomName);
 
             }
         );
-        phoneOrEmail.setOnAction(//TODO send Text here
+        phoneOrEmail.setOnAction(
             e->{
-                System.out.println("Send message");
+
             }
         );
         sendTextButton.setOnAction(e->{
             if (carrierPicked.equals(EMAIL)){
-
+                sendEmail(phoneOrEmail.getText());
             } else {
-                //sendText(Double.parseDouble(phoneOrEmail.getText()), carrierPicked);
-                sendText("5593016222", carrierPicked);
+                sendText(phoneOrEmail.getText(), carrierPicked);
+                //sendText("5593016222", carrierPicked);
                 System.out.println("Send message");
             }
 
@@ -1048,17 +1054,16 @@ cur = map.getRoomFromName(roomName);
         });
     }
 
-    private void sendEmail(
-
-
-    ){
-
+    private void sendEmail(String email){
+        GraphNode start = map.getKioskLocation();
+        GraphNode end = map.getRoomFromName(searchBar.getText()).getLocation();
+        applicationController.sendEmail(email, start, end, togStairs.isSelected());
     }
 
     private void sendText(String number, EmailController.phoneCompanies carrier){
-        String destination = "";
-        List<String> dir =  currentTextDirections.stream().map(p -> p.getValue()).collect(Collectors.toList());
-        applicationController.sendText(number, carrier, dir, destination);       //number, carrier, directions, destination
+        GraphNode start = map.getKioskLocation();
+        GraphNode end = map.getRoomFromName(searchBar.getText()).getLocation();
+        applicationController.sendText(number, carrier, start, end, togStairs.isSelected());       //number, carrier, directions, destination
     }
 
 

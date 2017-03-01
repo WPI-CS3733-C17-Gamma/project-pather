@@ -1,6 +1,7 @@
 package app.applicationControl;
 
 import app.applicationControl.email.EmailController;
+import app.dataPrimitives.GraphNode;
 import app.datastore.Map;
 import app.display.*;
 import javafx.application.Application;
@@ -305,30 +306,17 @@ public class ApplicationController extends Application {
     }
 
 
-    /**
-     *g
-     * @param to
-     * @param directions
-     * @param destination
-     * @return
-     */
-    public boolean sendEmail (String to, List<String> directions, String destination) {
 
-        return emailController.sendDirections(to, directions, destination);
+    public boolean sendEmail (String to, GraphNode start, GraphNode end, boolean useStairs) {
+
+        return emailController.sendDirections(to, start, end, useStairs);
     }
 
-    /**
-     *
-     * @param number
-     * @param carrier
-     * @param directions
-     * @param destination
-     * @return
-     */
-    public boolean sendText (String number, EmailController.phoneCompanies carrier,
-                             List<String> directions, String destination) {
 
-        return emailController.sendTextDirections(number, carrier, directions, destination);
+    public boolean sendText (String number, EmailController.phoneCompanies carrier,
+                             GraphNode start, GraphNode end, boolean useStairs) {
+
+        return emailController.sendTextDirections(number, carrier, start, end, useStairs);
     }
 
 
