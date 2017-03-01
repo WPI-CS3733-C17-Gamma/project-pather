@@ -557,37 +557,39 @@ public class PatientController extends DisplayController implements Initializabl
             String labelName = cur.getName();
             String curImage = "";
             for (DirectoryEntry entry : cur.getEntries()){
-                curImage = entry.getIcon();
+                if (entry.getIcon() != ""){
+                    curImage = entry.getIcon();
+                }
             }
-            Label label = new Label();
-            if (curImage.equals("")){
-                label.setText(labelName);
-                label.setLayoutX(imageLoc.getX() + 3);
-                label.setLayoutY(imageLoc.getY() + 3);
-                label.setOnMousePressed(e -> goToSelectedRoom(e));
-                label.setOnMouseEntered(e -> setMouseToHand(e));
-                label.setOnMouseExited(e -> setMouseToNormal(e));
-                label.setFont(Font.font ("Calibri", 10));
-                label.setStyle("-fx-background-color: #424556; -fx-border-color: #424556; -fx-padding: 2; -fx-border-radius: 1 1 1 1");
-                label.setTextFill(lightGrey);
-            }
-            else{
+            Label label = new Label(labelName);
+            label.setLayoutX(imageLoc.getX() + 3);
+            label.setLayoutY(imageLoc.getY() + 3);
+            label.setFont(Font.font ("Georgia", 10));
+            label.setStyle("-fx-background-color: #F0F4F5; -fx-border-color: darkblue; -fx-padding: 2;");
+            //set the labels clickable
+            label.setOnMousePressed((e) -> goToSelectedRoom(e, labelName));
+            label.setOnMouseEntered(e -> setMouseToHand(e));
+            label.setOnMouseExited(e -> setMouseToNormal(e));
+            //if the room has a directory associated with it that contains an icon
+            if (!curImage.equals("")){
                 ImageView image = new ImageView();
                 image.setImage(applicationController.getIconImage(curImage));
                 image.setPreserveRatio(true);
                 image.setFitWidth(20);
                 image.setFitHeight(20);
-                label.setGraphic(image);
-                label.setLayoutX(imageLoc.getX() + 3);
-                label.setLayoutY(imageLoc.getY() + 3);
+                Label iconLabel = new Label();
+                iconLabel.setGraphic(image);
+                iconLabel.setLayoutX(imageLoc.getX() + 3);
+                iconLabel.setLayoutY(imageLoc.getY() - 21);
+                iconLabel.setOnMousePressed((e) -> goToSelectedRoom(e, labelName));
+                iconLabel.setOnMouseEntered(e -> setMouseToHand(e));
+                iconLabel.setOnMouseExited(e -> setMouseToNormal(e));
+                anchorPane.getChildren().add(iconLabel);
+                drawnObjects.add(iconLabel);
             }
-            label.setOnMousePressed(e -> goToSelectedRoom(e));
-            label.setOnMouseEntered(e -> setMouseToHand(e));
-            label.setOnMouseExited(e -> setMouseToNormal(e));
             Circle circ = new Circle(2, Color.BLACK);
             circ.setLayoutX(imageLoc.getX());
             circ.setLayoutY(imageLoc.getY());
-            circ.setOnMousePressed(e -> goToSelectedRoom(e));
             anchorPane.getChildren().add(circ);
             anchorPane.getChildren().add(label);
             logger.debug("Adding Label {}", labelName);
@@ -600,13 +602,12 @@ public class PatientController extends DisplayController implements Initializabl
      * display the path to the room when clicked on the patient display map
      * @param e
      */
-    public void goToSelectedRoom(MouseEvent e){
+    public void goToSelectedRoom(MouseEvent e, String roomname){
         if (e.getSource() instanceof Label){
-            Label temp = (Label) e.getSource();
-            searchBar.setText(temp.getText());
+            searchBar.setText(roomname);
             startSearch();
 	    // TODO make use stairs
-            getPath(map.getKioskLocation(),map.getRoomFromName(temp.getText()).getLocation(), false);
+            getPath(map.getKioskLocation(),map.getRoomFromName(roomname).getLocation(), false);
         }
     }
 
@@ -643,7 +644,12 @@ public class PatientController extends DisplayController implements Initializabl
     }
 
 
-
+    /**
+     * draw the name of the nodes that the subpath goes through
+     * @param subPath
+     * @param lableFontSize
+     * @return
+     */
     private Label drawFloorLabel(SubPath subPath, int lableFontSize){
         Label label = new Label(subPath.getFloor());
         label.setFont(Font.font ("Verdana", lableFontSize));
@@ -693,7 +699,6 @@ public class PatientController extends DisplayController implements Initializabl
         Point2D point1 = new Point2D(7*arrowSize*Math.cos(arrowSize*Math.toRadians(angle)) - dist*arrowSize*Math.sin(arrowSize*Math.toRadians(angle)), -7*arrowSize*Math.sin(arrowSize*Math.toRadians(angle)) - dist*arrowSize*Math.cos(arrowSize*Math.toRadians(angle)));
         Point2D point2 = new Point2D(-7*arrowSize*Math.cos(arrowSize*Math.toRadians(angle)) - dist*arrowSize*Math.sin(arrowSize*Math.toRadians(angle)), 7*arrowSize*Math.sin(arrowSize*Math.toRadians(angle)) - dist*arrowSize*Math.cos(arrowSize*Math.toRadians(angle)));
         Point2D point3 = new Point2D(10*arrowSize*Math.sin(arrowSize*Math.toRadians(angle)) - dist*arrowSize*Math.sin(arrowSize*Math.toRadians(angle)), 10*arrowSize*Math.cos(arrowSize*Math.toRadians(angle)) - dist*arrowSize*Math.cos(arrowSize*Math.toRadians(angle)));
-
 
         triangle.getPoints().addAll(new Double [] {point3.getX(), point3.getY(), point2.getX(), point2.getY(), point1.getX(), point1.getY()});
         triangle.setLayoutX(pointB.getX());
@@ -760,14 +765,12 @@ public class PatientController extends DisplayController implements Initializabl
     return labels;
     }
 
-
     /**
      * Initialises the minimaps after animation
      */
     public void initializeMinimaps(){
         displayMinipaths();
     }
-
 
 
     /**

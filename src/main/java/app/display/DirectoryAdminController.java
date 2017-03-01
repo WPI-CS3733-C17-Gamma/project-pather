@@ -224,6 +224,7 @@ public class DirectoryAdminController extends DisplayController{
         filterAllEntries();
         activeDirectoryEntry = null;
         entryEditor.setVisible(false);
+        applicationController.refreshPatientController();
     }
 
     /**
