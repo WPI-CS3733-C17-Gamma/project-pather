@@ -313,92 +313,146 @@ public class Map {
         int nodeNum = -1;
         for (GraphNode node : path) {
             nodeNum++;
-            // No directions for first node
-            if (nodeNum == 0 || nodeNum > path.size() - 1 ) {
+            // If the node is after the end something went wrong, so ignore it
+            if (nodeNum > path.size() - 1) {
+                logger.error("Tried to get directions for node off the end of the list");
                 continue;
             }
-            if(nodeNum == path.size() - 1) {
-                String currFloor = path.get(0).getLocation().getFloor();
-                // Determine what transition is happening
-                if(nextFloor != null) {
-                    // If your going to faulkner but not already in faulkner
-                    if(!currFloor.contains("floor") && nextFloor.contains("floor")) {
-                        directions.add(new Pair(nodeNum, "Enter Faulkner Hospital"));
-                    }
-                    // If you are going to belkin but not coming from it
-                    else if(!currFloor.contains("belkin") && nextFloor.contains("belkin")) {
-                        directions.add(new Pair(nodeNum, "Enter Belkin House"));
-                    }
-                    // If you are going to the campus you must be leaving a building
-                    else if(nextFloor.contains("campus")) {
-                        directions.add(new Pair(nodeNum, "Exit building"));
-                    }
-                    // Else you are going to a building from the same building
-                    else {
-                        String floor = nextFloor.replaceFirst("floor|belkin", "floor ");
-                        logger.debug("Checking floor transition type: {}", node.getFloorTransitionType());
-                        // If its an elevator or a stairs
-                        if(node.getFloorTransitionType() == 1) {
-                            directions.add(new Pair(nodeNum, "Take the elevator to " + floor));
-                        }
-                        else if(node.getFloorTransitionType() == 3) {
-                            directions.add(new Pair(nodeNum, "Take the stairs to " + floor));
-                        }
-                    }
-                }
-                // If there is no transition then you are at the end of your path
-                else {
-                    directions.add(new Pair(nodeNum, "Arrive at your destination"));
-                }
+            // For the first node
+            else if (nodeNum == 0) {
+                // Determine what type of transition it is
+                directions.add(new Pair(nodeNum, getStartDirections(node)));
+                continue;
+            } else if (nodeNum == path.size() - 1) {
+                // If you are at the end of the path
+                directions.add(new Pair(nodeNum, getEndDirections(path, node, nextFloor)));
                 continue;
             }
+
             // Get any nearby location
-            String landmark = "";
-            // If the current node has a name, put that in the directions
-            if(getRoomFromNode(node) != null) {
-                landmark = " at " + getRoomFromNode(node).getName();
-            }
-            else {
-                double max = 35;
-                // If a nearby node has a name use that
-                for( GraphNode nearNode : node.getAdjacent()) {
-                    double distance = node.distance(nearNode);
-                    if(distance < max && getRoomFromNode(nearNode) != null) {
-                        max = distance;
-                        // If the nearby node is the node you came from
-                        if(nearNode == path.get(nodeNum - 1)) {
-                            landmark += " away from ";
-                        }
-                        if(nearNode == path.get(nodeNum + 1)) {
-                            landmark += " towards ";
-                        }
-                        else landmark += " near ";
-                        landmark += getRoomFromNode(nearNode).getName();
-                    }
-                }
-            }
-            getRoomFromNode(node);
+            String landmark = getLandmark(path, node, nodeNum);
+
             // Get a direction from the angle
-            double angle = node.getAngle(path.get(nodeNum - 1), path.get(nodeNum + 1));
-            if (angle < 80) {
-                // Sharp Right
-                directions.add(new Pair(nodeNum, "Take a sharp left" + landmark));
-            } else if (angle >= 80 && angle <= 160) {
-                // Right
-                directions.add(new Pair(nodeNum, "Take a left" + landmark));
-            } else if (angle > 160 && angle < 200 && node.getAdjacent().size() > 2 ) {
-                // No directions if there is only one path option and its straight anyway
-                // Straight
-                directions.add(new Pair(nodeNum, "Continue going straight" + landmark));
-            } else if (angle >= 200 && angle <= 280) {
-                // Left
-                directions.add(new Pair(nodeNum, "Take a right" + landmark));
-            } else if (angle >= 280) {
-                // Sharp Left
-                directions.add(new Pair(nodeNum, "Take a sharp right" + landmark));
+            String turnDir = getTurnDirections(path, node, nodeNum);
+            if(turnDir != null) {
+                directions.add(new Pair(nodeNum, turnDir + landmark));
             }
         }
         return directions;
+    }
+
+    private String getTurnDirections(List<GraphNode> path, GraphNode node, int nodeNum) {
+        // Get a direction from the angle
+        double angle = node.getAngle(path.get(nodeNum - 1), path.get(nodeNum + 1));
+        if (angle < 80) {
+            // Sharp Right
+            return "Take a sharp left";
+        } else if (angle >= 80 && angle <= 160) {
+            // Right
+            return "Take a left";
+        } else if (angle > 160 && angle < 200 ) {
+            if(node.getAdjacent().size() < 2) {
+                // No directions if there is only one path option and its straight anyway
+                return null;
+            }
+            // Straight
+            return "Continue going straight";
+        } else if (angle >= 200 && angle <= 280) {
+            // Left
+            return "Take a right";
+        } else if (angle >= 280) {
+            // Sharp Left
+            return "Take a sharp right";
+        }
+        logger.error("Found an unexpected angle between nodes while getting text directions");
+        logger.error("Angle was {}", angle);
+        return null;
+    }
+
+    private String getLandmark(List<GraphNode> path, GraphNode node, int nodeNum) {
+        String landmark = "";
+        String prefix = "\n\u2a3d";
+        // If the current node has a name, put that in the directions
+        logger.debug("Getting nearby named locations");
+        if (getRoomFromNode(node) != null) {
+            landmark = prefix + "at " + getRoomFromNode(node).getName();
+        } else {
+            double max = 50;
+            // If a nearby node has a name use that
+            for (GraphNode nearNode : node.getAdjacent()) {
+                double distance = node.distance(nearNode);
+                if (distance < max && getRoomFromNode(nearNode) != null) {
+                    max = distance;
+                    // If the nearby node is the node you came from
+                    if (nearNode == path.get(nodeNum - 1)) {
+                        landmark = prefix + "away from ";
+                    }
+                    if (nearNode == path.get(nodeNum + 1)) {
+                        landmark = prefix + "towards ";
+                    } else landmark = prefix + "near ";
+                    landmark += getRoomFromNode(nearNode).getName();
+                }
+            }
+        }
+        return landmark;
+    }
+
+    private String getStartDirections(GraphNode node) {
+        switch (node.getFloorTransitionType()) {
+            // If the first not is not a transition, then it is a kiosk
+            case 0:
+                if(getRoomFromNode(node) != null) {
+                    return "Starting from " + getRoomFromNode(node).getName();
+                }
+                else
+                    return "Starting from an unknown location";
+            case 1:
+                return "Exit the elevator";
+            case 2:
+                return "From the entrance";
+            case 3:
+                return "Exit Stairwell";
+            default:
+                return "Starting from an unknown location";
+        }
+    }
+
+    private Object getEndDirections(List<GraphNode> path, GraphNode node, String nextFloor) {
+        String currFloor = path.get(0).getLocation().getFloor();
+        // Determine what transition is happening
+        if (nextFloor != null) {
+            // If your going to faulkner but not already in faulkner
+            if (!currFloor.contains("floor") && nextFloor.contains("floor")) {
+                return "Enter Faulkner Hospital";
+            }
+            // If you are going to belkin but not coming from it
+            else if (!currFloor.contains("belkin") && nextFloor.contains("belkin")) {
+                return "Enter Belkin House";
+            }
+            // If you are going to the campus you must be leaving a building
+            else if (nextFloor.contains("campus")) {
+                return "Exit building";
+            }
+            // Else you are going to a building from the same building
+            else {
+                String floor = nextFloor.replaceFirst("floor|belkin", "floor ");
+                logger.debug("Checking floor transition type: {}", node.getFloorTransitionType());
+                // If its an elevator or a stairs
+                if (node.getFloorTransitionType() == 1) {
+                    return "Take the elevator to " + floor;
+                } else if (node.getFloorTransitionType() == 3) {
+                    return "Take the stairs to " + floor;
+                }
+                else {
+                    logger.error("Found a floor transition but it was not through an elevator or a stairs");
+                    return "Go to " + floor;
+                }
+            }
+        }
+        // If there is no transition then you are at the end of your path
+        else {
+            return "Arrive at your destination";
+        }
     }
 
     /**
