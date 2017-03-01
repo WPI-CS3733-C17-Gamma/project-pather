@@ -18,25 +18,26 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<StackPane fx:id="stackPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" styleClass="background" stylesheets="@design.css" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1">
+<StackPane fx:id="stackPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" styleClass="background" stylesheets="@design.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMousePressed="#hideOptions" prefHeight="600.0" prefWidth="1000.0" styleClass="background" stylesheets="@design.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
            <children>
+            <Button fx:id="exitButton" layoutX="280.0" layoutY="24.0" mnemonicParsing="false" onAction="#exitSearch" prefHeight="47.0" prefWidth="50.0" styleClass="exitButton" stylesheets="@design.css" text="X" />
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="470.0" layoutX="40.0" layoutY="115.0" stroke="#1b449c" strokeType="INSIDE" visible="false" width="920.0" />
-              <ImageView fitHeight="57.0" fitWidth="374.0" layoutX="343.0" layoutY="22.0" pickOnBounds="true" preserveRatio="true">
+              <ImageView fx:id="logo" fitHeight="57.0" fitWidth="374.0" layoutX="343.0" layoutY="22.0" pickOnBounds="true" preserveRatio="true">
                  <image>
                     <Image url="@BWFH_logo_rgb%20(1).png" />
                  </image>
               </ImageView>
               <Button fx:id="help" layoutX="825.0" layoutY="14.0" mnemonicParsing="false" onAction="#help" onKeyPressed="#help" prefHeight="50.0" prefWidth="50.0" style="-fx-background-color: none;" styleClass="helpButton" stylesheets="@design.css" />
               <Button fx:id="adminButton" layoutX="915.0" layoutY="14.0" mnemonicParsing="false" onAction="#logIn" prefHeight="50.0" prefWidth="50.0" styleClass="adminMenuButton" stylesheets="@design.css" />
-            <Line endX="970.0" layoutX="1.0" layoutY="115.0" startX="30.0" stroke="#424556" />
-            <HBox alignment="CENTER" layoutY="130.0" prefHeight="438.0" prefWidth="1000.0">
+            <Line fx:id="line" endX="970.0" layoutX="1.0" layoutY="115.0" startX="30.0" stroke="#424556" />
+            <HBox fx:id="mapHbox" alignment="CENTER" layoutX="0.1" layoutY="130.0" prefHeight="438.0" prefWidth="1000.0">
                <children>
                     <ImageView fx:id="imageView" fitHeight="438.0" fitWidth="800.0" pickOnBounds="true" preserveRatio="true" />
                </children>
             </HBox>
-            <TabPane layoutX="662.0" layoutY="79.0" prefHeight="485.0" prefWidth="303.0" stylesheets="@design.css" tabClosingPolicy="UNAVAILABLE">
+            <TabPane fx:id="mapTabs" layoutX="662.0" layoutY="79.0" prefHeight="485.0" prefWidth="303.0" stylesheets="@design.css" tabClosingPolicy="UNAVAILABLE">
               <tabs>
                   <Tab text="Main">
                     <content>
@@ -92,19 +93,8 @@
                     <Font size="30.0" />
                  </font>
               </Label>
-              <AnchorPane fx:id="searchAnchorPane" onMousePressed="#hideOptions" prefHeight="600.0" prefWidth="1000.0" styleClass="patientBackground" stylesheets="@design.css" visible="false">
-                 <children>
-                    <ImageView fx:id="patientImageView" fitHeight="420.0" fitWidth="695.0" layoutX="153.0" layoutY="83.0" pickOnBounds="true" preserveRatio="true" />
-                  <Button fx:id="TextDirection" layoutX="790.0" layoutY="473.0" mnemonicParsing="false" onMousePressed="#textDirection" prefHeight="37.0" prefWidth="210.0" style="-fx-background-radius: 3px;" text="Show Text Direction" visible="false" />
-                  <ImageView fitHeight="57.0" fitWidth="374.0" layoutX="343.0" layoutY="22.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@BWFH_logo_rgb%20(1).png" />
-                     </image>
-                  </ImageView>
-                  <Button fx:id="exitButton" layoutX="932.0" layoutY="14.0" mnemonicParsing="false" onAction="#exitSearch" styleClass="exitButton" stylesheets="@design.css" text="X" />
-                  <ListView fx:id="textDirectionsListView" layoutX="792.0" layoutY="83.0" prefHeight="379.0" prefWidth="200.0" styleClass="textDirection" stylesheets="@design.css" />
-                 </children>
-              </AnchorPane>
+            <ListView fx:id="textDirectionsListView" layoutX="790.0" layoutY="83.0" prefHeight="379.0" prefWidth="210.0" styleClass="textDirection" stylesheets="@design.css" visible="false" />
+            <Button fx:id="TextDirection" layoutX="790.0" layoutY="473.0" mnemonicParsing="false" onMousePressed="#textDirection" prefHeight="37.0" prefWidth="210.0" style="-fx-background-radius: 3px;" text="Show Text Direction" visible="false" />
               <TextField fx:id="searchBar" layoutX="28.0" layoutY="24.0" onKeyReleased="#search" onMousePressed="#startSearch" prefHeight="47.0" prefWidth="248.0" promptText="Search!" styleClass="search" stylesheets="@design.css">
                  <font>
                     <Font size="28.0" />
