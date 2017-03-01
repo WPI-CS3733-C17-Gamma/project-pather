@@ -127,6 +127,16 @@
                <font>
                   <Font name="System Italic" size="10.0" />
                </font></ToggleButton>
+               <ImageView fitHeight="47.0" fitWidth="40.0" layoutX="256.0" layoutY="24.0"  pickOnBounds="true" preserveRatio="false">
+                   <image>
+                       <Image url="@ElevatorT.png" />
+                   </image>
+               </ImageView>
+               <ImageView fitHeight="47.0" fitWidth="40.0" layoutX="296.0" layoutY="24.0"  pickOnBounds="true" preserveRatio="false">
+                   <image>
+                       <Image url="@Stairs.png" />
+                   </image>
+               </ImageView>
            </children>
         </AnchorPane>
     </children>

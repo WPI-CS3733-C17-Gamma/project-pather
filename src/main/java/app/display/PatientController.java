@@ -14,9 +14,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
-import javafx.scene.Cursor;
-import javafx.scene.Node;
-import javafx.scene.Parent;
+import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
@@ -849,8 +847,29 @@ public class PatientController extends DisplayController implements Initializabl
             "\n\nTo get started, start typing into the search bar. " +
             "\n Then, select the option you would like to get a path to." +
             "\n\nTo close this menu, click on this");
+        ImageView elev = new ImageView();
+        elev.setImage(applicationController.getIconImage("Elevator"));
+        elev.setFitWidth(40.0);
+        elev.setFitHeight(47.0);
+        elev.setPreserveRatio(false);
+        elev.setSmooth(true);
+        elev.setCache(true);
 
-        drawRoomLabel(currentMap, imageView);
+        ImageView stair = new ImageView();
+        stair.setImage(applicationController.getIconImage("Stairs"));
+        stair.setFitWidth(40.0);
+        stair.setFitHeight(47.0);
+        stair.setPreserveRatio(false);
+        stair.setSmooth(true);
+        stair.setCache(true);
+
+        Group root = new Group();
+        Scene scene = new Scene(root);
+        scene.setFill(null);
+        HBox box = new HBox();
+        box.getChildren().add(elev);
+        box.getChildren().add(stair);
+        root.getChildren().add(box);
     }
 
     /**
