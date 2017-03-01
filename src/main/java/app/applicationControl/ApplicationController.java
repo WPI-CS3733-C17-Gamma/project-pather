@@ -288,24 +288,31 @@ public class ApplicationController extends Application {
     }
 
 
-
+    /**
+     *g
+     * @param to
+     * @param directions
+     * @param destination
+     * @return
+     */
     public boolean sendEmail (String to, List<String> directions, String destination) {
 
         return emailController.sendDirections(to, directions, destination);
     }
 
     /**
-     * Send a text to given number and carrier
+     *
      * @param number
      * @param carrier
-     * @param message
+     * @param directions
+     * @param destination
      * @return
      */
     public boolean sendText (double number, EmailController.phoneCompanies carrier,
-                             List<String> directions, String Destination) {
+                             List<String> directions, String destination) {
 
 
-        return emailController.sendText(number, carrier, message);
+        return emailController.sendTextDirections(number, carrier, directions, destination);
     }
 
 
