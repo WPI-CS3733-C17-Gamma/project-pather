@@ -86,7 +86,7 @@ public class ApplicationController extends Application {
         extraImages.put("Elevator", new ProxyImage("Icon_PNGs/newElevator.png"));
         extraImages.put("Cafe", new ProxyImage("Icon_PNGs/Cafe2T.png"));
         extraImages.put("Restroom", new ProxyImage("Icon_PNGs/BathroomT.png"));
-        extraImages.put("Waitroom", new ProxyImage("Icon_PNGs/WaitRoomT.png"));
+        extraImages.put("Lobby", new ProxyImage("Icon_PNGs/WaitRoomT.png"));
         extraImages.put("Frontdesk", new ProxyImage("Icon_PNGs/AdmittingT.png"));
         extraImages.put("Library", new ProxyImage("Icon_PNGs/LibraryT.png"));
         extraImages.put("Giftshop", new ProxyImage("Icon_PNGs/GiftShopT.png"));
