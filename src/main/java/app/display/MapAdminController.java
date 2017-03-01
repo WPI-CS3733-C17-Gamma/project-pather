@@ -167,7 +167,6 @@ public class MapAdminController extends DisplayController {
          */
         roomName.addEventFilter(KeyEvent.KEY_PRESSED, e->{
             if(e.getCode() == KeyCode.ENTER){
-                System.out.println(roomName.getEditor().getText());
                 roomName.setValue(roomName.getEditor().getText());
                 addRoom();
                 mapPane.requestFocus();
@@ -288,23 +287,23 @@ public class MapAdminController extends DisplayController {
         ImagePattern addRoomImage = new ImagePattern(new Image("/Radial Icons/new_Add_Room.png"),0, 0, 60, 60, false);
         ImagePattern addNodeImage = new ImagePattern(new Image("/Radial Icons/new_Add_Node.png"),-1, 0, 60, 60, false);
         ImagePattern addConnectionImage = new ImagePattern(new Image("/Radial Icons/new_Add_Connection.png"),0,0,60,60,false);
-        ImagePattern chainAddImage = new ImagePattern(new Image("Radial Icons/new_Chain_Add.png"),0,0,60,60,false);
-        ImagePattern deleteRoomImageDisplay = new ImagePattern(new Image("/Radial Icons/new_Delete_Room.png"), 30, 150, 60, 60, false);
-        ImagePattern addRoomImageDisplay = new ImagePattern(new Image("/Radial Icons/new_Add_Room.png"),30, 150, 60, 60, false);
-        ImagePattern addNodeImageDisplay = new ImagePattern(new Image("/Radial Icons/new_Add_Node.png"),30, 150, 60, 60, false);
-        ImagePattern deleteNodeImageDisplay = new ImagePattern(new Image("/Radial Icons/new_Delete_Node.png"),30, 150, 60, 60, false);
-        ImagePattern addConnectionImageDisplay = new ImagePattern(new Image("/Radial Icons/new_Add_Connection.png"),30,150,60,60,false);
-        ImagePattern chainAddImageDisplay = new ImagePattern(new Image("Radial Icons/new_Chain_Add.png"),30,150,60,60,false);
+        ImagePattern chainAddImage = new ImagePattern(new Image("Radial Icons/new_Chain_Add_Right.png"),0,0,60,60,false);
+        ImagePattern deleteRoomImageDisplay = new ImagePattern(new Image("/Radial Icons/dark_delete_room.png"), 30, 150, 60, 60, false);
+        ImagePattern addRoomImageDisplay = new ImagePattern(new Image("/Radial Icons/dark_add_room.png"),30, 150, 60, 60, false);
+        ImagePattern addNodeImageDisplay = new ImagePattern(new Image("/Radial Icons/dark_add_node.png"),30, 150, 60, 60, false);
+        ImagePattern deleteNodeImageDisplay = new ImagePattern(new Image("/Radial Icons/dark_delete_node.png"),30, 150, 60, 60, false);
+        ImagePattern addConnectionImageDisplay = new ImagePattern(new Image("/Radial Icons/dark_add_connection.png"),30,150,60,60,false);
+        ImagePattern chainAddImageDisplay = new ImagePattern(new Image("Radial Icons/dark_chain_add_right.png"),30,150,60,60,false);
         screenMenu.addOption(addRoomImage,Color.rgb(42,45,56),addRoomImageDisplay, addRoomOption, addRoomOption);//Add delete Room, add/change Room, delete node to this menu, delete elevator if this node is an elevator
         screenMenu.addOption(addNodeImage,Color.rgb(42,45,56), addNodeImageDisplay, addNodeOption,addNodeOption);
-        screenMenu.addOption(chainAddImage, Color.rgb(42,45,56), chainAddImageDisplay, chainAddOption,chainAddOption);
         screenMenu.addOption(addConnectionImage, Color.rgb(42,45,56), addConnectionImageDisplay, addConnectionOption,addConnectionOption);
+        screenMenu.addOption(chainAddImage, Color.rgb(42,45,56), chainAddImageDisplay, chainAddOption,chainAddOption);
 
         ImagePattern deleteRoomImageNode = new ImagePattern(new Image("/Radial Icons/new_Delete_Room.png"), 15, 15, 60, 60, false);
         ImagePattern addRoomImageNode = new ImagePattern(new Image("/Radial Icons/new_Add_Room.png"),-15, -28, 60, 60, false);
         ImagePattern deleteNodeImageNode = new ImagePattern(new Image("/Radial Icons/new_Delete_Node.png"),6, -7, 60, 60, false);
         ImagePattern addConnectionImageNode = new ImagePattern(new Image("/Radial Icons/new_Add_Connection.png"),15,-13,60,60,false);
-        ImagePattern chainAddImageNode = new ImagePattern(new Image("Radial Icons/new_Chain_Add.png"),2,2,60,60,false);
+        ImagePattern chainAddImageNode = new ImagePattern(new Image("Radial Icons/new_Chain_Add_Right.png"),2,2,60,60,false);
         nodeMenu.addOption(deleteNodeImageNode, Color.rgb(42,45,56), deleteNodeImageDisplay, deleteNodeOption,deleteNodeOption);//Add add elevator, addnode, add elevator
         nodeMenu.addOption(deleteRoomImageNode,Color.rgb(42,45,56), deleteRoomImageDisplay, deleteRoom, deleteRoom);
         nodeMenu.addOption(addRoomImageNode, Color.rgb(42,45,56), addRoomImageDisplay, addChangeRoom, addChangeRoom);

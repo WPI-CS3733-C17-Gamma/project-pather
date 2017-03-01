@@ -28,7 +28,7 @@ public class DatabaseManager {
             "constraint id2_fk foreign key (ID2) references GraphNodes(ID))",
         "create table Rooms (rID Integer Primary key, Name varchar(100), nID Integer," +
             "constraint fk_gn foreign key (nID) references GraphNodes(ID))",
-        "create table Entries (eID Integer Primary Key, Title varchar(100), Name varchar(100))",
+        "create table Entries (eID Integer Primary Key, Title varchar(100), Name varchar(100), Icon varchar(100))",
         "create table RoomEntryAssoc (eID integer, rID integer," +
             "constraint pk_rea primary key (eID, rID),"+
             "constraint eID_fk foreign key (eID) references Entries(eID),"+
@@ -129,7 +129,8 @@ public class DatabaseManager {
 
                 DirectoryEntry entry = new DirectoryEntry(result.getString(3),
                                                           result.getString(2),
-                                                          locations);
+                                                          locations,
+                                                          result.getString(4));
                 entriesID.put(result.getInt(1), entry);
                 entries.put(result.getString(3), entry);
             }
@@ -170,7 +171,7 @@ public class DatabaseManager {
             PreparedStatement insertRoom = connection.prepareStatement(
                 "insert into Rooms (rID, name, nID) values (?, ?, ?)");
             PreparedStatement insertEntry = connection.prepareStatement(
-                "insert into Entries (eID, name, title) values (?, ?, ?)");
+                "insert into Entries (eID, name, title, Icon) values (?, ?, ?, ?)");
             PreparedStatement insertRoomEntryAssoc = connection.prepareStatement(
                 "insert into RoomEntryAssoc (eID, rID) values (?, ?)");
             PreparedStatement insertSetting = connection.prepareStatement(
@@ -214,6 +215,7 @@ public class DatabaseManager {
                 insertEntry.setLong(1, entry.id);
                 insertEntry.setString(2, entry.getName());
                 insertEntry.setString(3, entry.getTitle());
+                insertEntry.setString(4,entry.getIcon());
                 insertEntry.executeUpdate();
 
                 // Insert each room association

@@ -93,12 +93,13 @@ public class DirectoryAdminController extends DisplayController{
     /** See the method {@link Map#getEntry(String)}
      * Side Effect: Sets activeDirectoryEntry to the entry that is found
      * @throws IllegalArgumentException if an entry could not be found*/
-    public void selectEntry(String entryName) throws IllegalArgumentException {
+    public void selectEntry(String entryName) {//  throws IllegalArgumentException {
         activeDirectoryEntry = map.getEntry(entryName);
         //this thingy throws an error every time an entry is saved
-//        if( activeDirectoryEntry == null ) {
-//            throw new IllegalArgumentException();
-//        }
+        if( activeDirectoryEntry == null ) {
+            return;
+            //throw new IllegalArgumentException();
+        }
         displayEntry(activeDirectoryEntry);
         return;
     }
@@ -223,6 +224,7 @@ public class DirectoryAdminController extends DisplayController{
         filterAllEntries();
         activeDirectoryEntry = null;
         entryEditor.setVisible(false);
+        applicationController.refreshPatientController();
     }
 
     /**
@@ -274,6 +276,9 @@ public class DirectoryAdminController extends DisplayController{
             .collect(Collectors.toList());
         // FXCollections takes a normal list of strings and makes it viewable
         ObservableList<String> roomNames = FXCollections.observableList(locsAsString);
+
+        iconOption.getSelectionModel().select(activeEntry.getIcon());
+
         entryCurrentLocations.setItems(roomNames);
     }
 
