@@ -109,14 +109,13 @@
 	/*-fx-background-radius: 3px;*/
 }
 
-.textDirection{
-	-fx-padding: 5px;
-	-fx-background-radius: 3px;
-	-fx-background-color: #FAFAFA;
-	-fx-opacity: 75%;
-	-fx-text-fill: #424556;
-	-fx-font-size: 16px;
-	-fx-font-weight: bold;
+.textDirection {
+    -fx-padding: 5px;
+    -fx-background-radius: 3px;
+    -fx-background-color: #FAFAFA;
+    -fx-opacity: 85%;
+    -fx-text-fill: #424556;
+    -fx-font-size: 11px;
 }
 
 .centerImage{
