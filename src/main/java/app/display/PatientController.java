@@ -80,7 +80,7 @@ public class PatientController extends DisplayController implements Initializabl
     @FXML private Line line;
     @FXML private ImageView logo;
     @FXML private ToggleButton togStairs;
-    @FXML private BorderPane creditsPane; 
+    @FXML private VBox creditsPane;
     //Colors for patient Display
     //------------------------------------------------------------------------------------------------------------------
     private Color lightGrey = Color.rgb(211, 211, 211);
