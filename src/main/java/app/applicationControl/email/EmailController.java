@@ -185,21 +185,26 @@ public class EmailController {
     private String getDirections(GraphNode start, GraphNode end, boolean useStairs){
         List <GraphNode> path = map.getPath(start, end, useStairs);
         List<SubPath> currentPath;
+        List<String> dirTemp = new LinkedList<>();
         try {
             currentPath = map.getPathByFloor(start, end, useStairs);
-            int currentSubPath = 0;
-            SubPath subPath;
+            int currentSubPath = -1;
             String nextFloor = null;
-            for (int i = 0; i < path.size()-1; i++) {
-                nextFloor = path.get(i+1).getLocation().getFloor();
-                displayTextDirections(path, nextFloor);
+            for (SubPath subPath : currentPath){
+                currentSubPath++;
+                if (currentPath.size()>currentSubPath + 1){
+                    nextFloor = currentPath.get(currentSubPath + 1).getFloor();
+                }
+                LinkedList<Pair<Integer, String>> textDirections = map.getTextualDirections(subPath.getPath(), nextFloor);
+                dirTemp.addAll(textDirections.stream().map(p -> p.getValue()).collect(Collectors.toList()));
             }
+
             System.out.println(path.size());
         }catch (PathNotFoundException e){
             e.printStackTrace();
         }
 
-        return getReadableDirections(directions);
+        return getReadableDirections(dirTemp);
     }
 
     public void displayTextDirections(List<GraphNode> path, String nextFloor) {
