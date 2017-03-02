@@ -67,3 +67,4 @@ fabric.properties
 derby.log
 
 *.iml
+.DS_Store
