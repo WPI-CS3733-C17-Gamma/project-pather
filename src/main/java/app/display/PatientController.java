@@ -667,8 +667,8 @@ public class PatientController extends DisplayController implements Initializabl
             Label label = new Label(labelName);
             label.setLayoutX(imageLoc.getX() + 3);
             label.setLayoutY(imageLoc.getY() + 3);
-            label.setFont(Font.font ("Georgia", 10));
-            label.setStyle("-fx-background-color: #F0F4F5; -fx-border-color: darkblue; -fx-padding: 2;");
+            label.setFont(Font.font ("Calibri", 10));
+            label.setStyle("-fx-background-color: #424556; -fx-padding: 2; -fx-background-radius: 1px; -fx-text-fill: #d3d3d3;");
             //set the labels clickable
             label.setOnMousePressed((e) -> goToSelectedRoom(e, labelName));
             label.setOnMouseEntered(e -> setMouseToHand(e));
