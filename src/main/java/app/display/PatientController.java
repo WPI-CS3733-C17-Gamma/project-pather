@@ -391,10 +391,10 @@ public class PatientController extends DisplayController implements Initializabl
     FloorPoint graphPointToImage (GraphNode node, ImageView imageToBeDrawnOver) {
         Parent currentParent = imageToBeDrawnOver.getParent();
 
-        double imageWidth = imageToBeDrawnOver.getBoundsInLocal().getWidth();
-        double imageHeight = imageToBeDrawnOver.getBoundsInLocal().getHeight();
-        double offsetX = imageToBeDrawnOver.getLayoutX();
-        double offsetY = imageToBeDrawnOver.getLayoutY();
+        double imageWidth = imageToBeDrawnOver.getBoundsInLocal().getWidth()*imageToBeDrawnOver.getScaleX();;
+        double imageHeight = imageToBeDrawnOver.getBoundsInLocal().getHeight()*imageToBeDrawnOver.getScaleY();
+        double offsetX = imageToBeDrawnOver.getLayoutX() - (imageToBeDrawnOver.getScaleX() - 1) * imageToBeDrawnOver.getBoundsInLocal().getWidth()/2;
+        double offsetY = imageToBeDrawnOver.getLayoutY() - (imageToBeDrawnOver.getScaleY() - 1) * imageToBeDrawnOver.getBoundsInLocal().getHeight()/2;
 
         while(!(currentParent instanceof AnchorPane)){
             offsetX += currentParent.getLayoutX();
@@ -438,8 +438,8 @@ public class PatientController extends DisplayController implements Initializabl
                 currentImageView.setImage(applicationController.getFloorImage(p.getFloor()));
                 currentImageView.setId(x + "floor in list");
                 logger.debug("Current image view id: {}", currentImageView.getId());
-               multiMapDisplayMenu.getChildren().add(currentImageView);
-               minimaps.add(new Minimap(currentImageView,p));
+                multiMapDisplayMenu.getChildren().add(currentImageView);
+                minimaps.add(new Minimap(currentImageView,p));
             }
             showMultiMapAnimation();
             showMapAnimation();
@@ -460,18 +460,20 @@ public class PatientController extends DisplayController implements Initializabl
             for(Node child :iv.getParent().getChildrenUnmodifiable()){
                 ImageView buffer = (ImageView) child;
                 buffer.setEffect(null);
-                buffer.setFitWidth(133);
-                buffer.setFitHeight(75);
+                buffer.setScaleX(1);
+                buffer.setScaleY(1);
             }
             logger.debug("Image view ID: {}", iv.getId());
             currentSubPath = (int) iv.getId().charAt(0) - 48;
             SubPath path = currentPath.get(currentSubPath);//ascii conversion
             clearDisplay();
+            iv.setScaleX(1.3);//setFitWidth(iv.getFitWidth()*1.3);
+            iv.setScaleY(1.3);//FitHeight(iv.getFitHeight()*1.3);
+            clearDisplay();
             displaySubPath(imageView, path, true,10,1, 20);
-            iv.setEffect(new DropShadow());
-            iv.setFitWidth(iv.getFitWidth()*1.3);
-            iv.setFitHeight(iv.getFitHeight()*1.3);
             displayMinipaths();
+            iv.setEffect(new DropShadow());
+
             if (displayState == state.DISPLAYING_TEXT_DIRECTION){
                 String nextFloor = null;
                 if(currentPath.size() > currentSubPath+1) {
@@ -832,7 +834,11 @@ public class PatientController extends DisplayController implements Initializabl
      * Initialises the minimaps after animation
      */
     public void initializeMinimaps(){
+        ImageView imageView = minimaps.get(0).map;
+        imageView.setScaleY(1.3);
+        imageView.setScaleX(1.3);
         displayMinipaths();
+        imageView.setEffect(new DropShadow());
     }
 
 
