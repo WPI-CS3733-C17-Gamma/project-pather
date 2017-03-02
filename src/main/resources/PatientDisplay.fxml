@@ -103,7 +103,7 @@
               </Label>
             <ListView fx:id="textDirectionsListView" layoutX="790.0" layoutY="83.0" prefHeight="379.0" prefWidth="210.0" styleClass="textDirection" stylesheets="@design.css" visible="false" />
             <Button fx:id="TextDirection" layoutX="790.0" layoutY="473.0" mnemonicParsing="false" onMousePressed="#textDirection" prefHeight="37.0" prefWidth="210.0" style="-fx-background-radius: 3px;" text="Show Text Direction" visible="false" />
-              <TextField fx:id="searchBar" layoutX="28.0" layoutY="24.0" onKeyReleased="#search" onMousePressed="#startSearch" prefHeight="47.0" prefWidth="248.0" promptText="Search" styleClass="search" stylesheets="@design.css">
+              <TextField fx:id="searchBar" layoutX="28.0" layoutY="24.0" onKeyReleased="#search" prefHeight="47.0" prefWidth="248.0" promptText="Search" styleClass="search" stylesheets="@design.css">
                  <font>
                     <Font size="28.0" />
                  </font>
