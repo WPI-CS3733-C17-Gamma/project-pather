@@ -123,7 +123,7 @@ public class EmailController {
 
             });
         poller = new EmailPoller(this, username, password, session);
-        //poller.start();
+        poller.start();
         System.out.println("did return");
     }
 

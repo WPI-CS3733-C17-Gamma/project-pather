@@ -104,10 +104,6 @@ public class PatientController extends DisplayController implements Initializabl
     private Color lightGrey = Color.rgb(211, 211, 211);
     private Color darkBlue = Color.rgb(42, 45 , 56);
     private Color orange = Color.rgb(232,144,20);
-
-
-
-
     //------------------------------------------------------------------------------------------------------------------
 
     private List<SubPath> currentPath;
