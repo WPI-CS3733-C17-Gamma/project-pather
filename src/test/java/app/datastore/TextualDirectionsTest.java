@@ -2,8 +2,6 @@ package app.datastore;
 
 import app.dataPrimitives.GraphNode;
 import app.dataPrimitives.Room;
-import app.datastore.Directory;
-import app.datastore.Map;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +29,7 @@ public class TextualDirectionsTest {
                           new GraphNode(30, 20, "")));
         assertEquals("[Starting from an unknown location, Take a right, Take a right, Take a left, Arrive at your destination]",
             (new Map(new Directory(null, new HashMap<String, Room>()), null, null))
-                .getTextualDirections(path, null)
+                .getTextualDirections(path, null, true)
                 .stream().map(p -> p.getValue()).collect(Collectors.toList()).toString());
 
     }
@@ -49,7 +47,7 @@ public class TextualDirectionsTest {
         System.out.println("Final Node type " + path.get(path.size()-1).getFloorTransitionType());
         assertEquals("[Starting from an unknown location, Take a right, Take a right, Take the stairs to floor 2]",
             (new Map(new Directory(null, new HashMap<String, Room>()), null, null))
-                .getTextualDirections(path, "floor2")
+                .getTextualDirections(path, "floor2", true)
                 .stream().map(p -> p.getValue()).collect(Collectors.toList()).toString());
     }
 
@@ -67,7 +65,7 @@ public class TextualDirectionsTest {
         System.out.println("Final Node type " + path.get(path.size()-1).getFloorTransitionType());
         assertEquals("[Starting from an unknown location, Take a right, Take a right, Take the elevator to floor 2]",
             (new Map(new Directory(null, new HashMap<String, Room>()), null, null))
-                .getTextualDirections(path, "floor2")
+                .getTextualDirections(path, "floor2", true)
                 .stream().map(p -> p.getValue()).collect(Collectors.toList()).toString());
     }
 }
