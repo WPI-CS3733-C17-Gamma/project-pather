@@ -2,7 +2,7 @@ package app.display;
 
 import app.CustomMenus.CircularContextMenu;
 import app.applicationControl.ApplicationController;
-import app.applicationControl.email.*;
+import app.applicationControl.email.EmailController;
 import app.dataPrimitives.*;
 import app.pathfinding.PathNotFoundException;
 import javafx.animation.KeyFrame;
@@ -74,8 +74,10 @@ public class PatientController extends DisplayController implements Initializabl
     @FXML private AnchorPane anchorPane;
     @FXML private TabPane mapTabs;
     @FXML private ComboBox selectPhoneOrEmail;
+    @FXML private Tab main;
+    @FXML private Tab belkin;
+    @FXML private Tab campusTab;
     @FXML private TextField phoneOrEmail;
-
     @FXML private AnchorPane searchAnchorPane;
     @FXML private Button help;
     @FXML private Button exitButton;
@@ -88,6 +90,9 @@ public class PatientController extends DisplayController implements Initializabl
     @FXML private Button login;
     @FXML private Button TextDirection;
     @FXML private Button floor1;
+    @FXML private Button floor3;
+    @FXML private Button belkin1;
+    @FXML private Button campus;
     @FXML private Button sendTextButton;
     @FXML private Line line;
     @FXML private ImageView logo;
@@ -394,12 +399,63 @@ public class PatientController extends DisplayController implements Initializabl
     public void selectPatientImage(MouseEvent e){
         if (e.getSource() instanceof Button) {
             Button temp = (Button) e.getSource();
-	        currentMap = temp.getId();
+            currentMap = temp.getId();
 	        displayPatientMap(currentMap, temp);
         }
     }
 
+    /**
+     * Display first floor of Belkin
+     */
+    public void displayBelkin(Event e){
+        clearDisplay();
+        imageView.setImage(applicationController.getFloorImage("belkin1"));
+        currentMap = "belkin1";
+        if (previousButton != null){
+            //return to default image color
+            previousButton.setStyle("-fx-background-color: #F7F7F7");
+        }
+        previousButton = belkin1;
+        //selected color
+        previousButton.setStyle("-fx-background-color: #898b95");
+        drawRoomLabel(currentMap, imageView);
+    }
+    /**
+     * Display 3rd floor of main
+     */
+    public void displayMain(Event e){
+        clearDisplay();
+        imageView.setImage(applicationController.getFloorImage("floor3"));
+        currentMap = "floor3";
+        if (previousButton != null){
+            //return to default image color
+            previousButton.setStyle("-fx-background-color: #F7F7F7");
+        }
+        previousButton = floor3;
+        //selected color
+        previousButton.setStyle("-fx-background-color: #898b95");
+        drawRoomLabel(currentMap, imageView);
+    }
+
+    /**
+     * Display campus
+     */
+    public void displayCampus(Event e){
+        clearDisplay();
+        imageView.setImage(applicationController.getFloorImage("campus"));
+        currentMap = "campus";
+        if (previousButton != null){
+            //return to default image color
+            previousButton.setStyle("-fx-background-color: #F7F7F7");
+        }
+        previousButton = campus;
+        //selected color
+        previousButton.setStyle("-fx-background-color: #898b95");
+        drawRoomLabel(currentMap, imageView);
+    }
+
     public void displayPatientMap(String floorname, Button currentButton){
+        clearDisplay();
         imageView.setImage(applicationController.getFloorImage(floorname));
         if (previousButton != null){
             //return to default image color
@@ -408,7 +464,7 @@ public class PatientController extends DisplayController implements Initializabl
         previousButton = currentButton;
         //selected color
         previousButton.setStyle("-fx-background-color: #898b95");
-        clearDisplay();
+
         drawRoomLabel(currentMap, imageView);
     }
 
@@ -462,10 +518,10 @@ public class PatientController extends DisplayController implements Initializabl
     FloorPoint graphPointToImage (GraphNode node, ImageView imageToBeDrawnOver) {
         Parent currentParent = imageToBeDrawnOver.getParent();
 
-        double imageWidth = imageToBeDrawnOver.getBoundsInLocal().getWidth();
-        double imageHeight = imageToBeDrawnOver.getBoundsInLocal().getHeight();
-        double offsetX = imageToBeDrawnOver.getLayoutX();
-        double offsetY = imageToBeDrawnOver.getLayoutY();
+        double imageWidth = imageToBeDrawnOver.getBoundsInLocal().getWidth()*imageToBeDrawnOver.getScaleX();;
+        double imageHeight = imageToBeDrawnOver.getBoundsInLocal().getHeight()*imageToBeDrawnOver.getScaleY();
+        double offsetX = imageToBeDrawnOver.getLayoutX() - (imageToBeDrawnOver.getScaleX() - 1) * imageToBeDrawnOver.getBoundsInLocal().getWidth()/2;
+        double offsetY = imageToBeDrawnOver.getLayoutY() - (imageToBeDrawnOver.getScaleY() - 1) * imageToBeDrawnOver.getBoundsInLocal().getHeight()/2;
 
         while(!(currentParent instanceof AnchorPane)){
             offsetX += currentParent.getLayoutX();
@@ -513,8 +569,8 @@ public class PatientController extends DisplayController implements Initializabl
                 currentImageView.setImage(applicationController.getFloorImage(p.getFloor()));
                 currentImageView.setId(x + "floor in list");
                 logger.debug("Current image view id: {}", currentImageView.getId());
-               multiMapDisplayMenu.getChildren().add(currentImageView);
-               minimaps.add(new Minimap(currentImageView,p));
+                multiMapDisplayMenu.getChildren().add(currentImageView);
+                minimaps.add(new Minimap(currentImageView,p));
             }
             showMultiMapAnimation();
             showMapAnimation();
@@ -538,11 +594,17 @@ public class PatientController extends DisplayController implements Initializabl
 
             ImageView iv = (ImageView) e.getSource();
             for(Node child :iv.getParent().getChildrenUnmodifiable()){
-                child.setEffect(null);
+                ImageView buffer = (ImageView) child;
+                buffer.setEffect(null);
+                buffer.setScaleX(1);
+                buffer.setScaleY(1);
             }
             logger.debug("Image view ID: {}", iv.getId());
             currentSubPath = (int) iv.getId().charAt(0) - 48;
             SubPath path = currentPath.get(currentSubPath);//ascii conversion
+            clearDisplay();
+            iv.setScaleX(1.3);//setFitWidth(iv.getFitWidth()*1.3);
+            iv.setScaleY(1.3);//FitHeight(iv.getFitHeight()*1.3);
             clearDisplay();
             displaySubPath(imageView, path, true,10,1, 20);
             displayMinipaths();
@@ -914,8 +976,11 @@ cur = map.getRoomFromName(roomName);
      * Initialises the minimaps after animation
      */
     public void initializeMinimaps(){
+        ImageView imageView = minimaps.get(0).map;
+        imageView.setScaleY(1.3);
+        imageView.setScaleX(1.3);
         displayMinipaths();
-        minimaps.get(0).map.setEffect(new DropShadow(30, Color.rgb(42, 57, 86)));
+        imageView.setEffect(new DropShadow(30, Color.rgb(42, 57, 86)));
     }
 
 
