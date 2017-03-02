@@ -139,12 +139,12 @@ public class ApplicationController extends Application {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/PatientDisplay.fxml"));
             patientController = new PatientController();
-	    String currentFloor; 
+	    String currentFloor;
 	    try {
 		currentFloor = map.getRoomFromName(map.getKiosk()).getLocation().getLocation().getFloor();
 	    }
 	    catch (Exception e) {
-		currentFloor = "floor1"; 
+		currentFloor = "floor1";
 	    }
             patientController.init(map, this, pStage, currentFloor);
             loader.setController(patientController);
