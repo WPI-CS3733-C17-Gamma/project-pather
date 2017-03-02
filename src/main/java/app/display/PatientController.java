@@ -1162,8 +1162,7 @@ cur = map.getRoomFromName(roomName);
                 sendText(phoneOrEmail.getText(), carrierPicked);
                 System.out.println("Send message");
             }
-
-
+            phoneOrEmail.clear();
         });
     }
 
@@ -1235,6 +1234,7 @@ cur = map.getRoomFromName(roomName);
         currentMap = memento.floor;
         displayImage();
         refreshDisplay();
+        phoneOrEmail.clear();
         creditsPane.setVisible(false);
     }
 
