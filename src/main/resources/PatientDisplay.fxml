@@ -121,9 +121,9 @@
                   <Insets left="30.0" />
                </padding></HBox>
             <ToggleButton fx:id="togStairs" alignment="BOTTOM_RIGHT" layoutX="878.0" layoutY="564.0" mnemonicParsing="false" text="Stairs" />
-            <ChoiceBox fx:id="selectPhoneOrEmail" layoutX="560.0" layoutY="24.0" prefHeight="30.0" prefWidth="80.0" visible="false" />
+            <ChoiceBox fx:id="selectPhoneOrEmail" layoutX="501.0" layoutY="24.0" prefHeight="30.0" prefWidth="57.0" visible="false" />
             <ListView fx:id="providersList" focusTraversable="false" layoutX="560.0" layoutY="50.0" visible="false" />
-            <TextField fx:id="phoneOrEmail" layoutX="640.0" layoutY="24.0" prefHeight="30.0" prefWidth="133.0" visible="false" />
+            <TextField fx:id="phoneOrEmail" layoutX="563.0" layoutY="24.0" prefHeight="30.0" prefWidth="210.0" promptText="Send directions to Phone or Email" visible="false" />
             <Button fx:id="sendTextButton" layoutX="773.0" layoutY="24.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="36.0" style="-fx-font-size: 12;" text="OK" visible="false" />
            </children>
         </AnchorPane>
