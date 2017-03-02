@@ -1012,11 +1012,13 @@ cur = map.getRoomFromName(roomName);
                     providersList.setVisible(true);
                 }else{
                     selectPhoneOrEmail.setValue("EMAIL");
-                    sendEmail(phoneOrEmail.getText());
                 }
             }
         );
-        String providers[] = {"AT&T", "SPRINT", "VERIZON"};
+        String providers[] =   {"AT&T", "Sprint", "Verizon", "T-Mobile", "Virgin Mobile",
+                                "Tracfone", "Metro PCS", "Boost Mobile", "Cricket", "Ptel",
+                                "Republic Wireless", "Google Fi", "Suncom", "Ting",
+                                "U.S. Cellular", "Consumer Cellular", "C-Spire", "Page Plus"};
         providersList.setItems(FXCollections.observableList(Arrays.asList(providers)));
         providersList.getSelectionModel().selectedIndexProperty().addListener(
             (e, a, b)->{
@@ -1030,14 +1032,104 @@ cur = map.getRoomFromName(roomName);
                   case 1: //SPRINT
                       System.out.println("SPRINT");
                       providersList.setVisible(false);
-                      selectPhoneOrEmail.setValue("SPRINT");
+                      selectPhoneOrEmail.setValue("Sprint");
                       carrierPicked = SPRINT;
                       break;
                   case 2: //Verizon
-                      System.out.println("VERIZON");
+                      System.out.println("Verizon");
                       providersList.setVisible(false);
-                      selectPhoneOrEmail.setValue("VERIZON");
+                      selectPhoneOrEmail.setValue("Verizon");
                       carrierPicked = VERIZON;
+                      break;
+                  case 3: //T-Mobile
+                      System.out.println("T-Mobile");
+                      providersList.setVisible(false);
+                      selectPhoneOrEmail.setValue("T-Mobile");
+                      carrierPicked = TMOBILE;
+                      break;
+                  case 4: //Virgin Mobile
+                      System.out.println("Virgin Mobile");
+                      providersList.setVisible(false);
+                      selectPhoneOrEmail.setValue("Virgin Mobile");
+                      carrierPicked = VIRGIN;
+                      break;
+                  case 5: //Tracfone
+                      System.out.println("Tracfone");
+                      providersList.setVisible(false);
+                      selectPhoneOrEmail.setValue("Tracfone");
+                      carrierPicked = TRAC;
+                      break;
+                  case 6: //Metro PCS
+                      System.out.println("Metro PCS");
+                      providersList.setVisible(false);
+                      selectPhoneOrEmail.setValue("Metro PCS");
+                      carrierPicked = METRO;
+                      break;
+                  case 7: //Boost Mobile
+                      System.out.println("Boost Mobile");
+                      providersList.setVisible(false);
+                      selectPhoneOrEmail.setValue("Boost Mobile");
+                      carrierPicked = BOOST;
+                      break;
+                  case 8: //Cricket
+                      System.out.println("Cricket");
+                      providersList.setVisible(false);
+                      selectPhoneOrEmail.setValue("Cricket");
+                      carrierPicked = CRICKET;
+                      break;
+                  case 9: //Ptel
+                      System.out.println("Ptel");
+                      providersList.setVisible(false);
+                      selectPhoneOrEmail.setValue("Ptel");
+                      carrierPicked = PTEL;
+                      break;
+                  case 10: //Republic Wireless
+                      System.out.println("Republic Wireless");
+                      providersList.setVisible(false);
+                      selectPhoneOrEmail.setValue("Republic Wireless");
+                      carrierPicked = REPUBLIC;
+                      break;
+                  case 11: //Google Fi
+                      System.out.println("Google Fi");
+                      providersList.setVisible(false);
+                      selectPhoneOrEmail.setValue("Google Fi");
+                      carrierPicked = GOOGLE;
+                      break;
+                  case 12: //Suncom
+                      System.out.println("Suncom");
+                      providersList.setVisible(false);
+                      selectPhoneOrEmail.setValue("Suncom");
+                      carrierPicked = SUNCOM;
+                      break;
+                  case 13: //Ting
+                      System.out.println("Ting");
+                      providersList.setVisible(false);
+                      selectPhoneOrEmail.setValue("Ting");
+                      carrierPicked = TING;
+                      break;
+                  case 14: //U.S. Cellular
+                      System.out.println("US Cellular");
+                      providersList.setVisible(false);
+                      selectPhoneOrEmail.setValue("US Cellular");
+                      carrierPicked = US;
+                      break;
+                  case 15: //Consumer Cellular
+                      System.out.println("Consumer Cellular");
+                      providersList.setVisible(false);
+                      selectPhoneOrEmail.setValue("Consumer Cellular");
+                      carrierPicked = CONSUMER;
+                      break;
+                  case 16: //C-Spire
+                      System.out.println("C-Spire");
+                      providersList.setVisible(false);
+                      selectPhoneOrEmail.setValue("C-Spire");
+                      carrierPicked = CSPIRE;
+                      break;
+                  case 17: //Page Plus
+                      System.out.println("Page Plus");
+                      providersList.setVisible(false);
+                      selectPhoneOrEmail.setValue("Page Plus");
+                      carrierPicked = PAGE;
                       break;
               }
 
@@ -1046,7 +1138,6 @@ cur = map.getRoomFromName(roomName);
         );
         phoneOrEmail.setOnAction(
             e->{
-
             }
         );
         sendTextButton.setOnAction(e->{
@@ -1054,7 +1145,6 @@ cur = map.getRoomFromName(roomName);
                 sendEmail(phoneOrEmail.getText());
             } else {
                 sendText(phoneOrEmail.getText(), carrierPicked);
-                //sendText("5593016222", carrierPicked);
                 System.out.println("Send message");
             }
 

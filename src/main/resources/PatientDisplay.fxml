@@ -122,12 +122,12 @@
                </padding></HBox>
             <ToggleButton fx:id="togStairs" alignment="BOTTOM_RIGHT" layoutX="878.0" layoutY="564.0" mnemonicParsing="false" text="Stairs" />
             <ChoiceBox fx:id="selectPhoneOrEmail" layoutX="560.0" layoutY="24.0" prefHeight="30.0" prefWidth="80.0" visible="false" />
-            <ListView fx:id="providersList" layoutX="560.0" layoutY="50.0" prefHeight="100.0" prefWidth="80.0" visible="false" />
+            <ListView fx:id="providersList" focusTraversable="false" layoutX="560.0" layoutY="50.0" visible="false" />
             <TextField fx:id="phoneOrEmail" layoutX="640.0" layoutY="24.0" prefHeight="30.0" prefWidth="133.0" visible="false" />
             <Button fx:id="sendTextButton" layoutX="773.0" layoutY="24.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="36.0" style="-fx-font-size: 12;" text="OK" visible="false" />
            </children>
         </AnchorPane>
-      <VBox visible="false" fx:id="creditsPane" alignment="CENTER" fillWidth="false" spacing="5.0" style="-fx-background-color: white;">
+      <VBox fx:id="creditsPane" alignment="CENTER" fillWidth="false" spacing="5.0" style="-fx-background-color: white;" visible="false">
          <children>
             <ImageView fitHeight="57.0" fitWidth="374.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -159,6 +159,23 @@
                   <Label text="Adam Goldsmith" GridPane.columnIndex="1" GridPane.rowIndex="9" />
                   <Label text="Jon Andrews" GridPane.columnIndex="1" GridPane.rowIndex="10" />
                </children>
+               <columnConstraints>
+                  <ColumnConstraints />
+                  <ColumnConstraints />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+               </rowConstraints>
             </GridPane>
             <Button mnemonicParsing="false" onAction="#exitCredits" text="Exit" />
          </children>
