@@ -445,7 +445,7 @@ public class MapAdminController extends DisplayController {
                 addRoomLabel(nodeRoom);
             }
         }
-        else if (map.getKioskLocation().equals(node)){
+        else if (map.getKioskLocation() != null && map.getKioskLocation().equals(node)){
             System.out.println("DRAWING KIOSK");
             drawKiosk(node.getLocation(), imageToDrawOver);
             Room nodeRoom = map.getRoomFromNode(node);
