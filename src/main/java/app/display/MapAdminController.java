@@ -331,6 +331,47 @@ public class MapAdminController extends DisplayController {
 
         floorSelector.setValue("floor3");
         drawMap();
+
+        // add event filter
+        stage.addEventFilter(KeyEvent.ANY, (event) -> {
+                if (!roomName.isFocused() /*&& !idleTime.isFocused()*/) {
+                    imageviewMap.requestFocus();
+                    if (selectedNode == null) {
+                        return;
+                    }
+                    FloorPoint oldLoc = selectedNode.getLocation();
+                    if (oldLoc.getX() > 999 || oldLoc.getX() < 1 ||
+                        oldLoc.getY() > 999 || oldLoc.getY() < 1) {
+                        return;
+                    }
+                    System.out.println("got key: " + event.getCode().toString());
+
+                    int xDelta = 0;
+                    int yDelta = 0;
+                    switch (event.getCode()) {
+                        case LEFT:
+                            xDelta = -1;
+                            break;
+                        case RIGHT:
+                            xDelta = 1;
+                            break;
+                        case UP:
+                            yDelta = -1;
+                            break;
+                        case DOWN:
+                            yDelta = 1;
+                            break;
+                    }
+
+                    FloorPoint newLoc = new FloorPoint(
+                        oldLoc.getX() + xDelta,
+                        oldLoc.getY() + yDelta,
+                        oldLoc.getFloor());
+                    selectedNode.setLocation(newLoc);
+                    drawMap();
+                }
+            });
+
         //------------------------------------------------------------------------------------------------------------------
         stage.addEventFilter(KeyEvent.KEY_PRESSED, event -> handleKey(event));
 
@@ -1000,7 +1041,8 @@ public class MapAdminController extends DisplayController {
 
         defaultKioskButton.setDisable(selectedNode == null ||
                                       map.getRoomFromNode(selectedNode) == null ||
-                                      selectedNode.getLocation().equals(map.getKioskLocation().getLocation()));
+				      (map.getKioskLocation() != null && 
+				       selectedNode.getLocation().equals(map.getKioskLocation().getLocation())));
     }
 
     /**
