@@ -116,6 +116,10 @@ public class Map {
         return directory.searchRooms("Kiosk");
     }
 
+    public String getKiosk(){
+        return settings.get("default_kiosk");
+    }
+
     /**
      * Get the default kiosk location
      * @return

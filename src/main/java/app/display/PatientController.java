@@ -370,17 +370,21 @@ public class PatientController extends DisplayController implements Initializabl
         if (e.getSource() instanceof Button) {
             Button temp = (Button) e.getSource();
 	        currentMap = temp.getId();
-            imageView.setImage(applicationController.getFloorImage(temp.getId()));
-            if (previousButton != null){
-                //return to default image color
-                previousButton.setStyle("-fx-background-color: #F7F7F7");
-            }
-            previousButton = temp;
-            //selected color
-            previousButton.setStyle("-fx-background-color: #898b95");
-            clearDisplay();
-            drawRoomLabel(currentMap, imageView);
+	        displayPatientMap(currentMap, temp);
         }
+    }
+
+    public void displayPatientMap(String floorname, Button currentButton){
+        imageView.setImage(applicationController.getFloorImage(floorname));
+        if (previousButton != null){
+            //return to default image color
+            previousButton.setStyle("-fx-background-color: #F7F7F7");
+        }
+        previousButton = currentButton;
+        //selected color
+        previousButton.setStyle("-fx-background-color: #898b95");
+        clearDisplay();
+        drawRoomLabel(currentMap, imageView);
     }
 
     /**
@@ -639,6 +643,7 @@ public class PatientController extends DisplayController implements Initializabl
      */
     public void drawRoomLabel (String floorName, ImageView imageView) {
         List<String> roomNames= map.getAllRooms();
+        String kiosk = map.getKiosk();
         for (String roomName : roomNames) {
             Room cur = map.getRoomFromName(roomName);
             GraphNode loc = cur.getLocation();
@@ -667,6 +672,10 @@ public class PatientController extends DisplayController implements Initializabl
             anchorPane.getChildren().add(label);
             logger.debug("Adding Label {}", labelName);
             drawnObjects.add(label);
+
+            if (kiosk.equals(roomName)){
+                curImage = "Star";
+            }
             //if the room has a directory associated with it that contains an icon
             if (!curImage.equals("")){
                 ImageView image = new ImageView();
@@ -693,6 +702,7 @@ public class PatientController extends DisplayController implements Initializabl
             }
         }
     }
+
 
     /**
      * display the path to the room when clicked on the patient display map
@@ -928,6 +938,7 @@ public class PatientController extends DisplayController implements Initializabl
     public void initialize(URL location, ResourceBundle resources) {
         logger.info("INIT PatientController");
         displayImage();
+//        displayPatientMap(String floorname, Button currentButton)
 
         imageView.setMouseTransparent(true);
 

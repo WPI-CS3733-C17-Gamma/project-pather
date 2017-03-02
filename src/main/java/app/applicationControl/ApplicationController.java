@@ -91,7 +91,7 @@ public class ApplicationController extends Application {
         extraImages.put("Elevator", new ProxyImage("Icon_PNGs/newElevator.png"));
         extraImages.put("Cafe", new ProxyImage("Icon_PNGs/Cafe2T.png"));
         extraImages.put("Restroom", new ProxyImage("Icon_PNGs/BathroomT.png"));
-        extraImages.put("Waitroom", new ProxyImage("Icon_PNGs/WaitRoomT.png"));
+        extraImages.put("Lobby", new ProxyImage("Icon_PNGs/WaitRoomT.png"));
         extraImages.put("Frontdesk", new ProxyImage("Icon_PNGs/AdmittingT.png"));
         extraImages.put("Library", new ProxyImage("Icon_PNGs/LibraryT.png"));
         extraImages.put("Giftshop", new ProxyImage("Icon_PNGs/GiftShopT.png"));
@@ -102,6 +102,7 @@ public class ApplicationController extends Application {
         extraImages.put("Entrance", new ProxyImage("Icon_PNGs/Entrance.png"));
         extraImages.put("Cafeteria", new ProxyImage("Icon_PNGs/CafeteriaT.png"));
         extraImages.put("Chapel", new ProxyImage("Icon_PNGs/Chapel2T.png"));
+        extraImages.put("Star", new ProxyImage("Icon_PNGs/star.png"));
     }
 
     /**
@@ -136,7 +137,8 @@ public class ApplicationController extends Application {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/PatientDisplay.fxml"));
             patientController = new PatientController();
-            patientController.init(map, this, pStage, "floor3");
+            String currentFloor = map.getRoomFromName(map.getKiosk()).getLocation().getLocation().getFloor();
+            patientController.init(map, this, pStage, currentFloor);
             loader.setController(patientController);
             Parent root = loader.load();
             pStage.setTitle("PatientDisplay");
