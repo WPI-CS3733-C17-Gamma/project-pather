@@ -673,7 +673,7 @@ public class PatientController extends DisplayController implements Initializabl
             logger.debug("Adding Label {}", labelName);
             drawnObjects.add(label);
 
-            if (kiosk.equals(roomName)){
+            if (kiosk != null && kiosk.equals(roomName)){
                 curImage = "Star";
             }
             //if the room has a directory associated with it that contains an icon
