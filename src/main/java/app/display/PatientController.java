@@ -458,15 +458,20 @@ public class PatientController extends DisplayController implements Initializabl
 
             ImageView iv = (ImageView) e.getSource();
             for(Node child :iv.getParent().getChildrenUnmodifiable()){
-                child.setEffect(null);
+                ImageView buffer = (ImageView) child;
+                buffer.setEffect(null);
+                buffer.setFitWidth(133);
+                buffer.setFitHeight(75);
             }
             logger.debug("Image view ID: {}", iv.getId());
             currentSubPath = (int) iv.getId().charAt(0) - 48;
             SubPath path = currentPath.get(currentSubPath);//ascii conversion
             clearDisplay();
             displaySubPath(imageView, path, true,10,1, 20);
-            displayMinipaths();
             iv.setEffect(new DropShadow());
+            iv.setFitWidth(iv.getFitWidth()*1.3);
+            iv.setFitHeight(iv.getFitHeight()*1.3);
+            displayMinipaths();
             if (displayState == state.DISPLAYING_TEXT_DIRECTION){
                 String nextFloor = null;
                 if(currentPath.size() > currentSubPath+1) {
