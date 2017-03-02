@@ -69,15 +69,12 @@ public class PatientController extends DisplayController implements Initializabl
     @FXML private ListView<String> textDirectionsListView;
     @FXML private AnchorPane anchorPane;
     @FXML private TabPane mapTabs;
-    @FXML private Tab main;
-    @FXML private Tab belkin;
-    @FXML private Tab campusTab;
+    @FXML private Tab mainTab, belkinTab, campusTab;
     @FXML private ChoiceBox selectPhoneOrEmail;
     @FXML private TextField phoneOrEmail;
 
     @FXML private AnchorPane searchAnchorPane;
-    @FXML private Button help;
-    @FXML private Button exitButton;
+    @FXML private Button help, exitButton;
     @FXML private HBox multiMapDisplayMenu;
     @FXML private HBox mapHbox;
     @FXML private Button adminButton;
@@ -86,24 +83,20 @@ public class PatientController extends DisplayController implements Initializabl
     @FXML private Button patientDisplayButton;
     @FXML private Button login;
     @FXML private Button TextDirection;
-    @FXML private Button floor1;
-    @FXML private Button floor3;
-    @FXML private Button belkin1;
-    @FXML private Button campus;
+    @FXML private Button floor1,  floor2, floor3, floor4, floor5, floor6, floor7;
+    @FXML private Button belkin1, belkin2, belkin3, belkin4, campus;
     @FXML private Button sendTextButton;
     @FXML private Line line;
     @FXML private ImageView logo;
     @FXML private ToggleButton togStairs;
     @FXML private ListView providersList;
     @FXML private VBox creditsPane;
+
     //Colors for patient Display
     //------------------------------------------------------------------------------------------------------------------
     private Color lightGrey = Color.rgb(211, 211, 211);
     private Color darkBlue = Color.rgb(42, 45 , 56);
     private Color orange = Color.rgb(232,144,20);
-
-
-
 
     //------------------------------------------------------------------------------------------------------------------
 
@@ -125,6 +118,8 @@ public class PatientController extends DisplayController implements Initializabl
     String defaultFloor;
 
     PatientMemento memento;
+
+    HashMap<String, Button> buttonHashMap = new HashMap<>();
 
     //------------------------------------------------------------------------------------------------------------------
     //For Texting/Email
@@ -189,7 +184,17 @@ public class PatientController extends DisplayController implements Initializabl
         Image floor = applicationController.getFloorImage(currentMap);
         if (displayState == state.PATIENT_DEFAULT){
             imageView.setImage(floor);
+            drawRoomLabel(currentMap, imageView);
         }
+    }
+
+    /**
+     * display the image on the main patient screen
+     */
+    public void displayDefaultImage() {
+        Image floor = applicationController.getFloorImage(defaultFloor);
+            imageView.setImage(floor);
+            drawRoomLabel(defaultFloor, imageView);
     }
 
     /**
@@ -198,9 +203,8 @@ public class PatientController extends DisplayController implements Initializabl
     public void startSearch(){
         if (this.displayState == state.PATIENT_DEFAULT){//switch state
             clearDisplay();
-            imageView.setImage(imageView.getImage());
-            this.displayState = state.PATIENT_SEARCH;
             displayImage();
+            this.displayState = state.PATIENT_SEARCH;
         }
     }
 
@@ -210,17 +214,15 @@ public class PatientController extends DisplayController implements Initializabl
     public void exitSearch(){
         logger.debug("Exiting search in {}", this.getClass().getSimpleName());
         if (this.displayState == state.PATIENT_SEARCH || this.displayState == state.DISPLAYING_TEXT_DIRECTION ){//switch state
-            hideMultiMapAnimation();
-            hideMapAnimation();
+            clearSearchDisplay();
+            displayDefaultImage();//display the original image
+//            drawRoomLabel(currentMap, imageView);
             selectPhoneOrEmail.setVisible(false);
             sendTextButton.setVisible(false);
             phoneOrEmail.setVisible(false);
             mapTabs.setVisible(true);
-            this.displayState = state.PATIENT_DEFAULT;
-            clearSearchDisplay();
-            displayImage();//display the original image
             searchBar.setPromptText("Search");
-            drawRoomLabel(currentMap, imageView);
+            this.displayState = state.PATIENT_DEFAULT;
         }
     }
 
@@ -287,15 +289,16 @@ public class PatientController extends DisplayController implements Initializabl
      */
     public void search () {
         System.out.println("Doing search...");
-        if (displayState != state.PATIENT_SEARCH){
-            displayState = state.PATIENT_SEARCH;
-            startSearch();
+        String search = searchBar.getText();
+        if (displayState != state.PATIENT_SEARCH){ //|| search.equals("")){
             clearSearchDisplay();
+            revertState(memento);
+//            startSearch();
+            displayState = state.PATIENT_SEARCH;
             System.out.println("Starting display");
         }
 
         currentPath = null;
-        String search = searchBar.getText();
         if (!search.isEmpty()) {
             options.setVisible(true);
         }
@@ -458,15 +461,15 @@ public class PatientController extends DisplayController implements Initializabl
 
     public void displayPatientMap(String floorname, Button currentButton){
         clearDisplay();
-        imageView.setImage(applicationController.getFloorImage(floorname));
         if (previousButton != null){
             //return to default image color
             previousButton.setStyle("-fx-background-color: #F7F7F7");
         }
         previousButton = currentButton;
         //selected color
-        previousButton.setStyle("-fx-background-color: #898b95");
+        currentButton.setStyle("-fx-background-color: #898b95");
 
+        imageView.setImage(applicationController.getFloorImage(floorname));
         drawRoomLabel(currentMap, imageView);
     }
 
@@ -497,7 +500,7 @@ public class PatientController extends DisplayController implements Initializabl
         if (kioskNode != null) {
             defaultFloor = kioskNode.getLocation().getFloor();
         }
-        imageView.setImage(applicationController.getFloorImage(defaultFloor));
+//        imageView.setImage(applicationController.getFloorImage(defaultFloor));
         if(drawnObjects == null) {
             return;
         }
@@ -1042,8 +1045,33 @@ cur = map.getRoomFromName(roomName);
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         logger.info("INIT PatientController");
-        displayImage();
-//        displayPatientMap(String floorname, Button currentButton)
+        buttonHashMap.put("floor1", floor1);
+        buttonHashMap.put("floor2", floor2);
+        buttonHashMap.put("floor3", floor3);
+        buttonHashMap.put("floor4", floor4);
+        buttonHashMap.put("floor5", floor5);
+        buttonHashMap.put("floor6", floor6);
+        buttonHashMap.put("floor7", floor7);
+        buttonHashMap.put("belkin1", belkin1);
+        buttonHashMap.put("belkin2", belkin2);
+        buttonHashMap.put("belkin3", belkin3);
+        buttonHashMap.put("belkin4", belkin4);
+        buttonHashMap.put("campus", campus);
+    //setting the initial map to the kiosk
+        SingleSelectionModel<Tab> selectionModel = mapTabs.getSelectionModel();
+        displayPatientMap(currentMap, buttonHashMap.get(currentMap));
+        System.out.println(currentMap);
+        switch (currentMap.charAt(0)){
+            //c for campus
+            case 'c':selectionModel.select(campusTab);
+                break;
+            //b for belkin#
+            case 'b':selectionModel.select(belkinTab);
+                break;
+            //f for floor# in main building
+            case 'f':selectionModel.select(mainTab);
+                break;
+        }
 
         imageView.setMouseTransparent(true);
 
