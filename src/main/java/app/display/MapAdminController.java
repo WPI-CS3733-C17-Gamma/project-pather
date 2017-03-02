@@ -334,7 +334,7 @@ public class MapAdminController extends DisplayController {
 
         // add event filter
         stage.addEventFilter(KeyEvent.ANY, (event) -> {
-                if (!roomName.isFocused() /*&& !idleTime.isFocused()*/) {
+                if (!roomName.isFocused() && !idleTime.isFocused()) {
                     imageviewMap.requestFocus();
                     if (selectedNode == null) {
                         return;
