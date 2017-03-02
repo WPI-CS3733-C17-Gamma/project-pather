@@ -146,7 +146,7 @@ public class PatientController extends DisplayController implements Initializabl
                         floorname = defaultFloor;
                     }
                     timer.resetTimer(new PatientMemento(floorname));
-            }
+                }
             };
         this.stage.addEventFilter(MouseEvent.ANY, passAllEventsToTimer);
         this.stage.addEventFilter(KeyEvent.ANY, passAllEventsToTimer);
@@ -217,6 +217,8 @@ public class PatientController extends DisplayController implements Initializabl
             timeline.play();
             displayState  = s;
             TextDirection.setVisible(true);
+            textDirection();
+            TextDirection.setText("Hide Text Directions");
             mapTabs.setVisible(false);
         }
     }
@@ -243,6 +245,7 @@ public class PatientController extends DisplayController implements Initializabl
             mapTabs.setVisible(true);
             textDirectionsListView.setVisible(false);
             TextDirection.setVisible(false);
+            TextDirection.setText("Show Text Directions");
         }
     }
     /**
@@ -397,10 +400,6 @@ public class PatientController extends DisplayController implements Initializabl
         hideMapAnimation();
         multiMapDisplayMenu.getChildren().clear();//clear the hBox menu thingy
         clearDisplay();
-        StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
-        for (StackTraceElement stack : stackTraceElements) {
-            System.out.println(stack.toString());
-        }
     }
 
     /**
