@@ -1164,15 +1164,15 @@ cur = map.getRoomFromName(roomName);
     }
 
     private void sendEmail(String email){
-        GraphNode start = map.getKioskLocation();
-        GraphNode end = map.getRoomFromName(searchBar.getText()).getLocation();
-        applicationController.sendEmail(email, start, end, togStairs.isSelected());
+        //GraphNode start = map.getKioskLocation();
+        //GraphNode end = map.getRoomFromName(searchBar.getText()).getLocation();
+        applicationController.sendEmail(email, lastStart, lastEnd, togStairs.isSelected());
     }
 
     private void sendText(String number, EmailController.phoneCompanies carrier){
-        GraphNode start = map.getKioskLocation();
-        GraphNode end = map.getRoomFromName(searchBar.getText()).getLocation();
-        applicationController.sendText(number, carrier, start, end, togStairs.isSelected());       //number, carrier, directions, destination
+        //GraphNode start = map.getKioskLocation();
+        //GraphNode end = map.getRoomFromName(searchBar.getText()).getLocation();
+        applicationController.sendText(number, carrier, lastStart, lastEnd, togStairs.isSelected());       //number, carrier, directions, destination
     }
 
 
