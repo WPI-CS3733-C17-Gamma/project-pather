@@ -2,6 +2,7 @@ package app.display;
 
 import app.CustomMenus.CircularContextMenu;
 import app.applicationControl.ApplicationController;
+import app.applicationControl.email.*;
 import app.dataPrimitives.*;
 import app.pathfinding.PathNotFoundException;
 import javafx.animation.KeyFrame;
@@ -41,6 +42,8 @@ import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static app.applicationControl.email.EmailController.phoneCompanies.*;
+
 /**
  * controls all interaction with the patient display
  */
@@ -66,6 +69,8 @@ public class PatientController extends DisplayController implements Initializabl
     @FXML private ListView<String> textDirectionsListView;
     @FXML private AnchorPane anchorPane;
     @FXML private TabPane mapTabs;
+    @FXML private ChoiceBox selectPhoneOrEmail;
+    @FXML private TextField phoneOrEmail;
 
     @FXML private AnchorPane searchAnchorPane;
     @FXML private Button help;
@@ -79,9 +84,11 @@ public class PatientController extends DisplayController implements Initializabl
     @FXML private Button login;
     @FXML private Button TextDirection;
     @FXML private Button floor1;
+    @FXML private Button sendTextButton;
     @FXML private Line line;
     @FXML private ImageView logo;
     @FXML private ToggleButton togStairs;
+    @FXML private ListView providersList;
     @FXML private VBox creditsPane;
     //Colors for patient Display
     //------------------------------------------------------------------------------------------------------------------
@@ -112,6 +119,16 @@ public class PatientController extends DisplayController implements Initializabl
     String defaultFloor;
 
     PatientMemento memento;
+
+    //------------------------------------------------------------------------------------------------------------------
+    //For Texting/Email
+
+    EmailController.phoneCompanies carrierPicked = EMAIL;
+    GraphNode lastStart;
+    GraphNode lastEnd;
+    boolean lastUseStairs;
+
+    //------------------------------------------------------------------------------------------------------------------
 
     /**
      *
@@ -153,6 +170,7 @@ public class PatientController extends DisplayController implements Initializabl
         this.memento = new PatientMemento(currentMap);
     }
 
+
     /**
      * display the image on the main patient screen
      */
@@ -183,6 +201,10 @@ public class PatientController extends DisplayController implements Initializabl
         if (this.displayState == state.PATIENT_SEARCH || this.displayState == state.DISPLAYING_TEXT_DIRECTION ){//switch state
             hideMultiMapAnimation();
             hideMapAnimation();
+            selectPhoneOrEmail.setVisible(false);
+            sendTextButton.setVisible(false);
+            phoneOrEmail.setVisible(false);
+            mapTabs.setVisible(true);
             this.displayState = state.PATIENT_DEFAULT;
             clearSearchDisplay();
             displayImage();//display the original image
@@ -310,7 +332,7 @@ public class PatientController extends DisplayController implements Initializabl
     }
 
     /**
-     * select the clicked option
+     * selectPhoneOrEmail the clicked option
      * @param option
      * @return
      */
@@ -350,7 +372,6 @@ public class PatientController extends DisplayController implements Initializabl
             if (room != null) {
                 logger.debug("FOUND ROOM! : " + room);
                 displayResults(new LinkedList<>());
-		// TODO
                 getPath(map.getKioskLocation(), room.getLocation());
                 return room.getLocation();
             }
@@ -463,13 +484,17 @@ public class PatientController extends DisplayController implements Initializabl
      * @param end the ending location
      */
     public void getPath (GraphNode start, GraphNode end) {
+        lastStart = start;
+        lastEnd = end;
+        lastUseStairs = togStairs.isSelected();
         minimaps = new LinkedList<>();
         if (start == null || end == null) {
             logger.error("Cannot path, start or end is null!");
             return;
         }
         try {
-            currentPath = map.getPathByFloor(start, end, togStairs.isSelected());
+            currentPath = map.getPathByFloor(start, end, lastUseStairs);
+            TextDirection.setVisible(true);
             clearDisplay();
             //displaySubPath(imageView, currentPath.get(0), true,10, 1,20);
             currentSubPath = 0;
@@ -489,6 +514,11 @@ public class PatientController extends DisplayController implements Initializabl
             }
             showMultiMapAnimation();
             showMapAnimation();
+            textDirectionsListView.setVisible(true);
+            mapTabs.setVisible(false);
+            selectPhoneOrEmail.setVisible(true);
+            sendTextButton.setVisible(true);
+            phoneOrEmail.setVisible(true);
         } catch (PathNotFoundException e) {
             logger.error("No path can be drawn");
         }
@@ -649,7 +679,8 @@ public class PatientController extends DisplayController implements Initializabl
         List<String> roomNames= map.getAllRooms();
         String kiosk = map.getKiosk();
         for (String roomName : roomNames) {
-            Room cur = map.getRoomFromName(roomName);
+            Room
+cur = map.getRoomFromName(roomName);
             GraphNode loc = cur.getLocation();
             // skip rooms without locations
             if (loc == null || ! loc.getLocation().getFloor().equals(floorName)) {
@@ -897,13 +928,11 @@ public class PatientController extends DisplayController implements Initializabl
     }
 
     public void textDirection() {
-        System.out.println("fire");
         if (textDirectionsListView.isVisible()){
             displayState = state.PATIENT_SEARCH;
             textDirectionsListView.setVisible(false);
             TextDirection.setText("Show Text Direction");
-        }
-        else {
+        }else {
             displayState = state.DISPLAYING_TEXT_DIRECTION;
             TextDirection.setText("Hide Text Direction");
             String nextFloor = null;
@@ -914,6 +943,7 @@ public class PatientController extends DisplayController implements Initializabl
         }
     }
 
+    private List<String> directions;
     /**
      * Function to get textual directions and print it on screen
      * @param path the path to be converted to text
@@ -921,8 +951,8 @@ public class PatientController extends DisplayController implements Initializabl
      */
     public void displayTextDirections(List<GraphNode> path, String nextFloor) {
         textDirectionsListView.setVisible(true);
-        LinkedList<Pair<Integer, String>> textDirections = map.getTextualDirections(path, nextFloor);
-        List<String> directions = textDirections.stream().map(p -> p.getValue()).collect(Collectors.toList());
+        LinkedList<Pair<Integer, String>> textDirections = map.getTextualDirections(path, nextFloor, true);
+        directions = textDirections.stream().map(p -> p.getValue()).collect(Collectors.toList());
         textDirectionsListView.setItems(FXCollections.observableList(directions));
         currentTextDirections = textDirections;
         return;
@@ -979,12 +1009,175 @@ public class PatientController extends DisplayController implements Initializabl
 //        imageView.setPreserveRatio(false);
         helpLabel.setText("Hello! Thanks for using project-pather." +
             "\n\nTo get started, start typing into the search bar. " +
-            "\n Then, select the option you would like to get a path to." +
+            "\n Then, selectPhoneOrEmail the option you would like to get a path to." +
             "\n\nTo close this menu, click on this");
 
 
         drawRoomLabel(currentMap, imageView);
+
+        String options[] = {"Email", "Phone"};
+        selectPhoneOrEmail.setItems(FXCollections.observableList(Arrays.asList(options)));
+        selectPhoneOrEmail.setOnMouseClicked(e->{
+            selectPhoneOrEmail.setValue(null);
+            providersList.setVisible(false);
+        });
+        selectPhoneOrEmail.getSelectionModel().selectedIndexProperty().addListener(
+            (e, a ,b)->{
+                if(b.intValue() == 1){
+                    providersList.setVisible(true);
+                }else{
+                    selectPhoneOrEmail.setValue("EMAIL");
+                }
+            }
+        );
+        String providers[] =   {"AT&T", "Sprint", "Verizon", "T-Mobile", "Virgin Mobile",
+                                "Tracfone", "Metro PCS", "Boost Mobile", "Cricket", "Ptel",
+                                "Republic Wireless", "Google Fi", "Suncom", "Ting",
+                                "U.S. Cellular", "Consumer Cellular", "C-Spire", "Page Plus"};
+        providersList.setItems(FXCollections.observableList(Arrays.asList(providers)));
+        providersList.getSelectionModel().selectedIndexProperty().addListener(
+            (e, a, b)->{
+              switch (b.intValue()) {//TODO add interaction with text directions
+                  case 0: //AT&T
+                      System.out.println("AT&T");
+                      providersList.setVisible(false);
+                      selectPhoneOrEmail.setValue("AT&T");
+                      carrierPicked = ATT;
+                      break;
+                  case 1: //SPRINT
+                      System.out.println("SPRINT");
+                      providersList.setVisible(false);
+                      selectPhoneOrEmail.setValue("Sprint");
+                      carrierPicked = SPRINT;
+                      break;
+                  case 2: //Verizon
+                      System.out.println("Verizon");
+                      providersList.setVisible(false);
+                      selectPhoneOrEmail.setValue("Verizon");
+                      carrierPicked = VERIZON;
+                      break;
+                  case 3: //T-Mobile
+                      System.out.println("T-Mobile");
+                      providersList.setVisible(false);
+                      selectPhoneOrEmail.setValue("T-Mobile");
+                      carrierPicked = TMOBILE;
+                      break;
+                  case 4: //Virgin Mobile
+                      System.out.println("Virgin Mobile");
+                      providersList.setVisible(false);
+                      selectPhoneOrEmail.setValue("Virgin Mobile");
+                      carrierPicked = VIRGIN;
+                      break;
+                  case 5: //Tracfone
+                      System.out.println("Tracfone");
+                      providersList.setVisible(false);
+                      selectPhoneOrEmail.setValue("Tracfone");
+                      carrierPicked = TRAC;
+                      break;
+                  case 6: //Metro PCS
+                      System.out.println("Metro PCS");
+                      providersList.setVisible(false);
+                      selectPhoneOrEmail.setValue("Metro PCS");
+                      carrierPicked = METRO;
+                      break;
+                  case 7: //Boost Mobile
+                      System.out.println("Boost Mobile");
+                      providersList.setVisible(false);
+                      selectPhoneOrEmail.setValue("Boost Mobile");
+                      carrierPicked = BOOST;
+                      break;
+                  case 8: //Cricket
+                      System.out.println("Cricket");
+                      providersList.setVisible(false);
+                      selectPhoneOrEmail.setValue("Cricket");
+                      carrierPicked = CRICKET;
+                      break;
+                  case 9: //Ptel
+                      System.out.println("Ptel");
+                      providersList.setVisible(false);
+                      selectPhoneOrEmail.setValue("Ptel");
+                      carrierPicked = PTEL;
+                      break;
+                  case 10: //Republic Wireless
+                      System.out.println("Republic Wireless");
+                      providersList.setVisible(false);
+                      selectPhoneOrEmail.setValue("Republic Wireless");
+                      carrierPicked = REPUBLIC;
+                      break;
+                  case 11: //Google Fi
+                      System.out.println("Google Fi");
+                      providersList.setVisible(false);
+                      selectPhoneOrEmail.setValue("Google Fi");
+                      carrierPicked = GOOGLE;
+                      break;
+                  case 12: //Suncom
+                      System.out.println("Suncom");
+                      providersList.setVisible(false);
+                      selectPhoneOrEmail.setValue("Suncom");
+                      carrierPicked = SUNCOM;
+                      break;
+                  case 13: //Ting
+                      System.out.println("Ting");
+                      providersList.setVisible(false);
+                      selectPhoneOrEmail.setValue("Ting");
+                      carrierPicked = TING;
+                      break;
+                  case 14: //U.S. Cellular
+                      System.out.println("US Cellular");
+                      providersList.setVisible(false);
+                      selectPhoneOrEmail.setValue("US Cellular");
+                      carrierPicked = US;
+                      break;
+                  case 15: //Consumer Cellular
+                      System.out.println("Consumer Cellular");
+                      providersList.setVisible(false);
+                      selectPhoneOrEmail.setValue("Consumer Cellular");
+                      carrierPicked = CONSUMER;
+                      break;
+                  case 16: //C-Spire
+                      System.out.println("C-Spire");
+                      providersList.setVisible(false);
+                      selectPhoneOrEmail.setValue("C-Spire");
+                      carrierPicked = CSPIRE;
+                      break;
+                  case 17: //Page Plus
+                      System.out.println("Page Plus");
+                      providersList.setVisible(false);
+                      selectPhoneOrEmail.setValue("Page Plus");
+                      carrierPicked = PAGE;
+                      break;
+              }
+
+
+            }
+        );
+        phoneOrEmail.setOnAction(
+            e->{
+            }
+        );
+        sendTextButton.setOnAction(e->{
+            if (carrierPicked.equals(EMAIL)){
+                sendEmail(phoneOrEmail.getText());
+            } else {
+                sendText(phoneOrEmail.getText(), carrierPicked);
+                System.out.println("Send message");
+            }
+            phoneOrEmail.clear();
+        });
     }
+
+    private void sendEmail(String email){
+        //GraphNode start = map.getKioskLocation();
+        //GraphNode end = map.getRoomFromName(searchBar.getText()).getLocation();
+        applicationController.sendEmail(email, lastStart, lastEnd, togStairs.isSelected());
+    }
+
+    private void sendText(String number, EmailController.phoneCompanies carrier){
+        //GraphNode start = map.getKioskLocation();
+        //GraphNode end = map.getRoomFromName(searchBar.getText()).getLocation();
+        applicationController.sendText(number, carrier, lastStart, lastEnd, togStairs.isSelected());       //number, carrier, directions, destination
+    }
+
 
     /**
      * Resizes Window's Width
@@ -1031,6 +1224,7 @@ public class PatientController extends DisplayController implements Initializabl
 
     public void hideOptions(){
         options.setVisible(false);
+        providersList.setVisible(false);
     }
 
     // revert to previous state
@@ -1040,6 +1234,7 @@ public class PatientController extends DisplayController implements Initializabl
         currentMap = memento.floor;
         displayImage();
         refreshDisplay();
+        phoneOrEmail.clear();
         creditsPane.setVisible(false);
     }
 

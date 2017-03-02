@@ -1,5 +1,7 @@
 package app.applicationControl;
 
+import app.applicationControl.email.EmailController;
+import app.dataPrimitives.GraphNode;
 import app.datastore.Map;
 import app.display.*;
 import javafx.application.Application;
@@ -38,12 +40,10 @@ public class ApplicationController extends Application {
     Stage adminStage;
     Login login;
     Scene currentScene;
+    EmailController emailController ;
 
     HashMap<String, ProxyImage> floorMaps;
     HashMap<String, ProxyImage> extraImages;
-
-    boolean isLoginPage;
-
 
     final Logger logger = LoggerFactory.getLogger(ApplicationController.class);
     PatientController patientController;
@@ -52,6 +52,8 @@ public class ApplicationController extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         initialize();
+        emailController = new EmailController(this, map);
+        emailController.start();
         this.pStage = primaryStage;
         adminStage = new Stage();
         createPatientDisplay();
@@ -180,6 +182,7 @@ public class ApplicationController extends Application {
         ProxyImage proxyFloor = floorMaps.get(floor);
         if (proxyFloor != null) {
             try {
+                System.out.println("Hi mom!");
                 return proxyFloor.getValue();
             }
             catch (IllegalArgumentException e){
@@ -197,16 +200,14 @@ public class ApplicationController extends Application {
         if (proxyFloor != null) {
             try {
                 return proxyFloor.getValue();
-            }
-            catch (IllegalArgumentException e){
+            } catch (IllegalArgumentException e) {
                 e.printStackTrace();
                 return null;
             }
         }
-        else {
-            return null;
-        }
+        return null;
     }
+
 
     /**
      * Create map directory admin app
@@ -312,6 +313,21 @@ public class ApplicationController extends Application {
         //createPatientDisplay();
     }
 
+
+
+    public boolean sendEmail (String to, GraphNode start, GraphNode end, boolean useStairs) {
+
+        return emailController.sendDirections(to, start, end, useStairs);
+    }
+
+
+    public boolean sendText (String number, EmailController.phoneCompanies carrier,
+                             GraphNode start, GraphNode end, boolean useStairs) {
+
+        return emailController.sendTextDirections(number, carrier, start, end, useStairs);
+    }
+
+
     /**
      *
      */
@@ -340,6 +356,7 @@ public class ApplicationController extends Application {
     @Override
     public void stop () {
         databaseManager.write(map);
+        emailController.stop();
         logger.info("Application Closed at {}\n", Calendar.getInstance().getTime().toString());
     }
 
