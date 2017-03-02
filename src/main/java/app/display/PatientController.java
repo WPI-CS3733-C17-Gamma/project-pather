@@ -396,7 +396,7 @@ public class PatientController extends DisplayController implements Initializabl
     public void selectPatientImage(MouseEvent e){
         if (e.getSource() instanceof Button) {
             Button temp = (Button) e.getSource();
-	        currentMap = temp.getId();
+            currentMap = temp.getId();
 	        displayPatientMap(currentMap, temp);
         }
     }
@@ -405,7 +405,9 @@ public class PatientController extends DisplayController implements Initializabl
      * Display first floor of Belkin
      */
     public void displayBelkin(Event e){
+        clearDisplay();
         imageView.setImage(applicationController.getFloorImage("belkin1"));
+        currentMap = "belkin1";
         if (previousButton != null){
             //return to default image color
             previousButton.setStyle("-fx-background-color: #F7F7F7");
@@ -413,14 +415,15 @@ public class PatientController extends DisplayController implements Initializabl
         previousButton = belkin1;
         //selected color
         previousButton.setStyle("-fx-background-color: #898b95");
-        clearDisplay();
         drawRoomLabel(currentMap, imageView);
     }
     /**
      * Display 3rd floor of main
      */
     public void displayMain(Event e){
+        clearDisplay();
         imageView.setImage(applicationController.getFloorImage("floor3"));
+        currentMap = "floor3";
         if (previousButton != null){
             //return to default image color
             previousButton.setStyle("-fx-background-color: #F7F7F7");
@@ -428,7 +431,6 @@ public class PatientController extends DisplayController implements Initializabl
         previousButton = floor3;
         //selected color
         previousButton.setStyle("-fx-background-color: #898b95");
-        clearDisplay();
         drawRoomLabel(currentMap, imageView);
     }
 
@@ -436,7 +438,9 @@ public class PatientController extends DisplayController implements Initializabl
      * Display campus
      */
     public void displayCampus(Event e){
+        clearDisplay();
         imageView.setImage(applicationController.getFloorImage("campus"));
+        currentMap = "campus";
         if (previousButton != null){
             //return to default image color
             previousButton.setStyle("-fx-background-color: #F7F7F7");
@@ -444,11 +448,11 @@ public class PatientController extends DisplayController implements Initializabl
         previousButton = campus;
         //selected color
         previousButton.setStyle("-fx-background-color: #898b95");
-        clearDisplay();
         drawRoomLabel(currentMap, imageView);
     }
 
     public void displayPatientMap(String floorname, Button currentButton){
+        clearDisplay();
         imageView.setImage(applicationController.getFloorImage(floorname));
         if (previousButton != null){
             //return to default image color
@@ -457,7 +461,7 @@ public class PatientController extends DisplayController implements Initializabl
         previousButton = currentButton;
         //selected color
         previousButton.setStyle("-fx-background-color: #898b95");
-        clearDisplay();
+
         drawRoomLabel(currentMap, imageView);
     }
 
