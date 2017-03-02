@@ -937,7 +937,7 @@ cur = map.getRoomFromName(roomName);
      */
     public void displayTextDirections(List<GraphNode> path, String nextFloor) {
         textDirectionsListView.setVisible(true);
-        LinkedList<Pair<Integer, String>> textDirections = map.getTextualDirections(path, nextFloor);
+        LinkedList<Pair<Integer, String>> textDirections = map.getTextualDirections(path, nextFloor, true);
         directions = textDirections.stream().map(p -> p.getValue()).collect(Collectors.toList());
         textDirectionsListView.setItems(FXCollections.observableList(directions));
         currentTextDirections = textDirections;

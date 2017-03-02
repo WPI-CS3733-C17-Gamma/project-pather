@@ -1,9 +1,7 @@
 package app.applicationControl.email;
 
-import app.applicationControl.ApplicationController;
 import app.dataPrimitives.GraphNode;
 import app.dataPrimitives.Room;
-import app.dataPrimitives.SubPath;
 import com.sun.media.jfxmedia.logging.Logger;
 import javafx.util.Pair;
 import org.slf4j.LoggerFactory;
@@ -13,7 +11,6 @@ import javax.mail.BodyPart;
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.internet.MimeMultipart;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -104,7 +101,7 @@ public class MessageHandler {
     private String getDirections(GraphNode start, GraphNode end, boolean useStairs){
         List <GraphNode> path = emailController.map.getPath(start, end, useStairs);
         LinkedList<Pair<Integer, String>> textDirections = emailController.map.getTextualDirections
-            (path, end.getLocation().getFloor());
+            (path, end.getLocation().getFloor(), useStairs);
         List<String> directions = textDirections.stream().map(p -> {
             return p.getValue();
         }).collect(Collectors.toList());

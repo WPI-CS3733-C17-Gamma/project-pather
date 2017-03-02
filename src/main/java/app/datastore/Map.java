@@ -304,10 +304,11 @@ public class Map {
     /**
      * Generates a list of textual directions for the path
      * @param path the path to get directions for
-     * @param nextFloor
+     * @param nextFloor the next floor in the path
+     * @param withSpecialCharacters a boolean to indicate if it needs to be just text
      * @return a List of string directions
      */
-    public LinkedList<Pair<Integer, String>> getTextualDirections(List<GraphNode> path, String nextFloor) {
+    public LinkedList<Pair<Integer, String>> getTextualDirections(List<GraphNode> path, String nextFloor, boolean withSpecialCharacters) {
         LinkedList<Pair<Integer, String>> directions = new LinkedList<>();
 
         int nodeNum = -1;
@@ -330,7 +331,7 @@ public class Map {
             }
 
             // Get any nearby location
-            String landmark = getLandmark(path, node, nodeNum);
+            String landmark = getLandmark(path, node, nodeNum, withSpecialCharacters);
 
             // Get a direction from the angle
             String turnDir = getTurnDirections(path, node, nodeNum);
@@ -369,9 +370,12 @@ public class Map {
         return null;
     }
 
-    private String getLandmark(List<GraphNode> path, GraphNode node, int nodeNum) {
+    private String getLandmark(List<GraphNode> path, GraphNode node, int nodeNum, boolean withSpecialCharacters) {
         String landmark = "";
-        String prefix = "\n\u2a3d";
+        String prefix = " ";
+        if(withSpecialCharacters) {
+            prefix = "\n\u2a3d";
+        }
         // If the current node has a name, put that in the directions
         logger.debug("Getting nearby named locations");
         if (getRoomFromNode(node) != null) {
