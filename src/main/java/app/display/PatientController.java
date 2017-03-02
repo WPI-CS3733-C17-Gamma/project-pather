@@ -38,8 +38,12 @@ import javafx.util.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
 import java.net.URL;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static app.applicationControl.email.EmailController.phoneCompanies.*;
@@ -69,7 +73,7 @@ public class PatientController extends DisplayController implements Initializabl
     @FXML private ListView<String> textDirectionsListView;
     @FXML private AnchorPane anchorPane;
     @FXML private TabPane mapTabs;
-    @FXML private ChoiceBox selectPhoneOrEmail;
+    @FXML private ComboBox selectPhoneOrEmail;
     @FXML private TextField phoneOrEmail;
 
     @FXML private AnchorPane searchAnchorPane;
@@ -1025,6 +1029,8 @@ cur = map.getRoomFromName(roomName);
             (e, a ,b)->{
                 if(b.intValue() == 1){
                     providersList.setVisible(true);
+                    providersList.toFront();
+                    providersList.toFront();
                 }else{
                     selectPhoneOrEmail.setValue("EMAIL");
                 }
@@ -1037,7 +1043,7 @@ cur = map.getRoomFromName(roomName);
         providersList.setItems(FXCollections.observableList(Arrays.asList(providers)));
         providersList.getSelectionModel().selectedIndexProperty().addListener(
             (e, a, b)->{
-              switch (b.intValue()) {//TODO add interaction with text directions
+              switch (b.intValue()) {
                   case 0: //AT&T
                       System.out.println("AT&T");
                       providersList.setVisible(false);
@@ -1147,8 +1153,7 @@ cur = map.getRoomFromName(roomName);
                       carrierPicked = PAGE;
                       break;
               }
-
-
+            //providersList.setVisible(false);
             }
         );
         phoneOrEmail.setOnAction(
@@ -1156,26 +1161,44 @@ cur = map.getRoomFromName(roomName);
             }
         );
         sendTextButton.setOnAction(e->{
-            if (carrierPicked.equals(EMAIL)){
-                sendEmail(phoneOrEmail.getText());
-            } else {
-                sendText(phoneOrEmail.getText(), carrierPicked);
-                System.out.println("Send message");
-            }
+            String sendTo = phoneOrEmail.getText();
             phoneOrEmail.clear();
+            if (carrierPicked.equals(EMAIL)){
+                sendTo = checkEmail(sendTo);
+                sendEmail(sendTo);
+            } else {
+                sendTo = checkNumber(sendTo);
+                System.out.println(sendTo);
+                sendText(sendTo, carrierPicked);
+            }
+
         });
     }
 
     private void sendEmail(String email){
-        //GraphNode start = map.getKioskLocation();
-        //GraphNode end = map.getRoomFromName(searchBar.getText()).getLocation();
         applicationController.sendEmail(email, lastStart, lastEnd, togStairs.isSelected());
     }
 
     private void sendText(String number, EmailController.phoneCompanies carrier){
-        //GraphNode start = map.getKioskLocation();
-        //GraphNode end = map.getRoomFromName(searchBar.getText()).getLocation();
-        applicationController.sendText(number, carrier, lastStart, lastEnd, togStairs.isSelected());       //number, carrier, directions, destination
+        applicationController.sendText(number, carrier, lastStart, lastEnd, togStairs.isSelected());
+    }
+
+    private String checkEmail (String eMail){
+        String email = eMail;
+        try{
+            InternetAddress emailAddr = new InternetAddress(email);
+            emailAddr.validate();
+        } catch (AddressException ex){
+            return null;
+        }
+        return email;
+    }
+
+    private String checkNumber(String num){
+        String number = num.replace("-", "");
+        number = number.replace(" ", "");
+
+        return number;
     }
 
 

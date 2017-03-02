@@ -61,7 +61,6 @@ public class MessageHandler {
             return;
         } else if (clientInput.contains("directions from")){
             searchforLoctation(realContent);
-
         }
         // give them directions again
         System.out.printf("not a help request");
