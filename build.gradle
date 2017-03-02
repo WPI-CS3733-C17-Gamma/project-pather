@@ -23,10 +23,13 @@ dependencies {
     compile group: 'org.slf4j', name:'slf4j-log4j12', version: '1.7.2'
 
     testCompile group: 'junit', name: 'junit', version: '4.+'
+
+    compile group: 'javax.mail', name: 'mail', version: '1.4'
+    // https://mvnrepository.com/artifact/org.jsoup/jsoup
+    compile group: 'org.jsoup', name: 'jsoup', version: '1.8.3'
     // JBCRYPT
     // https://mvnrepository.com/artifact/org.mindrot/jbcrypt
     compile group: 'org.mindrot', name: 'jbcrypt', version: '0.3m'
-
 }
 
 repositories {
@@ -40,6 +43,7 @@ repositories {
 jfx {
     mainClass = 'app.applicationControl.ApplicationController';
     vendor = 'TeamGamma';
+
 }
 
 sourceSets.main.resources.srcDirs = ["src/main/resources"]

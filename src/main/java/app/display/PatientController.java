@@ -2,6 +2,7 @@ package app.display;
 
 import app.CustomMenus.CircularContextMenu;
 import app.applicationControl.ApplicationController;
+import app.applicationControl.email.*;
 import app.dataPrimitives.*;
 import app.pathfinding.PathNotFoundException;
 import javafx.animation.KeyFrame;
@@ -9,6 +10,7 @@ import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -21,6 +23,7 @@ import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -39,13 +42,15 @@ import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static app.applicationControl.email.EmailController.phoneCompanies.*;
+
 /**
  * controls all interaction with the patient display
  */
 public class PatientController extends DisplayController implements Initializable {
     final Logger logger = LoggerFactory.getLogger(PatientController.class);
 
-   //what type/state of display the Patient Display is currently displaying
+    //what type/state of display the Patient Display is currently displaying
     private enum state{
         PATIENT_DEFAULT,
         PATIENT_SEARCH,
@@ -64,6 +69,8 @@ public class PatientController extends DisplayController implements Initializabl
     @FXML private ListView<String> textDirectionsListView;
     @FXML private AnchorPane anchorPane;
     @FXML private TabPane mapTabs;
+    @FXML private ChoiceBox selectPhoneOrEmail;
+    @FXML private TextField phoneOrEmail;
 
     @FXML private AnchorPane searchAnchorPane;
     @FXML private Button help;
@@ -77,10 +84,12 @@ public class PatientController extends DisplayController implements Initializabl
     @FXML private Button login;
     @FXML private Button TextDirection;
     @FXML private Button floor1;
+    @FXML private Button sendTextButton;
     @FXML private Line line;
     @FXML private ImageView logo;
     @FXML private ToggleButton togStairs;
-
+    @FXML private ListView providersList;
+    @FXML private VBox creditsPane;
     //Colors for patient Display
     //------------------------------------------------------------------------------------------------------------------
     private Color lightGrey = Color.rgb(211, 211, 211);
@@ -107,6 +116,19 @@ public class PatientController extends DisplayController implements Initializabl
     CircularContextMenu menu = new CircularContextMenu();
 
     private Button previousButton;
+    String defaultFloor;
+
+    PatientMemento memento;
+
+    //------------------------------------------------------------------------------------------------------------------
+    //For Texting/Email
+
+    EmailController.phoneCompanies carrierPicked = EMAIL;
+    GraphNode lastStart;
+    GraphNode lastEnd;
+    boolean lastUseStairs;
+
+    //------------------------------------------------------------------------------------------------------------------
 
     /**
      *
@@ -120,9 +142,34 @@ public class PatientController extends DisplayController implements Initializabl
                 String currentMap){
         super.init(map,applicationController, stage);
         this.currentMap = currentMap;
+        defaultFloor = currentMap;
 
         displayState = state.PATIENT_DEFAULT;
+        /* Memento Pattern */
+        // add event filter
+        EventHandler passAllEventsToTimer = new EventHandler() {
+                @Override
+                public void handle(Event event) {
+                    IdleTimer timer = IdleTimer.getInstance();
+                    if (map.getSetting("idleTime") != null) {
+                        timer.setTime(Double.parseDouble(map.getSetting("idleTime")));
+                    }
+                    GraphNode kioskLoc = map.getKioskLocation();
+                    String floorname;
+                    if (kioskLoc != null) {
+                        floorname = kioskLoc.getLocation().getFloor();
+                    }
+                    else {
+                        floorname = defaultFloor;
+                    }
+                    timer.resetTimer(new PatientMemento(floorname));
+                }
+            };
+        this.stage.addEventFilter(MouseEvent.ANY, passAllEventsToTimer);
+        this.stage.addEventFilter(KeyEvent.ANY, passAllEventsToTimer);
+        this.memento = new PatientMemento(currentMap);
     }
+
 
     /**
      * display the image on the main patient screen
@@ -138,12 +185,10 @@ public class PatientController extends DisplayController implements Initializabl
      * shows the patient search interface (the dark one)
      */
     public void startSearch(){
-        clearDisplay();
         if (this.displayState == state.PATIENT_DEFAULT){//switch state
-            mapTabs.setVisible(false);
+            clearDisplay();
             imageView.setImage(imageView.getImage());
             this.displayState = state.PATIENT_SEARCH;
-            this.textDirectionsListView.setVisible(true);
             displayImage();
         }
     }
@@ -156,11 +201,14 @@ public class PatientController extends DisplayController implements Initializabl
         if (this.displayState == state.PATIENT_SEARCH || this.displayState == state.DISPLAYING_TEXT_DIRECTION ){//switch state
             hideMultiMapAnimation();
             hideMapAnimation();
+            selectPhoneOrEmail.setVisible(false);
+            sendTextButton.setVisible(false);
+            phoneOrEmail.setVisible(false);
             mapTabs.setVisible(true);
             this.displayState = state.PATIENT_DEFAULT;
             clearSearchDisplay();
             displayImage();//display the original image
-            this.textDirectionsListView.setVisible(false);
+            searchBar.setPromptText("Search");
             drawRoomLabel(currentMap, imageView);
         }
     }
@@ -190,6 +238,10 @@ public class PatientController extends DisplayController implements Initializabl
             timeline.getKeyFrames().add(kf);
             timeline.play();
             displayState  = s;
+            TextDirection.setVisible(true);
+            textDirection();
+            TextDirection.setText("Hide Text Directions");
+            mapTabs.setVisible(false);
         }
     }
 
@@ -212,6 +264,10 @@ public class PatientController extends DisplayController implements Initializabl
             timeline.getKeyFrames().add(kf);
             timeline.play();
             displayState = s;
+            mapTabs.setVisible(true);
+            textDirectionsListView.setVisible(false);
+            TextDirection.setVisible(false);
+            TextDirection.setText("Show Text Directions");
         }
     }
     /**
@@ -219,11 +275,14 @@ public class PatientController extends DisplayController implements Initializabl
      * perform search; get text from the textfield
      */
     public void search () {
-        if (displayState != state.DISPLAYING_TEXT_DIRECTION || displayState != state.PATIENT_SEARCH){
+        System.out.println("Doing search...");
+        if (displayState != state.PATIENT_SEARCH){
+            displayState = state.PATIENT_SEARCH;
             startSearch();
+            clearSearchDisplay();
+            System.out.println("Starting display");
         }
 
-        clearSearchDisplay();
         currentPath = null;
         String search = searchBar.getText();
         if (!search.isEmpty()) {
@@ -265,20 +324,21 @@ public class PatientController extends DisplayController implements Initializabl
 	// to the bottom of the list
         else{
             String lowerCaseSearch = searchTerm.toLowerCase();
-	    List<String> results = map.searchEntry(lowerCaseSearch) ;
-	    results.addAll(map.searchRoom(searchTerm));
-	    return results;
+            List<String> results = map.searchEntry(lowerCaseSearch) ;
+            results.addAll(map.searchRoom(searchTerm));
+            return results;
         }
         //(update) the display the list of room
     }
 
     /**
-     * select the clicked option
+     * selectPhoneOrEmail the clicked option
      * @param option
      * @return
      */
     public GraphNode select(String option) {
-        searchBar.setText(option);
+        searchBar.setPromptText(option);
+        searchBar.setText("");
         logger.info("Select {}", option);
         DirectoryEntry entry = map.getEntry(option);
         // if the selected entry is an entry not a room
@@ -312,7 +372,6 @@ public class PatientController extends DisplayController implements Initializabl
             if (room != null) {
                 logger.debug("FOUND ROOM! : " + room);
                 displayResults(new LinkedList<>());
-		// TODO
                 getPath(map.getKioskLocation(), room.getLocation());
                 return room.getLocation();
             }
@@ -332,35 +391,39 @@ public class PatientController extends DisplayController implements Initializabl
         if (e.getSource() instanceof Button) {
             Button temp = (Button) e.getSource();
 	        currentMap = temp.getId();
-            imageView.setImage(applicationController.getFloorImage(temp.getId()));
-            if (previousButton != null){
-                //return to default image color
-                previousButton.setStyle("-fx-background-color: #F7F7F7");
-            }
-            previousButton = temp;
-            //selected color
-            previousButton.setStyle("-fx-background-color: #898b95");
-            clearDisplay();
-            drawRoomLabel(currentMap, imageView);
+	        displayPatientMap(currentMap, temp);
         }
+    }
+
+    public void displayPatientMap(String floorname, Button currentButton){
+        imageView.setImage(applicationController.getFloorImage(floorname));
+        if (previousButton != null){
+            //return to default image color
+            previousButton.setStyle("-fx-background-color: #F7F7F7");
+        }
+        previousButton = currentButton;
+        //selected color
+        previousButton.setStyle("-fx-background-color: #898b95");
+        clearDisplay();
+        drawRoomLabel(currentMap, imageView);
     }
 
     /**
      * refresh the display
      */
     public void refreshDisplay () {
-            clearDisplay();
-            drawRoomLabel(currentMap, imageView);
+        System.out.println("Clearing display");
+        clearDisplay();
+        drawRoomLabel(currentMap, imageView);
     }
 
     /**
      * remove search result
      */
     public void clearSearchDisplay(){
-        TextDirection.setVisible(false);
         hideMultiMapAnimation();//hide the hBox thingy
+        hideMapAnimation();
         multiMapDisplayMenu.getChildren().clear();//clear the hBox menu thingy
-        textDirectionsListView.setVisible(false);
         clearDisplay();
     }
 
@@ -368,7 +431,11 @@ public class PatientController extends DisplayController implements Initializabl
      * Remove all the points and labels that have been drawn on the map
      */
     public void clearDisplay () {
-        imageView.setImage(imageView.getImage());
+        GraphNode kioskNode = map.getKioskLocation();
+        if (kioskNode != null) {
+            defaultFloor = kioskNode.getLocation().getFloor();
+        }
+        imageView.setImage(applicationController.getFloorImage(defaultFloor));
         if(drawnObjects == null) {
             return;
         }
@@ -417,12 +484,16 @@ public class PatientController extends DisplayController implements Initializabl
      * @param end the ending location
      */
     public void getPath (GraphNode start, GraphNode end) {
+        lastStart = start;
+        lastEnd = end;
+        lastUseStairs = togStairs.isSelected();
         minimaps = new LinkedList<>();
         if (start == null || end == null) {
             logger.error("Cannot path, start or end is null!");
+            return;
         }
         try {
-            currentPath = map.getPathByFloor(start, end, togStairs.isSelected());
+            currentPath = map.getPathByFloor(start, end, lastUseStairs);
             TextDirection.setVisible(true);
             clearDisplay();
             //displaySubPath(imageView, currentPath.get(0), true,10, 1,20);
@@ -443,6 +514,11 @@ public class PatientController extends DisplayController implements Initializabl
             }
             showMultiMapAnimation();
             showMapAnimation();
+            textDirectionsListView.setVisible(true);
+            mapTabs.setVisible(false);
+            selectPhoneOrEmail.setVisible(true);
+            sendTextButton.setVisible(true);
+            phoneOrEmail.setVisible(true);
         } catch (PathNotFoundException e) {
             logger.error("No path can be drawn");
         }
@@ -472,8 +548,7 @@ public class PatientController extends DisplayController implements Initializabl
             clearDisplay();
             displaySubPath(imageView, path, true,10,1, 20);
             displayMinipaths();
-            iv.setEffect(new DropShadow());
-
+            iv.setEffect(new DropShadow(30, Color.rgb(42, 57, 86)));
             if (displayState == state.DISPLAYING_TEXT_DIRECTION){
                 String nextFloor = null;
                 if(currentPath.size() > currentSubPath+1) {
@@ -608,8 +683,10 @@ public class PatientController extends DisplayController implements Initializabl
      */
     public void drawRoomLabel (String floorName, ImageView imageView) {
         List<String> roomNames= map.getAllRooms();
+        String kiosk = map.getKiosk();
         for (String roomName : roomNames) {
-            Room cur = map.getRoomFromName(roomName);
+            Room
+cur = map.getRoomFromName(roomName);
             GraphNode loc = cur.getLocation();
             // skip rooms without locations
             if (loc == null || ! loc.getLocation().getFloor().equals(floorName)) {
@@ -627,8 +704,8 @@ public class PatientController extends DisplayController implements Initializabl
             Label label = new Label(labelName);
             label.setLayoutX(imageLoc.getX() + 3);
             label.setLayoutY(imageLoc.getY() + 3);
-            label.setFont(Font.font ("Georgia", 10));
-            label.setStyle("-fx-background-color: #F0F4F5; -fx-border-color: darkblue; -fx-padding: 2;");
+            label.setFont(Font.font ("Calibri", 10));
+            label.setStyle("-fx-background-color: #424556; -fx-padding: 2; -fx-background-radius: 1px; -fx-text-fill: #d3d3d3;");
             //set the labels clickable
             label.setOnMousePressed((e) -> goToSelectedRoom(e, labelName));
             label.setOnMouseEntered(e -> setMouseToHand(e));
@@ -636,6 +713,10 @@ public class PatientController extends DisplayController implements Initializabl
             anchorPane.getChildren().add(label);
             logger.debug("Adding Label {}", labelName);
             drawnObjects.add(label);
+
+            if (kiosk != null && kiosk.equals(roomName)){
+                curImage = "Star";
+            }
             //if the room has a directory associated with it that contains an icon
             if (!curImage.equals("")){
                 ImageView image = new ImageView();
@@ -663,15 +744,16 @@ public class PatientController extends DisplayController implements Initializabl
         }
     }
 
+
     /**
      * display the path to the room when clicked on the patient display map
      * @param e
      */
     public void goToSelectedRoom(MouseEvent e, String roomname){
         if (e.getSource() instanceof Label){
-            searchBar.setText(roomname);
+            searchBar.setPromptText(roomname);
+            searchBar.setText("");
             startSearch();
-	    // TODO make use stairs
             getPath(map.getKioskLocation(),map.getRoomFromName(roomname).getLocation());
         }
     }
@@ -826,8 +908,8 @@ public class PatientController extends DisplayController implements Initializabl
                 labels.add(current);
             }
         }
-	drawnObjects.addAll(labels);
-    return labels;
+        drawnObjects.addAll(labels);
+        return labels;
     }
 
     /**
@@ -838,7 +920,7 @@ public class PatientController extends DisplayController implements Initializabl
         imageView.setScaleY(1.3);
         imageView.setScaleX(1.3);
         displayMinipaths();
-        imageView.setEffect(new DropShadow());
+        imageView.setEffect(new DropShadow(30, Color.rgb(42, 57, 86)));
     }
 
 
@@ -855,13 +937,11 @@ public class PatientController extends DisplayController implements Initializabl
     }
 
     public void textDirection() {
-        System.out.println("fire");
         if (textDirectionsListView.isVisible()){
             displayState = state.PATIENT_SEARCH;
             textDirectionsListView.setVisible(false);
             TextDirection.setText("Show Text Direction");
-        }
-        else {
+        }else {
             displayState = state.DISPLAYING_TEXT_DIRECTION;
             TextDirection.setText("Hide Text Direction");
             String nextFloor = null;
@@ -872,6 +952,7 @@ public class PatientController extends DisplayController implements Initializabl
         }
     }
 
+    private List<String> directions;
     /**
      * Function to get textual directions and print it on screen
      * @param path the path to be converted to text
@@ -879,8 +960,8 @@ public class PatientController extends DisplayController implements Initializabl
      */
     public void displayTextDirections(List<GraphNode> path, String nextFloor) {
         textDirectionsListView.setVisible(true);
-        LinkedList<Pair<Integer, String>> textDirections = map.getTextualDirections(path, nextFloor);
-        List<String> directions = textDirections.stream().map(p -> p.getValue()).collect(Collectors.toList());
+        LinkedList<Pair<Integer, String>> textDirections = map.getTextualDirections(path, nextFloor, true);
+        directions = textDirections.stream().map(p -> p.getValue()).collect(Collectors.toList());
         textDirectionsListView.setItems(FXCollections.observableList(directions));
         currentTextDirections = textDirections;
         return;
@@ -900,6 +981,7 @@ public class PatientController extends DisplayController implements Initializabl
     public void initialize(URL location, ResourceBundle resources) {
         logger.info("INIT PatientController");
         displayImage();
+//        displayPatientMap(String floorname, Button currentButton)
 
         imageView.setMouseTransparent(true);
 
@@ -936,11 +1018,175 @@ public class PatientController extends DisplayController implements Initializabl
 //        imageView.setPreserveRatio(false);
         helpLabel.setText("Hello! Thanks for using project-pather." +
             "\n\nTo get started, start typing into the search bar. " +
-            "\n Then, select the option you would like to get a path to." +
+            "\n Then, selectPhoneOrEmail the option you would like to get a path to." +
             "\n\nTo close this menu, click on this");
 
+
         drawRoomLabel(currentMap, imageView);
+
+        String options[] = {"Email", "Phone"};
+        selectPhoneOrEmail.setItems(FXCollections.observableList(Arrays.asList(options)));
+        selectPhoneOrEmail.setOnMouseClicked(e->{
+            selectPhoneOrEmail.setValue(null);
+            providersList.setVisible(false);
+        });
+        selectPhoneOrEmail.getSelectionModel().selectedIndexProperty().addListener(
+            (e, a ,b)->{
+                if(b.intValue() == 1){
+                    providersList.setVisible(true);
+                }else{
+                    selectPhoneOrEmail.setValue("EMAIL");
+                }
+            }
+        );
+        String providers[] =   {"AT&T", "Sprint", "Verizon", "T-Mobile", "Virgin Mobile",
+                                "Tracfone", "Metro PCS", "Boost Mobile", "Cricket", "Ptel",
+                                "Republic Wireless", "Google Fi", "Suncom", "Ting",
+                                "U.S. Cellular", "Consumer Cellular", "C-Spire", "Page Plus"};
+        providersList.setItems(FXCollections.observableList(Arrays.asList(providers)));
+        providersList.getSelectionModel().selectedIndexProperty().addListener(
+            (e, a, b)->{
+              switch (b.intValue()) {//TODO add interaction with text directions
+                  case 0: //AT&T
+                      System.out.println("AT&T");
+                      providersList.setVisible(false);
+                      selectPhoneOrEmail.setValue("AT&T");
+                      carrierPicked = ATT;
+                      break;
+                  case 1: //SPRINT
+                      System.out.println("SPRINT");
+                      providersList.setVisible(false);
+                      selectPhoneOrEmail.setValue("Sprint");
+                      carrierPicked = SPRINT;
+                      break;
+                  case 2: //Verizon
+                      System.out.println("Verizon");
+                      providersList.setVisible(false);
+                      selectPhoneOrEmail.setValue("Verizon");
+                      carrierPicked = VERIZON;
+                      break;
+                  case 3: //T-Mobile
+                      System.out.println("T-Mobile");
+                      providersList.setVisible(false);
+                      selectPhoneOrEmail.setValue("T-Mobile");
+                      carrierPicked = TMOBILE;
+                      break;
+                  case 4: //Virgin Mobile
+                      System.out.println("Virgin Mobile");
+                      providersList.setVisible(false);
+                      selectPhoneOrEmail.setValue("Virgin Mobile");
+                      carrierPicked = VIRGIN;
+                      break;
+                  case 5: //Tracfone
+                      System.out.println("Tracfone");
+                      providersList.setVisible(false);
+                      selectPhoneOrEmail.setValue("Tracfone");
+                      carrierPicked = TRAC;
+                      break;
+                  case 6: //Metro PCS
+                      System.out.println("Metro PCS");
+                      providersList.setVisible(false);
+                      selectPhoneOrEmail.setValue("Metro PCS");
+                      carrierPicked = METRO;
+                      break;
+                  case 7: //Boost Mobile
+                      System.out.println("Boost Mobile");
+                      providersList.setVisible(false);
+                      selectPhoneOrEmail.setValue("Boost Mobile");
+                      carrierPicked = BOOST;
+                      break;
+                  case 8: //Cricket
+                      System.out.println("Cricket");
+                      providersList.setVisible(false);
+                      selectPhoneOrEmail.setValue("Cricket");
+                      carrierPicked = CRICKET;
+                      break;
+                  case 9: //Ptel
+                      System.out.println("Ptel");
+                      providersList.setVisible(false);
+                      selectPhoneOrEmail.setValue("Ptel");
+                      carrierPicked = PTEL;
+                      break;
+                  case 10: //Republic Wireless
+                      System.out.println("Republic Wireless");
+                      providersList.setVisible(false);
+                      selectPhoneOrEmail.setValue("Republic Wireless");
+                      carrierPicked = REPUBLIC;
+                      break;
+                  case 11: //Google Fi
+                      System.out.println("Google Fi");
+                      providersList.setVisible(false);
+                      selectPhoneOrEmail.setValue("Google Fi");
+                      carrierPicked = GOOGLE;
+                      break;
+                  case 12: //Suncom
+                      System.out.println("Suncom");
+                      providersList.setVisible(false);
+                      selectPhoneOrEmail.setValue("Suncom");
+                      carrierPicked = SUNCOM;
+                      break;
+                  case 13: //Ting
+                      System.out.println("Ting");
+                      providersList.setVisible(false);
+                      selectPhoneOrEmail.setValue("Ting");
+                      carrierPicked = TING;
+                      break;
+                  case 14: //U.S. Cellular
+                      System.out.println("US Cellular");
+                      providersList.setVisible(false);
+                      selectPhoneOrEmail.setValue("US Cellular");
+                      carrierPicked = US;
+                      break;
+                  case 15: //Consumer Cellular
+                      System.out.println("Consumer Cellular");
+                      providersList.setVisible(false);
+                      selectPhoneOrEmail.setValue("Consumer Cellular");
+                      carrierPicked = CONSUMER;
+                      break;
+                  case 16: //C-Spire
+                      System.out.println("C-Spire");
+                      providersList.setVisible(false);
+                      selectPhoneOrEmail.setValue("C-Spire");
+                      carrierPicked = CSPIRE;
+                      break;
+                  case 17: //Page Plus
+                      System.out.println("Page Plus");
+                      providersList.setVisible(false);
+                      selectPhoneOrEmail.setValue("Page Plus");
+                      carrierPicked = PAGE;
+                      break;
+              }
+
+
+            }
+        );
+        phoneOrEmail.setOnAction(
+            e->{
+            }
+        );
+        sendTextButton.setOnAction(e->{
+            if (carrierPicked.equals(EMAIL)){
+                sendEmail(phoneOrEmail.getText());
+            } else {
+                sendText(phoneOrEmail.getText(), carrierPicked);
+                System.out.println("Send message");
+            }
+            phoneOrEmail.clear();
+        });
     }
+
+    private void sendEmail(String email){
+        //GraphNode start = map.getKioskLocation();
+        //GraphNode end = map.getRoomFromName(searchBar.getText()).getLocation();
+        applicationController.sendEmail(email, lastStart, lastEnd, togStairs.isSelected());
+    }
+
+    private void sendText(String number, EmailController.phoneCompanies carrier){
+        //GraphNode start = map.getKioskLocation();
+        //GraphNode end = map.getRoomFromName(searchBar.getText()).getLocation();
+        applicationController.sendText(number, carrier, lastStart, lastEnd, togStairs.isSelected());       //number, carrier, directions, destination
+    }
+
 
     /**
      * Resizes Window's Width
@@ -987,8 +1233,31 @@ public class PatientController extends DisplayController implements Initializabl
 
     public void hideOptions(){
         options.setVisible(false);
+        providersList.setVisible(false);
     }
 
+    // revert to previous state
+    public void revertState (PatientMemento memento) {
+        logger.info("Reverting State");
+        exitSearch();
+        currentMap = memento.floor;
+        displayImage();
+        refreshDisplay();
+        phoneOrEmail.clear();
+        creditsPane.setVisible(false);
+    }
+
+    public void exitCredits() {
+        displayImage();
+        creditsPane.setVisible(false);
+        anchorPane.setVisible(true);
+    }
+
+
+    public void showCredits() {
+        anchorPane.setVisible(false);
+        creditsPane.setVisible(true);
+    }
 
     /**
      * change the cursor to hand (like the one on top of buttons)

@@ -91,6 +91,8 @@ public class MapAdminController extends DisplayController {
 
     @FXML private ChoiceBox chooseAlgorithm;
 
+    @FXML private TextField idleTime;
+
     private GraphNode tempNode ;
     private String currentMap;
     private ContextMenuEvent contextEvent;
@@ -173,6 +175,17 @@ public class MapAdminController extends DisplayController {
                 drawMap();
             }
         });
+
+        idleTime.setText(map.getSetting("idleTime"));
+        idleTime.textProperty().addListener(
+            (observableValue, old_val, new_val) -> {
+                // Don't allow typing non-number characters
+                if (!new_val.matches("[.\\d]*")) {
+                    idleTime.setText(new_val.replaceAll("[^.\\d]", ""));
+                }
+                map.setSetting("idleTime", new_val);
+        });
+
         imageviewMap.toBack();
 
 
@@ -318,6 +331,47 @@ public class MapAdminController extends DisplayController {
 
         floorSelector.setValue("floor3");
         drawMap();
+
+        // add event filter
+        stage.addEventFilter(KeyEvent.ANY, (event) -> {
+                if (!roomName.isFocused() /*&& !idleTime.isFocused()*/) {
+                    imageviewMap.requestFocus();
+                    if (selectedNode == null) {
+                        return;
+                    }
+                    FloorPoint oldLoc = selectedNode.getLocation();
+                    if (oldLoc.getX() > 999 || oldLoc.getX() < 1 ||
+                        oldLoc.getY() > 999 || oldLoc.getY() < 1) {
+                        return;
+                    }
+                    System.out.println("got key: " + event.getCode().toString());
+
+                    int xDelta = 0;
+                    int yDelta = 0;
+                    switch (event.getCode()) {
+                        case LEFT:
+                            xDelta = -1;
+                            break;
+                        case RIGHT:
+                            xDelta = 1;
+                            break;
+                        case UP:
+                            yDelta = -1;
+                            break;
+                        case DOWN:
+                            yDelta = 1;
+                            break;
+                    }
+
+                    FloorPoint newLoc = new FloorPoint(
+                        oldLoc.getX() + xDelta,
+                        oldLoc.getY() + yDelta,
+                        oldLoc.getFloor());
+                    selectedNode.setLocation(newLoc);
+                    drawMap();
+                }
+            });
+
         //------------------------------------------------------------------------------------------------------------------
         stage.addEventFilter(KeyEvent.KEY_PRESSED, event -> handleKey(event));
 
@@ -426,6 +480,20 @@ public class MapAdminController extends DisplayController {
     public void drawNode (GraphNode node, ImageView imageToDrawOver) {
         if (node.doesCrossFloor()) {
             drawElevator(node.getLocation(), imageToDrawOver);
+            Room nodeRoom = map.getRoomFromNode(node);
+            if (nodeRoom != null) {
+                logger.info("Drawing room {}", nodeRoom.getName());
+                addRoomLabel(nodeRoom);
+            }
+        }
+        else if (map.getKioskLocation() != null && map.getKioskLocation().equals(node)){
+            System.out.println("DRAWING KIOSK");
+            drawKiosk(node.getLocation(), imageToDrawOver);
+            Room nodeRoom = map.getRoomFromNode(node);
+            if (nodeRoom != null) {
+                logger.info("Drawing room {}", nodeRoom.getName());
+                addRoomLabel(nodeRoom);
+            }
         }
         else {
             drawPoint(node.getLocation(), imageToDrawOver);
@@ -559,6 +627,7 @@ public class MapAdminController extends DisplayController {
         if (newName.isEmpty()) {
             if (activeRoom != null) {
                 map.deleteRoom(activeRoom);
+                defaultKioskButton.setDisable(true);
             }
         }
         // Already a room of that name, so change room location
@@ -568,16 +637,20 @@ public class MapAdminController extends DisplayController {
                 activeRoom.setLocation(null);
             }
             existingRoom.setLocation(selectedNode);
+            defaultKioskButton.setDisable(false);
         }
         // Node already has a room, so rename room
         else if (activeRoom != null) {
             map.changeRoomName(activeRoom, newName);
+            defaultKioskButton.setDisable(false);
         }
         // No room either existed at this node or had the new name, so
         // add a new room
         else {
             map.addRoom(new Room(selectedNode, newName));
+            defaultKioskButton.setDisable(false);
         };
+        drawMap();
     }
 
     /**
@@ -600,6 +673,24 @@ public class MapAdminController extends DisplayController {
     }
 
     /**
+     *
+     *@param loc
+     *@param imageToBeDrawnOn
+     */
+    private void drawKiosk(FloorPoint loc, ImageView imageToDrawOn ){
+        FloorPoint imagePoint = graphToImage(loc, imageToDrawOn);
+        // draw  point with layout x and y, not actual x and y
+        Circle circ = new Circle(9);
+        circ.setLayoutX(imagePoint.getX());
+        circ.setLayoutY(imagePoint.getY());
+        circ.setMouseTransparent(true);
+        mapPane.getChildren().add(circ);
+        GraphNode graphNodeAttatched = map.getGraphNode(loc);
+        drawnNodes.put(graphNodeAttatched.id, circ);
+    }
+
+
+    /**
      * Deletes the connection between the two selected nodes,
      * if one exists
      */
@@ -615,6 +706,9 @@ public class MapAdminController extends DisplayController {
      */
     public void deleteSelected () {
         unclickToggleButtons();
+        for (GraphNode node:highlightedNodes) {//delete highlighted nodes
+            map.deleteNode(node);
+        }
         if(selectedNode != null) {
             map.deleteNode(selectedNode);
             resetSelection();
@@ -626,6 +720,9 @@ public class MapAdminController extends DisplayController {
                 drawMap();
             }
             highlightedNodes.clear();
+        }
+        if(highlightedNodes.size() == 0 || selectedNode == null){
+            buttonDeleteNode.setDisable(true);
         }
     }
 
@@ -771,7 +868,6 @@ public class MapAdminController extends DisplayController {
         if (room != null) {
             roomName.setValue(room.getName());
             activeRoom = room;
-            defaultKioskButton.setDisable(false);
         }
         else {
             roomName.setValue("");
@@ -786,7 +882,10 @@ public class MapAdminController extends DisplayController {
         unclickToggleButtons();
         if (activeRoom != null) {
             map.setKiosk(activeRoom.getName());
+            defaultKioskButton.setDisable(true);
         }
+        drawMap();
+
     }
 
     /**
@@ -933,11 +1032,17 @@ public class MapAdminController extends DisplayController {
         buttonDeleteNode.setDisable(false);
         roomName.setDisable(false);
         buttonAddRoom.setDisable(false);
+
         buttonDeleteConnection.setDisable(
-            secondaryNode == null ||
+            secondaryNode == null || selectedNode == null ||
             !selectedNode.getAdjacent().contains(secondaryNode));
         buttonDeleteElevator.setDisable(selectedNode == null ||
                                         !selectedNode.doesCrossFloor());
+
+        defaultKioskButton.setDisable(selectedNode == null ||
+                                      map.getRoomFromNode(selectedNode) == null ||
+				      (map.getKioskLocation() != null && 
+				       selectedNode.getLocation().equals(map.getKioskLocation().getLocation())));
     }
 
     /**
@@ -1016,6 +1121,9 @@ public class MapAdminController extends DisplayController {
                 selectionRectangle.setHeight(selectionPointy - e.getY());
                 selectionRectangle.setY(e.getY());
             }
+        }
+        if(highlightedNodes.size() > 0){
+              buttonDeleteNode.setDisable(false);
         }
     }
     /**
@@ -1099,6 +1207,7 @@ public class MapAdminController extends DisplayController {
         String selectedString = roomName.getSelectionModel().getSelectedItem();
         roomName.setValue(selectedString);
         map.setRoomLocation(selectedString, selectedNode);
+        defaultKioskButton.setDisable(false);
     }
 
     /**
@@ -1245,6 +1354,7 @@ public class MapAdminController extends DisplayController {
         contextEvent = event;
         selectNode(nearbyNodeContext(contextEvent));
 
+
 //        ContextMenu contextMenu = new ContextMenu();
 //
 //        contextMenu.setOnShowing(new EventHandler<WindowEvent>() {
@@ -1280,4 +1390,3 @@ public class MapAdminController extends DisplayController {
 
     }
 }
-

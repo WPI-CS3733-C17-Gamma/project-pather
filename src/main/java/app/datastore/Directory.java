@@ -192,8 +192,9 @@ public class Directory {
     }
 
     /**
-     * Gets the app.dataPrimitives.GraphNode for the app.dataPrimitives.Room named Kiosk in the directory
-     * @return the app.dataPrimitives.GraphNode, or app.dataPrimitives.GraphNode(0, 0, "") if it does not exist
+     * Gets the app.dataPrimitives.GraphNode for the
+     * app.dataPrimitives.Room named Kiosk in the directory
+     * @return the app.dataPrimitives.GraphNode, or null if it does not exist
      */
     public GraphNode getKioskLocation(String kioskName) {
         try {
@@ -201,7 +202,7 @@ public class Directory {
         }
         catch (Exception e) {
             logger.error("No Kiosk Found");
-            return new GraphNode(0, 0, "");
+            return null;
         }
     }
 

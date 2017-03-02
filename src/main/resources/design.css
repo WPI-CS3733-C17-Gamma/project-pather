@@ -9,6 +9,9 @@
 	-fx-min-height: 30px;
 	/*-fx-background-radius: 1000px;*/
 }
+.button:hover{
+	-fx-background-color: #e8e8e8;
+}
 /*1b449c*/
 
 .background{

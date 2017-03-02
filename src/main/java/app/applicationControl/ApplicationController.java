@@ -1,10 +1,9 @@
 package app.applicationControl;
 
+import app.applicationControl.email.EmailController;
+import app.dataPrimitives.GraphNode;
 import app.datastore.Map;
-import app.display.AdminController;
-import app.display.DisplayController;
-import app.display.LoginController;
-import app.display.PatientController;
+import app.display.*;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -14,16 +13,20 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class ApplicationController extends Application {
@@ -37,12 +40,10 @@ public class ApplicationController extends Application {
     Stage adminStage;
     Login login;
     Scene currentScene;
+    EmailController emailController ;
 
     HashMap<String, ProxyImage> floorMaps;
     HashMap<String, ProxyImage> extraImages;
-
-    boolean isLoginPage;
-
 
     final Logger logger = LoggerFactory.getLogger(ApplicationController.class);
     PatientController patientController;
@@ -51,11 +52,17 @@ public class ApplicationController extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         initialize();
+        emailController = new EmailController(this, map);
+        emailController.start();
         this.pStage = primaryStage;
         adminStage = new Stage();
         createPatientDisplay();
         primaryStage.show();
         login = new Login();
+
+        // start timer
+        IdleTimer timer = IdleTimer.getInstance();
+        timer.setPatientController(patientController);
     }
 
     /**
@@ -86,7 +93,7 @@ public class ApplicationController extends Application {
         extraImages.put("Elevator", new ProxyImage("Icon_PNGs/newElevator.png"));
         extraImages.put("Cafe", new ProxyImage("Icon_PNGs/Cafe2T.png"));
         extraImages.put("Restroom", new ProxyImage("Icon_PNGs/BathroomT.png"));
-        extraImages.put("Waitroom", new ProxyImage("Icon_PNGs/WaitRoomT.png"));
+        extraImages.put("Lobby", new ProxyImage("Icon_PNGs/WaitRoomT.png"));
         extraImages.put("Frontdesk", new ProxyImage("Icon_PNGs/AdmittingT.png"));
         extraImages.put("Library", new ProxyImage("Icon_PNGs/LibraryT.png"));
         extraImages.put("Giftshop", new ProxyImage("Icon_PNGs/GiftShopT.png"));
@@ -97,6 +104,7 @@ public class ApplicationController extends Application {
         extraImages.put("Entrance", new ProxyImage("Icon_PNGs/Entrance.png"));
         extraImages.put("Cafeteria", new ProxyImage("Icon_PNGs/CafeteriaT.png"));
         extraImages.put("Chapel", new ProxyImage("Icon_PNGs/Chapel2T.png"));
+        extraImages.put("Star", new ProxyImage("Icon_PNGs/star.png"));
     }
 
     /**
@@ -131,7 +139,14 @@ public class ApplicationController extends Application {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/PatientDisplay.fxml"));
             patientController = new PatientController();
-            patientController.init(map, this, pStage, "floor3");
+	    String currentFloor; 
+	    try {
+		currentFloor = map.getRoomFromName(map.getKiosk()).getLocation().getLocation().getFloor();
+	    }
+	    catch (Exception e) {
+		currentFloor = "floor1"; 
+	    }
+            patientController.init(map, this, pStage, currentFloor);
             loader.setController(patientController);
             Parent root = loader.load();
             pStage.setTitle("PatientDisplay");
@@ -167,6 +182,7 @@ public class ApplicationController extends Application {
         ProxyImage proxyFloor = floorMaps.get(floor);
         if (proxyFloor != null) {
             try {
+                System.out.println("Hi mom!");
                 return proxyFloor.getValue();
             }
             catch (IllegalArgumentException e){
@@ -184,16 +200,14 @@ public class ApplicationController extends Application {
         if (proxyFloor != null) {
             try {
                 return proxyFloor.getValue();
-            }
-            catch (IllegalArgumentException e){
+            } catch (IllegalArgumentException e) {
                 e.printStackTrace();
                 return null;
             }
         }
-        else {
-            return null;
-        }
+        return null;
     }
+
 
     /**
      * Create map directory admin app
@@ -244,6 +258,18 @@ public class ApplicationController extends Application {
             adminStage.setTitle("Login");
             adminStage.initOwner(pStage);
             adminStage.setScene(new Scene(root));
+            adminStage.initStyle(StageStyle.UNDECORATED);
+            adminStage.addEventHandler(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
+                @Override public void handle(MouseEvent mouseEvent) {
+                    // record a delta distance for the drag and drop operation.
+                    LoginController.dragdelx = adminStage.getX() - mouseEvent.getScreenX();
+                    LoginController.dragdely = adminStage.getY() - mouseEvent.getScreenY();
+                }
+            });
+            adminStage.addEventHandler(MouseEvent.MOUSE_DRAGGED, e->{
+                adminStage.setX(e.getScreenX() + LoginController.dragdelx);
+                adminStage.setY(e.getScreenY() + LoginController.dragdely);
+            });
             adminStage.show();
         } catch (IOException e){
             e.printStackTrace();
@@ -287,6 +313,21 @@ public class ApplicationController extends Application {
         //createPatientDisplay();
     }
 
+
+
+    public boolean sendEmail (String to, GraphNode start, GraphNode end, boolean useStairs) {
+
+        return emailController.sendDirections(to, start, end, useStairs);
+    }
+
+
+    public boolean sendText (String number, EmailController.phoneCompanies carrier,
+                             GraphNode start, GraphNode end, boolean useStairs) {
+
+        return emailController.sendTextDirections(number, carrier, start, end, useStairs);
+    }
+
+
     /**
      *
      */
@@ -315,6 +356,7 @@ public class ApplicationController extends Application {
     @Override
     public void stop () {
         databaseManager.write(map);
+        emailController.stop();
         logger.info("Application Closed at {}\n", Calendar.getInstance().getTime().toString());
     }
 
