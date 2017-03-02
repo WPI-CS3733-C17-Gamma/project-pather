@@ -139,12 +139,12 @@ public class ApplicationController extends Application {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/PatientDisplay.fxml"));
             patientController = new PatientController();
-	    String currentFloor; 
+	    String currentFloor;
 	    try {
 		currentFloor = map.getRoomFromName(map.getKiosk()).getLocation().getLocation().getFloor();
 	    }
 	    catch (Exception e) {
-		currentFloor = "floor1"; 
+		currentFloor = "floor1";
 	    }
             patientController.init(map, this, pStage, currentFloor);
             loader.setController(patientController);
@@ -182,7 +182,7 @@ public class ApplicationController extends Application {
         ProxyImage proxyFloor = floorMaps.get(floor);
         if (proxyFloor != null) {
             try {
-                System.out.println("Hi mom!");
+
                 return proxyFloor.getValue();
             }
             catch (IllegalArgumentException e){
