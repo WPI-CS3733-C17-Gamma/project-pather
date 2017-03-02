@@ -47,7 +47,7 @@
             </HBox>
             <TabPane fx:id="mapTabs" layoutX="662.0" layoutY="79.0" prefHeight="485.0" prefWidth="303.0" stylesheets="@design.css" tabClosingPolicy="UNAVAILABLE">
               <tabs>
-                  <Tab text="Main">
+                  <Tab fx:id="main" onSelectionChanged="#displayMain" text="Main">
                     <content>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
@@ -66,7 +66,7 @@
                         </AnchorPane>
                     </content>
                   </Tab>
-                <Tab text="Belkin">
+                <Tab fx:id="belkin" onSelectionChanged="#displayBelkin" text="Belkin">
                   <content>
                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
@@ -82,7 +82,7 @@
                         </AnchorPane>
                   </content>
                 </Tab>
-                <Tab fx:id="campus" text="Campus">
+                <Tab fx:id="campusTab" onSelectionChanged="#displayCampus" text="Campus">
                   <content>
                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>

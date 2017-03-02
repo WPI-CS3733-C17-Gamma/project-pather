@@ -675,7 +675,7 @@ public class MapAdminController extends DisplayController {
     /**
      *
      *@param loc
-     *@param imageToBeDrawnOn
+     *@param imageToDrawnOn
      */
     private void drawKiosk(FloorPoint loc, ImageView imageToDrawOn ){
         FloorPoint imagePoint = graphToImage(loc, imageToDrawOn);
@@ -1041,7 +1041,7 @@ public class MapAdminController extends DisplayController {
 
         defaultKioskButton.setDisable(selectedNode == null ||
                                       map.getRoomFromNode(selectedNode) == null ||
-				      (map.getKioskLocation() != null && 
+				      (map.getKioskLocation() != null &&
 				       selectedNode.getLocation().equals(map.getKioskLocation().getLocation())));
     }
 

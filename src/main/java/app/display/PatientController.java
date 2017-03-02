@@ -2,7 +2,7 @@ package app.display;
 
 import app.CustomMenus.CircularContextMenu;
 import app.applicationControl.ApplicationController;
-import app.applicationControl.email.*;
+import app.applicationControl.email.EmailController;
 import app.dataPrimitives.*;
 import app.pathfinding.PathNotFoundException;
 import javafx.animation.KeyFrame;
@@ -69,6 +69,9 @@ public class PatientController extends DisplayController implements Initializabl
     @FXML private ListView<String> textDirectionsListView;
     @FXML private AnchorPane anchorPane;
     @FXML private TabPane mapTabs;
+    @FXML private Tab main;
+    @FXML private Tab belkin;
+    @FXML private Tab campusTab;
     @FXML private ChoiceBox selectPhoneOrEmail;
     @FXML private TextField phoneOrEmail;
 
@@ -84,6 +87,9 @@ public class PatientController extends DisplayController implements Initializabl
     @FXML private Button login;
     @FXML private Button TextDirection;
     @FXML private Button floor1;
+    @FXML private Button floor3;
+    @FXML private Button belkin1;
+    @FXML private Button campus;
     @FXML private Button sendTextButton;
     @FXML private Line line;
     @FXML private ImageView logo;
@@ -393,6 +399,53 @@ public class PatientController extends DisplayController implements Initializabl
 	        currentMap = temp.getId();
 	        displayPatientMap(currentMap, temp);
         }
+    }
+
+    /**
+     * Display first floor of Belkin
+     */
+    public void displayBelkin(Event e){
+        imageView.setImage(applicationController.getFloorImage("belkin1"));
+        if (previousButton != null){
+            //return to default image color
+            previousButton.setStyle("-fx-background-color: #F7F7F7");
+        }
+        previousButton = belkin1;
+        //selected color
+        previousButton.setStyle("-fx-background-color: #898b95");
+        clearDisplay();
+        drawRoomLabel(currentMap, imageView);
+    }
+    /**
+     * Display 3rd floor of main
+     */
+    public void displayMain(Event e){
+        imageView.setImage(applicationController.getFloorImage("floor3"));
+        if (previousButton != null){
+            //return to default image color
+            previousButton.setStyle("-fx-background-color: #F7F7F7");
+        }
+        previousButton = floor3;
+        //selected color
+        previousButton.setStyle("-fx-background-color: #898b95");
+        clearDisplay();
+        drawRoomLabel(currentMap, imageView);
+    }
+
+    /**
+     * Display campus
+     */
+    public void displayCampus(Event e){
+        imageView.setImage(applicationController.getFloorImage("campus"));
+        if (previousButton != null){
+            //return to default image color
+            previousButton.setStyle("-fx-background-color: #F7F7F7");
+        }
+        previousButton = campus;
+        //selected color
+        previousButton.setStyle("-fx-background-color: #898b95");
+        clearDisplay();
+        drawRoomLabel(currentMap, imageView);
     }
 
     public void displayPatientMap(String floorname, Button currentButton){
