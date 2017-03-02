@@ -157,8 +157,13 @@ public class PatientController extends DisplayController implements Initializabl
                 @Override
                 public void handle(Event event) {
                     IdleTimer timer = IdleTimer.getInstance();
-                    if (map.getSetting("idleTime") != null) {
-                        timer.setTime(Double.parseDouble(map.getSetting("idleTime")));
+                    String setting = map.getSetting("idleTime");
+                    try {
+                        timer.setTime(Double.parseDouble(setting));
+                    }
+                    catch (java.lang.NumberFormatException e) {
+                        //string was invalid, use default
+                        timer.setTime(0);
                     }
                     GraphNode kioskLoc = map.getKioskLocation();
                     String floorname;
