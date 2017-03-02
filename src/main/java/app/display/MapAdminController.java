@@ -1000,7 +1000,8 @@ public class MapAdminController extends DisplayController {
 
         defaultKioskButton.setDisable(selectedNode == null ||
                                       map.getRoomFromNode(selectedNode) == null ||
-                                      selectedNode.getLocation().equals(map.getKioskLocation().getLocation()));
+				      (map.getKioskLocation() != null && 
+				       selectedNode.getLocation().equals(map.getKioskLocation().getLocation())));
     }
 
     /**

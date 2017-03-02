@@ -410,7 +410,11 @@ public class PatientController extends DisplayController implements Initializabl
      * Remove all the points and labels that have been drawn on the map
      */
     public void clearDisplay () {
-        imageView.setImage(imageView.getImage());
+        GraphNode kioskNode = map.getKioskLocation();
+        if (kioskNode != null) {
+            defaultFloor = kioskNode.getLocation().getFloor();
+        }
+        imageView.setImage(applicationController.getFloorImage(defaultFloor));
         if(drawnObjects == null) {
             return;
         }
