@@ -6,7 +6,6 @@ import app.dataPrimitives.SubPath;
 import app.datastore.Map;
 import app.pathfinding.PathNotFoundException;
 import com.sun.media.jfxmedia.logging.Logger;
-import javafx.collections.FXCollections;
 import javafx.util.Pair;
 import org.slf4j.LoggerFactory;
 
@@ -189,14 +188,20 @@ public class EmailController {
         try {
             currentPath = map.getPathByFloor(start, end, useStairs);
             int currentSubPath = -1;
-            String nextFloor = null;
+            String floor;
             for (SubPath subPath : currentPath){
+                String nextFloor = null;
                 currentSubPath++;
                 if (currentPath.size()>currentSubPath + 1){
                     nextFloor = currentPath.get(currentSubPath + 1).getFloor();
                 }
-                LinkedList<Pair<Integer, String>> textDirections = map.getTextualDirections(subPath.getPath(), nextFloor);
+                floor = subPath.getFloor();
+                floor = floor.replaceFirst("floor", "Faulkner ");
+                floor = floor.replaceFirst("belkin", "Belking ");
+                dirTemp.add("For floor " + floor);
+                LinkedList<Pair<Integer, String>> textDirections = map.getTextualDirections(subPath.getPath(), nextFloor, false);
                 dirTemp.addAll(textDirections.stream().map(p -> p.getValue()).collect(Collectors.toList()));
+                dirTemp.add("\n");
             }
 
             System.out.println(path.size());
@@ -208,7 +213,7 @@ public class EmailController {
     }
 
     public void displayTextDirections(List<GraphNode> path, String nextFloor) {
-        LinkedList<Pair<Integer, String>> textDirections = map.getTextualDirections(path, nextFloor);
+        LinkedList<Pair<Integer, String>> textDirections = map.getTextualDirections(path, nextFloor, true);
         directions = textDirections.stream().map(p -> p.getValue()).collect(Collectors.toList());
         return;
     }
