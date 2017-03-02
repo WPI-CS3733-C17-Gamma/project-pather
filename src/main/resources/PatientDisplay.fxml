@@ -33,14 +33,13 @@
            <children>
             <Rectangle arcHeight="5.0" arcWidth="5.0" height="115.0" stroke="#424556ab" strokeType="OUTSIDE" width="1000.0">
                <fill>
-                  <LinearGradient endY="0.8269230769230769" startX="0.004807692307692308">
+                  <LinearGradient endX="1.0" endY="0.48557692307692313">
                      <stops>
-                        <Stop color="#7f94e1db" />
-                        <Stop color="#ffffff66" offset="1.0" />
+                        <Stop color="#290887ad" />
+                        <Stop color="WHITE" offset="1.0" />
                      </stops>
                   </LinearGradient>
-               </fill>
-            </Rectangle>
+               </fill></Rectangle>
             <Button fx:id="exitButton" layoutX="280.0" layoutY="24.0" mnemonicParsing="false" onAction="#exitSearch" prefHeight="47.0" prefWidth="50.0" styleClass="exitButton" stylesheets="@design.css" text="X" />
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="470.0" layoutX="40.0" layoutY="115.0" stroke="#1b449c" strokeType="INSIDE" visible="false" width="920.0" />
               <ImageView fx:id="logo" fitHeight="57.0" fitWidth="374.0" layoutX="343.0" layoutY="22.0" pickOnBounds="true" preserveRatio="true">
