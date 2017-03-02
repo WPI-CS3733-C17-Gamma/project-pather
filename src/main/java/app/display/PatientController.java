@@ -69,8 +69,8 @@ public class PatientController extends DisplayController implements Initializabl
     @FXML private ListView<String> textDirectionsListView;
     @FXML private AnchorPane anchorPane;
     @FXML private TabPane mapTabs;
-    @FXML private Tab main;
-    @FXML private Tab belkin;
+    @FXML private Tab mainTab;
+    @FXML private Tab belkinTab;
     @FXML private Tab campusTab;
     @FXML private ChoiceBox selectPhoneOrEmail;
     @FXML private TextField phoneOrEmail;
@@ -87,8 +87,16 @@ public class PatientController extends DisplayController implements Initializabl
     @FXML private Button login;
     @FXML private Button TextDirection;
     @FXML private Button floor1;
+    @FXML private Button floor2;
     @FXML private Button floor3;
+    @FXML private Button floor4;
+    @FXML private Button floor5;
+    @FXML private Button floor6;
+    @FXML private Button floor7;
     @FXML private Button belkin1;
+    @FXML private Button belkin2;
+    @FXML private Button belkin3;
+    @FXML private Button belkin4;
     @FXML private Button campus;
     @FXML private Button sendTextButton;
     @FXML private Line line;
@@ -96,6 +104,7 @@ public class PatientController extends DisplayController implements Initializabl
     @FXML private ToggleButton togStairs;
     @FXML private ListView providersList;
     @FXML private VBox creditsPane;
+    HashMap<String, Button> buttonHashMap = new HashMap<>();
     //Colors for patient Display
     //------------------------------------------------------------------------------------------------------------------
     private Color lightGrey = Color.rgb(211, 211, 211);
@@ -174,6 +183,18 @@ public class PatientController extends DisplayController implements Initializabl
         this.stage.addEventFilter(MouseEvent.ANY, passAllEventsToTimer);
         this.stage.addEventFilter(KeyEvent.ANY, passAllEventsToTimer);
         this.memento = new PatientMemento(currentMap);
+        buttonHashMap.put("floor1", floor1);
+        buttonHashMap.put("floor2", floor2);
+        buttonHashMap.put("floor3", floor3);
+        buttonHashMap.put("floor4", floor4);
+        buttonHashMap.put("floor5", floor5);
+        buttonHashMap.put("floor6", floor6);
+        buttonHashMap.put("floor7", floor7);
+        buttonHashMap.put("belkin1", belkin1);
+        buttonHashMap.put("belkin2", belkin2);
+        buttonHashMap.put("belkin3", belkin3);
+        buttonHashMap.put("belkin4", belkin4);
+        buttonHashMap.put("campus", campus);
     }
 
 
@@ -184,6 +205,7 @@ public class PatientController extends DisplayController implements Initializabl
         Image floor = applicationController.getFloorImage(currentMap);
         if (displayState == state.PATIENT_DEFAULT){
             imageView.setImage(floor);
+            drawRoomLabel(currentMap, imageView);
         }
     }
 
@@ -492,7 +514,7 @@ public class PatientController extends DisplayController implements Initializabl
         if (kioskNode != null) {
             defaultFloor = kioskNode.getLocation().getFloor();
         }
-        imageView.setImage(applicationController.getFloorImage(defaultFloor));
+//        imageView.setImage(applicationController.getFloorImage(defaultFloor));
         if(drawnObjects == null) {
             return;
         }
@@ -1038,7 +1060,13 @@ cur = map.getRoomFromName(roomName);
     public void initialize(URL location, ResourceBundle resources) {
         logger.info("INIT PatientController");
         displayImage();
-//        displayPatientMap(String floorname, Button currentButton)
+        SingleSelectionModel<Tab> selectionModel = mapTabs.getSelectionModel();
+//        displayPatientMap(currentMap, buttonHashMap.get(currentMap));
+        switch (currentMap.charAt(0)){
+            case 'c':selectionModel.select(campusTab);
+            break;
+
+        }
 
         imageView.setMouseTransparent(true);
 
