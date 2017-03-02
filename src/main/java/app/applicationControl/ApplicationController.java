@@ -182,7 +182,6 @@ public class ApplicationController extends Application {
         ProxyImage proxyFloor = floorMaps.get(floor);
         if (proxyFloor != null) {
             try {
-                System.out.println("Hi mom!");
                 return proxyFloor.getValue();
             }
             catch (IllegalArgumentException e){
