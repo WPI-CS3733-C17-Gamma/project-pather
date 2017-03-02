@@ -1196,17 +1196,7 @@ cur = map.getRoomFromName(roomName);
     public void scaleWidth(Number oldSceneWidth, Number newSceneWidth){
         anchorPane.setScaleX(anchorPane.getScaleX()*newSceneWidth.doubleValue()/oldSceneWidth.doubleValue());
         clearDisplay();
-        for(Node child :multiMapDisplayMenu.getChildren()){
-                child.setEffect(null);
-            }
-            ImageView iv = minimaps.get(currentSubPath).map;
-            currentSubPath = (int) iv.getId().charAt(0) - 48;
-            SubPath path = currentPath.get(currentSubPath);//ascii conversion
-            clearDisplay();
-            displaySubPath(imageView, path, true,10,1, 20);
-            displayMinipaths();
-            iv.setEffect(new DropShadow(30, Color.rgb(42, 57, 86)));
-        //drawRoomLabel(currentMap, imageView);
+        drawRoomLabel(currentMap, imageView);
         //imageView.setScaleX(imageView.getScaleX()*newSceneWidth.doubleValue()/oldSceneWidth.doubleValue());
     }
 
@@ -1218,17 +1208,7 @@ cur = map.getRoomFromName(roomName);
     public void scaleHeight(Number oldSceneHeight, Number newSceneHeight){
         anchorPane.setScaleY(anchorPane.getScaleY()*newSceneHeight.doubleValue()/oldSceneHeight.doubleValue());
         clearDisplay();
-        for(Node child :multiMapDisplayMenu.getChildren()){
-                child.setEffect(null);
-            }
-            ImageView iv = minimaps.get(currentSubPath).map;
-            currentSubPath = (int) iv.getId().charAt(0) - 48;
-            SubPath path = currentPath.get(currentSubPath);//ascii conversion
-            clearDisplay();
-            displaySubPath(imageView, path, true,10,1, 20);
-            displayMinipaths();
-            iv.setEffect(new DropShadow(30, Color.rgb(42, 57, 86)));
-        //drawRoomLabel(currentMap, imageView);
+        drawRoomLabel(currentMap, imageView);
         //imageView.setScaleX(imageView.getScaleY()*newSceneHeight.doubleValue()/oldSceneHeight.doubleValue());
     }
 
