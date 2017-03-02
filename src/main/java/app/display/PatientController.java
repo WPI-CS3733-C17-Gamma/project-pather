@@ -69,15 +69,12 @@ public class PatientController extends DisplayController implements Initializabl
     @FXML private ListView<String> textDirectionsListView;
     @FXML private AnchorPane anchorPane;
     @FXML private TabPane mapTabs;
-    @FXML private Tab mainTab;
-    @FXML private Tab belkinTab;
-    @FXML private Tab campusTab;
+    @FXML private Tab mainTab, belkinTab, campusTab;
     @FXML private ChoiceBox selectPhoneOrEmail;
     @FXML private TextField phoneOrEmail;
 
     @FXML private AnchorPane searchAnchorPane;
-    @FXML private Button help;
-    @FXML private Button exitButton;
+    @FXML private Button help, exitButton;
     @FXML private HBox multiMapDisplayMenu;
     @FXML private HBox mapHbox;
     @FXML private Button adminButton;
@@ -86,18 +83,8 @@ public class PatientController extends DisplayController implements Initializabl
     @FXML private Button patientDisplayButton;
     @FXML private Button login;
     @FXML private Button TextDirection;
-    @FXML private Button floor1;
-    @FXML private Button floor2;
-    @FXML private Button floor3;
-    @FXML private Button floor4;
-    @FXML private Button floor5;
-    @FXML private Button floor6;
-    @FXML private Button floor7;
-    @FXML private Button belkin1;
-    @FXML private Button belkin2;
-    @FXML private Button belkin3;
-    @FXML private Button belkin4;
-    @FXML private Button campus;
+    @FXML private Button floor1,  floor2, floor3, floor4, floor5, floor6, floor7;
+    @FXML private Button belkin1, belkin2, belkin3, belkin4, campus;
     @FXML private Button sendTextButton;
     @FXML private Line line;
     @FXML private ImageView logo;
@@ -203,9 +190,8 @@ public class PatientController extends DisplayController implements Initializabl
     public void startSearch(){
         if (this.displayState == state.PATIENT_DEFAULT){//switch state
             clearDisplay();
-            imageView.setImage(imageView.getImage());
-            this.displayState = state.PATIENT_SEARCH;
             displayImage();
+            this.displayState = state.PATIENT_SEARCH;
         }
     }
 
@@ -293,9 +279,9 @@ public class PatientController extends DisplayController implements Initializabl
     public void search () {
         System.out.println("Doing search...");
         if (displayState != state.PATIENT_SEARCH){
-            displayState = state.PATIENT_SEARCH;
-            startSearch();
             clearSearchDisplay();
+            startSearch();
+            displayState = state.PATIENT_SEARCH;
             System.out.println("Starting display");
         }
 
