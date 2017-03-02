@@ -163,7 +163,7 @@ public class PatientController extends DisplayController implements Initializabl
                         floorname = defaultFloor;
                     }
                     timer.resetTimer(new PatientMemento(floorname));
-            }
+                }
             };
         this.stage.addEventFilter(MouseEvent.ANY, passAllEventsToTimer);
         this.stage.addEventFilter(KeyEvent.ANY, passAllEventsToTimer);
@@ -185,8 +185,8 @@ public class PatientController extends DisplayController implements Initializabl
      * shows the patient search interface (the dark one)
      */
     public void startSearch(){
-        clearDisplay();
         if (this.displayState == state.PATIENT_DEFAULT){//switch state
+            clearDisplay();
             imageView.setImage(imageView.getImage());
             this.displayState = state.PATIENT_SEARCH;
             displayImage();
@@ -208,7 +208,7 @@ public class PatientController extends DisplayController implements Initializabl
             this.displayState = state.PATIENT_DEFAULT;
             clearSearchDisplay();
             displayImage();//display the original image
-
+            searchBar.setPromptText("Search");
             drawRoomLabel(currentMap, imageView);
         }
     }
@@ -239,6 +239,8 @@ public class PatientController extends DisplayController implements Initializabl
             timeline.play();
             displayState  = s;
             TextDirection.setVisible(true);
+            textDirection();
+            TextDirection.setText("Hide Text Directions");
             mapTabs.setVisible(false);
         }
     }
@@ -265,6 +267,7 @@ public class PatientController extends DisplayController implements Initializabl
             mapTabs.setVisible(true);
             textDirectionsListView.setVisible(false);
             TextDirection.setVisible(false);
+            TextDirection.setText("Show Text Directions");
         }
     }
     /**
@@ -272,11 +275,14 @@ public class PatientController extends DisplayController implements Initializabl
      * perform search; get text from the textfield
      */
     public void search () {
-        if (displayState != state.DISPLAYING_TEXT_DIRECTION || displayState != state.PATIENT_SEARCH){
+        System.out.println("Doing search...");
+        if (displayState != state.PATIENT_SEARCH){
+            displayState = state.PATIENT_SEARCH;
             startSearch();
+            clearSearchDisplay();
+            System.out.println("Starting display");
         }
 
-        clearSearchDisplay();
         currentPath = null;
         String search = searchBar.getText();
         if (!search.isEmpty()) {
@@ -318,9 +324,9 @@ public class PatientController extends DisplayController implements Initializabl
 	// to the bottom of the list
         else{
             String lowerCaseSearch = searchTerm.toLowerCase();
-	    List<String> results = map.searchEntry(lowerCaseSearch) ;
-	    results.addAll(map.searchRoom(searchTerm));
-	    return results;
+            List<String> results = map.searchEntry(lowerCaseSearch) ;
+            results.addAll(map.searchRoom(searchTerm));
+            return results;
         }
         //(update) the display the list of room
     }
@@ -331,7 +337,8 @@ public class PatientController extends DisplayController implements Initializabl
      * @return
      */
     public GraphNode select(String option) {
-        searchBar.setText(option);
+        searchBar.setPromptText(option);
+        searchBar.setText("");
         logger.info("Select {}", option);
         DirectoryEntry entry = map.getEntry(option);
         // if the selected entry is an entry not a room
@@ -401,8 +408,9 @@ public class PatientController extends DisplayController implements Initializabl
      * refresh the display
      */
     public void refreshDisplay () {
-            clearDisplay();
-            drawRoomLabel(currentMap, imageView);
+        System.out.println("Clearing display");
+        clearDisplay();
+        drawRoomLabel(currentMap, imageView);
     }
 
     /**
@@ -723,9 +731,9 @@ cur = map.getRoomFromName(roomName);
      */
     public void goToSelectedRoom(MouseEvent e, String roomname){
         if (e.getSource() instanceof Label){
-            searchBar.setText(roomname);
+            searchBar.setPromptText(roomname);
+            searchBar.setText("");
             startSearch();
-            // TODO make use stairs
             getPath(map.getKioskLocation(),map.getRoomFromName(roomname).getLocation());
         }
     }
