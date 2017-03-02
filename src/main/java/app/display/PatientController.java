@@ -183,18 +183,6 @@ public class PatientController extends DisplayController implements Initializabl
         this.stage.addEventFilter(MouseEvent.ANY, passAllEventsToTimer);
         this.stage.addEventFilter(KeyEvent.ANY, passAllEventsToTimer);
         this.memento = new PatientMemento(currentMap);
-        buttonHashMap.put("floor1", floor1);
-        buttonHashMap.put("floor2", floor2);
-        buttonHashMap.put("floor3", floor3);
-        buttonHashMap.put("floor4", floor4);
-        buttonHashMap.put("floor5", floor5);
-        buttonHashMap.put("floor6", floor6);
-        buttonHashMap.put("floor7", floor7);
-        buttonHashMap.put("belkin1", belkin1);
-        buttonHashMap.put("belkin2", belkin2);
-        buttonHashMap.put("belkin3", belkin3);
-        buttonHashMap.put("belkin4", belkin4);
-        buttonHashMap.put("campus", campus);
     }
 
 
@@ -475,15 +463,15 @@ public class PatientController extends DisplayController implements Initializabl
 
     public void displayPatientMap(String floorname, Button currentButton){
         clearDisplay();
-        imageView.setImage(applicationController.getFloorImage(floorname));
         if (previousButton != null){
             //return to default image color
             previousButton.setStyle("-fx-background-color: #F7F7F7");
         }
         previousButton = currentButton;
         //selected color
-        previousButton.setStyle("-fx-background-color: #898b95");
+        currentButton.setStyle("-fx-background-color: #898b95");
 
+        imageView.setImage(applicationController.getFloorImage(floorname));
         drawRoomLabel(currentMap, imageView);
     }
 
@@ -1059,13 +1047,32 @@ cur = map.getRoomFromName(roomName);
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         logger.info("INIT PatientController");
-        displayImage();
+        buttonHashMap.put("floor1", floor1);
+        buttonHashMap.put("floor2", floor2);
+        buttonHashMap.put("floor3", floor3);
+        buttonHashMap.put("floor4", floor4);
+        buttonHashMap.put("floor5", floor5);
+        buttonHashMap.put("floor6", floor6);
+        buttonHashMap.put("floor7", floor7);
+        buttonHashMap.put("belkin1", belkin1);
+        buttonHashMap.put("belkin2", belkin2);
+        buttonHashMap.put("belkin3", belkin3);
+        buttonHashMap.put("belkin4", belkin4);
+        buttonHashMap.put("campus", campus);
+    //setting the initial map to the kiosk
         SingleSelectionModel<Tab> selectionModel = mapTabs.getSelectionModel();
-//        displayPatientMap(currentMap, buttonHashMap.get(currentMap));
+        displayPatientMap(currentMap, buttonHashMap.get(currentMap));
+        System.out.println(currentMap);
         switch (currentMap.charAt(0)){
+            //c for campus
             case 'c':selectionModel.select(campusTab);
-            break;
-
+                break;
+            //b for belkin#
+            case 'b':selectionModel.select(belkinTab);
+                break;
+            //f for floor# in main building
+            case 'f':selectionModel.select(mainTab);
+                break;
         }
 
         imageView.setMouseTransparent(true);
