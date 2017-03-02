@@ -21,6 +21,8 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
@@ -29,6 +31,16 @@
     <children>
         <AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMousePressed="#hideOptions" prefHeight="600.0" prefWidth="1000.0" styleClass="background" stylesheets="@design.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
            <children>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" height="115.0" stroke="#424556ab" strokeType="OUTSIDE" width="1000.0">
+               <fill>
+                  <LinearGradient endY="0.8269230769230769" startX="0.004807692307692308">
+                     <stops>
+                        <Stop color="#7f94e1db" />
+                        <Stop color="#ffffff66" offset="1.0" />
+                     </stops>
+                  </LinearGradient>
+               </fill>
+            </Rectangle>
             <Button fx:id="exitButton" layoutX="280.0" layoutY="24.0" mnemonicParsing="false" onAction="#exitSearch" prefHeight="47.0" prefWidth="50.0" styleClass="exitButton" stylesheets="@design.css" text="X" />
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="470.0" layoutX="40.0" layoutY="115.0" stroke="#1b449c" strokeType="INSIDE" visible="false" width="920.0" />
               <ImageView fx:id="logo" fitHeight="57.0" fitWidth="374.0" layoutX="343.0" layoutY="22.0" pickOnBounds="true" preserveRatio="true">

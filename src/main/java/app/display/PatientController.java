@@ -5,9 +5,7 @@ import app.applicationControl.ApplicationController;
 import app.applicationControl.email.EmailController;
 import app.dataPrimitives.*;
 import app.pathfinding.PathNotFoundException;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
+import javafx.animation.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
@@ -579,6 +577,33 @@ public class PatientController extends DisplayController implements Initializabl
         } catch (PathNotFoundException e) {
             logger.error("No path can be drawn");
         }
+        searchAnimation(imageView);
+    }
+
+
+    private void searchAnimation(ImageView start) {
+        SequentialTransition slideshow = new SequentialTransition();
+
+        List<ImageView> slides = new LinkedList<>();
+        for (Minimap minimap:minimaps) {
+            slides.add(minimap.map);
+        }
+        for (ImageView slide :slides) {
+
+            SequentialTransition sequentialTransition = new SequentialTransition();
+
+            FadeTransition fadeIn = new FadeTransition(Duration.millis(20000),start);
+            FadeTransition stayOn = new FadeTransition(Duration.millis(20000),start);
+            FadeTransition fadeOut = new FadeTransition(Duration.millis(20000),start);
+            fadeIn.setFromValue(1.0);
+            fadeIn.setToValue(0.3);
+            fadeIn.setCycleCount(4);
+            sequentialTransition.getChildren().addAll(fadeIn, stayOn, fadeOut);
+//            anchorPane.getChildren().add(slide);
+            slideshow.getChildren().add(sequentialTransition);
+
+        }
+        slideshow.play();
     }
 
     /**
