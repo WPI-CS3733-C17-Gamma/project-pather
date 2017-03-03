@@ -21,6 +21,8 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
@@ -29,6 +31,15 @@
     <children>
         <AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMousePressed="#hideOptions" prefHeight="600.0" prefWidth="1000.0" styleClass="background" stylesheets="@design.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
            <children>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" height="115.0" opacity="0.78" stroke="#424556ab" strokeType="OUTSIDE" width="1000.0">
+               <fill>
+                  <LinearGradient endX="0.5922330097087378" endY="1.0">
+                     <stops>
+                        <Stop color="#1e2036" />
+                        <Stop color="#055f8000" offset="1.0" />
+                     </stops>
+                  </LinearGradient>
+               </fill></Rectangle>
             <Button fx:id="exitButton" layoutX="280.0" layoutY="24.0" mnemonicParsing="false" onAction="#exitSearch" prefHeight="47.0" prefWidth="50.0" styleClass="exitButton" stylesheets="@design.css" text="X" />
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="470.0" layoutX="40.0" layoutY="115.0" stroke="#1b449c" strokeType="INSIDE" visible="false" width="920.0" />
               <ImageView fx:id="logo" fitHeight="57.0" fitWidth="374.0" layoutX="343.0" layoutY="22.0" pickOnBounds="true" preserveRatio="true">
@@ -120,7 +131,7 @@
                <padding>
                   <Insets left="30.0" />
                </padding></HBox>
-            <ToggleButton fx:id="togStairs" alignment="BOTTOM_RIGHT" layoutX="878.0" layoutY="564.0" mnemonicParsing="false" text="Stairs" />
+            <ToggleButton fx:id="togStairs" alignment="BOTTOM_RIGHT" layoutX="888.0" layoutY="564.0" mnemonicParsing="false" text="Toggle Stairs" />
             <ChoiceBox fx:id="selectPhoneOrEmail" layoutX="501.0" layoutY="24.0" prefHeight="30.0" prefWidth="57.0" visible="false" />
             <ListView fx:id="providersList" focusTraversable="false" layoutX="560.0" layoutY="50.0" visible="false" />
             <TextField fx:id="phoneOrEmail" layoutX="563.0" layoutY="24.0" prefHeight="30.0" prefWidth="210.0" promptText="Send directions to Phone or Email" visible="false" />

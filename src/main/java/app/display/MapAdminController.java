@@ -445,12 +445,12 @@ public class MapAdminController extends DisplayController {
      */
     public void addRoomLabel (Room room) {
         Label label = new Label(room.getName());
-        label.setFont(Font.font ("Georgia", 10));
+        label.setFont(Font.font ("Calibri", 10));
         FloorPoint temp = graphToImage(room.getLocation().getLocation(),  imageviewMap);
         label.setLayoutX(temp.getX() + 5);
         label.setLayoutY(temp.getY() + 5);
-        label.setTextFill(Color.rgb(27, 68, 156));
-        label.setStyle("-fx-background-color: #E1F0F5; -fx-border-color: darkblue;-fx-padding: 2;");
+        label.setTextFill(Color.rgb(211,211,211));
+        label.setStyle("-fx-background-color: #424556; -fx-padding: 2;");
         label.setMouseTransparent(true);
         mapPane.getChildren().add(label);
         this.miscDrawnObjects.add(label);
