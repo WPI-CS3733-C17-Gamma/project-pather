@@ -293,7 +293,11 @@ public class PatientController extends DisplayController implements Initializabl
         String search = searchBar.getText();
         if (displayState != state.PATIENT_SEARCH){ //|| search.equals("")){
             clearSearchDisplay();
+            // Don't lose stairs toggle state across searches
+            // Pretty hacky fix
+            boolean stairsToggle = togStairs.isSelected();
             revertState(memento);
+            togStairs.setSelected(stairsToggle);
 //            startSearch();
             displayState = state.PATIENT_SEARCH;
             System.out.println("Starting display");
