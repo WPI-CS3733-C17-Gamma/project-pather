@@ -25,7 +25,10 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.*;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
+import javafx.scene.shape.Polygon;
+import javafx.scene.shape.Shape;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -86,7 +89,6 @@ public class PatientController extends DisplayController implements Initializabl
     @FXML private ToggleButton togStairs;
     @FXML private ListView providersList;
     @FXML private VBox creditsPane;
-    @FXML private Rectangle rectangle;
 
     //Colors for patient Display
     //------------------------------------------------------------------------------------------------------------------
@@ -487,7 +489,6 @@ public class PatientController extends DisplayController implements Initializabl
     public void clearSearchDisplay(){
         hideMultiMapAnimation();//hide the hBox thingy
         hideMapAnimation();
-        showRectangleAnimation();
         multiMapDisplayMenu.getChildren().clear();//clear the hBox menu thingy
         clearDisplay();
     }
@@ -579,8 +580,6 @@ public class PatientController extends DisplayController implements Initializabl
             }
             showMultiMapAnimation();
             showMapAnimation();
-            hideRectangleAnimation();
-
             textDirectionsListView.setVisible(true);
             mapTabs.setVisible(false);
             selectPhoneOrEmail.setVisible(true);
@@ -589,63 +588,6 @@ public class PatientController extends DisplayController implements Initializabl
         } catch (PathNotFoundException e) {
             logger.error("No path can be drawn");
         }
-    }
-
-    /**
-     *Shows the rectangle on search
-     */
-    private void hideRectangleAnimation(){
-        SequentialTransition slideshow = new SequentialTransition();
-
-        List<ImageView> slides = new LinkedList<>();
-        for (Minimap minimap:minimaps) {
-            slides.add(minimap.map);
-        }
-        for (ImageView slide :slides) {
-
-            SequentialTransition sequentialTransition = new SequentialTransition();
-
-            FadeTransition fadeIn = new FadeTransition(Duration.millis(500), rectangle);
-            fadeIn.setFromValue(1.0);
-            fadeIn.setToValue(0);
-            fadeIn.setCycleCount(0);
-            fadeIn.setOnFinished(e-> {
-                rectangle.setOpacity(0);
-            });
-            sequentialTransition.getChildren().addAll(fadeIn);
-            slideshow.getChildren().add(sequentialTransition);
-
-        }
-        slideshow.play();
-
-    }
-        /**
-     *Shows the rectangle on search
-     */
-    private void showRectangleAnimation(){
-        SequentialTransition slideshow = new SequentialTransition();
-
-        List<ImageView> slides = new LinkedList<>();
-        for (Minimap minimap:minimaps) {
-            slides.add(minimap.map);
-        }
-        for (ImageView slide :slides) {
-
-            SequentialTransition sequentialTransition = new SequentialTransition();
-
-            FadeTransition fadeIn = new FadeTransition(Duration.millis(500), rectangle);
-            fadeIn.setFromValue(0);
-            fadeIn.setToValue(1.0);
-            fadeIn.setCycleCount(0);
-            fadeIn.setOnFinished(e-> {
-                rectangle.setOpacity(1);
-            });
-            sequentialTransition.getChildren().addAll(fadeIn);
-            slideshow.getChildren().add(sequentialTransition);
-
-        }
-        slideshow.play();
-
     }
 
     /**
@@ -1406,7 +1348,6 @@ cur = map.getRoomFromName(roomName);
         refreshDisplay();
         phoneOrEmail.clear();
         creditsPane.setVisible(false);
-        showRectangleAnimation();
         togStairs.setSelected(false);
     }
 
