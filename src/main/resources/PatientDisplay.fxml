@@ -131,7 +131,7 @@
                <padding>
                   <Insets left="30.0" />
                </padding></HBox>
-            <ToggleButton fx:id="togStairs" alignment="BOTTOM_RIGHT" layoutX="878.0" layoutY="564.0" mnemonicParsing="false" text="Stairs" />
+            <ToggleButton fx:id="togStairs" alignment="BOTTOM_RIGHT" layoutX="888.0" layoutY="564.0" mnemonicParsing="false" text="Toggle Stairs" />
             <ChoiceBox fx:id="selectPhoneOrEmail" layoutX="501.0" layoutY="24.0" prefHeight="30.0" prefWidth="57.0" visible="false" />
             <ListView fx:id="providersList" focusTraversable="false" layoutX="560.0" layoutY="50.0" visible="false" />
             <TextField fx:id="phoneOrEmail" layoutX="563.0" layoutY="24.0" prefHeight="30.0" prefWidth="210.0" promptText="Send directions to Phone or Email" visible="false" />
