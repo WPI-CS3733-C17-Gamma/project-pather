@@ -676,7 +676,7 @@ public class MapAdminController extends DisplayController {
     /**
      *
      *@param loc
-     *@param imageToDrawnOn
+     *@param imageToDrawOn
      */
     private void drawKiosk(FloorPoint loc, ImageView imageToDrawOn ){
         FloorPoint imagePoint = graphToImage(loc, imageToDrawOn);
@@ -760,6 +760,7 @@ public class MapAdminController extends DisplayController {
     public void addConnection(GraphNode nodeA, GraphNode nodeB){
         if(nodeA != null && nodeB != null){
             map.addConnection(nodeA, nodeB);
+
             drawMap();
         }
     }
@@ -1227,7 +1228,6 @@ public class MapAdminController extends DisplayController {
                 case BACK_SPACE:
                     changeState(State.NONE);
                     deleteConnection();
-                    break;
                 case N:
                     toggleTools.selectToggle(togglebuttonAddNode);
                     break;
@@ -1267,6 +1267,11 @@ public class MapAdminController extends DisplayController {
                 addConnection(secondaryNode, selectedNode);
             }
         }
+        buttonDeleteConnection.setDisable(
+            secondaryNode == null || selectedNode == null ||
+            !selectedNode.getAdjacent().contains(secondaryNode));
+            buttonDeleteElevator.setDisable(selectedNode == null ||
+                                        !selectedNode.doesCrossFloor());
     }
 
     public void unclickToggleButtons(){
