@@ -49,7 +49,6 @@ public class MapAdminController extends DisplayController {
     }
 
     State currentState = State.NONE;
-    //    MapAdminDisplay display;
     GraphNode selectedNode;
     List<GraphNode> highlightedNodes;
     GraphNode secondaryNode;
@@ -153,6 +152,7 @@ public class MapAdminController extends DisplayController {
                 addRoom();
                 mapPane.requestFocus();
                 drawMap();
+              handleToggleTools();
             }
         });
 
@@ -333,12 +333,13 @@ public class MapAdminController extends DisplayController {
         drawMap();
 
         // add event filter
-        stage.addEventFilter(KeyEvent.ANY, (event) -> {
-                if (!roomName.isFocused() /*&& !idleTime.isFocused()*/) {
+        stage.addEventFilter(KeyEvent.KEY_PRESSED, (event) -> {
+                if (selectedNode != null
+                    && event.getCode().isArrowKey()
+                    && !roomName.isFocused()
+                    && !idleTime.isFocused()) {
+
                     imageviewMap.requestFocus();
-                    if (selectedNode == null) {
-                        return;
-                    }
                     FloorPoint oldLoc = selectedNode.getLocation();
                     if (oldLoc.getX() > 999 || oldLoc.getX() < 1 ||
                         oldLoc.getY() > 999 || oldLoc.getY() < 1) {
@@ -444,12 +445,12 @@ public class MapAdminController extends DisplayController {
      */
     public void addRoomLabel (Room room) {
         Label label = new Label(room.getName());
-        label.setFont(Font.font ("Georgia", 10));
+        label.setFont(Font.font ("Calibri", 10));
         FloorPoint temp = graphToImage(room.getLocation().getLocation(),  imageviewMap);
         label.setLayoutX(temp.getX() + 5);
         label.setLayoutY(temp.getY() + 5);
-        label.setTextFill(Color.rgb(27, 68, 156));
-        label.setStyle("-fx-background-color: #E1F0F5; -fx-border-color: darkblue;-fx-padding: 2;");
+        label.setTextFill(Color.rgb(211,211,211));
+        label.setStyle("-fx-background-color: #424556; -fx-padding: 2;");
         label.setMouseTransparent(true);
         mapPane.getChildren().add(label);
         this.miscDrawnObjects.add(label);
@@ -675,7 +676,7 @@ public class MapAdminController extends DisplayController {
     /**
      *
      *@param loc
-     *@param imageToDrawnOn
+     *@param imageToDrawOn
      */
     private void drawKiosk(FloorPoint loc, ImageView imageToDrawOn ){
         FloorPoint imagePoint = graphToImage(loc, imageToDrawOn);
@@ -759,6 +760,7 @@ public class MapAdminController extends DisplayController {
     public void addConnection(GraphNode nodeA, GraphNode nodeB){
         if(nodeA != null && nodeB != null){
             map.addConnection(nodeA, nodeB);
+
             drawMap();
         }
     }
@@ -1039,10 +1041,11 @@ public class MapAdminController extends DisplayController {
         buttonDeleteElevator.setDisable(selectedNode == null ||
                                         !selectedNode.doesCrossFloor());
 
-        defaultKioskButton.setDisable(selectedNode == null ||
-                                      map.getRoomFromNode(selectedNode) == null ||
-				      (map.getKioskLocation() != null &&
-				       selectedNode.getLocation().equals(map.getKioskLocation().getLocation())));
+        defaultKioskButton.setDisable(
+            selectedNode == null ||
+            map.getRoomFromNode(selectedNode) == null ||
+            (map.getKioskLocation() != null &&
+             selectedNode.getLocation().equals(map.getKioskLocation().getLocation())));
     }
 
     /**
@@ -1226,7 +1229,6 @@ public class MapAdminController extends DisplayController {
                 case BACK_SPACE:
                     changeState(State.NONE);
                     deleteConnection();
-                    break;
                 case N:
                     toggleTools.selectToggle(togglebuttonAddNode);
                     break;
@@ -1266,6 +1268,11 @@ public class MapAdminController extends DisplayController {
                 addConnection(secondaryNode, selectedNode);
             }
         }
+        buttonDeleteConnection.setDisable(
+            secondaryNode == null || selectedNode == null ||
+            !selectedNode.getAdjacent().contains(secondaryNode));
+            buttonDeleteElevator.setDisable(selectedNode == null ||
+                                        !selectedNode.doesCrossFloor());
     }
 
     public void unclickToggleButtons(){
@@ -1353,40 +1360,14 @@ public class MapAdminController extends DisplayController {
     public void showContextMenu(ContextMenuEvent event){
         contextEvent = event;
         selectNode(nearbyNodeContext(contextEvent));
-
-
-//        ContextMenu contextMenu = new ContextMenu();
-//
-//        contextMenu.setOnShowing(new EventHandler<WindowEvent>() {
-//            public void handle(WindowEvent e) {
-//            }
-//        });
-//        contextMenu.setOnShown(new EventHandler<WindowEvent>() {
-//            public void handle(WindowEvent e) {
-//            }
-//        });
-//
-//        MenuItem item1 = new MenuItem("About");
-//        item1.setStyle("MapAdminContextMenu");
-//        item1.setOnAction(new EventHandler<ActionEvent>() {
-//            public void handle(ActionEvent e) {
-//            }
-//        });
-//        MenuItem item2 = new MenuItem("Preferences");
-//        item2.setStyle("fx-background-image: red");
-//        item2.setOnAction(new EventHandler<ActionEvent>() {
-//            public void handle(ActionEvent e) {
-//            }
-//        });
-//        contextMenu.getItems().addAll(item1, item2);
         Shape circle = new Circle(event.getX(), event.getY(), 10);
         circle.setVisible(false);
         mapPane.getChildren().add(circle);
         if(selectedNode != null){
             nodeMenu.show(circle,event.getScreenX(), event.getScreenY());
-        }else{
+        }
+        else{
             screenMenu.show(circle, event.getScreenX(), event.getScreenY());
         }
-
     }
 }

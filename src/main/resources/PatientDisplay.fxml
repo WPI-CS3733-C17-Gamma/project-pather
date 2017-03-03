@@ -21,6 +21,8 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
@@ -82,6 +84,15 @@
       </VBox>
         <AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMousePressed="#hideOptions" prefHeight="600.0" prefWidth="1000.0" styleClass="background" stylesheets="@design.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
            <children>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" height="115.0" opacity="0.78" stroke="#424556ab" strokeType="OUTSIDE" width="1000.0">
+               <fill>
+                  <LinearGradient endX="0.5922330097087378" endY="1.0">
+                     <stops>
+                        <Stop color="#1e2036" />
+                        <Stop color="#055f8000" offset="1.0" />
+                     </stops>
+                  </LinearGradient>
+               </fill></Rectangle>
             <Button fx:id="exitButton" layoutX="280.0" layoutY="24.0" mnemonicParsing="false" onAction="#exitSearch" prefHeight="47.0" prefWidth="50.0" styleClass="exitButton" stylesheets="@design.css" text="X" />
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="470.0" layoutX="40.0" layoutY="115.0" stroke="#1b449c" strokeType="INSIDE" visible="false" width="920.0" />
               <ImageView fx:id="logo" fitHeight="57.0" fitWidth="374.0" layoutX="343.0" layoutY="22.0" pickOnBounds="true" preserveRatio="true">
@@ -100,7 +111,7 @@
             </HBox>
             <TabPane fx:id="mapTabs" layoutX="662.0" layoutY="79.0" prefHeight="485.0" prefWidth="303.0" stylesheets="@design.css" tabClosingPolicy="UNAVAILABLE">
               <tabs>
-                  <Tab fx:id="main" onSelectionChanged="#displayMain" text="Main">
+                  <Tab fx:id="mainTab" text="Main">
                     <content>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
@@ -119,7 +130,7 @@
                         </AnchorPane>
                     </content>
                   </Tab>
-                <Tab fx:id="belkin" onSelectionChanged="#displayBelkin" text="Belkin">
+                <Tab fx:id="belkinTab" text="Belkin">
                   <content>
                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
@@ -135,7 +146,7 @@
                         </AnchorPane>
                   </content>
                 </Tab>
-                <Tab fx:id="campusTab" onSelectionChanged="#displayCampus" text="Campus">
+                <Tab fx:id="campusTab" text="Campus">
                   <content>
                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
@@ -156,7 +167,7 @@
               </Label>
             <ListView fx:id="textDirectionsListView" layoutX="790.0" layoutY="83.0" prefHeight="379.0" prefWidth="210.0" styleClass="textDirection" stylesheets="@design.css" visible="false" />
             <Button fx:id="TextDirection" layoutX="790.0" layoutY="473.0" mnemonicParsing="false" onMousePressed="#textDirection" prefHeight="37.0" prefWidth="210.0" style="-fx-background-radius: 3px;" text="Show Text Direction" visible="false" />
-              <TextField fx:id="searchBar" layoutX="28.0" layoutY="24.0" onKeyReleased="#search" onMousePressed="#startSearch" prefHeight="47.0" prefWidth="248.0" promptText="Search" styleClass="search" stylesheets="@design.css">
+              <TextField fx:id="searchBar" layoutX="28.0" layoutY="24.0" onKeyReleased="#search" prefHeight="47.0" prefWidth="248.0" promptText="Search" styleClass="search" stylesheets="@design.css">
                  <font>
                     <Font size="28.0" />
                  </font>
