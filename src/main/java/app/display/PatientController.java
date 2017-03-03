@@ -223,6 +223,7 @@ public class PatientController extends DisplayController implements Initializabl
             mapTabs.setVisible(true);
             searchBar.setPromptText("Search");
             this.displayState = state.PATIENT_DEFAULT;
+	    revertState(new PatientMemento(defaultFloor)); 
         }
     }
 
