@@ -257,7 +257,6 @@ public class ApplicationController extends Application {
             adminStage.setTitle("Login");
             adminStage.initOwner(pStage);
             adminStage.setScene(new Scene(root));
-            adminStage.initStyle(StageStyle.UNDECORATED);
             adminStage.addEventHandler(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
                 @Override public void handle(MouseEvent mouseEvent) {
                     // record a delta distance for the drag and drop operation.

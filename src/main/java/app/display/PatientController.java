@@ -1394,6 +1394,7 @@ cur = map.getRoomFromName(roomName);
         phoneOrEmail.clear();
         creditsPane.setVisible(false);
         showRectangleAnimation();
+        togStairs.setSelected(false);
     }
 
     public void exitCredits() {
