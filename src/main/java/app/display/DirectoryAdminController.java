@@ -5,8 +5,7 @@ import app.dataPrimitives.DirectoryEntry;
 import app.dataPrimitives.GraphNode;
 import app.dataPrimitives.Room;
 import app.datastore.Map;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -19,7 +18,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,8 +34,7 @@ public class DirectoryAdminController extends DisplayController{
     @FXML VBox entryEditor;
     @FXML TextField entryName;
     @FXML TextField entryTitle;
-    @FXML TextField entryRoomSearch;
-    @FXML ListView<String> entryRoomOptions;
+    @FXML ComboBox<String> entryRoomBox;
     @FXML Button entryDeleteRoom;
     @FXML ListView<String> entryCurrentLocations;
     @FXML ChoiceBox iconOption;
@@ -71,9 +68,20 @@ public class DirectoryAdminController extends DisplayController{
         listEntries.getSelectionModel().selectedItemProperty().addListener(
             (ov, old_val, new_val) -> selectEntry(new_val));
 
+        entryRoomBox.getEditor().textProperty().addListener(
+            (observableValue, old_val, new_val) ->
+                Platform.runLater(() -> filterRooms(new_val)));
+
         // add change handler for the dropdown list of possible locations
-        entryRoomOptions.getSelectionModel().selectedItemProperty().addListener(
-            (ov, old_val, new_val) -> entryAddRoom(new_val));
+        entryRoomBox.getSelectionModel().selectedItemProperty().addListener(
+            (ov, old_val, new_val) -> {
+                entryAddRoom(new_val);
+                Platform.runLater(() -> {
+                    entryRoomBox.setItems(null);
+                    entryRoomBox.getEditor().clear();
+                    entryRoomBox.hide();
+                });
+        });
 
         // add click handlers to the list of currentRooms
         entryCurrentLocations.getSelectionModel().selectedItemProperty().addListener(
@@ -285,8 +293,7 @@ public class DirectoryAdminController extends DisplayController{
     /**
      * filter rooms for entries
      */
-    public void filterRooms () {
-        String searchText = entryRoomSearch.getText();
+    public void filterRooms (String searchText) {
         logger.debug("Filter Room by {}", searchText);
         if (searchText.isEmpty()) {
             logger.debug("nothing entered");
@@ -305,8 +312,9 @@ public class DirectoryAdminController extends DisplayController{
             results.stream().forEach(System.out::println);
 
             ObservableList<String> roomEntries = FXCollections.observableList(results);
-            entryRoomOptions.setVisible(true);
-            entryRoomOptions.setItems(roomEntries);
+            entryRoomBox.setItems(roomEntries);
+            entryRoomBox.setVisibleRowCount(roomEntries.size() % 10);
+            entryRoomBox.show();
         }
     }
 
@@ -349,10 +357,9 @@ public class DirectoryAdminController extends DisplayController{
      */
     public void entryAddRoom (String selection) {
         Room room = map.getRoomFromName(selection);
-        if(room != null) {
+        if (room != null &&
+            !entryCurrentLocations.getItems().contains(selection)) {
             entryCurrentLocations.getItems().add(selection);
-            entryRoomOptions.setVisible(false);
-            entryRoomSearch.setText("");
         }
         else {
             logger.debug("Cannot add room to entry, no such room");
