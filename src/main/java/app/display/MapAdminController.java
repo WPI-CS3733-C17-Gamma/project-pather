@@ -49,7 +49,6 @@ public class MapAdminController extends DisplayController {
     }
 
     State currentState = State.NONE;
-    //    MapAdminDisplay display;
     GraphNode selectedNode;
     List<GraphNode> highlightedNodes;
     GraphNode secondaryNode;
@@ -1042,10 +1041,11 @@ public class MapAdminController extends DisplayController {
         buttonDeleteElevator.setDisable(selectedNode == null ||
                                         !selectedNode.doesCrossFloor());
 
-        defaultKioskButton.setDisable(selectedNode == null ||
-                                      map.getRoomFromNode(selectedNode) == null ||
-				      (map.getKioskLocation() != null &&
-				       selectedNode.getLocation().equals(map.getKioskLocation().getLocation())));
+        defaultKioskButton.setDisable(
+            selectedNode == null ||
+            map.getRoomFromNode(selectedNode) == null ||
+            (map.getKioskLocation() != null &&
+             selectedNode.getLocation().equals(map.getKioskLocation().getLocation())));
     }
 
     /**
@@ -1360,40 +1360,14 @@ public class MapAdminController extends DisplayController {
     public void showContextMenu(ContextMenuEvent event){
         contextEvent = event;
         selectNode(nearbyNodeContext(contextEvent));
-
-
-//        ContextMenu contextMenu = new ContextMenu();
-//
-//        contextMenu.setOnShowing(new EventHandler<WindowEvent>() {
-//            public void handle(WindowEvent e) {
-//            }
-//        });
-//        contextMenu.setOnShown(new EventHandler<WindowEvent>() {
-//            public void handle(WindowEvent e) {
-//            }
-//        });
-//
-//        MenuItem item1 = new MenuItem("About");
-//        item1.setStyle("MapAdminContextMenu");
-//        item1.setOnAction(new EventHandler<ActionEvent>() {
-//            public void handle(ActionEvent e) {
-//            }
-//        });
-//        MenuItem item2 = new MenuItem("Preferences");
-//        item2.setStyle("fx-background-image: red");
-//        item2.setOnAction(new EventHandler<ActionEvent>() {
-//            public void handle(ActionEvent e) {
-//            }
-//        });
-//        contextMenu.getItems().addAll(item1, item2);
         Shape circle = new Circle(event.getX(), event.getY(), 10);
         circle.setVisible(false);
         mapPane.getChildren().add(circle);
         if(selectedNode != null){
             nodeMenu.show(circle,event.getScreenX(), event.getScreenY());
-        }else{
+        }
+        else{
             screenMenu.show(circle, event.getScreenX(), event.getScreenY());
         }
-
     }
 }

@@ -223,7 +223,7 @@ public class PatientController extends DisplayController implements Initializabl
             mapTabs.setVisible(true);
             searchBar.setPromptText("Search");
             this.displayState = state.PATIENT_DEFAULT;
-	    revertState(new PatientMemento(defaultFloor)); 
+			revertState(new PatientMemento(defaultFloor));
         }
     }
 
@@ -339,8 +339,8 @@ public class PatientController extends DisplayController implements Initializabl
         if (((int)searchTerm.charAt(0)) < 58 && ((int)searchTerm.charAt(0)) > 47){
             return map.searchRoom(searchTerm);
         }
-	// if the first letter is not a number, search for entries first, then add all the rooms
-	// to the bottom of the list
+        // if the first letter is not a number, search for entries first, then add all the rooms
+        // to the bottom of the list
         else{
             String lowerCaseSearch = searchTerm.toLowerCase();
             List<String> results = map.searchEntry(lowerCaseSearch) ;
@@ -410,7 +410,7 @@ public class PatientController extends DisplayController implements Initializabl
         if (e.getSource() instanceof Button) {
             Button temp = (Button) e.getSource();
             currentMap = temp.getId();
-	        displayPatientMap(currentMap, temp);
+            displayPatientMap(currentMap, temp);
         }
     }
 
@@ -755,8 +755,7 @@ public class PatientController extends DisplayController implements Initializabl
         List<String> roomNames= map.getAllRooms();
         String kiosk = map.getKiosk();
         for (String roomName : roomNames) {
-            Room
-cur = map.getRoomFromName(roomName);
+            Room cur = map.getRoomFromName(roomName);
             GraphNode loc = cur.getLocation();
             // skip rooms without locations
             if (loc == null || ! loc.getLocation().getFloor().equals(floorName)) {
