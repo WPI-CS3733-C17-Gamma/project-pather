@@ -123,7 +123,7 @@ public class EmailController {
 
             });
         poller = new EmailPoller(this, username, password, session);
-        //poller.start();
+        poller.start();
         System.out.println("did return");
     }
 
@@ -169,18 +169,40 @@ public class EmailController {
        return to;
     }
 
-
+    /**
+     * Email Directions
+     * @param to
+     * @param start
+     * @param end
+     * @param useStairs
+     * @return
+     */
     public boolean sendDirections (String to, GraphNode start, GraphNode end, boolean useStairs) {
         return send(to, getDirections(start, end, useStairs));
     }
 
+    /**
+     * Text Directions
+     * @param number
+     * @param carrier
+     * @param start
+     * @param end
+     * @param useStairs
+     * @return
+     */
     public boolean sendTextDirections (String number, phoneCompanies carrier,
                                        GraphNode start, GraphNode end, boolean useStairs) {
         return sendDirections(number + getPhoneEmail(carrier), start, end, useStairs);
     }
 
-    List<String> directions;
 
+    /**
+     * Get directions
+     * @param start
+     * @param end
+     * @param useStairs
+     * @return String
+     */
     private String getDirections(GraphNode start, GraphNode end, boolean useStairs){
         List <GraphNode> path = map.getPath(start, end, useStairs);
         List<SubPath> currentPath;
@@ -198,7 +220,7 @@ public class EmailController {
                 floor = subPath.getFloor();
                 floor = floor.replaceFirst("floor", "Faulkner ");
                 floor = floor.replaceFirst("belkin", "Belking ");
-                dirTemp.add("For floor " + floor);
+                dirTemp.add("For when you are on floor " + floor + ":");
                 LinkedList<Pair<Integer, String>> textDirections = map.getTextualDirections(subPath.getPath(), nextFloor, false);
                 dirTemp.addAll(textDirections.stream().map(p -> p.getValue()).collect(Collectors.toList()));
                 dirTemp.add("\n");
@@ -212,12 +234,11 @@ public class EmailController {
         return getReadableDirections(dirTemp);
     }
 
-    public void displayTextDirections(List<GraphNode> path, String nextFloor) {
-        LinkedList<Pair<Integer, String>> textDirections = map.getTextualDirections(path, nextFloor, true);
-        directions = textDirections.stream().map(p -> p.getValue()).collect(Collectors.toList());
-        return;
-    }
-
+    /**
+     * Return readable content for Email/Phone
+     * @param unreadableDirs
+     * @return
+     */
     public String getReadableDirections (List<String> unreadableDirs) {
         String content = unreadableDirs.stream().reduce("", (acu, el) -> {
             return acu += el + "\n";
@@ -261,18 +282,6 @@ public class EmailController {
         return conversationState.get(person);
     }
 
-    /**
-     * Send text
-     * @param number
-     * @param carrier
-     * @param message
-     * @return
-     */
-    public boolean sendText(double number, phoneCompanies carrier,  String message){
-        String email = getPhoneEmail(carrier);
-        return send(number+email, message);
-
-    }
 
     /**
      * Get phone number email based on carrier

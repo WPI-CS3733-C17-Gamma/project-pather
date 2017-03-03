@@ -32,14 +32,62 @@ public class MessageHandler {
 
     public void handleRealContent (String content) {
 
+
     }
 
-    /**
-     * Used for parsing help directions
-     * @param input
-     */
-    private void searchforLoctation (String input){
 
+    private void searchforLoctation (String input){
+        GraphNode start;
+        List<String> startList = new LinkedList<>();
+        String startName;
+        GraphNode end;
+        List<String> endList = new LinkedList<>();
+        String endName;
+        String email;
+
+        String realInput = input.trim() ;
+        System.out.println("received email");
+
+        realInput = realInput.split("\n")[0]
+            .replaceAll("[^ A-Za-z0-9]*", "") // only asc
+            .replaceAll(".*[dD]irections [fF]rom ", "");
+
+        String[] split = realInput.split(" [Tt]o ");
+        startName = split[0].trim();
+        endName = split[1].trim();
+
+        System.out.println(startName);
+        System.out.println(endName);
+
+        if (startName.toLowerCase().contains("emergency ")){
+            startName = "Emergency";
+
+        } else if (endName.toLowerCase().contains("emergency ")){
+            endName = "Emergency";
+
+        }
+            startList = emailController.map.searchRoom(startName);
+            endList = emailController.map.searchRoom(endName);
+
+
+        try{
+            if (startList.size() > 1 || endList.size() > 1){
+                throw new NullPointerException();
+
+            } else {
+                start = emailController.map.getRoomFromName(startList.get(0)).getLocation();
+                end = emailController.map.getRoomFromName(endList.get(0)).getLocation();
+                email = getDirections(start, end, false);
+                System.out.println("attempting to send email");
+                emailController.sendReply(message, email);
+            }
+        } catch (NullPointerException n){
+            emailController.sendReply(message, "Room name incorrect. Did you mean:\n"+String.join("\n",startList) + String.join("\n",endList) );
+        } catch (ArrayIndexOutOfBoundsException e){
+            e.printStackTrace();
+        } catch (IndexOutOfBoundsException e){
+            emailController.sendReply(message, "Room name incorrect.");
+        }
     }
 
     /**
@@ -53,18 +101,19 @@ public class MessageHandler {
         String realContent = getCleanMessage();
         String currentState = emailController.getState(from);
         System.out.println("realContent : " + realContent);
+        System.out.println("message : " + getTextFromMessage(message));
+        System.out.println("");
         String clientInput = realContent.toLowerCase();
 
         if (clientInput.contains("help")) {
             // reply
             emailController.sendReply(message, "Hi, " + getHelp());
             return;
-        } else if (clientInput.contains("directions from")){
-            searchforLoctation(realContent);
-
+        } else if (clientInput.contains("directions from") || clientInput.contains("to")){
+            searchforLoctation(getTextFromMessage(message));
         }
         // give them directions again
-        System.out.printf("not a help request");
+        /*System.out.printf("not a help request");
         if (currentState != null && ! currentState.equals("help"))  {
 
             GraphNode start;
@@ -95,7 +144,7 @@ public class MessageHandler {
         else {
             System.out.println("Adding state");
             emailController.addState(from, "destination");
-        }
+        }*/
     }
 
     private String getDirections(GraphNode start, GraphNode end, boolean useStairs){
