@@ -1329,10 +1329,22 @@ cur = map.getRoomFromName(roomName);
 
     // revert to previous state
     public void revertState (PatientMemento memento) {
+        SingleSelectionModel<Tab> selectionModel = mapTabs.getSelectionModel();
         logger.info("Reverting State");
         exitSearch();
         currentMap = memento.floor;
-        displayImage();
+        displayPatientMap(currentMap, buttonHashMap.get(currentMap));
+        switch (currentMap.charAt(0)){
+            //c for campus
+            case 'c':selectionModel.select(campusTab);
+                break;
+            //b for belkin#
+            case 'b':selectionModel.select(belkinTab);
+                break;
+            //f for floor# in main building
+            case 'f':selectionModel.select(mainTab);
+                break;
+        }
         refreshDisplay();
         phoneOrEmail.clear();
         creditsPane.setVisible(false);
