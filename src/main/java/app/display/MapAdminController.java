@@ -153,6 +153,7 @@ public class MapAdminController extends DisplayController {
                 addRoom();
                 mapPane.requestFocus();
                 drawMap();
+              handleToggleTools();
             }
         });
 
