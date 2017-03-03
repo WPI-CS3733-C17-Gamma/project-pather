@@ -1348,6 +1348,7 @@ cur = map.getRoomFromName(roomName);
         refreshDisplay();
         phoneOrEmail.clear();
         creditsPane.setVisible(false);
+        anchorPane.setVisible(true);
         togStairs.setSelected(false);
     }
 
