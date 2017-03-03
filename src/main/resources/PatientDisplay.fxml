@@ -31,12 +31,12 @@
     <children>
         <AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMousePressed="#hideOptions" prefHeight="600.0" prefWidth="1000.0" styleClass="background" stylesheets="@design.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
            <children>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" height="115.0" stroke="#424556ab" strokeType="OUTSIDE" width="1000.0">
+            <Rectangle arcHeight="5.0" arcWidth="5.0" height="115.0" opacity="0.78" stroke="#424556ab" strokeType="OUTSIDE" width="1000.0">
                <fill>
-                  <LinearGradient endX="1.0" endY="0.48557692307692313">
+                  <LinearGradient endX="0.5922330097087378" endY="1.0">
                      <stops>
-                        <Stop color="#290887ad" />
-                        <Stop color="WHITE" offset="1.0" />
+                        <Stop color="#1e2036" />
+                        <Stop color="#055f8000" offset="1.0" />
                      </stops>
                   </LinearGradient>
                </fill></Rectangle>

@@ -10,12 +10,12 @@
 	/*-fx-background-radius: 1000px;*/
 }
 .button:hover{
-	-fx-background-color: #e8e8e8;
+	-fx-background-color: #d8d8d8;
 }
 /*1b449c*/
 
 .background{
-	-fx-background-color: white;
+	-fx-background-color: #E8E8E8;
 }
 
 .patientBackground{
@@ -107,7 +107,7 @@
 }
 
 .resultMenu{
-	-fx-background-color: #FAFAFA;
+	-fx-background-color: #E8E8E8;
 	-fx-opacity: 100%;
 	/*-fx-background-radius: 3px;*/
 }
