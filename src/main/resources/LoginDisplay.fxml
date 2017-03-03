@@ -27,7 +27,6 @@
             <Font name="System Bold" size="16.0" />
          </font>
       </Label>
-      <Button fx:id="exitButton" mnemonicParsing="false" onAction="#exit" prefHeight="10.0" prefWidth="10.0" style="-fx-background-color: #aa1111;" text="X" translateY="-17.0" />
    </children>
    <padding>
       <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
